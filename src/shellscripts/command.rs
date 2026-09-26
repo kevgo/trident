@@ -1,13 +1,17 @@
 use std::path::{Path, PathBuf};
 use std::process::Command;
 
+// TODO: extract this stuff into the Conc crate.
+// The conc CLI allows executing shell scripts inside a shell environment.
+// Support for bash scripts on Windows is a missing feature for that.
+
 /// Provides a `Command` instance that runs the given shell script in the most appropriate shell.
 /// Unix uses `sh -c`.
 /// Windows uses `cmd.exe /C` for ordinary commands and Git bash for .sh and .bash files.
 #[must_use]
 pub fn shell_command(expr: &str) -> Command {
     match git_bash_command(expr) {
-        Some(command) => command,
+        Some(bash_call) => bash_call,
         None => conc::shell_command(expr),
     }
 }
