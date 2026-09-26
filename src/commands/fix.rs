@@ -7,6 +7,7 @@ use crate::cli::output::print_metadata;
 use crate::config::{Application, Config, Operation, ToolDefinition};
 use crate::domain::{DetectedStacks, Result, Runnables, StackType};
 use crate::git::Repo;
+use crate::shellscripts::shell_command;
 use ahash::AHashMap;
 use std::process::ExitCode;
 
@@ -154,7 +155,7 @@ pub(crate) fn add_custom_fixes(
     for fix in custom_fixes {
         global.push(conc::Executable {
             name: fix.name.clone().unwrap_or_else(|| fix.command.clone()),
-            command: crate::shellscripts::shell_command(&fix.command),
+            command: shell_command(&fix.command),
         });
     }
 }
