@@ -1,10 +1,9 @@
 use std::path::{Path, PathBuf};
 use std::process::Command;
 
-/// runs the given command in the correct shell
-///
+/// Provides a `Command` instance that runs the given shell script in the most appropriate shell.
 /// Unix uses `sh -c`.
-/// Windows uses `cmd.exe /C` for ordinary commands and Git bash for shell scripts.
+/// Windows uses `cmd.exe /C` for ordinary commands and Git bash for .sh and .bash files.
 #[must_use]
 pub fn shell_command(expr: &str) -> Command {
     match git_bash_command(expr) {
