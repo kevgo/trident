@@ -1,27 +1,28 @@
 use std::path::{Path, PathBuf};
 use std::process::Command;
 
-/// runs `command` in a shell
+/// runs the given command in the correct shell
 ///
-/// Unix uses `sh -c`. Windows uses `cmd.exe /C` for ordinary commands and Git bash for shell scripts.
+/// Unix uses `sh -c`.
+/// Windows uses `cmd.exe /C` for ordinary commands and Git bash for shell scripts.
 #[must_use]
-pub fn shell_command(command: &str) -> Command {
-    if let Some(command) = git_bash_script(command) {
-        return command;
+pub fn shell_command(expr: &str) -> Command {
+    match git_bash_command(expr) {
+        Some(command) => command,
+        None => conc::shell_command(expr),
     }
-    conc::shell_command(command)
 }
 
 /// runs a shell script through Git bash on Windows
-fn git_bash_script(command: &str) -> Option<Command> {
-    if !is_shell_script_command(command) {
+fn git_bash_command(expr: &str) -> Option<Command> {
+    if !is_shell_script_command(expr) {
         return None;
     }
     let bash = git_bash()?;
     let mut cmd = Command::new(bash);
     // `-c` keeps shell syntax (`args`, quotes, `&&`) working for the original command text.
     cmd.arg("-c");
-    cmd.arg(command);
+    cmd.arg(expr);
     Some(cmd)
 }
 
@@ -172,20 +173,26 @@ fn standard_git_bash() -> Option<PathBuf> {
 #[cfg(test)]
 mod tests {
     use super::{bash_alongside_git, is_shell_script_command, shell_command};
+    use maplit::hashmap;
     use std::fs;
     use std::path::Path;
     use tempfile::TempDir;
 
     #[test]
     fn shell_script_paths() {
-        assert!(is_shell_script_command("tests/fail.sh"));
-        assert!(is_shell_script_command(r"tests\fail.sh"));
-        assert!(is_shell_script_command("tests/fail.sh --flag"));
-        assert!(is_shell_script_command("\"tests/my script.sh\""));
-        assert!(is_shell_script_command("hooks/post_write.bash"));
-        assert!(!is_shell_script_command("echo hello"));
-        assert!(!is_shell_script_command("echo tests/fail.sh"));
-        assert!(!is_shell_script_command("sh -c tests/fail.sh"));
+        let tests = hashmap! {
+            "tests/fail.sh" => true,
+            r"tests\fail.sh" => true,
+            "tests/fail.sh --flag" => true,
+            "\"tests/my script.sh\"" => true,
+            "hooks/post_write.bash" => true,
+            "echo hello" => false,
+            "echo tests/fail.sh" => false,
+            "sh -c tests/fail.sh" => false,
+        };
+        for (expr, want) in tests {
+            assert_eq!(is_shell_script_command(expr), want);
+        }
     }
 
     #[test]
