@@ -103,7 +103,7 @@ mod tests {
             let dir = TempDir::new().unwrap();
             fs::write(dir.path().join("miss.txt"), "nothing").unwrap();
             let have = files_with_matches_in("needle", Some(dir.path()), &[]).unwrap();
-            assert!(have.is_empty());
+            assert_eq!(have, vec![]);
         }
 
         #[test]
