@@ -1822,7 +1822,7 @@ mod tests {
             let have = config
                 .tests_for(&[], |commands| commands.pitstop.as_ref(), DefaultTests::All)
                 .unwrap();
-            assert!(have.is_empty());
+            assert_eq!(have, Vec::<&ToolDefinition>::new());
         }
     }
 }
