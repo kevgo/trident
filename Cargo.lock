@@ -328,12 +328,13 @@ dependencies = [
 
 [[package]]
 name = "concurrent_shell_commands"
-version = "0.9.1"
+version = "0.10.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8aa5cf167a8a6de061770a395f9da0e4a93c9a87dbd0c457de4926b0cf3d21d8"
+checksum = "be77a075192191f46b113ebaa64c8863986396fcdc355e407e5fb20bc1a8e314"
 dependencies = [
  "colored 3.1.1",
  "shlex",
+ "which 8.0.6",
 ]
 
 [[package]]
@@ -2110,7 +2111,7 @@ dependencies = [
  "tempfile",
  "test_helpers",
  "tokio",
- "which 8.0.5",
+ "which 8.0.6",
 ]
 
 [[package]]
@@ -2336,9 +2337,9 @@ dependencies = [
 
 [[package]]
 name = "which"
-version = "8.0.5"
+version = "8.0.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8f3ef584124b911bcc3875c2f1472e80f24361ceb789bd1c62b3e9a3df9ff43c"
+checksum = "bae2f2b2b816647a1cab1acc91f5bd20812d53cb344382635ec2181940c8034f"
 dependencies = [
  "libc",
 ]
