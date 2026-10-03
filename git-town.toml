@@ -5,10 +5,3 @@
 [branches]
 main = "main"
 perennials = []
-
-[hosting]
-forge-type = "github"
-github-connector = "gh"
-
-[sync]
-feature-strategy = "merge"
