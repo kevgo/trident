@@ -59,7 +59,7 @@ mod tests {
                 err,
             }) => {
                 assert_eq!(have_path, path);
-                assert_eq!(err, "");
+                assert!(!err.is_empty());
             }
             other => panic!("expected CannotCreateDirectory, got {other:?}"),
         }
