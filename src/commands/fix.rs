@@ -154,7 +154,7 @@ pub(crate) fn add_custom_fixes(
     for fix in custom_fixes {
         global.push(conc::Executable {
             name: fix.name.clone().unwrap_or_else(|| fix.command.clone()),
-            command: conc::shell_executable(&fix.command),
+            command: conc::shell_command(&fix.command),
         });
     }
 }
