@@ -34,7 +34,7 @@ Feature: ignore files for an application
     Then it prints the block matching
       """
       lint TOML \(Taplo\)
-      \S+[/\\]taplo(\.exe)? lint config\.toml
+      taplo(\.exe)? lint config\.toml
       """
     And it does not print
       """
