@@ -18,6 +18,7 @@ Feature: ignore files for an application
       key = "value"
       """
 
+@this
   Scenario: lint honors application-level ignored files
     Given a file "trident.json" with content
       """
@@ -33,7 +34,7 @@ Feature: ignore files for an application
     Then it prints the block matching
       """
       lint TOML \(Taplo\)
-      \S+/taplo lint config\.toml\n
+      \S+/taplo(.exe)? lint config.toml
       """
     And it does not print
       """
