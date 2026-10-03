@@ -78,7 +78,7 @@ mod tests {
 
         #[test]
         fn empty() {
-            assert!(parse_stdout("").is_empty());
+            pretty::assert_eq!(parse_stdout(""), vec![]);
         }
     }
 
