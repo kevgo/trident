@@ -55,7 +55,7 @@ Feature: disable an application's lint operation
       fix TOML \(Taplo\)
       taplo(.exe)? format Cargo.toml
       """
-    And it prints the block matching
+    And it prints the lines matching
       """
       fix Markdown \(rumdl\)
       rumdl(.exe)? fmt other.md
