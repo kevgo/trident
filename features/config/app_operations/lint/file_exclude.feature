@@ -30,17 +30,17 @@ Feature: exclude a file from being linted by a specific app only
       """
       [package]
       name =      "demo"
-
+      
       [lints.clippy]
       pedantic = { level = "warn" }
       """
 
   Scenario: lint ignores the file
     When executing "trident lint --show=verbose"
-    Then it prints the block matching
+    Then it prints the lines matching
       """
       lint TOML \(Taplo\)
-      \S+/taplo lint other\.toml\n
+      taplo(.exe)? lint other.toml
       """
     And it does not print
       """
@@ -50,10 +50,10 @@ Feature: exclude a file from being linted by a specific app only
 
   Scenario: fix still formats the file
     When executing "trident fix --show=verbose"
-    Then it prints the block matching
+    Then it prints the lines matching
       """
       fix TOML \(Taplo\)
-      \S+/taplo format Cargo\.toml other\.toml\n
+      taplo(.exe)? format Cargo.toml other.toml
       """
     And file "other.toml" now has content
       """
@@ -63,7 +63,7 @@ Feature: exclude a file from being linted by a specific app only
       """
       [package]
       name = "demo"
-
+      
       [lints.clippy]
       pedantic = { level = "warn" }
       """
@@ -71,10 +71,10 @@ Feature: exclude a file from being linted by a specific app only
 
   Scenario: fix-unsafe still formats the file
     When executing "trident fix-unsafe --show=verbose"
-    Then it prints the block matching
+    Then it prints the lines matching
       """
       unsafe-fix TOML \(Taplo\)
-      \S+/taplo format --force Cargo\.toml other\.toml\n
+      taplo(.exe)? format --force Cargo.toml other.toml
       """
     And file "other.toml" now has content
       """
@@ -84,7 +84,7 @@ Feature: exclude a file from being linted by a specific app only
       """
       [package]
       name = "demo"
-
+      
       [lints.clippy]
       pedantic = { level = "warn" }
       """

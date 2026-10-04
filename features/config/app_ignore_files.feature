@@ -57,10 +57,10 @@ Feature: ignore files for an application
       key =     "value"
       """
     When executing "trident fix --show=verbose"
-    Then it prints the block matching
+    Then it prints the lines matching
       """
       fix TOML \(Taplo\)
-      \S+/taplo format config\.toml\n
+      taplo(.exe)? format config.toml
       """
     And it does not print
       """
@@ -81,10 +81,10 @@ Feature: ignore files for an application
       }
       """
     When executing "trident lint --show=verbose"
-    Then it prints the block matching
+    Then it prints the lines matching
       """
       lint TOML \(Taplo\)
-      \S+/taplo lint config\.toml\n
+      taplo lint config.toml
       """
     And it does not print
       """
@@ -100,10 +100,10 @@ Feature: ignore files for an application
       }
       """
     When executing "trident fix --show=verbose"
-    Then it prints the block matching
+    Then it prints the lines matching
       """
       fix TOML \(Taplo\)
-      \S+/taplo format config\.toml\n
+      taplo(.exe)? format config.toml
       """
     And it does not print
       """

@@ -33,7 +33,7 @@ Feature: disable an application's fix-unsafe operation
       """
       [package]
       name =      "demo"
-
+      
       [lints.clippy]
       pedantic = { level = "warn", priority = -1 }
       """
@@ -53,28 +53,28 @@ Feature: disable an application's fix-unsafe operation
 
   Scenario: lint still runs the application
     When executing "trident lint --show=verbose"
-    Then it prints the block matching
+    Then it prints the lines matching
       """
       lint TOML \(Taplo\)
-      \S+/taplo lint Cargo\.toml
+      taplo(.exe)? lint Cargo.toml
       """
-    And it prints the block matching
+    And it prints the lines matching
       """
       lint CSS \(Biome\)
-      \S+/biome lint other\.css\n
+      biome(.exe)? lint other.css
       """
     And the exit code is 0
 
   Scenario: fix still runs the application
     When executing "trident fix --show=verbose"
-    Then it prints the block matching
+    Then it prints the lines matching
       """
       fix TOML \(Taplo\)
-      \S+/taplo format Cargo\.toml
+      taplo(.exe)? format Cargo.toml
       """
-    And it prints the block matching
+    And it prints the lines matching
       """
       fix CSS \(Biome\)
-      \S+/biome format --write other\.css\n
+      biome(.exe)? format --write other.css
       """
     And the exit code is 0

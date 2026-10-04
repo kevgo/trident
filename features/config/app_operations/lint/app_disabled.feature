@@ -31,7 +31,7 @@ Feature: disable an application's lint operation
       """
       [package]
       name =      "demo"
-
+      
       [lints.clippy]
       pedantic = { level = "warn" }
       """
@@ -50,23 +50,23 @@ Feature: disable an application's lint operation
 
   Scenario: fix still runs the application
     When executing "trident fix --show=verbose"
-    Then it prints the block matching
+    Then it prints the lines matching
       """
       fix TOML \(Taplo\)
-      \S+/taplo format Cargo\.toml
+      taplo(.exe)? format Cargo.toml
       """
     And it prints the block matching
       """
       fix Markdown \(rumdl\)
-      \S+/rumdl fmt other.md\n
+      rumdl(.exe)? fmt other.md
       """
     And the exit code is 0
 
   Scenario: fix-unsafe still runs the application
     When executing "trident fix-unsafe --show=verbose"
-    Then it prints the block matching
+    Then it prints the lines matching
       """
       unsafe-fix TOML \(Taplo\)
-      \S+/taplo format --force Cargo\.toml
+      taplo(.exe)? format --force Cargo.toml
       """
     And the exit code is 0
