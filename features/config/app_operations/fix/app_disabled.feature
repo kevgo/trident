@@ -31,7 +31,7 @@ Feature: disable an application's fix operation
       """
       [package]
       name =      "demo"
-      
+
       [lints.clippy]
       pedantic = { level = "warn" }
       """

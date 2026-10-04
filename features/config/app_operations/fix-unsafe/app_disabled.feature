@@ -33,7 +33,7 @@ Feature: disable an application's fix-unsafe operation
       """
       [package]
       name =      "demo"
-      
+
       [lints.clippy]
       pedantic = { level = "warn", priority = -1 }
       """

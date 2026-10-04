@@ -30,7 +30,7 @@ Feature: exclude a file from being fixed by a specific app only
       """
       [package]
       name =      "demo"
-      
+
       [lints.clippy]
       pedantic = { level = "warn" }
       """
@@ -77,7 +77,7 @@ Feature: exclude a file from being fixed by a specific app only
       """
       [package]
       name = "demo"
-      
+
       [lints.clippy]
       pedantic = { level = "warn" }
       """
