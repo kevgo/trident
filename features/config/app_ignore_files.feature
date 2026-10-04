@@ -18,7 +18,7 @@ Feature: ignore files for an application
       key = "value"
       """
 
-@this
+  @this
   Scenario: lint honors application-level ignored files
     Given a file "trident.json" with content
       """
@@ -31,7 +31,7 @@ Feature: ignore files for an application
       }
       """
     When executing "trident lint --show=verbose"
-    Then it prints the block matching
+    Then it prints the lines matching
       """
       lint TOML \(Taplo\)
       taplo(\.exe)? lint config\.toml

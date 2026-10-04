@@ -1,5 +1,5 @@
 use crate::world::TridentWorld;
-use contains_lines::contains_lines;
+use contains_lines::{contains_lines, contains_lines_matching};
 use cucumber::gherkin::Step;
 use cucumber::then;
 use regex::Regex;
@@ -242,7 +242,7 @@ fn it_prints_the_lines_matching(world: &mut TridentWorld, step: &Step) {
     let stripped = strip_ansi_escapes::strip(&output.stdout);
     let stdout = str::from_utf8(&stripped).expect("non-UTF-8 output");
     // TODO: add contains_regex_lines to the contains_lines crate and use it here
-    let missing = contains_regex_lines(stdout, want);
+    let missing = contains_lines_matching(stdout, want);
     assert!(
         missing.is_empty(),
         "STDOUT is missing lines:\n\nHAVE:\n{stdout}\n\nWANT:\n{want}\n\nMISSING:\n{}",
