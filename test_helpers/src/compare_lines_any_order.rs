@@ -1,6 +1,9 @@
 use std::cmp::Ordering;
 
-pub fn compare_lines_any_order(have: &mut Vec<&str>, want: &mut Vec<&str>) -> CompareResult {
+pub fn compare_lines_any_order<'a>(
+    have: &'a mut Vec<&str>,
+    want: &'a mut Vec<&str>,
+) -> CompareResult<'a> {
     have.sort();
     want.sort();
     let mut missing = Vec::new();
@@ -10,11 +13,11 @@ pub fn compare_lines_any_order(have: &mut Vec<&str>, want: &mut Vec<&str>) -> Co
     while i < have.len() && j < want.len() {
         match have[i].cmp(want[j]) {
             Ordering::Less => {
-                extra.push(have[i].to_string());
+                extra.push(have[i]);
                 i += 1;
             }
             Ordering::Greater => {
-                missing.push(want[j].to_string());
+                missing.push(want[j]);
                 j += 1;
             }
             Ordering::Equal => {
@@ -23,18 +26,18 @@ pub fn compare_lines_any_order(have: &mut Vec<&str>, want: &mut Vec<&str>) -> Co
             }
         }
     }
-    missing.extend(want[j..].iter().map(|line| line.to_string()));
-    extra.extend(have[i..].iter().map(|line| line.to_string()));
+    missing.extend(&want[j..]);
+    extra.extend(&have[i..]);
 
     CompareResult { missing, extra }
 }
 
-pub struct CompareResult {
-    pub missing: Vec<String>,
-    pub extra: Vec<String>,
+pub struct CompareResult<'a> {
+    pub missing: Vec<&'a str>,
+    pub extra: Vec<&'a str>,
 }
 
-impl CompareResult {
+impl<'a> CompareResult<'a> {
     pub fn message(&self) -> String {
         let mut message = String::new();
         message.push_str("\nmissing lines:\n");
