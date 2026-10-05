@@ -1,4 +1,3 @@
-@this
 Feature: Displaying help
 
   Scenario: no command given
