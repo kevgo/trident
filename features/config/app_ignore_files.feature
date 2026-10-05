@@ -84,7 +84,7 @@ Feature: ignore files for an application
     Then it prints the lines matching
       """
       lint TOML \(Taplo\)
-      taplo lint config.toml
+      taplo(.exe)? lint config.toml
       """
     And it does not print
       """
