@@ -87,47 +87,47 @@ Feature: CI doesn't care about uncommitted files that are unformatted
       1 CSS, 1 Python, 1 TypeScript, 1 other
       running 9 tools
       """
-    And it prints the block matching
+    And it prints the lines matching
       """
       delete empty folders
-      \S+/delete-empty-folders
+      delete-empty-folders
       """
-    And it prints the block matching
+    And it prints the lines matching
       """
       fix TypeScript \(Biome\)
-      \S+/biome format --write main\.ts
+      biome(.exe)? format --write main.ts
       """
-    And it prints the block matching
+    And it prints the lines matching
       """
       fix CSS \(Biome\)
-      \S+/biome format --write main\.css
+      biome(.exe)? format --write main.css
       """
-    And it prints the block matching
+    And it prints the lines matching
       """
       fix Python \(ruff\)
-      \S+/ruff check --fix main\.py
+      ruff(.exe)? check --fix main.py
       All checks passed!
       """
-    And it prints the block matching
+    And it prints the lines matching
       """
       format Python \(ruff\)
-      \S+/ruff format main\.py
+      ruff(.exe)? format main.py
       1 file reformatted
       """
-    And it prints the block matching
+    And it prints the lines matching
       """
       lint Python \(ruff\)
-      \S+/ruff check main\.py
+      ruff(.exe)? check main.py
       """
-    And it prints the block matching
+    And it prints the lines matching
       """
       lint TypeScript \(Biome\)
-      \S+/biome lint main\.ts
+      biome(.exe)? lint main.ts
       """
-    And it prints the block matching
+    And it prints the lines matching
       """
       lint CSS \(Biome\)
-      \S+/biome lint main\.css
+      biome(.exe)? lint main.css
       """
     And file "main.css" now has content
       """

@@ -51,23 +51,23 @@ Feature: disable an application's fix operation
 
   Scenario: lint still runs the application
     When executing "trident lint --show=verbose"
-    Then it prints the block matching
+    Then it prints the lines matching
       """
       lint TOML \(Taplo\)
-      \S+/taplo lint Cargo\.toml
+      taplo(.exe)? lint Cargo.toml
       """
-    And it prints the block matching
+    And it prints the lines matching
       """
       lint Markdown \(rumdl\)
-      \S+/rumdl check other.md\n
+      rumdl(.exe)? check other.md
       """
     And the exit code is 0
 
   Scenario: fix-unsafe still runs the application
     When executing "trident fix-unsafe --show=verbose"
-    Then it prints the block matching
+    Then it prints the lines matching
       """
       unsafe-fix TOML \(Taplo\)
-      \S+/taplo format --force Cargo\.toml
+      taplo(.exe)? format --force Cargo.toml
       """
     And the exit code is 0

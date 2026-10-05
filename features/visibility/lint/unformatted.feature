@@ -52,21 +52,21 @@ Feature: lint multiple stacks with unformatted files
       1 CSS, 1 Python, 1 TypeScript, 1 other
       running 3 tools
       """
-    And it prints the block matching
+    And it prints the lines matching
       """
       lint Python \(ruff\)
-      \S+/ruff check main\.py
+      ruff(.exe)? check main.py
       All checks passed!
       """
-    And it prints the block matching
+    And it prints the lines matching
       """
       lint CSS \(Biome\)
-      \S+/biome lint main\.css
+      biome(.exe)? lint main.css
       """
-    And it prints the block matching
+    And it prints the lines matching
       """
       lint TypeScript \(Biome\)
-      \S+/biome lint main\.ts
+      biome(.exe)? lint main.ts
       """
     And the exit code is 0
     And all files are unchanged

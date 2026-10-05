@@ -328,12 +328,13 @@ dependencies = [
 
 [[package]]
 name = "concurrent_shell_commands"
-version = "0.9.1"
+version = "0.10.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8aa5cf167a8a6de061770a395f9da0e4a93c9a87dbd0c457de4926b0cf3d21d8"
+checksum = "be77a075192191f46b113ebaa64c8863986396fcdc355e407e5fb20bc1a8e314"
 dependencies = [
  "colored 3.1.1",
  "shlex",
+ "which 8.0.6",
 ]
 
 [[package]]
@@ -377,9 +378,12 @@ checksum = "245097e9a4535ee1e3e3931fcfcd55a796a44c643e8596ff6566d68f09b87bbc"
 
 [[package]]
 name = "contains_lines"
-version = "0.0.1"
+version = "0.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9e975c4385c8388e8f74feca3a40f6300e737bdd26bdfb0e76d3419652e2bb67"
+checksum = "843e5fe8e83748bb9698cf3c0d27a6c1243551cd4ba2ca937ccddac5162556e9"
+dependencies = [
+ "regex",
+]
 
 [[package]]
 name = "convert_case"
@@ -2110,7 +2114,7 @@ dependencies = [
  "tempfile",
  "test_helpers",
  "tokio",
- "which 8.0.5",
+ "which 8.0.6",
 ]
 
 [[package]]
@@ -2336,9 +2340,9 @@ dependencies = [
 
 [[package]]
 name = "which"
-version = "8.0.5"
+version = "8.0.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8f3ef584124b911bcc3875c2f1472e80f24361ceb789bd1c62b3e9a3df9ff43c"
+checksum = "bae2f2b2b816647a1cab1acc91f5bd20812d53cb344382635ec2181940c8034f"
 dependencies = [
  "libc",
 ]
