@@ -1,6 +1,5 @@
-use regex::Regex;
-
 use crate::compare_lines_any_order::CompareResult;
+use regex::Regex;
 
 /// Order-independent comparison where each `want` entry is a full-line regular expression.
 /// Unmatched `have` lines are `missing`. Unmatched `want` patterns are `extra`.
