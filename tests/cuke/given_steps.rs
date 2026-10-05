@@ -105,9 +105,8 @@ async fn i_ran(world: &mut TridentWorld, command: String) {
     } else {
         which::which(executable).unwrap()
     };
-    if std::env::consts::OS == "windows" {
-        absolute_path.set_extension("exe");
-    }
+    #[cfg(windows)]
+    absolute_path.set_extension("exe");
     let mut cmd = Command::new(absolute_path);
     if executable == "git" {
         cmd.arg("-c")

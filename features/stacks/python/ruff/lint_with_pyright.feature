@@ -15,6 +15,7 @@ Feature: lint Python with Pyright
       """
     And I ran "tools/rta uv tool install pyright"
 
+@this
   Scenario: valid Python with Pyright
     Given a file "main.py" with content
       """
