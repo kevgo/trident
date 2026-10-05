@@ -280,6 +280,23 @@ fn prints_lines_any_order(world: &mut TridentWorld, step: &Step) {
     );
 }
 
+#[then("it prints only these regexes in any order")]
+fn prints_regexes_any_order(world: &mut TridentWorld, step: &Step) {
+    let mut want = step.docstring.as_ref().unwrap()[1..]
+        .lines()
+        .collect::<Vec<&str>>();
+    let output = world.output.as_ref().expect("no command run");
+    let stripped = strip_ansi_escapes::strip(&output.stdout);
+    let stdout = str::from_utf8(&stripped).expect("non-UTF-8 output");
+    let mut have = stdout.lines().collect::<Vec<&str>>();
+    let compare_result = test_helpers::compare_regexes_any_order(&mut have, &mut want);
+    assert!(
+        compare_result.success(),
+        "{}\nHAVE:\n{stdout}",
+        compare_result.message()
+    );
+}
+
 #[then(expr = "the exit code is {int}")]
 fn exit_code(world: &mut TridentWorld, want: i32) {
     assert_eq!(world.exit_code(), want);
