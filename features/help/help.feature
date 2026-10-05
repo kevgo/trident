@@ -1,13 +1,14 @@
+@this
 Feature: Displaying help
 
   Scenario: no command given
     When executing "trident"
-    Then it prints
+    Then it prints the lines matching
       """
-      error: 'trident' requires a subcommand but one was not provided
-        [subcommands: ci, init:claude, init:config, init:githook, fix, fix-unsafe, full, lint, postgenerate, pitstop, postedit, precommit, test, update:tools, help]
+      error: 'trident(.exe)?' requires a subcommand but one was not provided
+        \[subcommands: ci, init:claude, init:config, init:githook, fix, fix-unsafe, full, lint, postgenerate, pitstop, postedit, precommit, test, update:tools, help\]
 
-      Usage: trident <COMMAND>
+      Usage: trident(.exe?) <COMMAND>
 
       For more information, try '--help'.
       """
@@ -15,11 +16,11 @@ Feature: Displaying help
 
   Scenario: help command
     When executing "trident help"
-    Then it prints
+    Then it prints the lines matching
       """
       The all-in-one DevEx tool.
 
-      Usage: trident <COMMAND>
+      Usage: trident(.exe)? <COMMAND>
 
       Commands:
         ci            Runs all fixes, lints, and tests on CI
@@ -49,7 +50,7 @@ Feature: Displaying help
       """
       The all-in-one DevEx tool.
 
-      Usage: trident <COMMAND>
+      Usage: trident(.exe)? <COMMAND>
 
       Commands:
         ci            Runs all fixes, lints, and tests on CI
@@ -75,11 +76,11 @@ Feature: Displaying help
 
   Scenario: -h flag
     When executing "trident -h"
-    Then it prints
+    Then it prints the lines matching
       """
       The all-in-one DevEx tool.
 
-      Usage: trident <COMMAND>
+      Usage: trident(.exe)? <COMMAND>
 
       Commands:
         ci            Runs all fixes, lints, and tests on CI
@@ -105,11 +106,11 @@ Feature: Displaying help
 
   Scenario: help for a subcommand
     When executing "trident help lint"
-    Then it prints
+    Then it prints the lines matching
       """
       Find code quality issues
 
-      Usage: trident lint [OPTIONS]
+      Usage: trident(.exe)? lint [OPTIONS]
 
       Options:
             --show <SHOW>
@@ -136,11 +137,11 @@ Feature: Displaying help
 
   Scenario: help for the ci command
     When executing "trident help ci"
-    Then it prints
+    Then it prints the lines matching
       """
       Runs all fixes, lints, and tests on CI
 
-      Usage: trident ci [OPTIONS]
+      Usage: trident(.exe)? ci [OPTIONS]
 
       Options:
             --show <SHOW>
@@ -170,11 +171,11 @@ Feature: Displaying help
 
   Scenario: help for the full command
     When executing "trident help full"
-    Then it prints
+    Then it prints the lines matching
       """
       Run all lints, fixes, and tests on all files
 
-      Usage: trident full [OPTIONS]
+      Usage: trident(.exe)? full [OPTIONS]
 
       Options:
             --show <SHOW>
@@ -196,11 +197,11 @@ Feature: Displaying help
 
   Scenario: help for the pitstop command
     When executing "trident help pitstop"
-    Then it prints
+    Then it prints the lines matching
       """
       Fix and lint the current work
 
-      Usage: trident pitstop [OPTIONS]
+      Usage: trident(.exe)? pitstop [OPTIONS]
 
       Options:
             --show <SHOW>
@@ -230,11 +231,11 @@ Feature: Displaying help
 
   Scenario: help for the fix command
     When executing "trident help fix"
-    Then it prints
+    Then it prints the lines matching
       """
       Apply safe code quality fixes
 
-      Usage: trident fix [OPTIONS]
+      Usage: trident(.exe)? fix [OPTIONS]
 
       Options:
             --show <SHOW>
@@ -261,11 +262,11 @@ Feature: Displaying help
 
   Scenario: help for the test command
     When executing "trident help test"
-    Then it prints
+    Then it prints the lines matching
       """
       Run all tests in parallel
 
-      Usage: trident test [OPTIONS]
+      Usage: trident(.exe)? test [OPTIONS]
 
       Options:
             --show <SHOW>
