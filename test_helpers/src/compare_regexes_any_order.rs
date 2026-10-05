@@ -25,9 +25,9 @@ pub fn compare_regexes_any_order<'a>(have: &'a [&str], want: &'a [&str]) -> Comp
     // for each line in have, the index of the regex that it is assigned to
     let mut assignments: Vec<Option<usize>> = vec![None; have.len()];
     let mut missing = Vec::new();
-    for (w, pattern) in want.iter().enumerate() {
+    for (p, pattern) in want.iter().enumerate() {
         let mut visited = vec![false; have.len()];
-        if !assign(w, &candidates, &mut assignments, &mut visited) {
+        if !assign(p, &candidates, &mut assignments, &mut visited) {
             missing.push(*pattern);
         }
     }
