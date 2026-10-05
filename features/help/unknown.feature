@@ -2,11 +2,11 @@ Feature: wrong CLI command
 
   Scenario: calling a non-existing subcommand
     When executing "trident zonk"
-    Then it prints
+    Then it prints the lines matching
       """
       error: unrecognized subcommand 'zonk'
 
-      Usage: trident <COMMAND>
+      Usage: trident(.exe)? <COMMAND>
 
       For more information, try '--help'.
       """
