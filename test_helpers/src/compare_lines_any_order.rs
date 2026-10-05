@@ -75,20 +75,20 @@ mod tests {
     fn missing_line() {
         let mut want = vec!["one", "two", "three"];
         let mut have = vec!["two", "three"];
-        let have = compare_lines_any_order(&mut have, &mut want);
-        assert!(!have.success());
-        assert_eq!(have.missing, vec!["one"]);
-        assert!(have.extra.is_empty());
+        let result = compare_lines_any_order(&mut have, &mut want);
+        assert!(!result.success());
+        assert_eq!(result.missing, vec!["one"]);
+        assert!(result.extra.is_empty());
     }
 
     #[test]
     fn extra_line() {
         let mut want = vec!["two", "three"];
         let mut have = vec!["one", "two", "three"];
-        let have = compare_lines_any_order(&mut have, &mut want);
-        assert!(!have.success());
-        assert!(have.missing.is_empty());
-        assert_eq!(have.extra, vec!["one"]);
+        let result = compare_lines_any_order(&mut have, &mut want);
+        assert!(!result.success());
+        assert!(result.missing.is_empty());
+        assert_eq!(result.extra, vec!["one"]);
     }
 
     #[test]
