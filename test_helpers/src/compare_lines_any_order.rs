@@ -26,8 +26,8 @@ pub fn compare_lines_any_order<'a>(
             }
         }
     }
-    missing.extend(want[j..].iter());
-    extra.extend(have[i..].iter());
+    missing.extend(&want[j..]);
+    extra.extend(&have[i..]);
 
     CompareResult { missing, extra }
 }
