@@ -23,8 +23,8 @@ pub fn compare_lines_any_order(have: &mut Vec<&str>, want: &mut Vec<&str>) -> Co
             }
         }
     }
-    missing.extend(have[i..].iter().map(|line| line.to_string()));
-    extra.extend(want[j..].iter().map(|line| line.to_string()));
+    missing.extend(want[j..].iter().map(|line| line.to_string()));
+    extra.extend(have[i..].iter().map(|line| line.to_string()));
 
     CompareResult { missing, extra }
 }
