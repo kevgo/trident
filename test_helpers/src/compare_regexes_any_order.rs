@@ -3,7 +3,7 @@ use regex::Regex;
 
 /// Verifies that each line in `have` matches exactly one regex in `want`, in any order.
 /// Each regex must match the entire line.
-pub fn compare_regexes_any_order(have: &[&str], want: &[&str]) -> CompareResult {
+pub fn compare_regexes_any_order<'a>(have: &'a [&str], want: &'a [&str]) -> CompareResult<'a> {
     let regexes: Vec<Regex> = want
         .iter()
         .map(|pattern| {
@@ -28,14 +28,14 @@ pub fn compare_regexes_any_order(have: &[&str], want: &[&str]) -> CompareResult 
     for (w, pattern) in want.iter().enumerate() {
         let mut visited = vec![false; have.len()];
         if !assign(w, &candidates, &mut assignments, &mut visited) {
-            missing.push(pattern.to_string());
+            missing.push(*pattern);
         }
     }
     let extra = have
         .iter()
         .zip(&assignments)
         .filter(|(_, assignment)| assignment.is_none())
-        .map(|(line, _)| line.to_string())
+        .map(|(line, _)| *line)
         .collect();
     CompareResult { missing, extra }
 }
