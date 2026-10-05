@@ -26,7 +26,7 @@ strum = { version = "0.28.0", features = ["derive"] }
 which = "8.0.5"
 
 [dev-dependencies]
-contains_lines = "0.0.1"
+contains_lines = "0.0.2"
 cucumber = "0.23.0"
 itertools = "0.14.0"
 maplit = "1.0.2"

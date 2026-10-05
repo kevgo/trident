@@ -85,22 +85,22 @@ Feature: pitstop multiple good stacks
       """
       lint TypeScript (Biome)
       """
-    And it prints the block matching
+    And it prints the lines matching
       """
       fix Python \(ruff\)
-      \S+/ruff check --fix main\.py
+      ruff(.exe)? check --fix main.py
       All checks passed!
       """
-    And it prints the block matching
+    And it prints the lines matching
       """
       format Python \(ruff\)
-      \S+/ruff format main\.py
+      ruff(.exe)? format main.py
       1 file left unchanged
       """
-    And it prints the block matching
+    And it prints the lines matching
       """
       lint Python \(ruff\)
-      \S+/ruff check main\.py
+      ruff(.exe)? check main.py
       All checks passed!
       """
     And all files are unchanged

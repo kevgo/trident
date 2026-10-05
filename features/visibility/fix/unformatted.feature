@@ -69,26 +69,26 @@ Feature: fix multiple stacks
       1 CSS, 1 Python, 1 TypeScript, 1 other
       running 5 tools
       """
-    And it prints the block matching
+    And it prints the lines matching
       """
       fix TypeScript \(Biome\)
-      \S+/biome format --write main\.ts
+      biome(.exe)? format --write main.ts
       """
-    And it prints the block matching
+    And it prints the lines matching
       """
       fix CSS \(Biome\)
-      \S+/biome format --write main\.css
+      biome(.exe)? format --write main.css
       """
-    And it prints the block matching
+    And it prints the lines matching
       """
       fix Python \(ruff\)
-      \S+/ruff check --fix main\.py
+      ruff(.exe)? check --fix main.py
       All checks passed!
       """
-    And it prints the block matching
+    And it prints the lines matching
       """
       format Python \(ruff\)
-      \S+/ruff format main\.py
+      ruff(.exe)? format main.py
       1 file reformatted
       """
     And file "main.css" now has content
