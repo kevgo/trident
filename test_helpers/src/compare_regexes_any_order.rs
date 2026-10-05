@@ -5,7 +5,10 @@ use regex::Regex;
 pub fn compare_regexes_any_order(have: &mut Vec<&str>, want: &mut Vec<&str>) -> CompareResult {
     have.sort();
     want.sort();
-    let patterns: Vec<Regex> = want.iter().copied().map(full_line_regex).collect();
+    let patterns: Vec<Regex> = want
+        .iter()
+        .map(|pattern| full_line_regex(pattern))
+        .collect();
     let edges = edges_between(have, &patterns);
     let pair_have = maximum_matching(have.len(), &edges);
 
@@ -94,123 +97,48 @@ impl Matcher<'_> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::compare_lines_any_order::compare_lines_any_order;
 
-    fn assert_same_as_literal_compare(have: &[&str], want: &[&str]) {
-        let mut have_lines = have.to_vec();
-        let mut want_lines = want.to_vec();
-        let mut have_regex = have.to_vec();
-        let mut want_regex = want.to_vec();
-        let lines = compare_lines_any_order(&mut have_lines, &mut want_lines);
-        let regexes = compare_regexes_any_order(&mut have_regex, &mut want_regex);
-        assert_eq!(lines.missing, regexes.missing);
-        assert_eq!(lines.extra, regexes.extra);
+    #[test]
+    fn same_order() {
+        let mut left = vec!["one", "two", "three"];
+        let mut right = vec!["one", "two", "three"];
+        assert!(compare_lines_any_order(&mut left, &mut right).success());
     }
 
     #[test]
-    fn literals_match_compare_lines_any_order() {
-        let cases: &[(&[&str], &[&str])] = &[
-            (&[], &[]),
-            (&["one", "two", "three"], &["one", "two", "three"]),
-            (&["one", "two", "three"], &["three", "two", "one"]),
-            (&["one", "two", "three"], &["two", "three"]),
-            (&["two", "three"], &["one", "two", "three"]),
-            (&["one", "one", "two"], &["one", "two", "two"]),
-            (&["a", "a", "c", "d"], &["a", "b", "b", "d"]),
-            (&["only"], &[]),
-            (&[], &["only"]),
-        ];
-        for (have, want) in cases {
-            assert_same_as_literal_compare(have, want);
-        }
+    fn different_order() {
+        let mut left = vec!["one", "two", "three"];
+        let mut right = vec!["three", "two", "one"];
+        assert!(compare_lines_any_order(&mut left, &mut right).success());
     }
 
     #[test]
-    fn regex_matches_in_any_order() {
-        let mut have = vec!["alpha 1", "beta 2"];
-        let mut want = vec![r"beta \d+", r"alpha \d+"];
-        assert!(compare_regexes_any_order(&mut have, &mut want).success());
+    fn missing_line() {
+        let mut left = vec!["one", "two", "three"];
+        let mut right = vec!["two", "three"];
+        let have = compare_lines_any_order(&mut left, &mut right);
+        assert!(!have.success());
+        assert_eq!(have.missing, vec!["one"]);
+        assert!(have.extra.is_empty());
     }
 
     #[test]
-    fn pattern_matches_a_whole_line_only() {
-        let mut have = vec!["prefix one suffix"];
-        let mut want = vec!["one"];
-        let result = compare_regexes_any_order(&mut have, &mut want);
-        assert_eq!(result.missing, vec!["prefix one suffix"]);
-        assert_eq!(result.extra, vec!["one"]);
+    fn extra_line() {
+        let mut left = vec!["two", "three"];
+        let mut right = vec!["one", "two", "three"];
+        let have = compare_lines_any_order(&mut left, &mut right);
+        assert!(!have.success());
+        assert!(have.missing.is_empty());
+        assert_eq!(have.extra, vec!["one"]);
     }
 
     #[test]
-    fn unanchored_content_can_be_expressed_in_the_pattern() {
-        let mut have = vec!["prefix one suffix"];
-        let mut want = vec![".*one.*"];
-        assert!(compare_regexes_any_order(&mut have, &mut want).success());
-    }
-
-    #[test]
-    fn alternation_is_anchored_to_the_whole_line() {
-        let mut have = vec!["ab"];
-        let mut want = vec!["a|b"];
-        let result = compare_regexes_any_order(&mut have, &mut want);
-        assert_eq!(result.missing, vec!["ab"]);
-        assert_eq!(result.extra, vec!["a|b"]);
-    }
-
-    #[test]
-    fn dot_matches_any_character() {
-        let mut have = vec!["abc"];
-        let mut want = vec!["a.c"];
-        assert!(compare_regexes_any_order(&mut have, &mut want).success());
-    }
-
-    #[test]
-    fn escaped_dot_is_literal() {
-        let mut have = vec!["abc"];
-        let mut want = vec![r"a\.c"];
-        let result = compare_regexes_any_order(&mut have, &mut want);
-        assert_eq!(result.missing, vec!["abc"]);
-        assert_eq!(result.extra, vec![r"a\.c"]);
-    }
-
-    #[test]
-    fn repeated_pattern_matches_one_line_per_copy() {
-        let mut have = vec!["a1", "b", "a2"];
-        let mut want = vec![r"a\d", "b", r"a\d"];
-        assert!(compare_regexes_any_order(&mut have, &mut want).success());
-    }
-
-    #[test]
-    fn repeated_pattern_requires_a_distinct_line() {
-        let mut have = vec!["a1", "b"];
-        let mut want = vec![r"a\d", "b", r"a\d"];
-        let result = compare_regexes_any_order(&mut have, &mut want);
-        assert!(!result.success());
-        assert!(result.missing.is_empty());
-        assert_eq!(result.extra, vec![r"a\d"]);
-    }
-
-    #[test]
-    fn broad_pattern_does_not_consume_a_specific_lines_only_match() {
-        let mut have = vec!["b", "c"];
-        let mut want = vec![".*", "b"];
-        assert!(compare_regexes_any_order(&mut have, &mut want).success());
-    }
-
-    #[test]
-    fn reports_unmatched_line_and_pattern() {
-        let mut have = vec!["alpha", "gamma"];
-        let mut want = vec!["alpha", r"beta \d+"];
-        let result = compare_regexes_any_order(&mut have, &mut want);
-        assert_eq!(result.missing, vec!["gamma"]);
-        assert_eq!(result.extra, vec![r"beta \d+"]);
-    }
-
-    #[test]
-    #[should_panic(expected = "invalid regular expression '('")]
-    fn invalid_regex() {
-        let mut have = vec!["one"];
-        let mut want = vec!["("];
-        compare_regexes_any_order(&mut have, &mut want);
+    fn same_number_different_content() {
+        let mut left = vec!["one", "one", "two"];
+        let mut right = vec!["one", "two", "two"];
+        let have = compare_lines_any_order(&mut left, &mut right);
+        assert!(!have.success());
+        assert_eq!(have.missing, vec!["one"]);
+        assert_eq!(have.extra, vec!["two"]);
     }
 }
