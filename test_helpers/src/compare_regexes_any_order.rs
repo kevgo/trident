@@ -2,8 +2,6 @@ use crate::compare_lines_any_order::CompareResult;
 use regex::Regex;
 
 /// Order-independent comparison where each `want` entry is a full-line regular expression.
-/// Unmatched `have` lines are `missing`. Unmatched `want` patterns are `extra`.
-/// Each line and each pattern is paired at most once.
 pub fn compare_regexes_any_order(have: &mut Vec<&str>, want: &mut Vec<&str>) -> CompareResult {
     have.sort();
     want.sort();
