@@ -59,10 +59,10 @@ Feature: lint multiple stacks
       """
       lint TypeScript (Biome)
       """
-    And it prints the block matching
+    And it prints the lines matching
       """
       lint Python \(ruff\)
-      \S+/ruff check main\.py
+      ruff(.exe)? check main.py
       All checks passed!
       """
     And all files are unchanged
