@@ -302,6 +302,11 @@ fn exit_code(world: &mut TridentWorld, want: i32) {
     assert_eq!(world.exit_code(), want);
 }
 
+#[then(expr = "the exit code is failure")]
+fn exit_code_failure(world: &mut TridentWorld) {
+    assert!(world.exit_code() != 0);
+}
+
 #[then(expr = "the staged changes are")]
 async fn the_staged_changes_are(world: &mut TridentWorld, step: &Step) {
     let want = step.docstring.as_ref().unwrap().trim();
