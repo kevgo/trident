@@ -5,10 +5,10 @@ Feature: Displaying help
     When executing "trident"
     Then it prints the lines matching
       """
-      error: 'trident(.exe)?' requires a subcommand but one was not provided
+      error: 'trident(\.exe)?' requires a subcommand but one was not provided
         \[subcommands: ci, init:claude, init:config, init:githook, fix, fix-unsafe, full, lint, postgenerate, pitstop, postedit, precommit, test, update:tools, help\]
 
-      Usage: trident(.exe?) <COMMAND>
+      Usage: trident(\.exe)? <COMMAND>
 
       For more information, try '--help'.
       """
@@ -20,7 +20,7 @@ Feature: Displaying help
       """
       The all-in-one DevEx tool.
 
-      Usage: trident(.exe)? <COMMAND>
+      Usage: trident(\.exe)? <COMMAND>
 
       Commands:
         ci            Runs all fixes, lints, and tests on CI
@@ -30,13 +30,13 @@ Feature: Displaying help
         fix           Apply safe code quality fixes
         fix-unsafe    Apply advanced fixes that might change behavior
         full          Run all lints, fixes, and tests on all files
-        lint          Find code quality issues [alias: postgenerate]
+        lint          Find code quality issues \[alias: postgenerate\]
         pitstop       Fix and lint the current work
         postedit      Lint uncommitted changes
         precommit     Fix staged files before committing, never fails
         test          Run all tests in parallel
         update:tools  Update third-party tools
-        help          Print this message or the help of the given subcommand(s)
+        help          Print this message or the help of the given subcommand\(s\)
 
       Options:
         -h, --help     Print help
@@ -46,11 +46,11 @@ Feature: Displaying help
 
   Scenario: --help flag
     When executing "trident --help"
-    Then it prints
+    Then it prints the lines matching
       """
       The all-in-one DevEx tool.
 
-      Usage: trident(.exe)? <COMMAND>
+      Usage: trident(\.exe)? <COMMAND>
 
       Commands:
         ci            Runs all fixes, lints, and tests on CI
@@ -60,13 +60,13 @@ Feature: Displaying help
         fix           Apply safe code quality fixes
         fix-unsafe    Apply advanced fixes that might change behavior
         full          Run all lints, fixes, and tests on all files
-        lint          Find code quality issues [alias: postgenerate]
+        lint          Find code quality issues \[alias: postgenerate\]
         pitstop       Fix and lint the current work
         postedit      Lint uncommitted changes
         precommit     Fix staged files before committing, never fails
         test          Run all tests in parallel
         update:tools  Update third-party tools
-        help          Print this message or the help of the given subcommand(s)
+        help          Print this message or the help of the given subcommand\(s\)
 
       Options:
         -h, --help     Print help
@@ -80,7 +80,7 @@ Feature: Displaying help
       """
       The all-in-one DevEx tool.
 
-      Usage: trident(.exe)? <COMMAND>
+      Usage: trident(\.exe)? <COMMAND>
 
       Commands:
         ci            Runs all fixes, lints, and tests on CI
@@ -90,13 +90,13 @@ Feature: Displaying help
         fix           Apply safe code quality fixes
         fix-unsafe    Apply advanced fixes that might change behavior
         full          Run all lints, fixes, and tests on all files
-        lint          Find code quality issues [alias: postgenerate]
+        lint          Find code quality issues \[alias: postgenerate\]
         pitstop       Fix and lint the current work
         postedit      Lint uncommitted changes
         precommit     Fix staged files before committing, never fails
         test          Run all tests in parallel
         update:tools  Update third-party tools
-        help          Print this message or the help of the given subcommand(s)
+        help          Print this message or the help of the given subcommand\(s\)
 
       Options:
         -h, --help     Print help
@@ -110,7 +110,7 @@ Feature: Displaying help
       """
       Find code quality issues
 
-      Usage: trident(.exe)? lint [OPTIONS]
+      Usage: trident(\.exe)? lint \[OPTIONS\]
 
       Options:
             --show <SHOW>
@@ -131,7 +131,7 @@ Feature: Displaying help
                 - all:         all files in the current directory
 
         -h, --help
-                Print help (see a summary with '-h')
+                Print help \(see a summary with '-h'\)
       """
     And the exit code is 0
 
@@ -141,7 +141,7 @@ Feature: Displaying help
       """
       Runs all fixes, lints, and tests on CI
 
-      Usage: trident(.exe)? ci [OPTIONS]
+      Usage: trident(\.exe)? ci \[OPTIONS\]
 
       Options:
             --show <SHOW>
@@ -162,10 +162,10 @@ Feature: Displaying help
                 - all:         all files in the current directory
 
             --test <NAME>
-                names of tests to run, joined with +
+                names of tests to run, joined with \+
 
         -h, --help
-                Print help (see a summary with '-h')
+                Print help \(see a summary with '-h'\)
       """
     And the exit code is 0
 
@@ -175,7 +175,7 @@ Feature: Displaying help
       """
       Run all lints, fixes, and tests on all files
 
-      Usage: trident(.exe)? full [OPTIONS]
+      Usage: trident(\.exe)? full \[OPTIONS\]
 
       Options:
             --show <SHOW>
@@ -188,10 +188,10 @@ Feature: Displaying help
                 - verbose: command lines and output of all commands
 
             --test <NAME>
-                names of tests to run, joined with +
+                names of tests to run, joined with \+
 
         -h, --help
-                Print help (see a summary with '-h')
+                Print help \(see a summary with '-h'\)
       """
     And the exit code is 0
 
@@ -201,7 +201,7 @@ Feature: Displaying help
       """
       Fix and lint the current work
 
-      Usage: trident(.exe)? pitstop [OPTIONS]
+      Usage: trident(\.exe)? pitstop \[OPTIONS\]
 
       Options:
             --show <SHOW>
@@ -222,10 +222,10 @@ Feature: Displaying help
                 - all:         all files in the current directory
 
             --test <NAME>
-                names of tests to run, joined with +
+                names of tests to run, joined with \+
 
         -h, --help
-                Print help (see a summary with '-h')
+                Print help \(see a summary with '-h'\)
       """
     And the exit code is 0
 
@@ -235,7 +235,7 @@ Feature: Displaying help
       """
       Apply safe code quality fixes
 
-      Usage: trident(.exe)? fix [OPTIONS]
+      Usage: trident(\.exe)? fix \[OPTIONS\]
 
       Options:
             --show <SHOW>
@@ -256,7 +256,7 @@ Feature: Displaying help
                 - all:         all files in the current directory
 
         -h, --help
-                Print help (see a summary with '-h')
+                Print help \(see a summary with '-h'\)
       """
     And the exit code is 0
 
@@ -266,7 +266,7 @@ Feature: Displaying help
       """
       Run all tests in parallel
 
-      Usage: trident(.exe)? test [OPTIONS]
+      Usage: trident(\.exe)? test \[OPTIONS\]
 
       Options:
             --show <SHOW>
@@ -279,9 +279,9 @@ Feature: Displaying help
                 - verbose: command lines and output of all commands
 
             --test <NAME>
-                names of tests to run, joined with +
+                names of tests to run, joined with \+
 
         -h, --help
-                Print help (see a summary with '-h')
+                Print help \(see a summary with '-h'\)
       """
     And the exit code is 0
