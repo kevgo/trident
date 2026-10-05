@@ -41,16 +41,16 @@ Feature: test command with a failing test
       """
       running 2 tools
       """
-    And it prints the block
+    And it prints the lines matching
       """
       unit tests
-      sh -c 'echo unit'
+      (sh|bash.exe) -c 'echo unit'
       unit
       """
-    And it prints the block
+    And it prints the lines matching
       """
       E2E tests
-      sh -c tests/fail.sh
+      (sh|bash.exe) -c tests/fail.sh
       failed
       """
     And the exit code is 4

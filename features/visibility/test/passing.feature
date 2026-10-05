@@ -35,16 +35,16 @@ Feature: test command with passing tests
       """
       running 2 tools
       """
-    And it prints the block
+    And it prints the lines matching
       """
       unit tests
-      sh -c 'echo unit'
+      (sh|bash.exe) -c 'echo unit'
       unit
       """
-    And it prints the block
+    And it prints the lines matching
       """
       E2E tests
-      sh -c 'echo e2e'
+      (sh|bash.exe) -c 'echo e2e'
       e2e
       """
     And the exit code is 0

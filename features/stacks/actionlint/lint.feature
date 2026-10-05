@@ -41,11 +41,11 @@ Feature: lint GitHub Actions workflow files
       key: "
       """
     When executing "trident lint --show=output"
-    Then it prints only these lines in any order
+    Then it prints only these regexes in any order
       """
-      lint Git diff markers (git diff HEAD --check)
-      GitHub Actions (actionlint)
-      .github/workflows/main.yml:2:5: could not parse as YAML: found unexpected end of stream [syntax-check]
+      lint Git diff markers \(git diff HEAD --check\)
+      GitHub Actions \(actionlint\)
+      .github[/\\]workflows[/\\]main.yml:2:5: could not parse as YAML: found unexpected end of stream \[syntax-check\]
       """
     And the exit code is 1
     And all files are unchanged
