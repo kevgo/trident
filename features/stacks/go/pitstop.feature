@@ -74,7 +74,7 @@ Feature: pitstop Go
       """
       other.go
       """
-    And the exit code is 1
+    And the exit code is failure
     And file "main.go" now has content
       """
       package main

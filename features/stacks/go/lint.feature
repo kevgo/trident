@@ -47,5 +47,5 @@ Feature: lint Go
       """
       string literal not terminated
       """
-    And the exit code is 1
+    And the exit code is failure
     And file "main.go" is unchanged
