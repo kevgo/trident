@@ -27,7 +27,7 @@ Feature: lint documentation with Text-Runner
     Given a file "one.md" with content
       """
       # One
-      
+
       <a type="hello"></a>
       """
     And a file "text-runner/hello.js" with content
@@ -50,7 +50,7 @@ Feature: lint documentation with Text-Runner
     Given a file "one.md" with content
       """
       # One
-      
+
       <a type="failing"></a>
       """
     And a file "text-runner/failing.js" with content
