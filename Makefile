@@ -1,4 +1,4 @@
-RUN_THAT_APP_VERSION = 0.42.1
+RUN_THAT_APP_VERSION = 0.42.6
 
 ifeq ($(OS),Windows_NT)
   EXE = .exe
