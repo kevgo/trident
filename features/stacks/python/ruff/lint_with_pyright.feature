@@ -1,10 +1,14 @@
+@online
 Feature: lint Python with Pyright
 
   Background:
-    Given a file "run-that-app" with content
+    Given a Git repository
+    And a file "run-that-app" with content
       """
       delete-empty-folders 0.0.2
       ruff 0.15.16
+      rumdl 0.2.14
+      taplo 0.10.0
       uv 0.11.20
       """
     And a file "pyrightconfig.json" with content
@@ -13,7 +17,8 @@ Feature: lint Python with Pyright
         "typeCheckingMode": "strict"
       }
       """
-    And I ran "tools/rta uv tool install pyright"
+    And I ran "tools/rta uv init"
+    And I ran "tools/rta uv add pyright"
 
   Scenario: valid Python with Pyright
     Given a file "main.py" with content
