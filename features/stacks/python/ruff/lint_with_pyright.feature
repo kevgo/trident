@@ -13,8 +13,10 @@ Feature: lint Python with Pyright
         "typeCheckingMode": "strict"
       }
       """
-    And I ran "tools/rta uv tool install pyright"
+    And I ran "tools/rta uv init"
+    And I ran "tools/rta uv add pyright"
 
+@this
   Scenario: valid Python with Pyright
     Given a file "main.py" with content
       """
