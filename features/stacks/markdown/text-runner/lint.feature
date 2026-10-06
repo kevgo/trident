@@ -6,10 +6,9 @@ Feature: lint documentation with Text-Runner
       biome 2.5.2
       delete-empty-folders 0.0.2
       node 26.4.0
-      npm 26.0.0
       rumdl 0.2.14
       taplo 0.10.0
-      text-runner 7.1.0
+      text-runner 7.5.1
       """
     And a file "text-runner.jsonc" with content
       """
@@ -24,6 +23,7 @@ Feature: lint documentation with Text-Runner
       enable = []
       """
 
+  @this
   Scenario: valid Markdown
     Given a file "one.md" with content
       """
