@@ -1,3 +1,4 @@
+@online
 Feature: lint Python with Pyright
 
   Background:
