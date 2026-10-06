@@ -1,6 +1,9 @@
 # Trident
 
-Type checking, linting, and automated testing are critical for AI engineering.
+_fuel additives for your AI workflow_
+
+Type checking, linting, and automated testing are critical
+for all software engineering, including AI engineering.
 AI hallucinates non-existing APIs, dead code, and mismatching formatting styles.
 Strict automated guardrails are the only things keeping your codebase from
 turning into an untamable, hallucinated mess.
