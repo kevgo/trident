@@ -2,14 +2,10 @@
 Feature: install Ghokin
 
   Scenario: not installed
-    Given a file "run-that-app" with content
-      """
-      delete-empty-folders 0.0.2
-      """
     And a file "main.feature" with content
       """
       Feature:   foo
-
+      
         Scenario:   bar
           Given a step
       """
@@ -27,11 +23,12 @@ Feature: install Ghokin
     And file "main.feature" now has content
       """
       Feature: foo
-
+      
         Scenario: bar
           Given a step
       """
     And file "run-that-app" now has an additional line matching
       """
+      delete-empty-folders \d+\.\d+\.\d+
       ghokin \d+\.\d+\.\d+
       """

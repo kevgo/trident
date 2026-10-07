@@ -2,14 +2,10 @@
 Feature: install Gherkin Lint
 
   Scenario: not installed
-    Given a file "run-that-app" with content
-      """
-      delete-empty-folders 0.0.2
-      """
     And a file "features/one.feature" with content
       """
       Feature: one
-
+      
         Scenario: one
           Given a step
       """
@@ -25,6 +21,7 @@ Feature: install Gherkin Lint
     And the exit code is 0
     And file "run-that-app" now has an additional line matching
       """
+      delete-empty-folders \d+\.\d+\.\d+
       gherkin-lint \d+\.\d+\.\d+
       node \d+\.\d+\.\d+
       """
