@@ -2,6 +2,10 @@
 Feature: install all CSS tools
 
   Scenario: not installed
+    Given a file "run-that-app" with content
+      """
+      delete-empty-folders 0.0.2
+      """
     Given a file "main.css" with content
       """
       .foo {
