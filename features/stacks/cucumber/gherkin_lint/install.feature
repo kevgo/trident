@@ -2,11 +2,7 @@
 Feature: install Gherkin Lint
 
   Scenario: not installed
-    Given a file "run-that-app" with content
-      """
-      delete-empty-folders 0.0.2
-      """
-    And a file "features/one.feature" with content
+    Given a file "features/one.feature" with content
       """
       Feature: one
 

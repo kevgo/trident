@@ -29,5 +29,6 @@ Feature: install Ghokin
       """
     And file "run-that-app" now has an additional line matching
       """
+      delete-empty-folders \d+\.\d+\.\d+
       ghokin \d+\.\d+\.\d+
       """

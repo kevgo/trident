@@ -26,5 +26,6 @@ Feature: install all CSS tools
       """
     And file "run-that-app" now has an additional line matching
       """
+      delete-empty-folders \d+\.\d+\.\d+
       biome \d+\.\d+\.\d+
       """
