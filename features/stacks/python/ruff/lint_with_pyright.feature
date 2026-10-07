@@ -2,8 +2,7 @@
 Feature: lint Python with Pyright
 
   Background:
-    Given a Git repository
-    And a file "run-that-app" with content
+    Given a file "run-that-app" with content
       """
       delete-empty-folders 0.0.2
       ruff 0.15.16
@@ -13,6 +12,9 @@ Feature: lint Python with Pyright
       """
       {
         "applications": {
+          "git_diff_check": {
+            "enabled": false
+          },
           "rumdl": {
             "enabled": false
           },
