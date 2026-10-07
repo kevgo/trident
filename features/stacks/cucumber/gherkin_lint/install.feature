@@ -5,7 +5,7 @@ Feature: install Gherkin Lint
     Given a file "features/one.feature" with content
       """
       Feature: one
-      
+
         Scenario: one
           Given a step
       """

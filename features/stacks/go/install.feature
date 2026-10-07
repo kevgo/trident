@@ -29,9 +29,9 @@ Feature: install all Go tools
     And file "main.go" now has content
       """
       package main
-      
+
       import "fmt"
-      
+
       func main() {
       	fmt.Println("Hello, world!")
       }
