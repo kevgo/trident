@@ -51,6 +51,12 @@ pub(crate) fn get_rta_command(args: &GetRTACmdArgs<'_>) -> Result<Option<conc::E
             }
             Err(err) => match &err {
                 rta::error::UserError::RunRequestMissingVersion { app }
+                | rta::error::UserError::MissingRuntime {
+                    runtime: app,
+                    needed_by: _,
+                    script: _,
+                    searched_dirs: _,
+                }
                 | rta::error::UserError::NoVersionsFound { app } => {
                     if added.contains(app) {
                         // We have tried to install this missing app before,
