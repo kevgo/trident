@@ -1,3 +1,4 @@
+@online
 Feature: precommit SQL
 
   Background:
@@ -107,7 +108,7 @@ Feature: precommit SQL
     Then it prints to STDERR
       """
       1 other
-      running 1 tools
+      running 0 tools
       """
     And the exit code is 0
     And file "migration.<FILE EXTENSION>" is unchanged
