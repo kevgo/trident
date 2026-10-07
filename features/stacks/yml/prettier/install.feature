@@ -18,6 +18,7 @@ Feature: install all YML tools
       """
     And file "run-that-app" now has an additional line matching
       """
+      delete-empty-folders \d+\.\d+\.\d+
       node \d+\.\d+\.\d+
       prettier \d+\.\d+\.\d+
       """

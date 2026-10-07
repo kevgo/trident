@@ -22,5 +22,6 @@ Feature: install all TOML tools
       """
     And file "run-that-app" now has an additional line matching
       """
+      delete-empty-folders \d+\.\d+\.\d+
       taplo \d+\.\d+\.\d+
       """

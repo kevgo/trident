@@ -22,5 +22,6 @@ Feature: install all SQL tools
       """
     And file "run-that-app" now has an additional line matching
       """
+      delete-empty-folders \d+\.\d+\.\d+
       uv \d+\.\d+\.\d+
       """

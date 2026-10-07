@@ -38,5 +38,6 @@ Feature: install all Go tools
       """
     And file "run-that-app" now has an additional line matching
       """
+      delete-empty-folders \d+\.\d+\.\d+
       gofumpt \d+\.\d+\.\d+
       """
