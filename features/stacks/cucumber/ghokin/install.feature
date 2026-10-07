@@ -2,10 +2,10 @@
 Feature: install Ghokin
 
   Scenario: not installed
-    And a file "main.feature" with content
+    Given a file "main.feature" with content
       """
       Feature:   foo
-
+      
         Scenario:   bar
           Given a step
       """
@@ -23,7 +23,7 @@ Feature: install Ghokin
     And file "main.feature" now has content
       """
       Feature: foo
-
+      
         Scenario: bar
           Given a step
       """
