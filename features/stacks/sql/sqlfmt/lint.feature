@@ -6,7 +6,10 @@ Feature: lint SQL
       delete-empty-folders 0.0.2
       uv 0.11.20
       """
+    And I ran "tools/rta uv init"
+    And I ran "tools/rta uv add --from=shandy-sqlfmt sqlfmt"
 
+  @this
   Scenario: valid SQL
     Given a file "one.sql" with content
       """
