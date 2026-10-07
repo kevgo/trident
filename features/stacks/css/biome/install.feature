@@ -2,10 +2,6 @@
 Feature: install all CSS tools
 
   Scenario: not installed
-    Given a file "run-that-app" with content
-      """
-      delete-empty-folders 0.0.2
-      """
     Given a file "main.css" with content
       """
       .foo {
@@ -30,5 +26,6 @@ Feature: install all CSS tools
       """
     And file "run-that-app" now has an additional line matching
       """
+      delete-empty-folders \d+\.\d+\.\d+
       biome \d+\.\d+\.\d+
       """
