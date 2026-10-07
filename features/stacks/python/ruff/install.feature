@@ -20,6 +20,7 @@ Feature: install all Python tools
     When executing "trident lint --show=output"
     Then it prints the lines to STDERR
       """
+      Talking to GitHub API (https://api.github.com/repos/astral-sh/uv/releases/latest) ... ok
       Talking to GitHub API (https://api.github.com/repos/astral-sh/ruff/releases/latest) ... ok
       """
     And it prints the block
