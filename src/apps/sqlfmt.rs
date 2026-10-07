@@ -36,8 +36,7 @@ impl Fix for Sqlfmt {
         let mut args = Vec::with_capacity(files.len() + 5);
         args.push(S("tool"));
         args.push(S("run"));
-        args.push(S("--from"));
-        args.push(S("shandy-sqlfmt"));
+        args.push(S("--from=shandy-sqlfmt"));
         args.push(S("sqlfmt"));
         args.extend(files.into_strings());
         let executable = get_rta_command(&GetRTACmdArgs {
