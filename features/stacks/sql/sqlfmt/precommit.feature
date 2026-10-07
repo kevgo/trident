@@ -1,3 +1,4 @@
+@online
 Feature: precommit SQL
 
   Background:
@@ -7,6 +8,33 @@ Feature: precommit SQL
       delete-empty-folders 0.0.2
       uv 0.11.20
       """
+    And a file "trident.json" with content
+      """
+      {
+        "applications": {
+          "delete_empty_folders": {
+            "enabled": false
+          },
+          "git_diff_check": {
+            "enabled": false
+          },
+          "prettier": {
+            "enabled": false
+          },
+          "rumdl": {
+            "enabled": false
+          },
+          "ruff": {
+            "enabled": false
+          },
+          "taplo": {
+            "enabled": false
+          }
+        }
+      }
+      """
+    And I ran "tools/rta uv init"
+    And I ran "tools/rta uv add shandy-sqlfmt[jinjafmt]"
 
   Scenario: valid SQL
     Given a file "one.sql" with content
@@ -80,7 +108,7 @@ Feature: precommit SQL
     Then it prints to STDERR
       """
       1 other
-      running 1 tools
+      running 0 tools
       """
     And the exit code is 0
     And file "migration.<FILE EXTENSION>" is unchanged

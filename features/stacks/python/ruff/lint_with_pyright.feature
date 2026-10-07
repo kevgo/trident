@@ -2,14 +2,27 @@
 Feature: lint Python with Pyright
 
   Background:
-    Given a Git repository
-    And a file "run-that-app" with content
+    Given a file "run-that-app" with content
       """
       delete-empty-folders 0.0.2
       ruff 0.15.16
-      rumdl 0.2.14
-      taplo 0.10.0
       uv 0.11.20
+      """
+    And a file "trident.json" with content
+      """
+      {
+        "applications": {
+          "git_diff_check": {
+            "enabled": false
+          },
+          "rumdl": {
+            "enabled": false
+          },
+          "taplo": {
+            "enabled": false
+          }
+        }
+      }
       """
     And a file "pyrightconfig.json" with content
       """

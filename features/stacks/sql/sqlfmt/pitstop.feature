@@ -1,11 +1,38 @@
+@online
 Feature: pitstop SQL
 
   Background:
     Given a file "run-that-app" with content
       """
-      delete-empty-folders 0.0.2
       uv 0.11.20
       """
+    And a file "trident.json" with content
+      """
+      {
+        "applications": {
+          "delete_empty_folders": {
+            "enabled": false
+          },
+          "git_diff_check": {
+            "enabled": false
+          },
+          "prettier": {
+            "enabled": false
+          },
+          "rumdl": {
+            "enabled": false
+          },
+          "ruff": {
+            "enabled": false
+          },
+          "taplo": {
+            "enabled": false
+          }
+        }
+      }
+      """
+    And I ran "tools/rta uv init"
+    And I ran "tools/rta uv add shandy-sqlfmt[jinjafmt]"
 
   Scenario: unformatted SQL
     Given a file "one.sql" with content
