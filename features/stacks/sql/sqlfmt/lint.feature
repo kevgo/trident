@@ -6,10 +6,28 @@ Feature: lint SQL
       delete-empty-folders 0.0.2
       uv 0.11.20
       """
+    And a file "trident.json" with content
+      """
+      {
+        "applications": {
+          "git_diff_check": {
+            "enabled": false
+          },
+          "rumdl": {
+            "enabled": false
+          },
+          "ruff": {
+            "enabled": false
+          },
+          "taplo": {
+            "enabled": false
+          }
+        }
+      }
+      """
     And I ran "tools/rta uv init"
-    And I ran "tools/rta uv add --from=shandy-sqlfmt sqlfmt"
+    And I ran "tools/rta uv add sqlfmt"
 
-  @this
   Scenario: valid SQL
     Given a file "one.sql" with content
       """
