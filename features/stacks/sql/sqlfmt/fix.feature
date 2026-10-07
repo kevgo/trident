@@ -6,6 +6,30 @@ Feature: fix SQL
       delete-empty-folders 0.0.2
       uv 0.11.20
       """
+    And a file "trident.json" with content
+      """
+      {
+        "applications": {
+          "git_diff_check": {
+            "enabled": false
+          },
+          "prettier": {
+            "enabled": false
+          },
+          "rumdl": {
+            "enabled": false
+          },
+          "ruff": {
+            "enabled": false
+          },
+          "taplo": {
+            "enabled": false
+          }
+        }
+      }
+      """
+    And I ran "tools/rta uv init"
+    And I ran "tools/rta uv add shandy-sqlfmt[jinjafmt]"
 
   Scenario: valid SQL
     Given a file "one.sql" with content

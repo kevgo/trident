@@ -26,7 +26,7 @@ Feature: lint SQL
       }
       """
     And I ran "tools/rta uv init"
-    And I ran "tools/rta uv add sqlfmt"
+    And I ran "tools/rta uv add shandy-sqlfmt[jinjafmt]"
 
   Scenario: valid SQL
     Given a file "one.sql" with content
