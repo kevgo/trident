@@ -46,7 +46,7 @@ pub(crate) fn get_rta_command(args: &GetRTACmdArgs<'_>) -> Result<Option<conc::E
             Ok(cmd) => {
                 return Ok(cmd.map(|command| conc::Executable {
                     name: args.name.clone(),
-                    command: (&command).into(),
+                    command,
                 }));
             }
             Err(err) => match &err {
