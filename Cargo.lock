@@ -1507,9 +1507,9 @@ dependencies = [
 
 [[package]]
 name = "run-that-app"
-version = "0.42.6"
+version = "0.43.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0ce87f20021d5e6a81c48311f136a0db87796f40690ca03c46b4b853c8efbac8"
+checksum = "0b0085ec5729b54ffaac1cda8b28195abf780de385e2bd7a3ad0d2242e886850"
 dependencies = [
  "big_s",
  "colored 2.2.0",
@@ -1523,6 +1523,8 @@ dependencies = [
  "regex",
  "semver",
  "serde_json",
+ "shlex",
+ "strip-ansi-escapes",
  "tar",
  "tempfile",
  "urlencoding",
