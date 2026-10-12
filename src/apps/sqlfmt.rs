@@ -33,14 +33,10 @@ impl Fix for Sqlfmt {
         if files.is_empty() {
             return Ok(vec![]);
         }
-        let mut args = Vec::with_capacity(files.len() + 5);
-        args.push(S("run"));
-        args.push(S("sqlfmt"));
-        args.extend(files.into_strings());
         let executable = get_rta_command(&GetRTACmdArgs {
             name: format!("fix {} ({self})", stack.stack),
-            app: &rta::applications::Uv {},
-            args,
+            app: &rta::applications::Sqlfmt {},
+            args: files.into_strings(),
             version: None,
         })?;
         Ok(executable.into_iter().collect())
