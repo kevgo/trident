@@ -1,7 +1,6 @@
 use crate::apps::{GetRTACmdArgs, get_rta_command};
 use crate::config::{Application, ApplicationSection, Config, Operation};
 use crate::domain::{DetectedStack, EnabledWhen, Fix, Result, Tool};
-use big_s::S;
 use std::fmt::Display;
 
 pub struct Sqlfmt;
@@ -33,17 +32,10 @@ impl Fix for Sqlfmt {
         if files.is_empty() {
             return Ok(vec![]);
         }
-        let mut args = Vec::with_capacity(files.len() + 5);
-        args.push(S("tool"));
-        args.push(S("run"));
-        args.push(S("--from"));
-        args.push(S("shandy-sqlfmt"));
-        args.push(S("sqlfmt"));
-        args.extend(files.into_strings());
         let executable = get_rta_command(&GetRTACmdArgs {
             name: format!("fix {} ({self})", stack.stack),
-            app: &rta::applications::Uv {},
-            args,
+            app: &rta::applications::Sqlfmt {},
+            args: files.into_strings(),
             version: None,
         })?;
         Ok(executable.into_iter().collect())

@@ -4,7 +4,27 @@ Feature: lint SQL
     Given a file "run-that-app" with content
       """
       delete-empty-folders 0.0.2
-      uv 0.11.20
+      sqlfmt 0.32.0
+      uv 0.13.0
+      """
+    And a file "trident.json" with content
+      """
+      {
+        "applications": {
+          "git_diff_check": {
+            "enabled": false
+          },
+          "rumdl": {
+            "enabled": false
+          },
+          "ruff": {
+            "enabled": false
+          },
+          "taplo": {
+            "enabled": false
+          }
+        }
+      }
       """
 
   Scenario: valid SQL
@@ -55,7 +75,7 @@ Feature: lint SQL
     When executing "trident lint --show=output"
     Then it prints to STDERR
       """
-      2 other
+      1 JSON, 2 other
       running 0 tools
       """
     And the exit code is 0

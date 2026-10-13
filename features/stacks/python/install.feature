@@ -20,7 +20,7 @@ Feature: install all Python tools
     When executing "trident lint --show=output"
     Then it prints the lines to STDERR
       """
-      Talking to GitHub API (https://api.github.com/repos/astral-sh/uv/releases/latest) ... ok
+      Talking to GitHub API (https://api.github.com/repos/microsoft/pyright/releases/latest) ... ok
       Talking to GitHub API (https://api.github.com/repos/astral-sh/ruff/releases/latest) ... ok
       """
     And it prints the block
@@ -37,6 +37,6 @@ Feature: install all Python tools
     And file "main.py" is unchanged
     And file "run-that-app" now has an additional line matching
       """
+      pyright \d+\.\d+\.\d+
       ruff \d+\.\d+\.\d+
-      uv \d+\.\d+\.\d+
       """
