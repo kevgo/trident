@@ -112,6 +112,9 @@ Feature: Displaying help
       Usage: trident(\.exe)? lint \[OPTIONS\]
 
       Options:
+            --sequential
+                run all commands one after another instead of concurrently
+
             --show <SHOW>
                 how much output to display
 
@@ -143,6 +146,9 @@ Feature: Displaying help
       Usage: trident(\.exe)? ci \[OPTIONS\]
 
       Options:
+            --sequential
+                run all commands one after another instead of concurrently
+
             --show <SHOW>
                 how much output to display
 
@@ -177,6 +183,9 @@ Feature: Displaying help
       Usage: trident(\.exe)? full \[OPTIONS\]
 
       Options:
+            --sequential
+                run all commands one after another instead of concurrently
+
             --show <SHOW>
                 how much output to display
 
@@ -203,6 +212,9 @@ Feature: Displaying help
       Usage: trident(\.exe)? pitstop \[OPTIONS\]
 
       Options:
+            --sequential
+                run all commands one after another instead of concurrently
+
             --show <SHOW>
                 how much output to display
 
@@ -237,6 +249,9 @@ Feature: Displaying help
       Usage: trident(\.exe)? fix \[OPTIONS\]
 
       Options:
+            --sequential
+                run all commands one after another instead of concurrently
+
             --show <SHOW>
                 how much output to display
 
@@ -268,6 +283,9 @@ Feature: Displaying help
       Usage: trident(\.exe)? test \[OPTIONS\]
 
       Options:
+            --sequential
+                run all commands one after another instead of concurrently
+
             --show <SHOW>
                 how much output to display
 

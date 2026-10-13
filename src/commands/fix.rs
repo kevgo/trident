@@ -16,6 +16,7 @@ pub fn fix(args: &RunArgsWithScope) -> Result<ExitCode> {
     let ignores = config.ignores()?;
     let show = args.run.show.unwrap_or(conc::Show::Names);
     let error_on_output = false;
+    let sequential = args.run.sequential;
     let stderr_to_stdout = true;
 
     // step 2: discover the stacks
@@ -41,6 +42,7 @@ pub fn fix(args: &RunArgsWithScope) -> Result<ExitCode> {
         let exit_code = conc::run(conc::RunArgs {
             sequences: vec![global],
             error_on_output,
+            sequential,
             stderr_to_stdout,
             show,
         });
@@ -53,6 +55,7 @@ pub fn fix(args: &RunArgsWithScope) -> Result<ExitCode> {
     let exit_code = conc::run(conc::RunArgs {
         sequences: stack_specific.into_values().collect(),
         error_on_output,
+        sequential,
         show,
         stderr_to_stdout,
     });

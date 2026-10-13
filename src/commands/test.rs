@@ -21,6 +21,7 @@ pub fn test(args: &RunArgsWithTest) -> Result<ExitCode> {
     let exit_code = conc::run(conc::RunArgs {
         sequences: test_sequences,
         error_on_output: false,
+        sequential: args.run.sequential,
         show,
         stderr_to_stdout: true,
     });
