@@ -5,6 +5,7 @@ Feature: lint SQL
       """
       delete-empty-folders 0.0.2
       sqlfmt 0.32.0
+      uv 0.13.0
       """
     And a file "trident.json" with content
       """
