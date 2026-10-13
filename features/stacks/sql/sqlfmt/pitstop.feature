@@ -4,7 +4,7 @@ Feature: pitstop SQL
   Background:
     Given a file "run-that-app" with content
       """
-      uv 0.11.20
+      sqlfmt 0.32.0
       """
     And a file "trident.json" with content
       """

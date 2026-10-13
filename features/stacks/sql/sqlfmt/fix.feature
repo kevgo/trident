@@ -4,7 +4,7 @@ Feature: fix SQL
     Given a file "run-that-app" with content
       """
       delete-empty-folders 0.0.2
-      uv 0.11.20
+      sqlfmt 0.32.0
       """
     And a file "trident.json" with content
       """
@@ -28,8 +28,6 @@ Feature: fix SQL
         }
       }
       """
-    And I ran "tools/rta uv init"
-    And I ran "tools/rta uv add shandy-sqlfmt[jinjafmt]"
 
   Scenario: valid SQL
     Given a file "one.sql" with content
@@ -110,7 +108,7 @@ Feature: fix SQL
     When executing "trident fix --show=output"
     Then it prints to STDERR
       """
-      1 JSON, 1 Markdown, 1 Python, 1 TOML, 5 other
+      1 JSON, 2 other
       running 1 tools
       """
     And the exit code is 0

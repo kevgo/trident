@@ -5,8 +5,7 @@ Feature: precommit SQL
     Given a Git repository
     And a file "run-that-app" with content
       """
-      delete-empty-folders 0.0.2
-      uv 0.11.20
+      sqlfmt 0.32.0
       """
     And a file "trident.json" with content
       """
