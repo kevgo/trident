@@ -208,6 +208,19 @@ and `pitstop` choose a default from the Git workspace:
 uncommitted changes if present, otherwise files changed on the current branch,
 otherwise all files.
 
+### `--sequential`
+
+By default, Trident runs as many tools as possible concurrently.
+The `--sequential` flag makes it run all tools one after another instead.
+This is slower, but helps when tools interfere with each other
+or the machine cannot handle the load of running them all at once.
+
+```sh
+trident test --sequential
+```
+
+As in a concurrent run, a failing tool does not stop unrelated tools.
+
 ## Supported stacks
 
 | Stack      | Linter                                                                          |

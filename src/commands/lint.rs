@@ -15,6 +15,7 @@ pub fn lint(args: &RunArgsWithScope) -> Result<ExitCode> {
     let ignores = config.ignores()?;
     let show = args.run.show.unwrap_or(conc::Show::Names);
     let error_on_output = false;
+    let sequential = args.run.sequential;
     let stderr_to_stdout = true;
     let repo = git::Repo::load();
 
@@ -38,6 +39,7 @@ pub fn lint(args: &RunArgsWithScope) -> Result<ExitCode> {
     let exit_code = conc::run(conc::RunArgs {
         sequences: lints.into_sequences(),
         error_on_output,
+        sequential,
         show,
         stderr_to_stdout,
     });
