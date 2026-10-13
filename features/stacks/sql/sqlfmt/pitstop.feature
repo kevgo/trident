@@ -31,8 +31,6 @@ Feature: pitstop SQL
         }
       }
       """
-    And I ran "tools/rta uv init"
-    And I ran "tools/rta uv add shandy-sqlfmt[jinjafmt]"
 
   Scenario: unformatted SQL
     Given a file "one.sql" with content
