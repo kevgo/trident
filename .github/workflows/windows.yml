@@ -16,4 +16,6 @@ jobs:
       - uses: taiki-e/install-action@nextest
       - run: make setup-ci
       # Windows encounters concurrency issues with the Rust toolchain
-      - run: make ci-sequential
+      - run: make lint
+      - run: make unit
+      - run: make cuke-slow
