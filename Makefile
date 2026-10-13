@@ -21,9 +21,6 @@ build-release:	# builds the project in release mode
 ci: build   # run the full CI pipeline
 	$(TRIDENT) ci
 
-ci-sequential: build   # run the full CI pipeline sequentially
-	$(TRIDENT) ci --sequential
-
 contest: ${RTA}
 	$(CONTEST)
 
