@@ -5,8 +5,8 @@ Feature: lint Python with Pyright
     Given a file "run-that-app" with content
       """
       delete-empty-folders 0.0.2
+      pyright 1.1.414
       ruff 0.15.16
-      uv 0.11.20
       """
     And a file "trident.json" with content
       """
@@ -30,8 +30,6 @@ Feature: lint Python with Pyright
         "typeCheckingMode": "strict"
       }
       """
-    And I ran "tools/rta uv init"
-    And I ran "tools/rta uv add pyright"
 
   Scenario: valid Python with Pyright
     Given a file "main.py" with content
