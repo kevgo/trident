@@ -208,8 +208,7 @@ otherwise all files.
 ### `--sequential`
 
 By default, Trident runs as many tools as possible concurrently.
-`ci`, `fix`, `fix-unsafe`, `full`, `lint`, `pitstop`, `postedit`, `precommit`,
-and `test` accept `--sequential` to run all tools one after another instead.
+The `--sequential` flag makes it run all tools one after another instead.
 This is slower, but helps when tools interfere with each other
 or the machine cannot handle the load of running them all at once.
 
