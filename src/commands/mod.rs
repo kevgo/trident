@@ -23,24 +23,8 @@ pub use lint::lint;
 pub use pitstop::pitstop;
 pub use post_edit::post_edit;
 pub use precommit::precommit;
-use std::process::ExitCode;
 pub use test::test;
 pub use update_tools::update_tools;
-
-/// runs the given sequences concurrently, or one after another if `sequential` is set
-pub(crate) fn run_sequences(
-    sequences: Vec<conc::Sequence>,
-    show: conc::Show,
-    sequential: bool,
-) -> ExitCode {
-    conc::run(conc::RunArgs {
-        sequences,
-        error_on_output: false,
-        sequential,
-        stderr_to_stdout: true,
-        show,
-    })
-}
 
 /// uses the explicit `--scope` if given, otherwise [`infer_scope`]
 pub(crate) fn resolve_scope(explicit: &ScopeArg, repo: Option<&Repo>) -> Scope {

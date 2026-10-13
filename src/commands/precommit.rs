@@ -3,7 +3,6 @@ use crate::apps::{delete_empty_folders, keep_sorted};
 use crate::cli::input::{RunArgs, ShowExt};
 use crate::cli::output::print_metadata;
 use crate::commands::fix::add_custom_fixes;
-use crate::commands::run_sequences;
 use crate::config::{Application, Config, Operation};
 use crate::domain::{DetectedStacks, Result, Runnables, StackType, UserError, fingerprint};
 use crate::git;
@@ -24,7 +23,9 @@ fn run(args: &RunArgs) -> Result<()> {
     let ignores = config.ignores()?;
     let repo = git::Repo::load().ok_or(UserError::NoGitRepository)?;
     let show = args.show.unwrap_or(conc::Show::Names);
+    let error_on_output = false;
     let sequential = args.sequential;
+    let stderr_to_stdout = true;
 
     // step 2: discover the staged files and their stacks
     let staged = repo.staged()?;
@@ -52,11 +53,23 @@ fn run(args: &RunArgs) -> Result<()> {
 
     // step 5: run the global fixes
     if let Some(global) = global {
-        let _exit_code = run_sequences(vec![global], show, sequential);
+        let _exit_code = conc::run(conc::RunArgs {
+            sequences: vec![global],
+            error_on_output,
+            sequential,
+            stderr_to_stdout,
+            show,
+        });
     }
 
     // step 6: run the stack-specific fixes
-    let _exit_code = run_sequences(stack_specific.into_values().collect(), show, sequential);
+    let _exit_code = conc::run(conc::RunArgs {
+        sequences: stack_specific.into_values().collect(),
+        error_on_output,
+        sequential,
+        show,
+        stderr_to_stdout,
+    });
 
     // step 7: stage the files whose fixes actually changed their content
     let after = fingerprint::scan_files(&staged_files);

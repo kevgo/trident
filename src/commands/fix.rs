@@ -1,4 +1,4 @@
-use super::{discover_stacks, resolve_scope, run_sequences};
+use super::{discover_stacks, resolve_scope};
 use crate::apps::delete_empty_folders;
 use crate::apps::delete_empty_folders::DeleteEmptyFolders;
 use crate::apps::keep_sorted;
@@ -15,7 +15,9 @@ pub fn fix(args: &RunArgsWithScope) -> Result<ExitCode> {
     let config = Config::load()?;
     let ignores = config.ignores()?;
     let show = args.run.show.unwrap_or(conc::Show::Names);
+    let error_on_output = false;
     let sequential = args.run.sequential;
+    let stderr_to_stdout = true;
 
     // step 2: discover the stacks
     let repo = Repo::load();
@@ -37,14 +39,26 @@ pub fn fix(args: &RunArgsWithScope) -> Result<ExitCode> {
 
     // step 4: run the global fixes
     if let Some(global) = global {
-        let exit_code = run_sequences(vec![global], show, sequential);
+        let exit_code = conc::run(conc::RunArgs {
+            sequences: vec![global],
+            error_on_output,
+            sequential,
+            stderr_to_stdout,
+            show,
+        });
         if exit_code != ExitCode::SUCCESS {
             return Ok(exit_code);
         }
     }
 
     // step 5: run the stack-specific fixes
-    let exit_code = run_sequences(stack_specific.into_values().collect(), show, sequential);
+    let exit_code = conc::run(conc::RunArgs {
+        sequences: stack_specific.into_values().collect(),
+        error_on_output,
+        sequential,
+        show,
+        stderr_to_stdout,
+    });
     Ok(exit_code)
 }
 

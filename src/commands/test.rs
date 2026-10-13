@@ -1,4 +1,3 @@
-use super::run_sequences;
 use crate::cli::input::{RunArgsWithTest, ShowExt};
 use crate::config::{Config, DefaultTests, to_sequences};
 use crate::domain::Result;
@@ -19,6 +18,12 @@ pub fn test(args: &RunArgsWithTest) -> Result<ExitCode> {
         return Ok(ExitCode::SUCCESS);
     }
     let test_sequences = to_sequences(tests);
-    let exit_code = run_sequences(test_sequences, show, args.run.sequential);
+    let exit_code = conc::run(conc::RunArgs {
+        sequences: test_sequences,
+        error_on_output: false,
+        sequential: args.run.sequential,
+        show,
+        stderr_to_stdout: true,
+    });
     Ok(exit_code)
 }

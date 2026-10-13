@@ -1,4 +1,4 @@
-use super::{discover_stacks, resolve_scope, run_sequences};
+use super::{discover_stacks, resolve_scope};
 use crate::cli::input::{RunArgsWithScope, ShowExt};
 use crate::cli::output::print_metadata;
 use crate::config::{Config, Operation};
@@ -11,6 +11,9 @@ pub fn fix_unsafe(args: &RunArgsWithScope) -> Result<ExitCode> {
     // step 1: load the config
     let config = Config::load()?;
     let ignores = config.ignores()?;
+    let error_on_output = false;
+    let sequential = args.run.sequential;
+    let stderr_to_stdout = true;
     let show = args.run.show.unwrap_or(conc::Show::Names);
 
     // step 2: discover the stacks
@@ -28,7 +31,13 @@ pub fn fix_unsafe(args: &RunArgsWithScope) -> Result<ExitCode> {
     }
 
     // step 4: run the fixes
-    let exit_code = run_sequences(unsafe_fixes, show, args.run.sequential);
+    let exit_code = conc::run(conc::RunArgs {
+        sequences: unsafe_fixes,
+        error_on_output,
+        sequential,
+        show,
+        stderr_to_stdout,
+    });
     Ok(exit_code)
 }
 

@@ -1,4 +1,4 @@
-use super::{discover_stacks, resolve_scope, run_sequences};
+use super::{discover_stacks, resolve_scope};
 use crate::apps::git_diff_check;
 use crate::apps::git_diff_check::GitDiffCheck;
 use crate::cli::input::{RunArgsWithScope, ShowExt};
@@ -14,6 +14,9 @@ pub fn lint(args: &RunArgsWithScope) -> Result<ExitCode> {
     let config = Config::load()?;
     let ignores = config.ignores()?;
     let show = args.run.show.unwrap_or(conc::Show::Names);
+    let error_on_output = false;
+    let sequential = args.run.sequential;
+    let stderr_to_stdout = true;
     let repo = git::Repo::load();
 
     // step 2: discover the stacks
@@ -33,7 +36,13 @@ pub fn lint(args: &RunArgsWithScope) -> Result<ExitCode> {
     if lints.is_empty() {
         return Ok(ExitCode::SUCCESS);
     }
-    let exit_code = run_sequences(lints.into_sequences(), show, args.run.sequential);
+    let exit_code = conc::run(conc::RunArgs {
+        sequences: lints.into_sequences(),
+        error_on_output,
+        sequential,
+        show,
+        stderr_to_stdout,
+    });
     Ok(exit_code)
 }
 

@@ -1,7 +1,7 @@
 use crate::cli::input::{RunArgs, RunArgsWithTestAndScope, ShowExt};
 use crate::cli::output::print_metadata;
 use crate::commands::lint::Lints;
-use crate::commands::{discover_stacks, fix, lint, resolve_scope, run_sequences};
+use crate::commands::{discover_stacks, fix, lint, resolve_scope};
 use crate::config::{Config, DefaultTests, to_sequences};
 use crate::domain::{DetectedStacks, Result, Runnables, StackType};
 use crate::git::Repo;
@@ -33,7 +33,9 @@ pub(crate) fn run_tasks(
     tests: Vec<conc::Sequence>,
 ) -> Result<ExitCode> {
     let show = args.show.unwrap_or(conc::Show::Names);
+    let error_on_output = false;
     let sequential = args.sequential;
+    let stderr_to_stdout = true;
 
     if show.display_metadata() {
         print_metadata(stacks);
@@ -56,7 +58,13 @@ pub(crate) fn run_tasks(
 
     // step 2: run the global fixes by themselves first
     if let Some(global_fixes) = global_fixes {
-        let exit_code = run_sequences(vec![global_fixes], show, sequential);
+        let exit_code = conc::run(conc::RunArgs {
+            sequences: vec![global_fixes],
+            error_on_output,
+            sequential,
+            stderr_to_stdout,
+            show,
+        });
         if exit_code != ExitCode::SUCCESS {
             return Ok(exit_code);
         }
@@ -80,7 +88,13 @@ pub(crate) fn run_tasks(
         .into_values()
         .filter_map(conc::Sequence::from_vec)
         .collect();
-    let exit_code = run_sequences(stack_sequences, show, sequential);
+    let exit_code = conc::run(conc::RunArgs {
+        sequences: stack_sequences,
+        error_on_output,
+        sequential,
+        show,
+        stderr_to_stdout,
+    });
     if exit_code != ExitCode::SUCCESS {
         return Ok(exit_code);
     }
@@ -91,6 +105,12 @@ pub(crate) fn run_tasks(
     // some of them, like the global git-diff-check linter,
     // error on whitespace problems and therefore
     // depend on the formatting having been run.
-    let exit_code = run_sequences(global_lints, show, sequential);
+    let exit_code = conc::run(conc::RunArgs {
+        sequences: global_lints,
+        error_on_output,
+        sequential,
+        show,
+        stderr_to_stdout,
+    });
     Ok(exit_code)
 }

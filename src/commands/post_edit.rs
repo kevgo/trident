@@ -1,4 +1,4 @@
-use super::{discover_stacks, lint, run_sequences};
+use super::{discover_stacks, lint};
 use crate::cli::input::{RunArgs, Scope, ShowExt};
 use crate::cli::output::print_metadata;
 use crate::config::Config;
@@ -12,6 +12,9 @@ pub fn post_edit(args: &RunArgs) -> Result<ExitCode> {
     let ignores = config.ignores()?;
     let git_repo = git::Repo::load();
     let show = args.show.unwrap_or(conc::Show::Failed);
+    let error_on_output = false;
+    let sequential = args.sequential;
+    let stderr_to_stdout = true;
 
     // step 2: discover the files and their stacks
     let stacks = discover_stacks(Scope::Uncommitted, git_repo.as_ref(), &ignores)?;
@@ -29,6 +32,12 @@ pub fn post_edit(args: &RunArgs) -> Result<ExitCode> {
     if lints.is_empty() {
         return Ok(ExitCode::SUCCESS);
     }
-    let exit_code = run_sequences(lints.into_sequences(), show, args.sequential);
+    let exit_code = conc::run(conc::RunArgs {
+        sequences: lints.into_sequences(),
+        error_on_output,
+        sequential,
+        show,
+        stderr_to_stdout,
+    });
     Ok(exit_code)
 }
