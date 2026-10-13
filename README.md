@@ -218,7 +218,6 @@ trident test --sequential
 ```
 
 As in a concurrent run, a failing tool does not stop unrelated tools.
-Trident exits with the exit code of the first tool that failed.
 
 ## Supported stacks
 

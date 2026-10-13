@@ -21,4 +21,4 @@ Feature: sequential runs continue after a failure
       three
       three failed
       """
-    And the exit code is 3
+    And the exit code is 4
