@@ -52,7 +52,6 @@ Feature: fix SQL
     And file "one.sql" is unchanged
     And file "two.sql" is unchanged
 
-  @this
   Scenario: unformatted SQL
     Given a file "one.sql" with content
       """
