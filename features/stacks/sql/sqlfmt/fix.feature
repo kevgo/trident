@@ -10,6 +10,9 @@ Feature: fix SQL
       """
       {
         "applications": {
+          "delete-empty-folders": {
+            "enabled": false
+          },
           "git_diff_check": {
             "enabled": false
           },
