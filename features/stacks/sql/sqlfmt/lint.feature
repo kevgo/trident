@@ -74,7 +74,7 @@ Feature: lint SQL
     When executing "trident lint --show=output"
     Then it prints to STDERR
       """
-      1 JSON, 1 Markdown, 1 Python, 1 TOML, 5 other
+      1 JSON, 2 other
       running 0 tools
       """
     And the exit code is 0

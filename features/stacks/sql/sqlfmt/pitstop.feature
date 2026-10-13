@@ -67,7 +67,6 @@ Feature: pitstop SQL
     When executing "trident pitstop --show=output"
     Then it prints the lines
       """
-      delete empty folders
       fix SQL (sqlfmt)
       1 file left unchanged.
       """
