@@ -15,6 +15,7 @@ jobs:
       - uses: Swatinem/rust-cache@v2
       - uses: taiki-e/install-action@nextest
       - run: make setup-ci
+      # running "trident ci" on Windows causes concurrency issues with the Rust toolchain, so we run the tests manually
       - run: make lint
       - run: make unit
       - run: make cuke-slow
