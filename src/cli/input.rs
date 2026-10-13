@@ -124,6 +124,10 @@ pub struct RunArgsWithTestAndScope {
 
 #[derive(clap::Args)]
 pub struct RunArgs {
+    /// run all commands one after another instead of concurrently
+    #[arg(long)]
+    pub sequential: bool,
+
     /// how much output to display
     #[arg(long, ignore_case = true, value_parser = show_parser())]
     pub show: Option<conc::Show>,
@@ -135,6 +139,7 @@ impl RunArgs {
     pub fn with_default_show(self, default_show: conc::Show) -> Self {
         Self {
             show: Some(self.show.unwrap_or(default_show)),
+            ..self
         }
     }
 }
@@ -196,7 +201,9 @@ pub fn parse() -> Result<Option<Command>> {
 
 #[cfg(test)]
 mod tests {
-    use super::{Cli, Command, RunArgsWithScope, RunArgsWithTest, RunArgsWithTestAndScope, Scope};
+    use super::{
+        Cli, Command, RunArgs, RunArgsWithScope, RunArgsWithTest, RunArgsWithTestAndScope, Scope,
+    };
     use clap::Parser;
     use clap::error::ErrorKind;
     use maplit::hashmap;
@@ -233,6 +240,20 @@ mod tests {
         match parse_command("pitstop", args) {
             Command::Pitstop(pitstop) => pitstop,
             _ => panic!("expected the pitstop command"),
+        }
+    }
+
+    fn parse_postedit(args: &[&str]) -> RunArgs {
+        match parse_command("postedit", args) {
+            Command::Postedit(postedit) => postedit,
+            _ => panic!("expected the postedit command"),
+        }
+    }
+
+    fn parse_precommit(args: &[&str]) -> RunArgs {
+        match parse_command("precommit", args) {
+            Command::Precommit(precommit) => precommit,
+            _ => panic!("expected the precommit command"),
         }
     }
 
@@ -334,6 +355,50 @@ mod tests {
     #[test]
     fn test_without_test_flag_runs_all_tests() {
         pretty::assert_eq!(parse_test(&[]).test, Vec::<String>::new());
+    }
+
+    #[test]
+    fn sequential_flag_given() {
+        let args = &["--sequential"];
+        assert!(parse_ci(args).run.sequential);
+        assert!(parse_fix(args).run.sequential);
+        assert!(parse_fix_unsafe(args).run.sequential);
+        assert!(parse_full(args).run.sequential);
+        assert!(parse_lint(args).run.sequential);
+        assert!(parse_pitstop(args).run.sequential);
+        assert!(parse_postedit(args).sequential);
+        assert!(parse_precommit(args).sequential);
+        assert!(parse_test(args).run.sequential);
+    }
+
+    #[test]
+    fn sequential_flag_omitted() {
+        assert!(!parse_ci(&[]).run.sequential);
+        assert!(!parse_fix(&[]).run.sequential);
+        assert!(!parse_fix_unsafe(&[]).run.sequential);
+        assert!(!parse_full(&[]).run.sequential);
+        assert!(!parse_lint(&[]).run.sequential);
+        assert!(!parse_pitstop(&[]).run.sequential);
+        assert!(!parse_postedit(&[]).sequential);
+        assert!(!parse_precommit(&[]).sequential);
+        assert!(!parse_test(&[]).run.sequential);
+    }
+
+    #[test]
+    fn sequential_flag_survives_default_show() {
+        let args = parse_ci(&["--sequential"])
+            .run
+            .with_default_show(conc::Show::Output);
+        assert!(args.sequential);
+        pretty::assert_eq!(args.show, Some(conc::Show::Output));
+    }
+
+    #[test]
+    fn sequential_flag_rejected_by_init_commands() {
+        for command in ["init:claude", "init:config", "init:githook"] {
+            let err = parse_err(command, &["--sequential"]);
+            pretty::assert_eq!(err.kind(), ErrorKind::UnknownArgument);
+        }
     }
 
     #[test]

@@ -1,7 +1,7 @@
 use crate::cli::input::{RunArgs, RunArgsWithTestAndScope, ShowExt};
 use crate::cli::output::print_metadata;
 use crate::commands::lint::Lints;
-use crate::commands::{discover_stacks, fix, lint, resolve_scope};
+use crate::commands::{discover_stacks, fix, lint, resolve_scope, run_sequences};
 use crate::config::{Config, DefaultTests, to_sequences};
 use crate::domain::{DetectedStacks, Result, Runnables, StackType};
 use crate::git::Repo;
@@ -24,7 +24,7 @@ pub fn pitstop(args: &RunArgsWithTestAndScope) -> Result<ExitCode> {
 
 /// runs global fixes, then stack-specific fixes, then lints on the given stacks
 ///
-/// `tests` run in parallel with the lints, the same way global lints do.
+/// `tests` run together with the global lints.
 pub(crate) fn run_tasks(
     args: &RunArgs,
     config: &Config,
@@ -33,8 +33,7 @@ pub(crate) fn run_tasks(
     tests: Vec<conc::Sequence>,
 ) -> Result<ExitCode> {
     let show = args.show.unwrap_or(conc::Show::Names);
-    let error_on_output = false;
-    let stderr_to_stdout = true;
+    let sequential = args.sequential;
 
     if show.display_metadata() {
         print_metadata(stacks);
@@ -57,12 +56,7 @@ pub(crate) fn run_tasks(
 
     // step 2: run the global fixes by themselves first
     if let Some(global_fixes) = global_fixes {
-        let exit_code = conc::run(conc::RunArgs {
-            sequences: vec![global_fixes],
-            error_on_output,
-            stderr_to_stdout,
-            show,
-        });
+        let exit_code = run_sequences(vec![global_fixes], show, sequential);
         if exit_code != ExitCode::SUCCESS {
             return Ok(exit_code);
         }
@@ -86,12 +80,7 @@ pub(crate) fn run_tasks(
         .into_values()
         .filter_map(conc::Sequence::from_vec)
         .collect();
-    let exit_code = conc::run(conc::RunArgs {
-        sequences: stack_sequences,
-        error_on_output,
-        show,
-        stderr_to_stdout,
-    });
+    let exit_code = run_sequences(stack_sequences, show, sequential);
     if exit_code != ExitCode::SUCCESS {
         return Ok(exit_code);
     }
@@ -102,11 +91,6 @@ pub(crate) fn run_tasks(
     // some of them, like the global git-diff-check linter,
     // error on whitespace problems and therefore
     // depend on the formatting having been run.
-    let exit_code = conc::run(conc::RunArgs {
-        sequences: global_lints,
-        error_on_output,
-        show,
-        stderr_to_stdout,
-    });
+    let exit_code = run_sequences(global_lints, show, sequential);
     Ok(exit_code)
 }

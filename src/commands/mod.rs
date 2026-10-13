@@ -23,8 +23,40 @@ pub use lint::lint;
 pub use pitstop::pitstop;
 pub use post_edit::post_edit;
 pub use precommit::precommit;
+use std::process::ExitCode;
 pub use test::test;
 pub use update_tools::update_tools;
+
+/// runs the given sequences concurrently, or one after another if `sequential` is set
+///
+/// Running sequentially still runs all sequences, even if one of them fails,
+/// and provides the exit code of the first failed sequence.
+pub(crate) fn run_sequences(
+    sequences: Vec<conc::Sequence>,
+    show: conc::Show,
+    sequential: bool,
+) -> ExitCode {
+    let run = |sequences| {
+        conc::run(conc::RunArgs {
+            sequences,
+            sequential,
+            error_on_output: false,
+            stderr_to_stdout: true,
+            show,
+        })
+    };
+    if !sequential {
+        return run(sequences);
+    }
+    let mut result = ExitCode::SUCCESS;
+    for sequence in sequences {
+        let exit_code = run(vec![sequence]);
+        if result == ExitCode::SUCCESS {
+            result = exit_code;
+        }
+    }
+    result
+}
 
 /// uses the explicit `--scope` if given, otherwise [`infer_scope`]
 pub(crate) fn resolve_scope(explicit: &ScopeArg, repo: Option<&Repo>) -> Scope {
@@ -195,5 +227,48 @@ mod tests {
         let have = resolve_scope(&omitted, Some(&repo));
         let want = Scope::Uncommitted;
         pretty::assert_eq!(have, want);
+    }
+
+    // these tests use Unix shell commands
+    #[cfg(unix)]
+    mod run_sequences {
+        use super::super::run_sequences;
+        use std::fs;
+        use std::path::Path;
+        use std::process::ExitCode;
+        use tempfile::TempDir;
+
+        /// provides a sequence that appends the given text to the given file after the given delay
+        fn append_after(seconds: &str, text: &str, file: &Path) -> conc::Sequence {
+            let command = format!("sleep {seconds} && echo {text} >> '{}'", file.display());
+            conc::Sequence::one(conc::shell_executable(&command))
+        }
+
+        #[test]
+        fn sequential_runs_in_the_given_order() {
+            let dir = TempDir::new().unwrap();
+            let log = dir.path().join("log");
+            let sequences = vec![
+                append_after("0.2", "slow", &log),
+                append_after("0", "fast", &log),
+            ];
+            let exit_code = run_sequences(sequences, conc::Show::Failed, true);
+            pretty::assert_eq!(exit_code, ExitCode::SUCCESS);
+            pretty::assert_eq!(fs::read_to_string(&log).unwrap(), "slow\nfast\n");
+        }
+
+        #[test]
+        fn sequential_continues_after_a_failure() {
+            let dir = TempDir::new().unwrap();
+            let log = dir.path().join("log");
+            let sequences = vec![
+                conc::Sequence::one(conc::shell_executable("exit 3")),
+                append_after("0", "ran", &log),
+                conc::Sequence::one(conc::shell_executable("exit 4")),
+            ];
+            let exit_code = run_sequences(sequences, conc::Show::Failed, true);
+            pretty::assert_eq!(exit_code, ExitCode::from(3));
+            pretty::assert_eq!(fs::read_to_string(&log).unwrap(), "ran\n");
+        }
     }
 }
