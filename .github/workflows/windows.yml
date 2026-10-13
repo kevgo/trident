@@ -15,7 +15,8 @@ jobs:
       - uses: Swatinem/rust-cache@v2
       - uses: taiki-e/install-action@nextest
       - run: make setup-ci
-      # Windows encounters concurrency issues with the Rust toolchain
+      # Windows encounters concurrent file access issues when running `target/debug/trident ci`.
+      # Some tests try to build that file again, but it cannot be replaced because it is running.
       - run: make lint
       - run: make unit
       - run: make cuke-slow
