@@ -19,6 +19,7 @@ jobs:
       # `target/debug/trident ci` or `target/release/trident ci`.
       # Some tests try to build that file again,
       # but it cannot be replaced because it is running.
+      # We therefore run the tests individually.
       - run: make lint
       - run: make unit
       - run: make cuke-slow
