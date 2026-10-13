@@ -90,9 +90,9 @@ Feature: fix SQL
       SELECT FROM "
       """
     When executing "trident fix --show=output"
-    Then it prints the lines
+    Then it prints the lines matching
       """
-      fix SQL (sqlfmt)
+      fix SQL \(sqlfmt\)
       2 files had errors while formatting.
       0 files left unchanged.
       one.sql
