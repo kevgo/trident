@@ -1,4 +1,3 @@
-@online
 Feature: lint SQL
 
   Background:

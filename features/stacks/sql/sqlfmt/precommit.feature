@@ -1,4 +1,3 @@
-@online
 Feature: precommit SQL
 
   Background:

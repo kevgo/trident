@@ -1,4 +1,3 @@
-@online
 Feature: pitstop SQL
 
   Background:
