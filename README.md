@@ -1,5 +1,8 @@
 # Trident
 
+[![linux](https://github.com/kevgo/Trident/actions/workflows/linux.yml/badge.svg)](https://github.com/kevgo/trident/actions/workflows/linux.yml)
+[![windows](https://github.com/kevgo/Trident/actions/workflows/windows.yml/badge.svg)](https://github.com/kevgo/trident/actions/workflows/windows.yml)
+
 Type checking, linting, and automated testing are critical for AI engineering.
 AI hallucinates non-existing APIs, dead code, and mismatching formatting styles.
 Strict automated guardrails are the only things keeping your codebase from
