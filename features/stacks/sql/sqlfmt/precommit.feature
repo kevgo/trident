@@ -82,7 +82,7 @@ Feature: precommit SQL
       """
     And I ran "git add one.sql two.sql"
     When executing "trident precommit --show=failed"
-    Then it prints
+    Then it prints the lines matching
       """
       2 files had errors while formatting.
       0 files left unchanged.
