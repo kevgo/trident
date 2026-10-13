@@ -36,15 +36,10 @@ impl Lint for Pyright {
         if files.is_empty() {
             return Ok(None);
         }
-        let mut args = Vec::with_capacity(files.len() + 3);
-        args.push(S("run"));
-        args.push(S("--"));
-        args.push(S("pyright"));
-        args.extend(files.into_strings());
         let executable = get_rta_command(&GetRTACmdArgs {
             name: format!("type-check {} ({self})", stack.stack),
-            app: &rta::applications::Uv {},
-            args,
+            app: &rta::applications::Pyright {},
+            args: files.into_strings(),
             version: None,
         })?;
         let Some(executable) = executable else {
