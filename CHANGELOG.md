@@ -27,24 +27,25 @@ New commands:
   - `--sequential` flag makes Tricorder run all operations sequentially
   - splits the `init` command into `init:config`, `init:claude`, and `init:githook`
   - new `test` command runs the tasks defined in the config `tests` key in parallel
+  - `trident precommit` now always exits with code 0, even if the Trident config file is invalid
 
 New stacks:
   - `rust` but you need to define the commands for linting and fixing yourself because there is too much customization needed.
-  - GitHub Actions config files via actionlint
-  - Dockerfiles via hadolint
+  - support for GitHub Actions config files via actionlint
+  - support for Dockerfiles via hadolint
   - support for `dprint` if file `dprint.json` is present
 
 New behaviors:
   - auto-scope: `ci`, `fix`, `fix-unsafe`, `lint`, and `pitstop` now process files based on the current situation, and accept `--scope=uncommitted|branch|all` to override the file selection
-  - the `--test` flag allows running test scripts in addition to linters and fixes
+  - support for tests: Tricorder can now run unit tests and other custom test scripts concurrently with the lints and fixes
+    - define them in the `test` section of each stack or command
+    - customize them using the new `--test` flag
   - now versions `delete-empty-folders` through the `run-that-app` file
   - `fix-unsafe` now prints tools as `unsafe-fix <stack> (<name>)`
-
-
-#### Bug fixes
-
-- `precommit` now always exits with code 0, even if the Trident config file is invalid
+  - renamed the `--show=all` flag to `--show=output`
 - custom stack tools now print `{operation} {stack} ({name})`, matching built-in tools
+
+
 
 ## 0.0.17 (2026-08-15)
 
