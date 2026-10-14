@@ -216,10 +216,8 @@ This is slower, but helps when tools interfere with each other
 or the machine cannot handle the load of running them all at once.
 
 ```sh
-trident test --sequential
+trident ci --sequential
 ```
-
-As in a concurrent run, a failing tool does not stop unrelated tools.
 
 ## Supported stacks
 
