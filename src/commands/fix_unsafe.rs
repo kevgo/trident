@@ -12,6 +12,7 @@ pub fn fix_unsafe(args: &RunArgsWithScope) -> Result<ExitCode> {
     let config = Config::load()?;
     let ignores = config.ignores()?;
     let error_on_output = false;
+    let sequential = args.run.sequential;
     let stderr_to_stdout = true;
     let show = args.run.show.unwrap_or(conc::Show::Names);
 
@@ -33,6 +34,7 @@ pub fn fix_unsafe(args: &RunArgsWithScope) -> Result<ExitCode> {
     let exit_code = conc::run(conc::RunArgs {
         sequences: unsafe_fixes,
         error_on_output,
+        sequential,
         show,
         stderr_to_stdout,
     });

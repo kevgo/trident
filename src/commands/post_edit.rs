@@ -13,6 +13,7 @@ pub fn post_edit(args: &RunArgs) -> Result<ExitCode> {
     let git_repo = git::Repo::load();
     let show = args.show.unwrap_or(conc::Show::Failed);
     let error_on_output = false;
+    let sequential = args.sequential;
     let stderr_to_stdout = true;
 
     // step 2: discover the files and their stacks
@@ -34,6 +35,7 @@ pub fn post_edit(args: &RunArgs) -> Result<ExitCode> {
     let exit_code = conc::run(conc::RunArgs {
         sequences: lints.into_sequences(),
         error_on_output,
+        sequential,
         show,
         stderr_to_stdout,
     });

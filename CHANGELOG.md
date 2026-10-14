@@ -1,5 +1,6 @@
 # Trident changelog
 
+- `ci`, `fix`, `fix-unsafe`, `full`, `lint`, `pitstop`, `postedit`, `precommit`, and `test` accept `--sequential` to run all commands one after another instead of concurrently
 - `commands.<name>.test` sets the tests that command runs when you omit `--test`, e.g. `"commands": { "pitstop": { "test": ["unit"] } }`
 - `ci`, `fix`, `fix-unsafe`, `lint`, and `pitstop` accept `--scope=uncommitted|branch|all` to select which files they process
 - `fix`, `fix-unsafe`, `lint`, and `pitstop` default to uncommitted files if any exist, otherwise files changed on the current branch, otherwise all files

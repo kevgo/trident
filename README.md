@@ -1,9 +1,11 @@
 # Trident
 
-_fuel additives for your AI workflow_
+[![linux](https://github.com/kevgo/Trident/actions/workflows/linux.yml/badge.svg)](https://github.com/kevgo/trident/actions/workflows/linux.yml)
+[![windows](https://github.com/kevgo/Trident/actions/workflows/windows.yml/badge.svg)](https://github.com/kevgo/trident/actions/workflows/windows.yml)
 
 Type checking, linting, and automated testing are critical
 for all software engineering, including AI engineering.
+
 AI hallucinates non-existing APIs, dead code, and mismatching formatting styles.
 Strict automated guardrails are the only things keeping your codebase from
 turning into an untamable, hallucinated mess.
@@ -207,6 +209,19 @@ and `pitstop` accept `--scope` to choose which files they process:
 and `pitstop` choose a default from the Git workspace:
 uncommitted changes if present, otherwise files changed on the current branch,
 otherwise all files.
+
+### `--sequential`
+
+By default, Trident runs as many tools as possible concurrently.
+The `--sequential` flag makes it run all tools one after another instead.
+This is slower, but helps when tools interfere with each other
+or the machine cannot handle the load of running them all at once.
+
+```sh
+trident test --sequential
+```
+
+As in a concurrent run, a failing tool does not stop unrelated tools.
 
 ## Supported stacks
 

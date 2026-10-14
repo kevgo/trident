@@ -24,7 +24,7 @@ pub fn pitstop(args: &RunArgsWithTestAndScope) -> Result<ExitCode> {
 
 /// runs global fixes, then stack-specific fixes, then lints on the given stacks
 ///
-/// `tests` run in parallel with the lints, the same way global lints do.
+/// `tests` run together with the global lints.
 pub(crate) fn run_tasks(
     args: &RunArgs,
     config: &Config,
@@ -34,6 +34,7 @@ pub(crate) fn run_tasks(
 ) -> Result<ExitCode> {
     let show = args.show.unwrap_or(conc::Show::Names);
     let error_on_output = false;
+    let sequential = args.sequential;
     let stderr_to_stdout = true;
 
     if show.display_metadata() {
@@ -60,6 +61,7 @@ pub(crate) fn run_tasks(
         let exit_code = conc::run(conc::RunArgs {
             sequences: vec![global_fixes],
             error_on_output,
+            sequential,
             stderr_to_stdout,
             show,
         });
@@ -89,6 +91,7 @@ pub(crate) fn run_tasks(
     let exit_code = conc::run(conc::RunArgs {
         sequences: stack_sequences,
         error_on_output,
+        sequential,
         show,
         stderr_to_stdout,
     });
@@ -105,6 +108,7 @@ pub(crate) fn run_tasks(
     let exit_code = conc::run(conc::RunArgs {
         sequences: global_lints,
         error_on_output,
+        sequential,
         show,
         stderr_to_stdout,
     });

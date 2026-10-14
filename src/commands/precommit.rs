@@ -24,6 +24,7 @@ fn run(args: &RunArgs) -> Result<()> {
     let repo = git::Repo::load().ok_or(UserError::NoGitRepository)?;
     let show = args.show.unwrap_or(conc::Show::Names);
     let error_on_output = false;
+    let sequential = args.sequential;
     let stderr_to_stdout = true;
 
     // step 2: discover the staged files and their stacks
@@ -55,6 +56,7 @@ fn run(args: &RunArgs) -> Result<()> {
         let _exit_code = conc::run(conc::RunArgs {
             sequences: vec![global],
             error_on_output,
+            sequential,
             stderr_to_stdout,
             show,
         });
@@ -64,6 +66,7 @@ fn run(args: &RunArgs) -> Result<()> {
     let _exit_code = conc::run(conc::RunArgs {
         sequences: stack_specific.into_values().collect(),
         error_on_output,
+        sequential,
         show,
         stderr_to_stdout,
     });

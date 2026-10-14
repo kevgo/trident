@@ -3,8 +3,33 @@ Feature: pitstop SQL
   Background:
     Given a file "run-that-app" with content
       """
-      delete-empty-folders 0.0.2
-      uv 0.11.20
+      sqlfmt 0.32.0
+      uv 0.13.0
+      """
+    And a file "trident.json" with content
+      """
+      {
+        "applications": {
+          "delete_empty_folders": {
+            "enabled": false
+          },
+          "git_diff_check": {
+            "enabled": false
+          },
+          "prettier": {
+            "enabled": false
+          },
+          "rumdl": {
+            "enabled": false
+          },
+          "ruff": {
+            "enabled": false
+          },
+          "taplo": {
+            "enabled": false
+          }
+        }
+      }
       """
 
   Scenario: unformatted SQL
@@ -17,9 +42,9 @@ Feature: pitstop SQL
       SELECT            id, name FROM two
       """
     When executing "trident pitstop --show=output"
-    Then it prints the block
+    Then it prints the lines matching
       """
-      fix SQL (sqlfmt)
+      fix SQL \(sqlfmt\)
       2 files formatted.
       0 files left unchanged.
       one.sql formatted.
@@ -43,7 +68,6 @@ Feature: pitstop SQL
     When executing "trident pitstop --show=output"
     Then it prints the lines
       """
-      delete empty folders
       fix SQL (sqlfmt)
       1 file left unchanged.
       """
