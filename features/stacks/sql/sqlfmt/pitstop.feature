@@ -42,9 +42,9 @@ Feature: pitstop SQL
       SELECT            id, name FROM two
       """
     When executing "trident pitstop --show=output"
-    Then it prints the block
+    Then it prints the lines matching
       """
-      fix SQL (sqlfmt)
+      fix SQL \(sqlfmt\)
       2 files formatted.
       0 files left unchanged.
       one.sql formatted.
