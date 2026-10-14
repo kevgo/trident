@@ -125,13 +125,12 @@ It ensures all code passes all checks, i.e. it fails if either:
 - some code is unformatted, i.e. a formatter would modify a file
 - a test defined in `trident.jsonc` fails
 
-To run only some of those tests, pass their names joined with `+`:
+To run only some of those tests,
+configure them in the config file or pass their names joined with `+`:
 
 ```sh
 trident ci --test=unit+e2e
 ```
-
-To change the default tests, set `commands.ci.test`.
 
 ### `trident full`
 
