@@ -132,29 +132,18 @@ configure them in the config file or pass their names joined with `+`:
 trident ci --test=unit+e2e
 ```
 
-### `trident full`
+### `trident init:config`
 
-This command runs everything: all safe fixes, all lints, all tests,
-on all files.
+Creates an Trident config file with the default settings.
 
 ### `trident init:claude`
 
 This command integrates Trident into coding agents harnesses
-that follow Claude Code configuration, such as Claude Code, Codex, Code Puppy,
-or Wibey.
+that use the Claude Code configuration format, such as Claude Code, Codex,
+Code Puppy, or Wibey.
 
-Once configured, the agent runs `trident postedit` after it makes changes.
-This command lints only the uncommitted files,
-i.e. changes that the agent just made.
-
-This helps the AI-generated generate cleaner code and fix possible bugs faster.
-
-It works particularly well with custom AI-generated linters
-that enforce invariants specific to your domain.
-
-### `trident init:config`
-
-Creates a scaffold of the Trident config file containing the default settings.
+Once configured, your AI agent will run `trident postedit`
+after it makes file changes.
 
 ### `trident init:githook`
 
@@ -164,8 +153,10 @@ that runs `trident precommit` before every commit.
 
 ### `trident update:tools`
 
-This command updates the versions of third-party tools
-that Trident uses to the latest available versions.
+This command updates the versions of third-party tools that Trident runs
+for you to the latest available versions.
+These changes get written to a file with the name `run-that-app`, which uses the
+[asdf config syntax](https://asdf-vm.com/manage/configuration.html).
 
 ### `trident fix`
 
@@ -176,7 +167,7 @@ multiple fixes for the same file type run sequentially.
 ### `trident fix-unsafe`
 
 This command applies more aggressive automatic fixes to your current work.
-These might change program behavior and should be verified.
+These might change program behavior, please verify the results.
 
 ### `trident lint`
 
@@ -187,13 +178,17 @@ All linters run in parallel.
 
 This command runs all tests defined in `trident.jsonc` in parallel.
 
-To run only some tests, pass their names joined with `+`:
+To run only some tests, configure `commands.test.test` in the config file
+or pass their names joined with `+`:
 
 ```sh
 trident test --test=unit+e2e
 ```
 
-To change the default tests, set `commands.test.test`.
+### `trident full`
+
+This command runs everything: all safe fixes, all lints, all tests,
+on all files.
 
 ### `--scope`
 
@@ -201,14 +196,17 @@ To change the default tests, set `commands.test.test`.
 and `pitstop` accept `--scope` to choose which files they process:
 
 - `uncommitted`: only uncommitted files (staged, unstaged, and untracked)
-- `branch`: only files changed on the current branch
+- `branch`: only files that the current branch changes
 - `all`: all files in the current directory
 
-`ci` defaults to `all`.
-`fix`, `fix-unsafe`, `lint`,
-and `pitstop` choose a default from the Git workspace:
-uncommitted changes if present, otherwise files changed on the current branch,
-otherwise all files.
+The `ci` command defaults to `all` files.
+The `fix`, `fix-unsafe`, `lint`,
+and `pitstop` commands choose a scope matching the current situation:
+
+- uncommitted changes present: process only those
+- no uncommitted changes but on a feature branch:
+  process all files on the current branch
+- otherwise process all files
 
 ### `--sequential`
 
