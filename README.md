@@ -13,23 +13,23 @@ humans, or code templates.
 
 ## Demo
 
-Trident is optimized for speed.
-Running `trident lint --scope=all --show=output` on the Trident codebase
-finishes in about half a second and prints:
+If I run `trident lint --scope=all --show=output` on a 2021 MacBook Pro M1
+running Linux, the Trident codebase finishes in about 200ms and prints:
 
 ```sh
-114 Cucumber, 3 JSON, 1 JSONC, 4 Markdown, 115 Rust, 2 TOML, 3 YML, 8 other
-running 6 tools
+163 Cucumber, 4 JSON, 1 JSONC, 4 Markdown, 127 Rust, 4 TOML, 4 YML, 8 other
+running 7 tools
 
 lint Markdown (rumdl)
 lint TOML (Taplo)
 lint Git diff markers (git diff HEAD --check)
 GitHub Actions (actionlint)
+lint Rust (cargo clippy for Cucumber code)
+lint Rust (cargo clippy)
 lint Cucumber (gherkin-lint)
-cargo clippy
 ```
 
-Trident has analyzed 203 files and executed 6 linters concurrently to verify
+Trident has analyzed 315 files and executed 7 linters to verify
 and improve them.
 In this example:
 
@@ -41,14 +41,24 @@ In this example:
   for the GitHub Action configuration
 - [git diff --check](https://git-scm.com/docs/git-diff#Documentation/git-diff.txt---check)
   to detect unresolved merge conflict markers
+- [Cargo clippy](https://doc.rust-lang.org/clippy)
 
 You don't need to know about or even install these third-party linters.
 Trident downloads them as needed.
 
-It favors modern linters and formatters that execute quickly,
-runs them concurrently, and passes each tool the exact files to process,
-so that the tools don't need to scan the codebase again to discover files to
-process.
+## Why is it so fast
+
+Trident is designed from the ground up for speed.
+
+- It is written in Rust.
+- It favors modern linters and formatters that execute quickly.
+- It runs all tools concurrently.
+- It passes each tool the exact files to process.
+  This way each tool doesn't need to scan the entire file tree again to discover
+  files it can process.
+
+At the same time, Trident is extremely minimalistic.
+Trident runs the tools directly on your machine, without Docker or emulation.
 
 ## Usage
 
