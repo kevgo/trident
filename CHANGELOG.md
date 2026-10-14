@@ -1,9 +1,6 @@
 # Trident changelog
 
-- `ci`, `fix`, `fix-unsafe`, `full`, `lint`, `pitstop`, `postedit`, `precommit`, and `test` accept `--sequential` to run all commands one after another instead of concurrently
 - `commands.<name>.test` sets the tests that command runs when you omit `--test`, e.g. `"commands": { "pitstop": { "test": ["unit"] } }`
-- `ci`, `fix`, `fix-unsafe`, `lint`, and `pitstop` accept `--scope=uncommitted|branch|all` to select which files they process
-- `fix`, `fix-unsafe`, `lint`, and `pitstop` default to uncommitted files if any exist, otherwise files changed on the current branch, otherwise all files
 - app: hadolint for Dockerfile
 - stack: Dockerfile, linted by hadolint, formatted by dprint (when `dprint.json` is present)
 - app: dprint for JSON, JSONC, YML, and Dockerfile (when `dprint.json` is present)
@@ -15,7 +12,6 @@
 - `ci --test` runs a subset of the configured tests, e.g. `trident ci --test=unit+cuke`
 - `pitstop --test` runs a subset of the configured tests, e.g. `trident pitstop --test=unit+cuke`
 - `test --test` runs a subset of the configured tests, e.g. `trident test --test=unit+cuke`
-- new `full` command runs all lints, fixes, and tests on all files
 - `full --test` runs a subset of the configured tests, e.g. `trident full --test=unit+cuke`
 - renamed to Trident
 
@@ -23,29 +19,30 @@
 
 #### BREAKING CHANGES
 
-- breaking: the config file is in JSONC format now because there is too much nesting for TOML
-- breaking: many keys in the config file are simplified
-- breaking: `trident pitstop` now processes only files changed on the current branch
-- breaking: the `stack` field on `[[custom-lints]]` and `[[custom-fixes]]` is removed; use `[stack.<name>]` with `lint`/`add-lint` and `fix`/`add-fix` to replace or extend a stack's built-in tools
-- breaking: the `keep-sorted` config key now lives under `applications`
-- breaking: unknown keys in the config file are now an error
-- breaking: splits the `init` command into `init:config`, `init:claude`, and `init:githook`
-- breaking: the `ignore` config key is renamed to `ignore-files`
-- breaking: commands have now specific default visibilities
+- rename the app from Tricorder to Trident to avoid a protected trademark
+- the config file is in JSONC format now because there is too much nesting for TOML
+- many keys in the config file are simplified
+- auto-scope: `ci`, `fix`, `fix-unsafe`, `lint`, and `pitstop` now process files based on the current situation, and accept `--scope=uncommitted|branch|all` to override the file selection
+- the `stack` field on `custom-lints` and `custom-fixes` is removed; use `stack.<name>` with `lint`/`add-lint` and `fix`/`add-fix` to replace or extend a stack's built-in tools
+- the `keep-sorted` config key now lives under `applications`
+- unknown keys in the config file are now an error
+- splits the `init` command into `init:config`, `init:claude`, and `init:githook`
+- the `ignore` config key is renamed to `ignore-files`
+- now versions `delete-empty-folders` through the `run-that-app` file
 
 #### New Features
 
-- The new `postedit` command is optimized for running after code was changed, for example insided the agentic loop. It only lints the uncommitted files.
+- `trident postedit`: a new command optimized for running after code was changed, for example insided the agentic loop. Lints only the uncommitted files.
 - `trident update:tools` updates third-party tool versions to the latest available
 - JSON-Schema for the config file is available at https://github.com/kevgo/trident/raw/refs/heads/main/docs/schema.json.
-- New `rust` stack, but you need to define the commands for linting and fixing yourself because there are no widely adopted standards.
-- `trident init:config` writes a `trident.json` with default settings
+- New `rust` stack, but you need to define the commands for linting and fixing yourself because there is too much customization needed.
 - app: actionlint
-- now versions `delete-empty-folders` through the `run-that-app` file
-- all tool definitions in the config file have optional names now
-- installs `gherkin-lint` as a standalone Node app now
-- config: you can now enable/disable and ignore files for individual tools
-- config: you can now enable/disable and ignore files for individual operations of each tool
+- all tool definitions in the config file can have an optional name now
+- config file: you can now enable/disable and ignore files for individual tools or operations of each tool
+- `--sequential` makes Tricorder run all operations sequentially
+- Git Town support: Trident know knows about Git Town branch hierarchy
+- Windows support
+- `trident full` runs all lints, fixes, and tests on all files
 
 #### Bug fixes
 
