@@ -1,55 +1,51 @@
 # Trident changelog
 
-- `ci`, `fix`, `fix-unsafe`, `full`, `lint`, `pitstop`, `postedit`, `precommit`, and `test` accept `--sequential` to run all commands one after another instead of concurrently
-- `commands.<name>.test` sets the tests that command runs when you omit `--test`, e.g. `"commands": { "pitstop": { "test": ["unit"] } }`
-- `ci`, `fix`, `fix-unsafe`, `lint`, and `pitstop` accept `--scope=uncommitted|branch|all` to select which files they process
-- `fix`, `fix-unsafe`, `lint`, and `pitstop` default to uncommitted files if any exist, otherwise files changed on the current branch, otherwise all files
-- app: hadolint for Dockerfile
-- stack: Dockerfile, linted by hadolint, formatted by dprint (when `dprint.json` is present)
-- app: dprint for JSON, JSONC, YML, and Dockerfile (when `dprint.json` is present)
-- app: dprint for JSON, JSONC, and YML (when `dprint.json` is present)
-- custom stack tools now print `{operation} {stack} ({name})`, matching built-in tools
-- `fix-unsafe` now prints tools as `unsafe-fix <stack> (<name>)`
-- new `test` command runs the tasks defined in the config `tests` key in parallel
-- the `ci` command now runs those same tests in parallel with lints
-- `ci --test` runs a subset of the configured tests, e.g. `trident ci --test=unit+cuke`
-- `pitstop --test` runs a subset of the configured tests, e.g. `trident pitstop --test=unit+cuke`
-- `test --test` runs a subset of the configured tests, e.g. `trident test --test=unit+cuke`
-- new `full` command runs all lints, fixes, and tests on all files
-- `full --test` runs a subset of the configured tests, e.g. `trident full --test=unit+cuke`
-- renamed to Trident
-
 ## 0.1.0
 
-#### BREAKING CHANGES
+New name: renamed the app from Tricorder to Trident to avoid a protected trademark.
 
-- breaking: the config file is in JSONC format now because there is too much nesting for TOML
-- breaking: many keys in the config file are simplified
-- breaking: `trident pitstop` now processes only files changed on the current branch
-- breaking: the `stack` field on `[[custom-lints]]` and `[[custom-fixes]]` is removed; use `[stack.<name>]` with `lint`/`add-lint` and `fix`/`add-fix` to replace or extend a stack's built-in tools
-- breaking: the `keep-sorted` config key now lives under `applications`
-- breaking: unknown keys in the config file are now an error
-- breaking: splits the `init` command into `init:config`, `init:claude`, and `init:githook`
-- breaking: the `ignore` config key is renamed to `ignore-files`
-- breaking: commands have now specific default visibilities
+New environments:
+  - Windows support
+  - Git Town support: Trident know knows about Git Town branch hierarchy
 
-#### New Features
+New config file:
+  - the config file is in JSONC format now because there is too much nesting for TOML
+  - many keys in the config file are simplified
+  - the `stack` field on `custom-lints` and `custom-fixes` is removed; use `stack.<name>` with `lint`/`add-lint` and `fix`/`add-fix` to replace or extend a stack's built-in tools
+  - the `keep-sorted` config key now lives under `applications`
+  - unknown keys in the config file are now an error
+  - the `ignore` config key is renamed to `ignore-files`
+  - JSON-Schema for the config file is available at https://github.com/kevgo/trident/raw/refs/heads/main/docs/schema.json.
+  - all tool definitions in the config file can now have an optional name
+  - you can now enable/disable and ignore files for individual tools or operations of each tool
+  - `commands.<name>.test` sets the tests that command runs when you omit `--test`, e.g. `"commands": { "pitstop": { "test": ["unit"] } }`
 
-- The new `postedit` command is optimized for running after code was changed, for example insided the agentic loop. It only lints the uncommitted files.
-- `trident update:tools` updates third-party tool versions to the latest available
-- JSON-Schema for the config file is available at https://github.com/kevgo/trident/raw/refs/heads/main/docs/schema.json.
-- New `rust` stack, but you need to define the commands for linting and fixing yourself because there are no widely adopted standards.
-- `trident init:config` writes a `trident.json` with default settings
-- app: actionlint
-- now versions `delete-empty-folders` through the `run-that-app` file
-- all tool definitions in the config file have optional names now
-- installs `gherkin-lint` as a standalone Node app now
-- config: you can now enable/disable and ignore files for individual tools
-- config: you can now enable/disable and ignore files for individual operations of each tool
+New commands:
+  - `trident postedit`: a new command optimized for running after code was changed, for example insided the agentic loop. Lints only the uncommitted files.
+  - `trident update:tools` updates third-party tool versions to the latest available
+  - `trident full` runs all lints, fixes, and tests on all files
+  - `--sequential` flag makes Tricorder run all operations sequentially
+  - splits the `init` command into `init:config`, `init:claude`, and `init:githook`
+  - new `test` command runs the tasks defined in the config `tests` key in parallel
+  - `trident precommit` now always exits with code 0, even if the Trident config file is invalid
 
-#### Bug fixes
+New stacks:
+  - `rust` but you need to define the commands for linting and fixing yourself because there is too much customization needed.
+  - support for GitHub Actions config files via actionlint
+  - support for Dockerfiles via hadolint
+  - support for `dprint` if file `dprint.json` is present
 
-- `precommit` now always exits with code 0, even if the Trident config file is invalid
+New behaviors:
+  - auto-scope: `ci`, `fix`, `fix-unsafe`, `lint`, and `pitstop` now process files based on the current situation, and accept `--scope=uncommitted|branch|all` to override the file selection
+  - support for tests: Tricorder can now run unit tests and other custom test scripts concurrently with the lints and fixes
+    - define them in the `test` section of each stack or command
+    - customize them using the new `--test` flag
+  - now versions `delete-empty-folders` through the `run-that-app` file
+  - `fix-unsafe` now prints tools as `unsafe-fix <stack> (<name>)`
+  - renamed the `--show=all` flag to `--show=output`
+- custom stack tools now print `{operation} {stack} ({name})`, matching built-in tools
+
+
 
 ## 0.0.17 (2026-08-15)
 
