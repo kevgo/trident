@@ -221,35 +221,35 @@ trident ci --sequential
 
 ## Supported stacks
 
-| Stack      | Linter                                                                          |
-| ---------- | ------------------------------------------------------------------------------- |
-| TypeScript | biome                                                                           |
-| CSS        | biome                                                                           |
-| Dockerfile | hadolint, dprint (when `dprint.json` is present)                                |
-| JSON       | prettier, dprint (when `dprint.json` is present)                                |
-| JSONC      | prettier, dprint (when `dprint.json` is present)                                |
-| YAML       | prettier, dprint (when `dprint.json` is present)                                |
-| Markdown   | rumdl                                                                           |
-| TOML       | taplo                                                                           |
-| Python     | ruff                                                                            |
-| Rust       | (none, please define your Rust commands as custom lints and fixes)              |
-| Go         | golangci-lint                                                                   |
-| Java       | checkstyle                                                                      |
-| SQL        | sqlfmt                                                                          |
+| Stack      | Linter                                                       |
+| ---------- | ------------------------------------------------------------ |
+| TypeScript | biome                                                        |
+| CSS        | biome                                                        |
+| Dockerfile | hadolint, dprint (when `dprint.json` is present)             |
+| JSON       | prettier, dprint (when `dprint.json` is present)             |
+| JSONC      | prettier, dprint (when `dprint.json` is present)             |
+| YAML       | prettier, dprint (when `dprint.json` is present)             |
+| Markdown   | rumdl                                                        |
+| TOML       | taplo                                                        |
+| Python     | ruff                                                         |
+| Rust       | (please define your Rust commands as custom lints and fixes) |
+| Go         | golangci-lint                                                |
+| SQL        | sqlfmt                                                       |
 
 ## Q & A
 
 > Does Trident lock me into its tooling choices?
 
-No. You can override which tools run in the Trident config file.
+No. You can override which tools Trident runs in its config file.
 
-> I want to add a linter or formatter to Trident.
+> I want to add a stack, linter, or formatter to Trident.
 
 Send a pull request or open an issue!
 
 ## Installation
 
-The installer script downloads the Trident executable into the current
+Trident ships as a single executable.
+The Trident installer script downloads the Trident executable into the current
 directory.
 To install Trident into a particular directory,
 run the installer from that directory.
@@ -268,6 +268,15 @@ curl https://raw.githubusercontent.com/kevgo/trident/main/download.sh | sh -S --
 
 ### Windows PowerShell
 
+Try to install and run Tricorder from a Bash environment on Windows,
+for example the Git Bash.
+
+Tricorder is designed as a cross-platform development tool,
+so it tries to run the tools it runs consistently inside a bash environment on
+all platform.
+
+If you don't have a Bash environment available:
+
 ```powershell
 Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/kevgo/trident/main/download.ps1" -UseBasicParsing).Content
 ```
@@ -282,7 +291,7 @@ cargo install --git https://github.com/kevgo/trident
 
 You can configure Trident and define custom linters
 and formatters in **trident.json** or **trident.jsonc**.
-Comments and trailing commas are allowed in either file.
+Both file types use JSONC format, so comments are allowed.
 If both exist, **trident.json** takes precedence.
 
 <!-- DEFAULT-CONFIG-START -->
