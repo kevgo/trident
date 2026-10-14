@@ -13,8 +13,9 @@ humans, or code templates.
 
 ## Demo
 
+Trident is optimized for speed.
 Running `trident lint --scope=all --show=output` on the Trident codebase
-finishes in about 500 ms and prints:
+finishes in about half a second and prints:
 
 ```sh
 114 Cucumber, 3 JSON, 1 JSONC, 4 Markdown, 115 Rust, 2 TOML, 3 YML, 8 other
@@ -28,7 +29,8 @@ lint Cucumber (gherkin-lint)
 cargo clippy
 ```
 
-Trident has classified 203 files and executed 5 tools concurrently to lint them.
+Trident has analyzed 203 files and executed 6 linters concurrently to verify
+and improve them.
 In this example:
 
 - [Taplo](https://github.com/tamasfe/taplo) for the 3 TOML files
@@ -40,10 +42,9 @@ In this example:
 - [git diff --check](https://git-scm.com/docs/git-diff#Documentation/git-diff.txt---check)
   to detect unresolved merge conflict markers
 
-These third-party linters don't need to be installed on the machine,
-Trident downloads them if needed.
+You don't need to know about or even install these third-party linters.
+Trident downloads them as needed.
 
-Trident is optimized for speed.
 It favors modern linters and formatters that execute quickly,
 runs them concurrently, and passes each tool the exact files to process,
 so that the tools don't need to scan the codebase again to discover files to
