@@ -134,16 +134,8 @@ trident ci --test=unit+e2e
 
 ### `trident full`
 
-This command runs everything: all safe fixes, all lints, and all tests,
+This command runs everything: all safe fixes, all lints, all tests,
 on all files.
-
-To run only some tests, pass their names joined with `+`:
-
-```sh
-trident full --test=unit+e2e
-```
-
-To change the default tests, set `commands.full.test` in the config file.
 
 ### `trident init:claude`
 
