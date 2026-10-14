@@ -3,16 +3,13 @@
 [![linux](https://github.com/kevgo/Trident/actions/workflows/linux.yml/badge.svg)](https://github.com/kevgo/trident/actions/workflows/linux.yml)
 [![windows](https://github.com/kevgo/Trident/actions/workflows/windows.yml/badge.svg)](https://github.com/kevgo/trident/actions/workflows/windows.yml)
 
-Type checking, linting, and automated testing are critical
-for all software engineering, including AI engineering.
+Trident runs all applicable type checkers, linters,
+and formatters for the various file types in your codebase.
+Concurrently for the fastest results.
 
-AI hallucinates non-existing APIs, dead code, and mismatching formatting styles.
-Strict automated guardrails are the only things keeping your codebase from
-turning into an untamable, hallucinated mess.
-
-Trident solves this problem for you.
-It runs all applicable type checkers, linters,
-and formatters concurrently for the fastest results.
+Type checking, linting, and automated testing are essential
+for high-quality software engineering, no matter who writes the code: AI,
+humans, or code templates.
 
 ## Demo
 
