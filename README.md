@@ -294,6 +294,8 @@ and formatters in **trident.json** or **trident.jsonc**.
 Both file types use JSONC format, so comments are allowed.
 If both exist, **trident.json** takes precedence.
 
+Use the linked JSON-Schema to get help on supported settings and their meaning.
+
 <!-- DEFAULT-CONFIG-START -->
 
 ```jsonc
