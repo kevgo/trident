@@ -13,8 +13,9 @@ humans, or code templates.
 
 ## Demo
 
-If I run `trident lint --scope=all --show=output` on a 2021 MacBook Pro M1
-running Linux, the Trident codebase finishes in about 200ms and prints:
+If I run `trident lint --scope=all --show=output` on the Trident codebase,
+using a 2021 MacBook Pro M1 running Linux,
+it finishes in about 200ms and prints:
 
 ```sh
 163 Cucumber, 4 JSON, 1 JSONC, 4 Markdown, 127 Rust, 4 TOML, 4 YML, 8 other
@@ -57,21 +58,21 @@ Trident is designed from the ground up for speed.
   This way each tool doesn't need to scan the entire file tree again to discover
   files it can process.
 
-At the same time, Trident is extremely minimalistic.
-Trident runs the tools directly on your machine, without Docker or emulation.
+At the same time, Trident is extremely minimalistic:
+It executes the tools directly on your machine, without Docker or emulation.
 
 ## Usage
 
 Trident provides special commands
-for specific phases of the software development workflow:
+for all relevant phases of the software development workflow:
 
 ### `trident pitstop`
 
-This command provides efficient support for interactive development.
+Run this command at any time during human development.
 It first applies all safe automatic fixes to your current work,
-then reports any remaining code problems that require manual or AI attention.
+then reports any remaining code problems that require (manual or AI) attention.
 
-By default, it reviews the smallest scope you currently work on:
+By default, this command reviews the smallest scope you currently work on:
 
 - uncommitted changes exist: reviews only those
 - no uncommitted changes but you are on a feature branch with changes:
@@ -80,7 +81,7 @@ By default, it reviews the smallest scope you currently work on:
 
 To process a different set of files, use `--scope`.
 
-To always run some tests as well, list them under `commands.pitstop.test`.
+You can also configure it to run certain tests during a pitstop:
 
 ```jsonc
 {
@@ -92,24 +93,11 @@ To always run some tests as well, list them under `commands.pitstop.test`.
 }
 ```
 
-### `trident full`
-
-This command runs all available tools: all safe fixes, all lints, and all tests,
-on all files.
-
-To run only some tests, pass their names joined with `+`:
-
-```sh
-trident full --test=unit+cuke
-```
-
-To change the default tests, set `commands.full.test`.
-
 ### `trident postedit`
 
 This command is the equivalent of `trident pitstop` for AI agents.
-Each time your agent generates code, it checks it for problems.
-This command does not format files because coding agents cache file contents
+Each time your agent generates code, this command checks it for code smells.
+It does not format files because coding agents cache file contents
 and can get tripped up by unexpected file changes.
 The changes get formatted when being committed.
 
@@ -140,10 +128,23 @@ It ensures all code passes all checks, i.e. it fails if either:
 To run only some of those tests, pass their names joined with `+`:
 
 ```sh
-trident ci --test=unit+cuke
+trident ci --test=unit+e2e
 ```
 
 To change the default tests, set `commands.ci.test`.
+
+### `trident full`
+
+This command runs everything: all safe fixes, all lints, and all tests,
+on all files.
+
+To run only some tests, pass their names joined with `+`:
+
+```sh
+trident full --test=unit+e2e
+```
+
+To change the default tests, set `commands.full.test` in the config file.
 
 ### `trident init:claude`
 
@@ -198,7 +199,7 @@ This command runs all tests defined in `trident.jsonc` in parallel.
 To run only some tests, pass their names joined with `+`:
 
 ```sh
-trident test --test=unit+cuke
+trident test --test=unit+e2e
 ```
 
 To change the default tests, set `commands.test.test`.
