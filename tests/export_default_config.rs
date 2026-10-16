@@ -1,18 +1,28 @@
 use std::fs;
 use std::path::Path;
-use trident::commands::init_config::DEFAULT_JSON;
+use std::process::ExitCode;
+use trident::config::Config;
 
-const START: &str = "<!-- DEFAULT-CONFIG-START -->";
-const END: &str = "<!-- DEFAULT_CONFIG-END -->";
+const START: &str = "<!-- CONFIG-EXAMPLE-START -->";
+const END: &str = "<!-- CONFIG-EXAMPLE-END -->";
 
-#[test]
-fn export_default_config() {
+/// verifies that the example config in README.md is valid
+fn main() -> ExitCode {
     let path = Path::new(env!("CARGO_MANIFEST_DIR")).join("README.md");
     let readme = fs::read_to_string(&path).expect("read README.md");
-    let (before, rest) = readme
+    let (_, rest) = readme
         .split_once(START)
-        .expect("DEFAULT-CONFIG-START marker");
-    let (_, after) = rest.split_once(END).expect("DEFAULT_CONFIG-END marker");
-    let updated = format!("{before}{START}\n\n```jsonc\n{DEFAULT_JSON}```\n\n{END}{after}");
-    fs::write(&path, updated).expect("write README.md");
+        .expect("CONFIG-EXAMPLE-START marker");
+    let (block, _) = rest.split_once(END).expect("CONFIG-EXAMPLE-END marker");
+    let json = block
+        .trim()
+        .trim_start_matches("```jsonc")
+        .trim_end_matches("```");
+    match Config::parse(json, "README.md") {
+        Ok(_) => ExitCode::SUCCESS,
+        Err(err) => {
+            err.print();
+            ExitCode::FAILURE
+        }
+    }
 }

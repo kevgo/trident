@@ -10,6 +10,15 @@
         "null"
       ]
     },
+    "ignore-files": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "type": "string"
+      }
+    },
     "global-fixes": {
       "type": [
         "array",
@@ -28,24 +37,15 @@
         "$ref": "#/$defs/ToolDefinition"
       }
     },
-    "ignore-files": {
+    "tests": {
+      "description": "define the functional tests",
       "type": [
         "array",
         "null"
       ],
       "items": {
-        "type": "string"
+        "$ref": "#/$defs/ToolDefinition"
       }
-    },
-    "applications": {
-      "anyOf": [
-        {
-          "$ref": "#/$defs/ApplicationSection"
-        },
-        {
-          "type": "null"
-        }
-      ]
     },
     "stacks": {
       "type": [
@@ -101,15 +101,15 @@
       },
       "additionalProperties": false
     },
-    "tests": {
-      "description": "define the functional tests",
-      "type": [
-        "array",
-        "null"
-      ],
-      "items": {
-        "$ref": "#/$defs/ToolDefinition"
-      }
+    "applications": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ApplicationSection"
+        },
+        {
+          "type": "null"
+        }
+      ]
     },
     "commands": {
       "description": "configure the default behavior of the Trident commands",
@@ -144,6 +144,60 @@
       "required": [
         "command"
       ]
+    },
+    "StackConfig": {
+      "type": "object",
+      "properties": {
+        "lint": {
+          "description": "customize the lints for this stack",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/StackTools"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "fix": {
+          "description": "customize the fixes for this stack",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/StackTools"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "StackTools": {
+      "type": "object",
+      "properties": {
+        "add": {
+          "description": "these commands run in addition to the built-in ones",
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "$ref": "#/$defs/ToolDefinition"
+          }
+        },
+        "replace": {
+          "description": "these commands replace the built-in ones",
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "$ref": "#/$defs/ToolDefinition"
+          }
+        }
+      },
+      "additionalProperties": false
     },
     "ApplicationSection": {
       "type": "object",
@@ -511,60 +565,6 @@
           ],
           "items": {
             "type": "string"
-          }
-        }
-      },
-      "additionalProperties": false
-    },
-    "StackConfig": {
-      "type": "object",
-      "properties": {
-        "lint": {
-          "description": "customize the lints for this stack",
-          "anyOf": [
-            {
-              "$ref": "#/$defs/StackTools"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "fix": {
-          "description": "customize the fixes for this stack",
-          "anyOf": [
-            {
-              "$ref": "#/$defs/StackTools"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        }
-      },
-      "additionalProperties": false
-    },
-    "StackTools": {
-      "type": "object",
-      "properties": {
-        "add": {
-          "description": "these commands run in addition to the built-in ones",
-          "type": [
-            "array",
-            "null"
-          ],
-          "items": {
-            "$ref": "#/$defs/ToolDefinition"
-          }
-        },
-        "replace": {
-          "description": "these commands replace the built-in ones",
-          "type": [
-            "array",
-            "null"
-          ],
-          "items": {
-            "$ref": "#/$defs/ToolDefinition"
           }
         }
       },

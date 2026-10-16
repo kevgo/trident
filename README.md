@@ -296,7 +296,7 @@ If both exist, **trident.json** takes precedence.
 
 Use the linked JSON-Schema to get help on supported settings and their meaning.
 
-<!-- DEFAULT-CONFIG-START -->
+<!-- CONFIG-EXAMPLE-START -->
 
 ```jsonc
 {
@@ -308,20 +308,145 @@ Use the linked JSON-Schema to get help on supported settings and their meaning.
   "ignore-files": ["node_modules/", "**/*.min.css"],
 
   // These tools always run.
-  "global-lints": [],
-  "global-fixes": [],
+  "global-lints": [
+    {
+      "name": "a custom lint with a name",
+      "command": "echo Running a custom lint command"
+    },
+    {
+      "command": "echo Just a command without name works too"
+    }
+  ],
+  "global-fixes": [
+    {
+      "command": "echo Fixes are defined the same way as lints"
+    }
+  ],
 
   // Define the functional tests.
-  "tests": [],
+  "tests": [
+    {
+      "name": "a functional test",
+      "command": "echo running this functional test"
+    },
+    {
+      "name": "another test",
+      "command": "echo running another test"
+    }
+  ],
 
   // configure the supported software stacks
-  "stacks": {},
+  "stacks": {
+    "css": {
+      "lint": {
+        "add": [
+          {
+            "name": "This lint gets run in addition to the built-in CSS lints",
+            "command": "echo additional CSS lint"
+          }
+        ],
+        "replace": [
+          {
+            "name": "This lint replaces the built-in CSS lints",
+            "command": "echo The one and only CSS lint"
+          }
+        ]
+      },
+      "fix": {
+        "add": [
+          {
+            "name": "This fix gets run in addition to the built-in CSS fixes",
+            "command": "echo additional CSS fix"
+          },
+        ],
+        "replace": [
+          {
+            "name": "This fix replaces the built-in CSS fixes",
+            "command": "echo The one and only CSS fix"
+          }
+        ]
+      }
+    },
+    "cucumber": {},
+    "dockerfile": {},
+    "go": {},
+    "java": {},
+    "json": {},
+    "jsonc": {},
+    "markdown": {},
+    "python": {},
+    "rust": {},
+    "sql": {},
+    "toml": {},
+    "typescript": {},
+    "unknown": {},
+    "yml": {}
+  },
 
   // configure the built-in tools
   //
   // Only applications that can receive file paths as CLI arguments have an "ignore-files" key.
-  "applications": {}
+  "applications": {
+    "actionlint": {},
+    "biome": {
+      // enable or disable the entire biome tool
+      "enabled": true,
+      // don't process this file with Biome at all
+      // (but run other tools on it)
+      "ignore-files": ["ignore-completely.css"],
+      "operations": {
+        "lint": {
+          // enable or disable all Biome lint functionality
+          "enabled": true,
+          // don't lint this CSS file
+          "ignore-files": ["dont-lint.css"]
+        },
+        "fix": {
+          // enable or disable all Biome fix functionality
+          "enabled": true,
+          // don't fix this CSS file
+          "ignore-files": ["dont-fix.css"]
+        },
+        "fix-unsafe": {
+          // enable or disable all Biome fix-unsafe functionality
+          "enabled": true,
+          // don't fix-unsafe this CSS file
+          "ignore-files": ["dont-fix-unsafe.css"]
+        }
+      }
+    },
+    "checkstyle": {},
+    "delete_empty_folders": {},
+    "dprint": {},
+    "gherkin_lint": {},
+    "ghokin": {},
+    "git_diff_check": {},
+    "gofumpt": {},
+    "golangci_lint": {},
+    "hadolint": {},
+    "keep_sorted": {},
+    "prettier": {},
+    "pyright": {},
+    "ruff": {},
+    "rumdl": {},
+    "sqlfmt": {},
+    "taplo": {},
+    "text_runner": {},
+    "tikibase": {},
+  },
+
+  // configure the Trident command behavior
+  "commands": {
+    "ci": {
+      // Configure the tests that the "trident ci" command runs by default.
+      // Tests are refered to by name, and need to be defined in the "tests" section above.
+      "test": ["a functional test"]
+    },
+    "full": {},
+    "pitstop": {},
+    "test": {}
+  }
 }
 ```
 
-<!-- DEFAULT_CONFIG-END -->
+<!-- CONFIG-EXAMPLE-END -->

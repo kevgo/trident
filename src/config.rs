@@ -27,6 +27,11 @@ pub struct Config {
     #[schemars(rename = "$schema")]
     pub schema: Option<String>,
 
+    // files that should be excluded when running any tool
+    #[serde(alias = "ignore-files")]
+    #[schemars(rename = "ignore-files")]
+    pub ignore_files: Option<Vec<String>>,
+
     // custom fixes that aren't stack-specific
     #[serde(alias = "global-fixes")]
     #[schemars(rename = "global-fixes")]
@@ -37,20 +42,15 @@ pub struct Config {
     #[schemars(rename = "global-lints")]
     pub global_lints: Option<Vec<ToolDefinition>>,
 
-    // files that should be excluded when running any tool
-    #[serde(alias = "ignore-files")]
-    #[schemars(rename = "ignore-files")]
-    pub ignore_files: Option<Vec<String>>,
-
-    // application-specific configuration
-    pub applications: Option<ApplicationSection>,
+    /// define the functional tests
+    pub tests: Option<Vec<ToolDefinition>>,
 
     // stack-specific configuration
     #[schemars(with = "Option<std::collections::BTreeMap<StackType, StackConfig>>")]
     pub stacks: Option<AHashMap<StackType, StackConfig>>,
 
-    /// define the functional tests
-    pub tests: Option<Vec<ToolDefinition>>,
+    // application-specific configuration
+    pub applications: Option<ApplicationSection>,
 
     /// configure the default behavior of the Trident commands
     pub commands: Option<CommandsSection>,
@@ -115,7 +115,7 @@ impl Config {
         Ok(Self::default())
     }
 
-    pub(crate) fn parse(text: &str, filename: &str) -> Result<Config> {
+    pub fn parse(text: &str, filename: &str) -> Result<Config> {
         // empty or comment-only files deserialize as null, hence Option
         let config: Option<Config> =
             jsonc_parser::parse_to_serde_value(text, &ParseOptions::default()).map_err(|err| {
