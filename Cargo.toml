@@ -53,8 +53,8 @@ harness = false # allows Cucumber to print output instead of libtest
 test = false    # don't run this as part of "cargo test"
 
 [[test]]
-name = "export_default_config"
-harness = false                # this is a script that exits with a status code
+name = "check_readme_config"
+harness = false              # this is a script that exits with a status code
 
 [lints.clippy]
 pedantic = { level = "warn", priority = -1 }

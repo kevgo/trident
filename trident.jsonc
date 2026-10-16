@@ -61,7 +61,7 @@
           },
           {
             "name": "document configuration in README.md",
-            "command": "cargo test --test=export_default_config --locked --quiet"
+            "command": "cargo test --test=check_readme_config --locked --quiet"
           }
         ]
       }
