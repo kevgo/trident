@@ -328,6 +328,10 @@ Use the linked JSON-Schema to get help on supported settings and their meaning.
     {
       "name": "a functional test",
       "command": "echo running this functional test"
+    },
+    {
+      "name": "another test",
+      "command": "echo running another test"
     }
   ],
 
@@ -429,6 +433,18 @@ Use the linked JSON-Schema to get help on supported settings and their meaning.
     "taplo": {},
     "text_runner": {},
     "tikibase": {},
+  },
+
+  // configure the Trident command behavior
+  "commands": {
+    "ci": {
+      // which tests should the "trident ci" command run by default
+      // tests need to be defined in the "tests" section above
+      "test": ["a functional test"]
+    },
+    "full": {},
+    "pitstop": {},
+    "test": {}
   }
 }
 ```
