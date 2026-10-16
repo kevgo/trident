@@ -4,13 +4,7 @@ Feature: fix JSONC with dprint
     Given a file "run-that-app" with content
       """
       delete-empty-folders 0.0.2
-      dprint 0.57.4
-      """
-    And a file "dprint.json" with content
-      """
-      {
-        "plugins": ["https://plugins.dprint.dev/json-0.23.0.wasm"]
-      }
+      prettier 3.7.0
       """
     And a file "trident.json" with content
       """

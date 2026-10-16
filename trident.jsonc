@@ -9,9 +9,6 @@
         "features/commands/pitstop/keep_sorted.feature"
       ]
     },
-    "prettier": {
-      "enabled": false
-    },
     "taplo": {
       "operations": {
         "lint": {
@@ -61,7 +58,7 @@
           },
           {
             "name": "document configuration in README.md",
-            "command": "cargo test --test=export_default_config --locked --quiet"
+            "command": "cargo test --test=check_readme_config --locked --quiet"
           }
         ]
       }
