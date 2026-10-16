@@ -333,21 +333,50 @@ Use the linked JSON-Schema to get help on supported settings and their meaning.
 
   // configure the supported software stacks
   "stacks": {
-    "css": {},
-    "Cucumber": {},
-    "Dockerfile": {},
-    "Go": {},
-    "Java": {},
-    "Json": {},
-    "JsonC": {},
-    "Markdown": {},
-    "Python": {},
-    "Rust": {},
-    "Sql": {},
-    "Toml": {},
-    "Typescript": {},
-    "Unknown": {},
-    "Yml": {}
+    "css": {
+      "lint": {
+        "add": [
+          {
+            "name": "This lint gets run in addition to the built-in CSS lints",
+            "command": "echo additional CSS lint"
+          }
+        ],
+        "replace": [
+          {
+            "name": "This lint replaces the built-in CSS lints",
+            "command": "echo The one and only CSS lint"
+          }
+        ]
+      },
+      "fix": {
+        "add": [
+          {
+            "name": "This fix gets run in addition to the built-in CSS fixes",
+            "command": "echo additional CSS fix"
+          },
+        ],
+        "replace": [
+          {
+            "name": "This fix replaces the built-in CSS fixes",
+            "command": "echo The one and only CSS fix"
+          }
+        ]
+      }
+    },
+    "cucumber": {},
+    "dockerfile": {},
+    "go": {},
+    "java": {},
+    "json": {},
+    "jsonc": {},
+    "markdown": {},
+    "python": {},
+    "rust": {},
+    "sql": {},
+    "toml": {},
+    "typescript": {},
+    "unknown": {},
+    "yml": {}
   },
 
   // configure the built-in tools
