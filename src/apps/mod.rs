@@ -2,7 +2,6 @@ pub mod actionlint;
 pub mod biome;
 pub mod checkstyle;
 pub mod delete_empty_folders;
-pub mod dprint;
 pub mod gherkin_lint;
 pub mod ghokin;
 pub mod git_diff_check;
