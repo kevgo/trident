@@ -296,7 +296,7 @@ If both exist, **trident.json** takes precedence.
 
 Use the linked JSON-Schema to get help on supported settings and their meaning.
 
-<!-- DEFAULT-CONFIG-START -->
+<!-- CONFIG-EXAMPLE-START -->
 
 ```jsonc
 {
@@ -449,4 +449,4 @@ Use the linked JSON-Schema to get help on supported settings and their meaning.
 }
 ```
 
-<!-- DEFAULT_CONFIG-END -->
+<!-- CONFIG-EXAMPLE-END -->

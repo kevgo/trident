@@ -3,8 +3,8 @@ use std::path::Path;
 use std::process::ExitCode;
 use trident::config::Config;
 
-const START: &str = "<!-- DEFAULT-CONFIG-START -->";
-const END: &str = "<!-- DEFAULT_CONFIG-END -->";
+const START: &str = "<!-- CONFIG-EXAMPLE-START -->";
+const END: &str = "<!-- CONFIG-EXAMPLE-END -->";
 
 /// verifies that the example config in README.md is valid
 fn main() -> ExitCode {
@@ -12,8 +12,8 @@ fn main() -> ExitCode {
     let readme = fs::read_to_string(&path).expect("read README.md");
     let (_, rest) = readme
         .split_once(START)
-        .expect("DEFAULT-CONFIG-START marker");
-    let (block, _) = rest.split_once(END).expect("DEFAULT_CONFIG-END marker");
+        .expect("CONFIG-EXAMPLE-START marker");
+    let (block, _) = rest.split_once(END).expect("CONFIG-EXAMPLE-END marker");
     let json = block
         .trim()
         .trim_start_matches("```jsonc")
