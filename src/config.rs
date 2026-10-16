@@ -27,6 +27,11 @@ pub struct Config {
     #[schemars(rename = "$schema")]
     pub schema: Option<String>,
 
+    // files that should be excluded when running any tool
+    #[serde(alias = "ignore-files")]
+    #[schemars(rename = "ignore-files")]
+    pub ignore_files: Option<Vec<String>>,
+
     // custom fixes that aren't stack-specific
     #[serde(alias = "global-fixes")]
     #[schemars(rename = "global-fixes")]
@@ -36,11 +41,6 @@ pub struct Config {
     #[serde(alias = "global-lints")]
     #[schemars(rename = "global-lints")]
     pub global_lints: Option<Vec<ToolDefinition>>,
-
-    // files that should be excluded when running any tool
-    #[serde(alias = "ignore-files")]
-    #[schemars(rename = "ignore-files")]
-    pub ignore_files: Option<Vec<String>>,
 
     // application-specific configuration
     pub applications: Option<ApplicationSection>,
