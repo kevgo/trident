@@ -242,16 +242,6 @@
             }
           ]
         },
-        "dprint": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/ApplicationWithFile"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
         "gherkin-lint": {
           "anyOf": [
             {

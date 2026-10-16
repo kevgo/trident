@@ -4,21 +4,13 @@ Feature: full runs all fixes, lints, and tests
     Given a file "run-that-app" with content
       """
       delete-empty-folders 0.0.2
-      dprint 0.57.4
+      node 26.4.0
+      prettier 3.7.0
       ruff 0.15.16
-      """
-    And a file "dprint.json" with content
-      """
-      {
-        "plugins": ["https://plugins.dprint.dev/json-0.23.0.wasm"]
-      }
       """
     And a file "trident.json" with content
       """
       {
-        "applications": {
-          "prettier": { "enabled": false }
-        },
         "tests": [
           { "name": "unit tests", "command": "echo unit" }
         ]
@@ -35,12 +27,12 @@ Feature: full runs all fixes, lints, and tests
     When executing "trident full --show=output"
     Then it prints the lines to STDERR
       """
-      3 JSON, 1 Python, 1 other
+      2 JSON, 1 Python, 1 other
       running 6 tools
       """
     And it prints the lines
       """
-      fix JSON (dprint)
+      fix JSON (Prettier)
       """
     And it prints the block
       """
@@ -77,7 +69,6 @@ Feature: full runs all fixes, lints, and tests
       """
       {
         "applications": {
-          "dprint": { "enabled": false },
           "prettier": { "enabled": false }
         },
         "tests": [

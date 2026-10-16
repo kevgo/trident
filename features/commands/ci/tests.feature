@@ -12,7 +12,6 @@ Feature: CI runs all fixes, formatters, lints, and tests
       """
       {
         "applications": {
-          "dprint": { "enabled": false },
           "prettier": { "enabled": false }
         },
         "tests": [
@@ -53,7 +52,6 @@ Feature: CI runs all fixes, formatters, lints, and tests
       """
       {
         "applications": {
-          "dprint": { "enabled": false },
           "prettier": { "enabled": false }
         },
         "tests": [
@@ -80,7 +78,6 @@ Feature: CI runs all fixes, formatters, lints, and tests
       """
       {
         "applications": {
-          "dprint": { "enabled": false },
           "prettier": { "enabled": false }
         },
         "tests": [
@@ -117,7 +114,6 @@ Feature: CI runs all fixes, formatters, lints, and tests
       """
       {
         "applications": {
-          "dprint": { "enabled": false },
           "prettier": { "enabled": false }
         },
         "tests": [

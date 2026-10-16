@@ -1,4 +1,3 @@
-use crate::apps::dprint::Dprint;
 use crate::apps::hadolint::Hadolint;
 use crate::domain::{Fix, Lint, Stack, StackType};
 use std::path::Path;
@@ -19,7 +18,7 @@ impl Stack for Dockerfile {
     }
 
     fn fixes(&self) -> Vec<Box<dyn Fix>> {
-        vec![Box::new(Dprint {})]
+        vec![]
     }
 }
 
