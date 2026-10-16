@@ -26,12 +26,12 @@ Feature: full runs all fixes, lints, and tests
     When executing "trident full --show=output"
     Then it prints the lines to STDERR
       """
-      3 JSON, 1 Python, 1 other
+      2 JSON, 1 Python, 1 other
       running 6 tools
       """
     And it prints the lines
       """
-      fix JSON (prettier)
+      fix JSON (Prettier)
       """
     And it prints the block
       """

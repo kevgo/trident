@@ -25,7 +25,7 @@ Feature: precommit JSONC
     When executing "trident precommit --show=output"
     Then it prints the block
       """
-      fix JSONC (prettier)
+      fix JSONC (Prettier)
       """
     And the exit code is 0
     And file "main.jsonc" is unchanged
@@ -43,7 +43,7 @@ Feature: precommit JSONC
     When executing "trident precommit --show=output"
     Then it prints the lines
       """
-      fix JSONC (prettier)
+      fix JSONC (Prettier)
       """
     And the exit code is 0
     And file "main.jsonc" now has content
@@ -64,8 +64,8 @@ Feature: precommit JSONC
     When executing "trident precommit --show=output"
     Then it prints the block
       """
-      fix JSONC (prettier)
-      Error formatting
+      fix JSONC (Prettier)
+      [error] main.jsonc: SyntaxError: Unexpected token (2:1)
       """
     And the exit code is 0
     And file "main.jsonc" is unchanged

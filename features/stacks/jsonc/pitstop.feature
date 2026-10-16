@@ -27,7 +27,7 @@ Feature: pitstop JSONC
     When executing "trident pitstop --show=output"
     Then it prints the lines
       """
-      fix JSONC (prettier)
+      fix JSONC (Prettier)
       """
     And the exit code is 0
     And file "main.jsonc" now has content
@@ -47,7 +47,7 @@ Feature: pitstop JSONC
     When executing "trident pitstop --show=output"
     Then it prints the block
       """
-      fix JSONC (prettier)
+      fix JSONC (Prettier)
       Error formatting
       """
     And the exit code is 1

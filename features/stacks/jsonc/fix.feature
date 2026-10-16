@@ -23,7 +23,7 @@ Feature: fix JSONC
     When executing "trident fix --show=output"
     Then it prints the block
       """
-      fix JSONC (prettier)
+      fix JSONC (Prettier)
       """
     And the exit code is 0
     And file "main.jsonc" is unchanged
@@ -40,7 +40,7 @@ Feature: fix JSONC
     When executing "trident fix --show=output"
     Then it prints the lines
       """
-      fix JSONC (prettier)
+      fix JSONC (Prettier)
       """
     And the exit code is 0
     And file "main.jsonc" now has content
@@ -60,7 +60,7 @@ Feature: fix JSONC
     When executing "trident fix --show=output"
     Then it prints the block
       """
-      fix JSONC (prettier)
+      fix JSONC (Prettier)
       Error formatting
       """
     And the exit code is 1
