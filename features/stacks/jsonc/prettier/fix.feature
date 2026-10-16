@@ -1,4 +1,4 @@
-Feature: fix JSONC with dprint
+Feature: fix JSONC
 
   Background:
     Given a file "run-that-app" with content
@@ -10,8 +10,7 @@ Feature: fix JSONC with dprint
       """
       {
         "applications": {
-          "prettier": { "enabled": false },
-          "dprint": { "enabled": true, "ignore-files": ["dprint.json", "trident.json"] }
+          "prettier": { "ignore-files": ["trident.json"] }
         }
       }
       """
@@ -24,7 +23,7 @@ Feature: fix JSONC with dprint
     When executing "trident fix --show=output"
     Then it prints the block
       """
-      fix JSONC (dprint)
+      fix JSONC (prettier)
       """
     And the exit code is 0
     And file "main.jsonc" is unchanged
@@ -41,7 +40,7 @@ Feature: fix JSONC with dprint
     When executing "trident fix --show=output"
     Then it prints the lines
       """
-      fix JSONC (dprint)
+      fix JSONC (prettier)
       """
     And the exit code is 0
     And file "main.jsonc" now has content
@@ -61,7 +60,7 @@ Feature: fix JSONC with dprint
     When executing "trident fix --show=output"
     Then it prints the block
       """
-      fix JSONC (dprint)
+      fix JSONC (prettier)
       Error formatting
       """
     And the exit code is 1
