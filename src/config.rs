@@ -115,7 +115,7 @@ impl Config {
         Ok(Self::default())
     }
 
-    pub(crate) fn parse(text: &str, filename: &str) -> Result<Config> {
+    pub fn parse(text: &str, filename: &str) -> Result<Config> {
         // empty or comment-only files deserialize as null, hence Option
         let config: Option<Config> =
             jsonc_parser::parse_to_serde_value(text, &ParseOptions::default()).map_err(|err| {
