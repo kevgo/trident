@@ -385,20 +385,29 @@ Use the linked JSON-Schema to get help on supported settings and their meaning.
   "applications": {
     "actionlint": {},
     "biome": {
-      "enabled": true, // enable or disable the entire biome tool
-      "ignore-files": ["generated.css"],  // don't process this file
+      // enable or disable the entire biome tool
+      "enabled": true,
+      // don't process this file with Biome at all
+      // (but run other tools on it)
+      "ignore-files": ["ignore-completely.css"],
       "operations": {
         "lint": {
-          "enabled": true, // enable or disable actionlint as a linter
-          "ignore-files": ["weird1.css"]  // don't lint this CSS file
+          // enable or disable all Biome lint functionality
+          "enabled": true,
+          // don't lint this CSS file
+          "ignore-files": ["dont-lint.css"]
         },
         "fix": {
+          // enable or disable all Biome fix functionality
           "enabled": true,
-          "ignore-files": ["weird2.css"]  // don't fix this CSS file
+          // don't fix this CSS file
+          "ignore-files": ["dont-fix.css"]
         },
         "fix-unsafe": {
+          // enable or disable all Biome fix-unsafe functionality
           "enabled": true,
-          "ignore-files": ["weird3.css"]  // don't fix-unsafe this CSS file
+          // don't fix-unsafe this CSS file
+          "ignore-files": ["dont-fix-unsafe.css"]
         }
       }
     },
