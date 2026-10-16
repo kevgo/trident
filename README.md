@@ -382,7 +382,28 @@ Use the linked JSON-Schema to get help on supported settings and their meaning.
   // configure the built-in tools
   //
   // Only applications that can receive file paths as CLI arguments have an "ignore-files" key.
-  "applications": {}
+  "applications": {
+    "actionlint": {},
+    "biome": {},
+    "checkstyle": {},
+    "delete_empty_folders": {},
+    "dprint": {},
+    "gherkin_lint": {},
+    "ghokin": {},
+    "git_diff_check": {},
+    "gofumpt": {},
+    "golangci_lint": {},
+    "hadolint": {},
+    "keep_sorted": {},
+    "prettier": {},
+    "pyright": {},
+    "ruff": {},
+    "rumdl": {},
+    "sqlfmt": {},
+    "taplo": {},
+    "text_runner": {},
+    "tikibase": {},
+  }
 }
 ```
 
