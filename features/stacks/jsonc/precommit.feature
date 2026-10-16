@@ -5,6 +5,7 @@ Feature: precommit JSONC
     And a file "run-that-app" with content
       """
       delete-empty-folders 0.0.2
+      node 26.4.0
       prettier 3.7.0
       """
     And a file "trident.json" with content

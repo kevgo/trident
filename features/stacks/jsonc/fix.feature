@@ -4,6 +4,7 @@ Feature: fix JSONC
     Given a file "run-that-app" with content
       """
       delete-empty-folders 0.0.2
+      node 26.4.0
       prettier 3.7.0
       """
     And a file "trident.json" with content
@@ -61,7 +62,7 @@ Feature: fix JSONC
     Then it prints the block
       """
       fix JSONC (Prettier)
-      Error formatting
+      [error] main.jsonc: SyntaxError: Unexpected token (2:1)
       """
-    And the exit code is 1
+    And the exit code is 2
     And file "main.jsonc" is unchanged
