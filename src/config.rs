@@ -42,15 +42,15 @@ pub struct Config {
     #[schemars(rename = "global-lints")]
     pub global_lints: Option<Vec<ToolDefinition>>,
 
-    // application-specific configuration
-    pub applications: Option<ApplicationSection>,
+    /// define the functional tests
+    pub tests: Option<Vec<ToolDefinition>>,
 
     // stack-specific configuration
     #[schemars(with = "Option<std::collections::BTreeMap<StackType, StackConfig>>")]
     pub stacks: Option<AHashMap<StackType, StackConfig>>,
 
-    /// define the functional tests
-    pub tests: Option<Vec<ToolDefinition>>,
+    // application-specific configuration
+    pub applications: Option<ApplicationSection>,
 
     /// configure the default behavior of the Trident commands
     pub commands: Option<CommandsSection>,

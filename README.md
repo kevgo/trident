@@ -308,14 +308,47 @@ Use the linked JSON-Schema to get help on supported settings and their meaning.
   "ignore-files": ["node_modules/", "**/*.min.css"],
 
   // These tools always run.
-  "global-lints": [],
-  "global-fixes": [],
+  "global-lints": [
+    {
+      "name": "a custom lint with a name",
+      "command": "echo Running a custom lint command"
+    },
+    {
+      "command": "echo Just a command without name works too"
+    }
+  ],
+  "global-fixes": [
+    {
+      "command": "echo Fixes are defined the same way as lints"
+    }
+  ],
 
   // Define the functional tests.
-  "tests": [],
+  "tests": [
+    {
+      "name": "a functional test",
+      "command": "echo running this functional test"
+    }
+  ],
 
   // configure the supported software stacks
-  "stacks": {},
+  "stacks": {
+    "css": {},
+    "Cucumber": {},
+    "Dockerfile": {},
+    "Go": {},
+    "Java": {},
+    "Json": {},
+    "JsonC": {},
+    "Markdown": {},
+    "Python": {},
+    "Rust": {},
+    "Sql": {},
+    "Toml": {},
+    "Typescript": {},
+    "Unknown": {},
+    "Yml": {}
+  },
 
   // configure the built-in tools
   //
