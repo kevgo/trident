@@ -384,7 +384,20 @@ Use the linked JSON-Schema to get help on supported settings and their meaning.
   // Only applications that can receive file paths as CLI arguments have an "ignore-files" key.
   "applications": {
     "actionlint": {},
-    "biome": {},
+    "biome": {
+      "enabled": true, // enable or disable the entire biome tool
+      "operations": {
+        "lint": {
+          "enabled": true // enable or disable actionlint as a linter
+        },
+        "fix": {
+          "enabled": true
+        },
+        "fix-unsafe": {
+          "enabled": true
+        }
+      }
+    },
     "checkstyle": {},
     "delete_empty_folders": {},
     "dprint": {},
