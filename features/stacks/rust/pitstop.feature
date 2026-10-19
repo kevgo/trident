@@ -37,7 +37,7 @@ Feature: pitstop Rust
                   "command": "echo 'custom fix running'",
                   "name": "my custom fix"
                 }
-              ],
+              ]
             },
             "lint": {
               "replace": [
