@@ -27,7 +27,7 @@ Feature: pitstop JSONC
     When executing "trident pitstop --show=output"
     Then it prints the lines
       """
-      fix JSONC (Prettier)
+      fix JSONC (Biome)
       """
     And the exit code is 0
     And file "main.jsonc" now has content
@@ -47,7 +47,7 @@ Feature: pitstop JSONC
     When executing "trident pitstop --show=output"
     Then it prints the block
       """
-      fix JSONC (Prettier)
+      fix JSONC (Biome)
       [error] main.jsonc: SyntaxError: Unexpected token (2:1)
       """
     And the exit code is 2

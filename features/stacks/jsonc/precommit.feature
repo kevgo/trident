@@ -30,6 +30,7 @@ Feature: precommit JSONC
     And the exit code is 0
     And file "main.jsonc" is unchanged
 
+  @this
   Scenario: unformatted JSONC
     Given a file "main.jsonc" with content
       """
@@ -43,7 +44,7 @@ Feature: precommit JSONC
     When executing "trident precommit --show=output"
     Then it prints the lines
       """
-      fix JSONC (Prettier)
+      fix JSONC (Biome)
       """
     And the exit code is 0
     And file "main.jsonc" now has content
@@ -62,10 +63,10 @@ Feature: precommit JSONC
       """
     And I ran "git add main.jsonc"
     When executing "trident precommit --show=output"
-    Then it prints the block
+    Then it prints the lines matching
       """
-      fix JSONC (biome)
-      [error] main.jsonc: SyntaxError: Unexpected token (2:1)
+      fix JSONC \(Biome\)
+      Expected an array, an object, or a literal but instead found the end of the file.
       """
     And the exit code is 0
     And file "main.jsonc" is unchanged
