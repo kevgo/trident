@@ -30,7 +30,6 @@ Feature: precommit JSONC
     And the exit code is 0
     And file "main.jsonc" is unchanged
 
-  @this
   Scenario: unformatted JSONC
     Given a file "main.jsonc" with content
       """
