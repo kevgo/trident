@@ -7,7 +7,6 @@ delete-empty-folders 0.0.2
 gherkin-lint 4.2.4
 ghokin 3.10.0
 keep-sorted 0.9.1
-lefthook 2.1.10
 node 26.5.0
 prettier 3.7.0
 ripgrep 15.2.0
