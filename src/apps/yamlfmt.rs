@@ -1,7 +1,6 @@
 use crate::apps::{GetRTACmdArgs, get_rta_command};
 use crate::config::{Application, ApplicationSection, Config, Operation};
 use crate::domain::{DetectedStack, EnabledWhen, Fix, Result, Tool};
-use big_s::S;
 use std::fmt::Display;
 
 pub struct Yamlfmt;
@@ -18,7 +17,7 @@ impl Tool for Yamlfmt {
 
 impl Display for Yamlfmt {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.write_str("Yamlfmt")
+        f.write_str("yamlfmt")
     }
 }
 
@@ -44,24 +43,9 @@ impl Fix for Yamlfmt {
 
     fn unsafe_fix_commands(
         &self,
-        stack: &DetectedStack,
-        config: &Config,
+        _stack: &DetectedStack,
+        _config: &Config,
     ) -> Result<Vec<conc::Executable>> {
-        let ignores = config.ignores_for(self, Operation::FixUnsafe)?;
-        let files = stack.files.remove(&ignores);
-        if files.is_empty() {
-            return Ok(Vec::new());
-        }
-        let mut args = Vec::with_capacity(files.len() + 2);
-        args.push(S("format"));
-        args.push(S("--force"));
-        args.extend(files.into_strings());
-        let executable = get_rta_command(&GetRTACmdArgs {
-            name: format!("unsafe-fix {} ({self})", stack.stack),
-            app: &rta::applications::Taplo {},
-            args,
-            version: None,
-        })?;
-        Ok(executable.into_iter().collect())
+        Ok(vec![])
     }
 }

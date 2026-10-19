@@ -5,8 +5,7 @@ Feature: precommit YML
     And a file "run-that-app" with content
       """
       delete-empty-folders 0.0.2
-      node 26.4.0
-      prettier 3.7.0
+      yamlfmt 0.21.0
       """
 
   Scenario: valid YML
@@ -18,7 +17,7 @@ Feature: precommit YML
     When executing "trident precommit --show=output"
     Then it prints the block
       """
-      fix YML (Prettier)
+      fix YML (yamlfmt)
       """
     And the exit code is 0
     And file "main.yml" is unchanged
@@ -36,7 +35,7 @@ Feature: precommit YML
     When executing "trident precommit --show=output"
     Then it prints the lines
       """
-      fix YML (Prettier)
+      fix YML (yamlfmt)
       """
     And the exit code is 0
     And file "main.yml" now has content
@@ -48,6 +47,7 @@ Feature: precommit YML
       key: other
       """
 
+  @this
   Scenario: invalid YML
     Given a file "main.yml" with content
       """
@@ -57,8 +57,8 @@ Feature: precommit YML
     When executing "trident precommit --show=output"
     Then it prints the lines
       """
-      fix YML (Prettier)
-      [error] main.yml: SyntaxError: Missing closing "quote (1:6)
+      fix YML (yamlfmt)
+      main.yml: yaml: line 2: found unexpected end of stream
       """
     And the exit code is 0
     And file "main.yml" is unchanged

@@ -4,11 +4,9 @@ Feature: fix YML
     Given a file "run-that-app" with content
       """
       delete-empty-folders 0.0.2
-      node 26.4.0
-      prettier 3.7.0
+      yamlfmt 0.21.0
       """
 
-  @this
   Scenario: valid YML
     Given a file "main.yml" with content
       """
@@ -17,7 +15,7 @@ Feature: fix YML
     When executing "trident fix --show=output"
     Then it prints the block
       """
-      fix YML (Prettier)
+      fix YML (yamlfmt)
       """
     And the exit code is 0
     And file "main.yml" is unchanged
@@ -34,7 +32,7 @@ Feature: fix YML
     When executing "trident fix --show=output"
     Then it prints the lines
       """
-      fix YML (Prettier)
+      fix YML (yamlfmt)
       """
     And the exit code is 0
     And file "main.yml" now has content
@@ -54,8 +52,8 @@ Feature: fix YML
     When executing "trident fix --show=output"
     Then it prints the lines
       """
-      fix YML (Prettier)
-      [error] main.yml: SyntaxError: Missing closing "quote (1:6)
+      fix YML (yamlfmt)
+      main.yml: yaml: line 2: found unexpected end of stream
       """
-    And the exit code is 2
+    And the exit code is 1
     And file "main.yml" is unchanged
