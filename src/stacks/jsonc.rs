@@ -14,7 +14,7 @@ impl Stack for JsonC {
     }
 
     fn lints(&self) -> Vec<Box<dyn Lint>> {
-        vec![]
+        vec![Box::new(Biome {})]
     }
 
     fn fixes(&self) -> Vec<Box<dyn Fix>> {

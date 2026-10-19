@@ -11,11 +11,12 @@ Feature: precommit JSONC
       """
       {
         "applications": {
-          "prettier": { "ignore-files": ["trident.json"] }
+          "biome": { "ignore-files": ["trident.json"] }
         }
       }
       """
 
+  @this
   Scenario: formatted JSONC
     Given a file "main.jsonc" with content
       """
@@ -25,7 +26,7 @@ Feature: precommit JSONC
     When executing "trident precommit --show=output"
     Then it prints the block
       """
-      fix JSONC (Prettier)
+      fix JSONC (biome)
       """
     And the exit code is 0
     And file "main.jsonc" is unchanged
@@ -55,7 +56,6 @@ Feature: precommit JSONC
       { "key": "other" } // comment
       """
 
-  @this
   Scenario: invalid JSONC
     Given a file "main.jsonc" with content
       """
@@ -65,7 +65,7 @@ Feature: precommit JSONC
     When executing "trident precommit --show=output"
     Then it prints the block
       """
-      fix JSONC (Prettier)
+      fix JSONC (biome)
       [error] main.jsonc: SyntaxError: Unexpected token (2:1)
       """
     And the exit code is 0
