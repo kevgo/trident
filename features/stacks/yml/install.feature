@@ -9,7 +9,7 @@ Feature: install all YML tools
     When executing "trident fix --show=output"
     Then it prints the lines
       """
-      fix YML (Prettier)
+      fix YML (yamlfmt)
       """
     And the exit code is 0
     And file "main.yml" now has content
@@ -19,6 +19,5 @@ Feature: install all YML tools
     And file "run-that-app" now has an additional line matching
       """
       delete-empty-folders \d+\.\d+\.\d+
-      node \d+\.\d+\.\d+
-      prettier \d+\.\d+\.\d+
+      yamlfmt \d+\.\d+\.\d+
       """

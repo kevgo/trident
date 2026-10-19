@@ -17,6 +17,7 @@ pub mod sqlfmt;
 pub mod taplo;
 pub mod text_runner;
 pub mod tikibase;
+pub mod yamlfmt;
 
 use crate::domain::{Result, UserError};
 use rta::applications::AppDefinition;
