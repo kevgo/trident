@@ -3,7 +3,7 @@ Feature: GitHub Actions workflow files not in a Git repository
   Scenario: valid workflow
     Given a file "run-that-app" with content
       """
-      actionlint 1.1.0
+      actionlint 1.7.12
       delete-empty-folders 0.0.2
       """
     And a file ".github/workflows/main.yml" with content
