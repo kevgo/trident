@@ -9,7 +9,6 @@ pub mod gofumpt;
 pub mod golangci_lint;
 pub mod hadolint;
 pub mod keep_sorted;
-pub mod prettier;
 pub mod pyright;
 pub mod ripgrep;
 pub mod ruff;

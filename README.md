@@ -226,9 +226,9 @@ trident ci --sequential
 | TypeScript | biome                                                        |
 | CSS        | biome                                                        |
 | Dockerfile | hadolint                                                     |
-| JSON       | prettier                                                     |
-| JSONC      | prettier                                                     |
-| YAML       | prettier                                                     |
+| JSON       | biome                                                        |
+| JSONC      | biome                                                        |
+| YAML       | yamlfmt                                                      |
 | Markdown   | rumdl                                                        |
 | TOML       | taplo                                                        |
 | Python     | ruff                                                         |
@@ -424,7 +424,6 @@ Use the linked JSON-Schema to get help on supported settings and their meaning.
     "golangci_lint": {},
     "hadolint": {},
     "keep_sorted": {},
-    "prettier": {},
     "pyright": {},
     "ruff": {},
     "rumdl": {},
