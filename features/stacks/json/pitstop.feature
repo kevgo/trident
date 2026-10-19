@@ -15,7 +15,7 @@ Feature: pitstop JSON
     When executing "trident pitstop --show=output"
     Then it prints the lines
       """
-      fix JSON (Prettier)
+      fix JSON (Biome)
       """
     And the exit code is 0
     And file "main.json" now has content
@@ -34,7 +34,7 @@ Feature: pitstop JSON
     When executing "trident pitstop --show=output"
     Then it prints the block
       """
-      fix JSON (Prettier)
+      fix JSON (Biome)
       """
     And the exit code is 0
     And file "main.json" now has content

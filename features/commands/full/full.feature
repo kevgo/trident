@@ -31,7 +31,7 @@ Feature: full runs all fixes, lints, and tests
       """
     And it prints the lines
       """
-      fix JSON (Prettier)
+      fix JSON (Biome)
       """
     And it prints the block
       """

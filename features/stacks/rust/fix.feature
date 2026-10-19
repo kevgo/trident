@@ -50,7 +50,7 @@ Feature: fix Rust
       """
     And it prints the block
       """
-      fix JSON (Prettier)
+      fix JSON (Biome)
       """
     And it prints the block
       """

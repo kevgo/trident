@@ -15,7 +15,7 @@ Feature: fix JSON
     When executing "trident fix --show=output"
     Then it prints the lines
       """
-      fix JSON (Prettier)
+      fix JSON (Biome)
       """
     And the exit code is 0
     And file "main.json" is unchanged
@@ -28,7 +28,7 @@ Feature: fix JSON
     When executing "trident fix --show=output"
     Then it prints the lines
       """
-      fix JSON (Prettier)
+      fix JSON (Biome)
       """
     And the exit code is 0
     And file "main.json" now has content
@@ -44,7 +44,7 @@ Feature: fix JSON
     When executing "trident fix --show=output"
     Then it prints the block
       """
-      fix JSON (Prettier)
+      fix JSON (Biome)
       [error] main.json: SyntaxError: Unexpected token (2:1)
       """
     And the exit code is 2

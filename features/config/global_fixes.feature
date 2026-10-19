@@ -38,7 +38,7 @@ Feature: custom fixes
       """
     And it prints the lines
       """
-      fix JSON (Prettier)
+      fix JSON (Biome)
       """
     And the exit code is 0
 
