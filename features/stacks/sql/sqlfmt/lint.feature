@@ -12,6 +12,9 @@ Feature: lint SQL
       """
       {
         "applications": {
+          "biome": {
+            "enabled": false
+          },
           "git_diff_check": {
             "enabled": false
           },
