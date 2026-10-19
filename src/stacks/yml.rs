@@ -1,4 +1,5 @@
-use crate::apps::{actionlint::Actionlint, prettier::Prettier};
+use crate::apps::actionlint::Actionlint;
+use crate::apps::yamlfmt::Yamlfmt;
 use crate::domain::{Fix, Lint, Stack, StackType};
 use std::path::Path;
 
@@ -19,7 +20,7 @@ impl Stack for Yml {
     }
 
     fn fixes(&self) -> Vec<Box<dyn Fix>> {
-        vec![Box::new(Prettier {})]
+        vec![Box::new(Yamlfmt {})]
     }
 }
 
