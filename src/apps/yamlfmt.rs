@@ -18,7 +18,7 @@ impl Tool for Yamlfmt {
 
 impl Display for Yamlfmt {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.write_str("Taplo")
+        f.write_str("Yamlfmt")
     }
 }
 
@@ -33,13 +33,10 @@ impl Fix for Yamlfmt {
         if files.is_empty() {
             return Ok(Vec::new());
         }
-        let mut args = Vec::with_capacity(files.len() + 1);
-        args.push(S("format"));
-        args.extend(files.into_strings());
         let executable = get_rta_command(&GetRTACmdArgs {
             name: format!("fix {} ({self})", stack.stack),
-            app: &rta::applications::Taplo {},
-            args,
+            app: &rta::applications::Yamlfmt {},
+            args: files.into_strings(),
             version: None,
         })?;
         Ok(executable.into_iter().collect())

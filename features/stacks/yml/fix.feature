@@ -8,6 +8,7 @@ Feature: fix YML
       prettier 3.7.0
       """
 
+  @this
   Scenario: valid YML
     Given a file "main.yml" with content
       """
