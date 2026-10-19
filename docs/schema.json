@@ -362,16 +362,6 @@
               "type": "null"
             }
           ]
-        },
-        "yamlfmt": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/ApplicationWithFile"
-            },
-            {
-              "type": "null"
-            }
-          ]
         }
       },
       "additionalProperties": false
