@@ -12,7 +12,6 @@ Feature: pitstop --test runs selected tests
       """
       {
         "applications": {
-          "dprint": { "enabled": false },
           "prettier": { "enabled": false }
         },
         "tests": [
@@ -42,7 +41,6 @@ Feature: pitstop --test runs selected tests
       """
       {
         "applications": {
-          "dprint": { "enabled": false },
           "prettier": { "enabled": false }
         },
         "tests": [
@@ -78,7 +76,6 @@ Feature: pitstop --test runs selected tests
       """
       {
         "applications": {
-          "dprint": { "enabled": false },
           "prettier": { "enabled": false }
         },
         "tests": [
@@ -114,7 +111,6 @@ Feature: pitstop --test runs selected tests
       """
       {
         "applications": {
-          "dprint": { "enabled": false },
           "prettier": { "enabled": false }
         },
         "tests": [
@@ -151,7 +147,6 @@ Feature: pitstop --test runs selected tests
       """
       {
         "applications": {
-          "dprint": { "enabled": false },
           "prettier": { "enabled": false }
         },
         "tests": [

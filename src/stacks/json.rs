@@ -1,4 +1,3 @@
-use crate::apps::dprint::Dprint;
 use crate::apps::prettier::Prettier;
 use crate::domain::{Fix, Lint, Stack, StackType};
 use std::path::Path;
@@ -19,7 +18,7 @@ impl Stack for Json {
     }
 
     fn fixes(&self) -> Vec<Box<dyn Fix>> {
-        vec![Box::new(Dprint {}), Box::new(Prettier {})]
+        vec![Box::new(Prettier {})]
     }
 }
 

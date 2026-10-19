@@ -1,8 +1,0 @@
-{
-  "json": {
-    "trailingCommas": "never"
-  },
-  "yaml": {},
-  "excludes": ["**/*-lock.json"],
-  "plugins": ["npm:@dprint/json@0.23.0", "npm:dprint-plugin-yaml@0.6.0"]
-}

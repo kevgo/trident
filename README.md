@@ -225,10 +225,10 @@ trident ci --sequential
 | ---------- | ------------------------------------------------------------ |
 | TypeScript | biome                                                        |
 | CSS        | biome                                                        |
-| Dockerfile | hadolint, dprint (when `dprint.json` is present)             |
-| JSON       | prettier, dprint (when `dprint.json` is present)             |
-| JSONC      | prettier, dprint (when `dprint.json` is present)             |
-| YAML       | prettier, dprint (when `dprint.json` is present)             |
+| Dockerfile | hadolint                                                     |
+| JSON       | prettier                                                     |
+| JSONC      | prettier                                                     |
+| YAML       | prettier                                                     |
 | Markdown   | rumdl                                                        |
 | TOML       | taplo                                                        |
 | Python     | ruff                                                         |
@@ -417,7 +417,6 @@ Use the linked JSON-Schema to get help on supported settings and their meaning.
     },
     "checkstyle": {},
     "delete_empty_folders": {},
-    "dprint": {},
     "gherkin_lint": {},
     "ghokin": {},
     "git_diff_check": {},

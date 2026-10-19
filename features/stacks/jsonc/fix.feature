@@ -1,24 +1,17 @@
-Feature: precommit JSONC with dprint
+Feature: fix JSONC
 
   Background:
-    Given a Git repository
-    And a file "run-that-app" with content
+    Given a file "run-that-app" with content
       """
       delete-empty-folders 0.0.2
-      dprint 0.57.4
-      """
-    And a file "dprint.json" with content
-      """
-      {
-        "plugins": ["https://plugins.dprint.dev/json-0.23.0.wasm"]
-      }
+      node 26.4.0
+      prettier 3.7.0
       """
     And a file "trident.json" with content
       """
       {
         "applications": {
-          "prettier": { "enabled": false },
-          "dprint": { "enabled": true, "ignore-files": ["dprint.json", "trident.json"] }
+          "prettier": { "ignore-files": ["trident.json"] }
         }
       }
       """
@@ -28,11 +21,10 @@ Feature: precommit JSONC with dprint
       """
       { "key": "value" } // comment
       """
-    And I ran "git add main.jsonc"
-    When executing "trident precommit --show=output"
+    When executing "trident fix --show=output"
     Then it prints the block
       """
-      fix JSONC (dprint)
+      fix JSONC (Prettier)
       """
     And the exit code is 0
     And file "main.jsonc" is unchanged
@@ -46,11 +38,10 @@ Feature: precommit JSONC with dprint
       """
       {  "key"  :  "other"  } // comment
       """
-    And I ran "git add main.jsonc other.jsonc"
-    When executing "trident precommit --show=output"
+    When executing "trident fix --show=output"
     Then it prints the lines
       """
-      fix JSONC (dprint)
+      fix JSONC (Prettier)
       """
     And the exit code is 0
     And file "main.jsonc" now has content
@@ -67,12 +58,11 @@ Feature: precommit JSONC with dprint
       """
       { "key":
       """
-    And I ran "git add main.jsonc"
-    When executing "trident precommit --show=output"
+    When executing "trident fix --show=output"
     Then it prints the block
       """
-      fix JSONC (dprint)
-      Error formatting
+      fix JSONC (Prettier)
+      [error] main.jsonc: SyntaxError: Unexpected token (2:1)
       """
-    And the exit code is 0
+    And the exit code is 2
     And file "main.jsonc" is unchanged
