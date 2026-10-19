@@ -16,7 +16,6 @@ Feature: precommit JSONC
       }
       """
 
-  @this
   Scenario: formatted JSONC
     Given a file "main.jsonc" with content
       """
@@ -26,7 +25,7 @@ Feature: precommit JSONC
     When executing "trident precommit --show=output"
     Then it prints the block
       """
-      fix JSONC (biome)
+      fix JSONC (Biome)
       """
     And the exit code is 0
     And file "main.jsonc" is unchanged
