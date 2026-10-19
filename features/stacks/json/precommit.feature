@@ -40,9 +40,9 @@ Feature: precommit JSON
       """
     And I ran "git add main.json"
     When executing "trident precommit"
-    Then it prints the block
+    Then it prints the lines matching
       """
-      [error] main.json: SyntaxError: Unexpected token (2:1)
+      Expected an array, an object, or a literal but instead found the end of the file.
       """
     And the exit code is 0
     And file "main.json" is unchanged
