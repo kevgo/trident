@@ -350,6 +350,8 @@ pub struct ApplicationSection {
     pub text_runner: Option<ApplicationNoFile>,
 
     pub tikibase: Option<ApplicationNoFile>,
+
+    pub yamlfmt: Option<ApplicationWithFile>,
 }
 
 /// a Trident operation that applications can be configured for
@@ -978,7 +980,8 @@ mod tests {
     "sqlfmt": { "enabled": false },
     "taplo": { "enabled": false },
     "text-runner": { "enabled": false },
-    "tikibase": { "enabled": false }
+    "tikibase": { "enabled": false },
+    "yamlfmt": { "enabled": false }
   }
 }
 "#;
@@ -1005,6 +1008,7 @@ mod tests {
                     taplo: Some(disabled_with_file()),
                     text_runner: Some(disabled_no_file()),
                     tikibase: Some(disabled_no_file()),
+                    yamlfmt: Some(disabled_with_file()),
                 })
             );
         }
