@@ -3,6 +3,7 @@ Feature: pitstop SQL
   Background:
     Given a file "run-that-app" with content
       """
+      biome 0.21.0
       sqlfmt 0.32.0
       uv 0.13.0
       """

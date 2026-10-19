@@ -3,6 +3,7 @@ Feature: lint a Tikibase
   Background:
     Given a file "run-that-app" with content
       """
+      biome 0.21.0
       delete-empty-folders 0.0.2
       rumdl 0.2.14
       tikibase 0.6.2

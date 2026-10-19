@@ -1,4 +1,4 @@
-use crate::apps::prettier::Prettier;
+use crate::apps::biome::Biome;
 use crate::domain::{Fix, Lint, Stack, StackType};
 use std::path::Path;
 
@@ -18,7 +18,7 @@ impl Stack for JsonC {
     }
 
     fn fixes(&self) -> Vec<Box<dyn Fix>> {
-        vec![Box::new(Prettier {})]
+        vec![Box::new(Biome {})]
     }
 }
 

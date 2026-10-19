@@ -55,6 +55,7 @@ Feature: precommit JSONC
       { "key": "other" } // comment
       """
 
+  @this
   Scenario: invalid JSONC
     Given a file "main.jsonc" with content
       """
