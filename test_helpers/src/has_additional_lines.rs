@@ -39,7 +39,7 @@ mod tests {
         let new = "\
 # more info at https://github.com/kevgo/run-that-app
 
-biome 0.21.0
+biome 2.4.0
 rumdl 0.2.14
 ";
         let patterns = r"
@@ -106,7 +106,7 @@ two 2.0.0"))
     fn pattern_not_added() {
         let old = "";
         let new = "\
-biome 0.21.0
+biome 2.4.0
 ";
         let patterns = r"taplo \d+\.\d+\.\d+";
         let have = has_additional_lines(old, new, patterns);
@@ -140,7 +140,7 @@ one \\d+\\.\\d+\\.\\d+
     fn unexpected_additional_line() {
         let old = "";
         let new = "\
-biome 0.21.0
+biome 2.4.0
 rumdl 0.2.14
 ";
         let have = has_additional_lines(old, new, r"rumdl \d+\.\d+\.\d+");
@@ -148,7 +148,7 @@ rumdl 0.2.14
             have,
             Err(S("\
 unexpected additional lines:
-biome 0.21.0"))
+biome 2.4.0"))
         );
     }
 
@@ -156,7 +156,7 @@ biome 0.21.0"))
     fn new_lines_can_be_in_any_order() {
         let old = "";
         let new = "\
-biome 0.21.0
+biome 2.4.0
 rumdl 0.2.14
 ";
         let patterns = r"

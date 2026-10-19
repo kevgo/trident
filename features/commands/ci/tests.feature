@@ -3,7 +3,7 @@ Feature: CI runs all fixes, formatters, lints, and tests
   Background:
     Given a file "run-that-app" with content
       """
-      biome 0.21.0
+      biome 2.4.0
       delete-empty-folders 0.0.2
       ruff 0.15.16
       """

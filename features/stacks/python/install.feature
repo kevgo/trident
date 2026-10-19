@@ -4,7 +4,7 @@ Feature: install all Python tools
   Scenario: not installed
     Given a file "run-that-app" with content
       """
-      biome 0.21.0
+      biome 2.4.0
       """
     And a file "main.py" with content
       """

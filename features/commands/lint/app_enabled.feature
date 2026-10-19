@@ -3,7 +3,7 @@ Feature: "trident lint" skips disabled applications
   Scenario: skips a disabled application
     Given a file "run-that-app" with content
       """
-      biome 0.21.0
+      biome 2.4.0
       delete-empty-folders 0.0.2
       taplo 0.10.0
       """

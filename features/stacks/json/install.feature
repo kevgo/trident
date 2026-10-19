@@ -4,7 +4,7 @@ Feature: install all JSON tools
   Scenario: not installed
     Given a file "run-that-app" with content
       """
-      biome 0.21.0
+      biome 2.4.0
       delete-empty-folders 0.0.2
       """
     And a file "main.json" with content

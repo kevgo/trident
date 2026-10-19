@@ -3,7 +3,7 @@ Feature: disable an application's lint operation
   Background:
     Given a file "run-that-app" with content
       """
-      biome 0.21.0
+      biome 2.4.0
       delete-empty-folders 0.0.2
       rumdl 0.2.14
       taplo 0.10.0
