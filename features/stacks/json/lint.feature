@@ -33,6 +33,9 @@ Feature: lint JSON
       { "key":
       """
     When executing "trident lint --show=output"
-    Then it prints nothing to STDOUT
-    And the exit code is 0
+    Then it prints the lines matching
+      """
+      Expected an array, an object, or a literal but instead found the end of the file.
+      """
+    And the exit code is 1
     And file "main.json" is unchanged
