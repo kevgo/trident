@@ -3,9 +3,8 @@ Feature: exclude a file from being linted by a specific app only
   Background:
     Given a file "run-that-app" with content
       """
+      biome 0.21.0
       delete-empty-folders 0.0.2
-      node 26.4.0
-      prettier 3.7.0
       taplo 0.10.0
       """
     And a file "trident.json" with content
