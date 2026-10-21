@@ -36,11 +36,11 @@ Feature: pitstop JSON
       """
       fix JSON (Biome)
       """
-    And the exit code is 0
+    And the exit code is 1
     And file "main.json" now has content
       """
       {
-        "key": "value",
-        "key": "value"
+      \t"key": "value",
+      \t"key": "value"
       }
       """
