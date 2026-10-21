@@ -27,7 +27,7 @@ Feature: full runs all fixes, lints, and tests
     Then it prints the lines to STDERR
       """
       2 JSON, 1 Python, 1 other
-      running 6 tools
+      running 7 tools
       """
     And it prints the lines
       """
@@ -61,6 +61,7 @@ Feature: full runs all fixes, lints, and tests
   Scenario: commands.full.test runs those tests by default
     Given a file "run-that-app" with content
       """
+      biome 2.4.0
       delete-empty-folders 0.0.2
       ruff 0.15.16
       """
@@ -85,7 +86,7 @@ Feature: full runs all fixes, lints, and tests
     Then it prints the lines to STDERR
       """
       1 JSON, 1 other
-      running 2 tools
+      running 4 tools
       """
     And it prints the block
       """
