@@ -86,7 +86,7 @@ Feature: full runs all fixes, lints, and tests
     Then it prints the lines to STDERR
       """
       1 JSON, 1 other
-      running 4 tools
+      running 2 tools
       """
     And it prints the block
       """
