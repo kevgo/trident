@@ -1,13 +1,10 @@
 name: Release
-
 permissions:
   contents: write
-
 on:
   push:
     tags:
       - v[0-9]+.*
-
 jobs:
   create-release:
     runs-on: ubuntu-22.04
@@ -20,7 +17,6 @@ jobs:
           # draft: true
           # (required) GitHub token for creating GitHub Releases.
           token: ${{ secrets.RELEASE_TOKEN }}
-
   upload-assets:
     needs: create-release
     strategy:

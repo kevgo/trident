@@ -1,7 +1,5 @@
 # more info at https://github.com/kevgo/run-that-app
 
-# always update the versions in feature files too
-
 actionlint 1.7.12
 biome 2.4.0
 contest 0.5.0
@@ -14,3 +12,4 @@ ripgrep 15.2.0
 ruff 0.15.16
 rumdl 0.2.14
 taplo 0.10.0
+yamlfmt 0.21.0

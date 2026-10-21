@@ -1,92 +1,92 @@
 {
-  "$schema": "./docs/schema.json",
-  "applications": {
-    "keep-sorted": {
-      "enabled": true,
-      "ignore-files": [
-        "README.md",
-        "src/apps/keep_sorted.rs",
-        "features/commands/pitstop/keep_sorted.feature"
-      ]
-    },
-    "taplo": {
-      "operations": {
-        "lint": {
-          // current Taplo version doesn't handle Cargo.toml, see https://github.com/rust-lang/cargo/issues/15030
-          "ignore-files": ["Cargo.toml"]
-        }
-      }
-    }
-  },
-  "stacks": {
-    "cucumber": {
-      "fix": {
-        "add": [
-          {
-            "name": "sort-run-that-app",
-            "command": "cargo test --test=run-that-app-content-sorted"
-          }
-        ]
-      }
-    },
-    "rust": {
-      "lint": {
-        "add": [
-          {
-            "name": "cargo clippy",
-            "command": "cargo clippy --all-targets --all-features -- --deny=warnings"
-          },
-          {
-            "name": "cargo clippy for Cucumber code",
-            "command": "cargo clippy --test=cuke --all-features -- --deny=warnings"
-          }
-        ]
-      },
-      "fix": {
-        "add": [
-          {
-            "name": "cargo fix",
-            "command": "cargo +nightly fix --allow-dirty"
-          },
-          {
-            "name": "cargo clippy --fix",
-            "command": "cargo clippy --fix --allow-dirty"
-          },
-          {
-            "name": "cargo fmt",
-            "command": "cargo +nightly fmt"
-          },
-          {
-            "name": "document configuration in README.md",
-            "command": "cargo test --test=check_readme_config --locked --quiet"
-          }
-        ]
-      }
-    }
-  },
-  "tests": [
-    {
-      "name": "unit tests",
-      "command": "make unit"
-    },
-    {
-      "name": "E2E tests",
-      "command": "make cuke"
-    },
-    {
-      "name": "slow E2E tests",
-      "command": "make cuke-slow"
-    }
-  ],
-  "commands": {
-    "ci": {
-      "test": ["unit tests", "slow E2E tests"]
-    },
-    "pitstop": {
-      "test": ["unit tests"]
-    },
-    "full": {
-      "test": ["unit tests", "E2E tests"]
-    }
-  }
+	"$schema": "./docs/schema.json",
+	"applications": {
+		"keep-sorted": {
+			"enabled": true,
+			"ignore-files": [
+				"README.md",
+				"src/apps/keep_sorted.rs",
+				"features/commands/pitstop/keep_sorted.feature"
+			]
+		},
+		"taplo": {
+			"operations": {
+				"lint": {
+					// current Taplo version doesn't handle Cargo.toml, see https://github.com/rust-lang/cargo/issues/15030
+					"ignore-files": ["Cargo.toml"]
+				}
+			}
+		}
+	},
+	"stacks": {
+		"cucumber": {
+			"fix": {
+				"add": [
+					{
+						"name": "sort-run-that-app",
+						"command": "cargo test --test=run-that-app-content-sorted"
+					}
+				]
+			}
+		},
+		"rust": {
+			"lint": {
+				"add": [
+					{
+						"name": "cargo clippy",
+						"command": "cargo clippy --all-targets --all-features -- --deny=warnings"
+					},
+					{
+						"name": "cargo clippy for Cucumber code",
+						"command": "cargo clippy --test=cuke --all-features -- --deny=warnings"
+					}
+				]
+			},
+			"fix": {
+				"add": [
+					{
+						"name": "cargo fix",
+						"command": "cargo +nightly fix --allow-dirty"
+					},
+					{
+						"name": "cargo clippy --fix",
+						"command": "cargo clippy --fix --allow-dirty"
+					},
+					{
+						"name": "cargo fmt",
+						"command": "cargo +nightly fmt"
+					},
+					{
+						"name": "document configuration in README.md",
+						"command": "cargo test --test=check_readme_config --locked --quiet"
+					}
+				]
+			}
+		}
+	},
+	"tests": [
+		{
+			"name": "unit tests",
+			"command": "make unit"
+		},
+		{
+			"name": "E2E tests",
+			"command": "make cuke"
+		},
+		{
+			"name": "slow E2E tests",
+			"command": "make cuke-slow"
+		}
+	],
+	"commands": {
+		"ci": {
+			"test": ["unit tests", "slow E2E tests"]
+		},
+		"pitstop": {
+			"test": ["unit tests"]
+		},
+		"full": {
+			"test": ["unit tests", "E2E tests"]
+		}
+	}
 }
