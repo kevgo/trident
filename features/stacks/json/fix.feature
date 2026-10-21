@@ -42,10 +42,10 @@ Feature: fix JSON
       { "key":
       """
     When executing "trident fix --show=output"
-    Then it prints the block
+    Then it prints the lines matching
       """
-      fix JSON (Biome)
-      [error] main.json: SyntaxError: Unexpected token (2:1)
+      fix JSON \(Biome\)
+      Expected an array, an object, or a literal but instead found the end of the file
       """
-    And the exit code is 2
+    And the exit code is 1
     And file "main.json" is unchanged
