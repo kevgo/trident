@@ -12,9 +12,6 @@ Feature: CI runs all fixes, formatters, lints, and tests
     Given a file "trident.json" with content
       """
       {
-        "applications": {
-          "biome": { "enabled": false }
-        },
         "tests": [
           { "command": "echo test one" },
           { "name": "unit tests", "command": "echo unit" }
@@ -78,9 +75,6 @@ Feature: CI runs all fixes, formatters, lints, and tests
     Given a file "trident.json" with content
       """
       {
-        "applications": {
-          "biome": { "enabled": false }
-        },
         "tests": [
           { "name": "unit", "command": "echo unit" },
           { "name": "cuke", "command": "echo cuke" },
@@ -114,9 +108,6 @@ Feature: CI runs all fixes, formatters, lints, and tests
     Given a file "trident.json" with content
       """
       {
-        "applications": {
-          "biome": { "enabled": false }
-        },
         "tests": [
           { "name": "unit", "command": "echo unit" },
           { "name": "cuke", "command": "echo cuke" }
