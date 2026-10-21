@@ -4,8 +4,7 @@ Feature: install all Python tools
   Scenario: not installed
     Given a file "run-that-app" with content
       """
-      node 26.4.0
-      prettier 3.7.0
+      biome 2.4.0
       """
     And a file "main.py" with content
       """

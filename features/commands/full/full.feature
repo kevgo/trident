@@ -3,9 +3,8 @@ Feature: full runs all fixes, lints, and tests
   Scenario: runs all fixes, lints, and tests on all files
     Given a file "run-that-app" with content
       """
+      biome 2.4.0
       delete-empty-folders 0.0.2
-      node 26.4.0
-      prettier 3.7.0
       ruff 0.15.16
       """
     And a file "trident.json" with content
@@ -28,11 +27,11 @@ Feature: full runs all fixes, lints, and tests
     Then it prints the lines to STDERR
       """
       2 JSON, 1 Python, 1 other
-      running 6 tools
+      running 7 tools
       """
     And it prints the lines
       """
-      fix JSON (Prettier)
+      fix JSON (Biome)
       """
     And it prints the block
       """
@@ -62,6 +61,7 @@ Feature: full runs all fixes, lints, and tests
   Scenario: commands.full.test runs those tests by default
     Given a file "run-that-app" with content
       """
+      biome 2.4.0
       delete-empty-folders 0.0.2
       ruff 0.15.16
       """
@@ -69,7 +69,7 @@ Feature: full runs all fixes, lints, and tests
       """
       {
         "applications": {
-          "prettier": { "enabled": false }
+          "biome": { "enabled": false }
         },
         "tests": [
           { "name": "unit", "command": "echo unit" },

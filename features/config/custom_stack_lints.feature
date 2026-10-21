@@ -3,6 +3,7 @@ Feature: stack-specific lints
   Background:
     Given a file "run-that-app" with content
       """
+      biome 2.4.0
       delete-empty-folders 0.0.2
       ruff 0.15.16
       """

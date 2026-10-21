@@ -3,9 +3,8 @@ Feature: pitstop JSON
   Background:
     Given a file "run-that-app" with content
       """
+      biome 2.4.0
       delete-empty-folders 0.0.2
-      node 26.4.0
-      prettier 3.7.0
       """
 
   Scenario: unformatted JSON
@@ -16,7 +15,7 @@ Feature: pitstop JSON
     When executing "trident pitstop --show=output"
     Then it prints the lines
       """
-      fix JSON (Prettier)
+      fix JSON (Biome)
       """
     And the exit code is 0
     And file "main.json" now has content
@@ -35,13 +34,13 @@ Feature: pitstop JSON
     When executing "trident pitstop --show=output"
     Then it prints the block
       """
-      fix JSON (Prettier)
+      fix JSON (Biome)
       """
-    And the exit code is 0
+    And the exit code is 1
     And file "main.json" now has content
       """
       {
-        "key": "value",
-        "key": "value"
+      \t"key": "value",
+      \t"key": "value"
       }
       """

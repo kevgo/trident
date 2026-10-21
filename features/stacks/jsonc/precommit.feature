@@ -4,15 +4,14 @@ Feature: precommit JSONC
     Given a Git repository
     And a file "run-that-app" with content
       """
+      biome 2.4.0
       delete-empty-folders 0.0.2
-      node 26.4.0
-      prettier 3.7.0
       """
     And a file "trident.json" with content
       """
       {
         "applications": {
-          "prettier": { "ignore-files": ["trident.json"] }
+          "biome": { "ignore-files": ["trident.json"] }
         }
       }
       """
@@ -26,7 +25,7 @@ Feature: precommit JSONC
     When executing "trident precommit --show=output"
     Then it prints the block
       """
-      fix JSONC (Prettier)
+      fix JSONC (Biome)
       """
     And the exit code is 0
     And file "main.jsonc" is unchanged
@@ -44,7 +43,7 @@ Feature: precommit JSONC
     When executing "trident precommit --show=output"
     Then it prints the lines
       """
-      fix JSONC (Prettier)
+      fix JSONC (Biome)
       """
     And the exit code is 0
     And file "main.jsonc" now has content
@@ -63,10 +62,10 @@ Feature: precommit JSONC
       """
     And I ran "git add main.jsonc"
     When executing "trident precommit --show=output"
-    Then it prints the block
+    Then it prints the lines matching
       """
-      fix JSONC (Prettier)
-      [error] main.jsonc: SyntaxError: Unexpected token (2:1)
+      fix JSONC \(Biome\)
+      Expected an array, an object, or a literal but instead found the end of the file.
       """
     And the exit code is 0
     And file "main.jsonc" is unchanged

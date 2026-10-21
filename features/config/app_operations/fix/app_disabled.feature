@@ -3,9 +3,8 @@ Feature: disable an application's fix operation
   Background:
     Given a file "run-that-app" with content
       """
+      biome 2.4.0
       delete-empty-folders 0.0.2
-      node 26.4.0
-      prettier 3.7.0
       rumdl 0.2.14
       taplo 0.10.0
       """

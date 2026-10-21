@@ -5,7 +5,6 @@ Feature: install all JSON tools
     Given a file "run-that-app" with content
       """
       delete-empty-folders 0.0.2
-      node 26.4.0
       """
     And a file "main.json" with content
       """
@@ -14,7 +13,7 @@ Feature: install all JSON tools
     When executing "trident fix --show=output"
     Then it prints the lines
       """
-      fix JSON (Prettier)
+      fix JSON (Biome)
       """
     And the exit code is 0
     And file "main.json" now has content
@@ -23,5 +22,5 @@ Feature: install all JSON tools
       """
     And file "run-that-app" now has an additional line matching
       """
-      prettier \d+\.\d+\.\d+
+      biome \d+\.\d+\.\d+
       """

@@ -10,7 +10,6 @@ gherkin-lint 4.2.4
 ghokin 3.10.0
 keep-sorted 0.9.1
 node 26.12.0
-prettier 3.9.10
 ripgrep 15.2.0
 ruff 0.15.16
 rumdl 0.2.14

@@ -1,592 +1,592 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "Trident configuration",
-  "type": "object",
-  "properties": {
-    "$schema": {
-      "description": "JSON Schema URL for editor support",
-      "type": ["string", "null"]
-    },
-    "ignore-files": {
-      "type": ["array", "null"],
-      "items": {
-        "type": "string"
-      }
-    },
-    "global-fixes": {
-      "type": ["array", "null"],
-      "items": {
-        "$ref": "#/$defs/ToolDefinition"
-      }
-    },
-    "global-lints": {
-      "type": ["array", "null"],
-      "items": {
-        "$ref": "#/$defs/ToolDefinition"
-      }
-    },
-    "tests": {
-      "description": "define the functional tests",
-      "type": ["array", "null"],
-      "items": {
-        "$ref": "#/$defs/ToolDefinition"
-      }
-    },
-    "stacks": {
-      "type": ["object", "null"],
-      "properties": {
-        "css": {
-          "$ref": "#/$defs/StackConfig"
-        },
-        "cucumber": {
-          "$ref": "#/$defs/StackConfig"
-        },
-        "dockerfile": {
-          "$ref": "#/$defs/StackConfig"
-        },
-        "go": {
-          "$ref": "#/$defs/StackConfig"
-        },
-        "java": {
-          "$ref": "#/$defs/StackConfig"
-        },
-        "json": {
-          "$ref": "#/$defs/StackConfig"
-        },
-        "jsonc": {
-          "$ref": "#/$defs/StackConfig"
-        },
-        "markdown": {
-          "$ref": "#/$defs/StackConfig"
-        },
-        "python": {
-          "$ref": "#/$defs/StackConfig"
-        },
-        "rust": {
-          "$ref": "#/$defs/StackConfig"
-        },
-        "sql": {
-          "$ref": "#/$defs/StackConfig"
-        },
-        "toml": {
-          "$ref": "#/$defs/StackConfig"
-        },
-        "typescript": {
-          "$ref": "#/$defs/StackConfig"
-        },
-        "unknown": {
-          "$ref": "#/$defs/StackConfig"
-        },
-        "yml": {
-          "$ref": "#/$defs/StackConfig"
-        }
-      },
-      "additionalProperties": false
-    },
-    "applications": {
-      "anyOf": [
-        {
-          "$ref": "#/$defs/ApplicationSection"
-        },
-        {
-          "type": "null"
-        }
-      ]
-    },
-    "commands": {
-      "description": "configure the default behavior of the Trident commands",
-      "anyOf": [
-        {
-          "$ref": "#/$defs/CommandsSection"
-        },
-        {
-          "type": "null"
-        }
-      ]
-    }
-  },
-  "additionalProperties": false,
-  "$defs": {
-    "ToolDefinition": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "description": "display name for the fix",
-          "type": ["string", "null"]
-        },
-        "command": {
-          "description": "the command that implements the fix",
-          "type": "string"
-        }
-      },
-      "additionalProperties": false,
-      "required": ["command"]
-    },
-    "StackConfig": {
-      "type": "object",
-      "properties": {
-        "lint": {
-          "description": "customize the lints for this stack",
-          "anyOf": [
-            {
-              "$ref": "#/$defs/StackTools"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "fix": {
-          "description": "customize the fixes for this stack",
-          "anyOf": [
-            {
-              "$ref": "#/$defs/StackTools"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        }
-      },
-      "additionalProperties": false
-    },
-    "StackTools": {
-      "type": "object",
-      "properties": {
-        "add": {
-          "description": "these commands run in addition to the built-in ones",
-          "type": ["array", "null"],
-          "items": {
-            "$ref": "#/$defs/ToolDefinition"
-          }
-        },
-        "replace": {
-          "description": "these commands replace the built-in ones",
-          "type": ["array", "null"],
-          "items": {
-            "$ref": "#/$defs/ToolDefinition"
-          }
-        }
-      },
-      "additionalProperties": false
-    },
-    "ApplicationSection": {
-      "type": "object",
-      "properties": {
-        "actionlint": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/ApplicationNoFile"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "biome": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/ApplicationWithFile"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "checkstyle": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/ApplicationNoFile"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "delete-empty-folders": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/ApplicationNoFile"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "gherkin-lint": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/ApplicationWithFile"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "ghokin": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/ApplicationWithFile"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "git-diff-check": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/ApplicationNoFile"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "gofumpt": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/ApplicationWithFile"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "golangci-lint": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/ApplicationNoFile"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "hadolint": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/ApplicationWithFile"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "keep-sorted": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/ApplicationWithFile"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "prettier": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/ApplicationWithFile"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "pyright": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/ApplicationWithFile"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "ruff": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/ApplicationWithFile"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "rumdl": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/ApplicationWithFile"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "sqlfmt": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/ApplicationWithFile"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "taplo": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/ApplicationWithFile"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "text-runner": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/ApplicationNoFile"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "tikibase": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/ApplicationNoFile"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "yamlfmt": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/ApplicationWithFile"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        }
-      },
-      "additionalProperties": false
-    },
-    "ApplicationNoFile": {
-      "type": "object",
-      "properties": {
-        "enabled": {
-          "description": "enable or disable the entire application",
-          "type": ["boolean", "null"]
-        },
-        "operations": {
-          "description": "enable or disable individual operations",
-          "anyOf": [
-            {
-              "$ref": "#/$defs/Operations"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        }
-      },
-      "additionalProperties": false
-    },
-    "Operations": {
-      "type": "object",
-      "properties": {
-        "lint": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/ApplicationNoFileOperation"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "fix": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/ApplicationNoFileOperation"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "fix-unsafe": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/ApplicationNoFileOperation"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        }
-      },
-      "additionalProperties": false
-    },
-    "ApplicationNoFileOperation": {
-      "type": "object",
-      "properties": {
-        "enabled": {
-          "type": ["boolean", "null"]
-        }
-      },
-      "additionalProperties": false
-    },
-    "ApplicationWithFile": {
-      "type": "object",
-      "properties": {
-        "enabled": {
-          "description": "enable or disable the entire application",
-          "type": ["boolean", "null"]
-        },
-        "ignore-files": {
-          "description": "make this app ignore these files",
-          "type": ["array", "null"],
-          "items": {
-            "type": "string"
-          }
-        },
-        "operations": {
-          "description": "enable or disable individual operations",
-          "anyOf": [
-            {
-              "$ref": "#/$defs/Operations2"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        }
-      },
-      "additionalProperties": false
-    },
-    "Operations2": {
-      "type": "object",
-      "properties": {
-        "lint": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/ApplicationWithFileOperation"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "fix": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/ApplicationWithFileOperation"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "fix-unsafe": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/ApplicationWithFileOperation"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        }
-      },
-      "additionalProperties": false
-    },
-    "ApplicationWithFileOperation": {
-      "type": "object",
-      "properties": {
-        "enabled": {
-          "description": "enable or disable this operation",
-          "type": ["boolean", "null"]
-        },
-        "ignore-files": {
-          "description": "files that this operation should ignore",
-          "type": ["array", "null"],
-          "items": {
-            "type": "string"
-          }
-        }
-      },
-      "additionalProperties": false
-    },
-    "CommandsSection": {
-      "description": "settings for individual Trident commands",
-      "type": "object",
-      "properties": {
-        "ci": {
-          "description": "default tests for `trident ci`",
-          "anyOf": [
-            {
-              "$ref": "#/$defs/CommandConfig"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "full": {
-          "description": "default tests for `trident full`",
-          "anyOf": [
-            {
-              "$ref": "#/$defs/CommandConfig"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "pitstop": {
-          "description": "default tests for `trident pitstop`",
-          "anyOf": [
-            {
-              "$ref": "#/$defs/CommandConfig"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "test": {
-          "description": "default tests for `trident test`",
-          "anyOf": [
-            {
-              "$ref": "#/$defs/CommandConfig"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        }
-      },
-      "additionalProperties": false
-    },
-    "CommandConfig": {
-      "description": "default tests and other settings for a Trident command",
-      "type": "object",
-      "properties": {
-        "test": {
-          "description": "names of tests this command runs by default",
-          "type": ["array", "null"],
-          "items": {
-            "type": "string"
-          }
-        }
-      },
-      "additionalProperties": false
-    }
-  }
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"title": "Trident configuration",
+	"type": "object",
+	"properties": {
+		"$schema": {
+			"description": "JSON Schema URL for editor support",
+			"type": ["string", "null"]
+		},
+		"ignore-files": {
+			"type": ["array", "null"],
+			"items": {
+				"type": "string"
+			}
+		},
+		"global-fixes": {
+			"type": ["array", "null"],
+			"items": {
+				"$ref": "#/$defs/ToolDefinition"
+			}
+		},
+		"global-lints": {
+			"type": ["array", "null"],
+			"items": {
+				"$ref": "#/$defs/ToolDefinition"
+			}
+		},
+		"tests": {
+			"description": "define the functional tests",
+			"type": ["array", "null"],
+			"items": {
+				"$ref": "#/$defs/ToolDefinition"
+			}
+		},
+		"stacks": {
+			"type": ["object", "null"],
+			"properties": {
+				"css": {
+					"$ref": "#/$defs/StackConfig"
+				},
+				"cucumber": {
+					"$ref": "#/$defs/StackConfig"
+				},
+				"dockerfile": {
+					"$ref": "#/$defs/StackConfig"
+				},
+				"go": {
+					"$ref": "#/$defs/StackConfig"
+				},
+				"java": {
+					"$ref": "#/$defs/StackConfig"
+				},
+				"json": {
+					"$ref": "#/$defs/StackConfig"
+				},
+				"jsonc": {
+					"$ref": "#/$defs/StackConfig"
+				},
+				"markdown": {
+					"$ref": "#/$defs/StackConfig"
+				},
+				"python": {
+					"$ref": "#/$defs/StackConfig"
+				},
+				"rust": {
+					"$ref": "#/$defs/StackConfig"
+				},
+				"sql": {
+					"$ref": "#/$defs/StackConfig"
+				},
+				"toml": {
+					"$ref": "#/$defs/StackConfig"
+				},
+				"typescript": {
+					"$ref": "#/$defs/StackConfig"
+				},
+				"unknown": {
+					"$ref": "#/$defs/StackConfig"
+				},
+				"yml": {
+					"$ref": "#/$defs/StackConfig"
+				}
+			},
+			"additionalProperties": false
+		},
+		"applications": {
+			"anyOf": [
+				{
+					"$ref": "#/$defs/ApplicationSection"
+				},
+				{
+					"type": "null"
+				}
+			]
+		},
+		"commands": {
+			"description": "configure the default behavior of the Trident commands",
+			"anyOf": [
+				{
+					"$ref": "#/$defs/CommandsSection"
+				},
+				{
+					"type": "null"
+				}
+			]
+		}
+	},
+	"additionalProperties": false,
+	"$defs": {
+		"ToolDefinition": {
+			"type": "object",
+			"properties": {
+				"name": {
+					"description": "display name for the fix",
+					"type": ["string", "null"]
+				},
+				"command": {
+					"description": "the command that implements the fix",
+					"type": "string"
+				}
+			},
+			"additionalProperties": false,
+			"required": ["command"]
+		},
+		"StackConfig": {
+			"type": "object",
+			"properties": {
+				"lint": {
+					"description": "customize the lints for this stack",
+					"anyOf": [
+						{
+							"$ref": "#/$defs/StackTools"
+						},
+						{
+							"type": "null"
+						}
+					]
+				},
+				"fix": {
+					"description": "customize the fixes for this stack",
+					"anyOf": [
+						{
+							"$ref": "#/$defs/StackTools"
+						},
+						{
+							"type": "null"
+						}
+					]
+				}
+			},
+			"additionalProperties": false
+		},
+		"StackTools": {
+			"type": "object",
+			"properties": {
+				"add": {
+					"description": "these commands run in addition to the built-in ones",
+					"type": ["array", "null"],
+					"items": {
+						"$ref": "#/$defs/ToolDefinition"
+					}
+				},
+				"replace": {
+					"description": "these commands replace the built-in ones",
+					"type": ["array", "null"],
+					"items": {
+						"$ref": "#/$defs/ToolDefinition"
+					}
+				}
+			},
+			"additionalProperties": false
+		},
+		"ApplicationSection": {
+			"type": "object",
+			"properties": {
+				"actionlint": {
+					"anyOf": [
+						{
+							"$ref": "#/$defs/ApplicationNoFile"
+						},
+						{
+							"type": "null"
+						}
+					]
+				},
+				"biome": {
+					"anyOf": [
+						{
+							"$ref": "#/$defs/ApplicationWithFile"
+						},
+						{
+							"type": "null"
+						}
+					]
+				},
+				"checkstyle": {
+					"anyOf": [
+						{
+							"$ref": "#/$defs/ApplicationNoFile"
+						},
+						{
+							"type": "null"
+						}
+					]
+				},
+				"delete-empty-folders": {
+					"anyOf": [
+						{
+							"$ref": "#/$defs/ApplicationNoFile"
+						},
+						{
+							"type": "null"
+						}
+					]
+				},
+				"gherkin-lint": {
+					"anyOf": [
+						{
+							"$ref": "#/$defs/ApplicationWithFile"
+						},
+						{
+							"type": "null"
+						}
+					]
+				},
+				"ghokin": {
+					"anyOf": [
+						{
+							"$ref": "#/$defs/ApplicationWithFile"
+						},
+						{
+							"type": "null"
+						}
+					]
+				},
+				"git-diff-check": {
+					"anyOf": [
+						{
+							"$ref": "#/$defs/ApplicationNoFile"
+						},
+						{
+							"type": "null"
+						}
+					]
+				},
+				"gofumpt": {
+					"anyOf": [
+						{
+							"$ref": "#/$defs/ApplicationWithFile"
+						},
+						{
+							"type": "null"
+						}
+					]
+				},
+				"golangci-lint": {
+					"anyOf": [
+						{
+							"$ref": "#/$defs/ApplicationNoFile"
+						},
+						{
+							"type": "null"
+						}
+					]
+				},
+				"hadolint": {
+					"anyOf": [
+						{
+							"$ref": "#/$defs/ApplicationWithFile"
+						},
+						{
+							"type": "null"
+						}
+					]
+				},
+				"keep-sorted": {
+					"anyOf": [
+						{
+							"$ref": "#/$defs/ApplicationWithFile"
+						},
+						{
+							"type": "null"
+						}
+					]
+				},
+				"prettier": {
+					"anyOf": [
+						{
+							"$ref": "#/$defs/ApplicationWithFile"
+						},
+						{
+							"type": "null"
+						}
+					]
+				},
+				"pyright": {
+					"anyOf": [
+						{
+							"$ref": "#/$defs/ApplicationWithFile"
+						},
+						{
+							"type": "null"
+						}
+					]
+				},
+				"ruff": {
+					"anyOf": [
+						{
+							"$ref": "#/$defs/ApplicationWithFile"
+						},
+						{
+							"type": "null"
+						}
+					]
+				},
+				"rumdl": {
+					"anyOf": [
+						{
+							"$ref": "#/$defs/ApplicationWithFile"
+						},
+						{
+							"type": "null"
+						}
+					]
+				},
+				"sqlfmt": {
+					"anyOf": [
+						{
+							"$ref": "#/$defs/ApplicationWithFile"
+						},
+						{
+							"type": "null"
+						}
+					]
+				},
+				"taplo": {
+					"anyOf": [
+						{
+							"$ref": "#/$defs/ApplicationWithFile"
+						},
+						{
+							"type": "null"
+						}
+					]
+				},
+				"text-runner": {
+					"anyOf": [
+						{
+							"$ref": "#/$defs/ApplicationNoFile"
+						},
+						{
+							"type": "null"
+						}
+					]
+				},
+				"tikibase": {
+					"anyOf": [
+						{
+							"$ref": "#/$defs/ApplicationNoFile"
+						},
+						{
+							"type": "null"
+						}
+					]
+				},
+				"yamlfmt": {
+					"anyOf": [
+						{
+							"$ref": "#/$defs/ApplicationWithFile"
+						},
+						{
+							"type": "null"
+						}
+					]
+				}
+			},
+			"additionalProperties": false
+		},
+		"ApplicationNoFile": {
+			"type": "object",
+			"properties": {
+				"enabled": {
+					"description": "enable or disable the entire application",
+					"type": ["boolean", "null"]
+				},
+				"operations": {
+					"description": "enable or disable individual operations",
+					"anyOf": [
+						{
+							"$ref": "#/$defs/Operations"
+						},
+						{
+							"type": "null"
+						}
+					]
+				}
+			},
+			"additionalProperties": false
+		},
+		"Operations": {
+			"type": "object",
+			"properties": {
+				"lint": {
+					"anyOf": [
+						{
+							"$ref": "#/$defs/ApplicationNoFileOperation"
+						},
+						{
+							"type": "null"
+						}
+					]
+				},
+				"fix": {
+					"anyOf": [
+						{
+							"$ref": "#/$defs/ApplicationNoFileOperation"
+						},
+						{
+							"type": "null"
+						}
+					]
+				},
+				"fix-unsafe": {
+					"anyOf": [
+						{
+							"$ref": "#/$defs/ApplicationNoFileOperation"
+						},
+						{
+							"type": "null"
+						}
+					]
+				}
+			},
+			"additionalProperties": false
+		},
+		"ApplicationNoFileOperation": {
+			"type": "object",
+			"properties": {
+				"enabled": {
+					"type": ["boolean", "null"]
+				}
+			},
+			"additionalProperties": false
+		},
+		"ApplicationWithFile": {
+			"type": "object",
+			"properties": {
+				"enabled": {
+					"description": "enable or disable the entire application",
+					"type": ["boolean", "null"]
+				},
+				"ignore-files": {
+					"description": "make this app ignore these files",
+					"type": ["array", "null"],
+					"items": {
+						"type": "string"
+					}
+				},
+				"operations": {
+					"description": "enable or disable individual operations",
+					"anyOf": [
+						{
+							"$ref": "#/$defs/Operations2"
+						},
+						{
+							"type": "null"
+						}
+					]
+				}
+			},
+			"additionalProperties": false
+		},
+		"Operations2": {
+			"type": "object",
+			"properties": {
+				"lint": {
+					"anyOf": [
+						{
+							"$ref": "#/$defs/ApplicationWithFileOperation"
+						},
+						{
+							"type": "null"
+						}
+					]
+				},
+				"fix": {
+					"anyOf": [
+						{
+							"$ref": "#/$defs/ApplicationWithFileOperation"
+						},
+						{
+							"type": "null"
+						}
+					]
+				},
+				"fix-unsafe": {
+					"anyOf": [
+						{
+							"$ref": "#/$defs/ApplicationWithFileOperation"
+						},
+						{
+							"type": "null"
+						}
+					]
+				}
+			},
+			"additionalProperties": false
+		},
+		"ApplicationWithFileOperation": {
+			"type": "object",
+			"properties": {
+				"enabled": {
+					"description": "enable or disable this operation",
+					"type": ["boolean", "null"]
+				},
+				"ignore-files": {
+					"description": "files that this operation should ignore",
+					"type": ["array", "null"],
+					"items": {
+						"type": "string"
+					}
+				}
+			},
+			"additionalProperties": false
+		},
+		"CommandsSection": {
+			"description": "settings for individual Trident commands",
+			"type": "object",
+			"properties": {
+				"ci": {
+					"description": "default tests for `trident ci`",
+					"anyOf": [
+						{
+							"$ref": "#/$defs/CommandConfig"
+						},
+						{
+							"type": "null"
+						}
+					]
+				},
+				"full": {
+					"description": "default tests for `trident full`",
+					"anyOf": [
+						{
+							"$ref": "#/$defs/CommandConfig"
+						},
+						{
+							"type": "null"
+						}
+					]
+				},
+				"pitstop": {
+					"description": "default tests for `trident pitstop`",
+					"anyOf": [
+						{
+							"$ref": "#/$defs/CommandConfig"
+						},
+						{
+							"type": "null"
+						}
+					]
+				},
+				"test": {
+					"description": "default tests for `trident test`",
+					"anyOf": [
+						{
+							"$ref": "#/$defs/CommandConfig"
+						},
+						{
+							"type": "null"
+						}
+					]
+				}
+			},
+			"additionalProperties": false
+		},
+		"CommandConfig": {
+			"description": "default tests and other settings for a Trident command",
+			"type": "object",
+			"properties": {
+				"test": {
+					"description": "names of tests this command runs by default",
+					"type": ["array", "null"],
+					"items": {
+						"type": "string"
+					}
+				}
+			},
+			"additionalProperties": false
+		}
+	}
 }

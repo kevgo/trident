@@ -10,7 +10,7 @@ Feature: install Text-Runner
       """
       {
         "applications": {
-          "prettier": { "enabled": false },
+          "biome": { "enabled": false },
           "rumdl": { "enabled": false },
           "tikibase": { "enabled": false }
         }

@@ -16,7 +16,7 @@ Feature: install Rumdl
       """
       {
         "applications": {
-          "prettier": { "enabled": false }
+          "biome": { "enabled": false }
         }
       }
       """

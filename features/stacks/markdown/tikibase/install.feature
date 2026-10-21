@@ -10,7 +10,7 @@ Feature: install Tikibase
       """
       {
         "applications": {
-          "prettier": { "enabled": false },
+          "biome": { "enabled": false },
           "rumdl": { "enabled": false }
           "text-runner": { "enabled": false }
         }

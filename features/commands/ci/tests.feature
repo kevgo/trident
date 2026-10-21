@@ -3,6 +3,7 @@ Feature: CI runs all fixes, formatters, lints, and tests
   Background:
     Given a file "run-that-app" with content
       """
+      biome 2.4.0
       delete-empty-folders 0.0.2
       ruff 0.15.16
       """
@@ -11,9 +12,6 @@ Feature: CI runs all fixes, formatters, lints, and tests
     Given a file "trident.json" with content
       """
       {
-        "applications": {
-          "biome": { "enabled": false }
-        },
         "tests": [
           { "command": "echo test one" },
           { "name": "unit tests", "command": "echo unit" }
@@ -28,7 +26,7 @@ Feature: CI runs all fixes, formatters, lints, and tests
     Then it prints the lines to STDERR
       """
       1 JSON, 1 Python, 1 other
-      running 6 tools
+      running 8 tools
       """
     And it prints the block
       """
@@ -51,9 +49,6 @@ Feature: CI runs all fixes, formatters, lints, and tests
     Given a file "trident.json" with content
       """
       {
-        "applications": {
-          "biome": { "enabled": false }
-        },
         "tests": [
           { "name": "failing test", "command": "tests/fail.sh" }
         ]
@@ -77,9 +72,6 @@ Feature: CI runs all fixes, formatters, lints, and tests
     Given a file "trident.json" with content
       """
       {
-        "applications": {
-          "biome": { "enabled": false }
-        },
         "tests": [
           { "name": "unit", "command": "echo unit" },
           { "name": "cuke", "command": "echo cuke" },
@@ -91,7 +83,7 @@ Feature: CI runs all fixes, formatters, lints, and tests
     Then it prints the lines to STDERR
       """
       1 JSON, 1 other
-      running 3 tools
+      running 5 tools
       """
     And it prints the block
       """
@@ -113,9 +105,6 @@ Feature: CI runs all fixes, formatters, lints, and tests
     Given a file "trident.json" with content
       """
       {
-        "applications": {
-          "biome": { "enabled": false }
-        },
         "tests": [
           { "name": "unit", "command": "echo unit" },
           { "name": "cuke", "command": "echo cuke" }
@@ -131,7 +120,7 @@ Feature: CI runs all fixes, formatters, lints, and tests
     Then it prints the lines to STDERR
       """
       1 JSON, 1 other
-      running 2 tools
+      running 4 tools
       """
     And it prints the block
       """
