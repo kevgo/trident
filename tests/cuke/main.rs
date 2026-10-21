@@ -8,7 +8,7 @@ mod then_steps;
 mod when_steps;
 mod world;
 
-use cucumber::{World, WriterExt as _, event};
+use cucumber::{World, WriterExt as _, cli, event, runner};
 use dot_writer::DotWriter;
 use std::borrow::Cow;
 use std::sync::{
@@ -21,6 +21,11 @@ use world::TridentWorld;
 #[tokio::main(flavor = "current_thread")]
 async fn main() {
     let had_failures = Arc::new(AtomicBool::new(false));
+    let cli = cli::Opts::<_, runner::basic::Cli, _>::parsed();
+    if cli.runner.concurrency == Some(1) {
+        // no concurrent scenarios, hence no need to spread out file system activity
+        jitter::disable();
+    }
     TridentWorld::cucumber()
         .before(|feature, _rule, _scenario, world| {
             world.feature_path.clone_from(&feature.path);
@@ -50,6 +55,7 @@ async fn main() {
         })
         // .max_concurrent_scenarios(1)
         .with_writer(DotWriter::new(Arc::clone(&had_failures)).normalized())
+        .with_cli(cli)
         .run("features")
         .await;
     if snapshots::enabled() {
