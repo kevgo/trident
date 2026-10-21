@@ -14,21 +14,21 @@ Feature: "trident init:claude" installs Claude-compatible agent hooks
     And file ".claude/settings.json" now has content
       """
       {
-      \t"hooks": {
-      \t\t"PostToolUse": [
-      \t\t\t{
-      \t\t\t\t"matcher": "Write|Edit|MultiEdit",
-      \t\t\t\t"hooks": [
-      \t\t\t\t\t{
-      \t\t\t\t\t\t"type": "command",
-      \t\t\t\t\t\t"command": ".claude/trident-hooks/post_write.sh",
-      \t\t\t\t\t\t"statusMessage": "Trident: running linters...",
-      \t\t\t\t\t\t"timeout": 120
-      \t\t\t\t\t}
-      \t\t\t\t]
-      \t\t\t}
-      \t\t]
-      \t}
+        "hooks": {
+          "PostToolUse": [
+            {
+              "matcher": "Write|Edit|MultiEdit",
+              "hooks": [
+                {
+                  "type": "command",
+                  "command": ".claude/trident-hooks/post_write.sh",
+                  "statusMessage": "Trident: running linters...",
+                  "timeout": 120
+                }
+              ]
+            }
+          ]
+        }
       }
       """
     And file ".claude/trident-hooks/post_write.sh" now matches these lines
@@ -103,21 +103,21 @@ Feature: "trident init:claude" installs Claude-compatible agent hooks
     And file ".claude/settings.json" now has content
       """
       {
-      \t"hooks": {
-      \t\t"PostToolUse": [
-      \t\t\t{
-      \t\t\t\t"matcher": "Write|Edit|MultiEdit",
-      \t\t\t\t"hooks": [
-      \t\t\t\t\t{
-      \t\t\t\t\t\t"type": "command",
-      \t\t\t\t\t\t"command": ".claude/trident-hooks/post_write.sh",
-      \t\t\t\t\t\t"statusMessage": "Trident: running linters...",
-      \t\t\t\t\t\t"timeout": 120
-      \t\t\t\t\t}
-      \t\t\t\t]
-      \t\t\t}
-      \t\t]
-      \t}
+        "hooks": {
+          "PostToolUse": [
+            {
+              "matcher": "Write|Edit|MultiEdit",
+              "hooks": [
+                {
+                  "type": "command",
+                  "command": ".claude/trident-hooks/post_write.sh",
+                  "statusMessage": "Trident: running linters...",
+                  "timeout": 120
+                }
+              ]
+            }
+          ]
+        }
       }
       """
     And file ".claude/trident-hooks/post_write.sh" now matches these lines
