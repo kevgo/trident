@@ -49,9 +49,6 @@ Feature: CI runs all fixes, formatters, lints, and tests
     Given a file "trident.json" with content
       """
       {
-        "applications": {
-          "biome": { "enabled": false }
-        },
         "tests": [
           { "name": "failing test", "command": "tests/fail.sh" }
         ]
