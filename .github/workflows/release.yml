@@ -44,7 +44,6 @@ jobs:
           - filename: trident_windows_arm_64
             target: aarch64-pc-windows-msvc
             os: windows-latest
-
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v6
