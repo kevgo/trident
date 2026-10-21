@@ -1,64 +1,64 @@
 {
-	"$schema": "https://raw.githubusercontent.com/contest-framework/server/refs/heads/main/documentation/schema.json",
-	"actions": [
-		{
-			"comment": "entire test suite",
-			"type": "test-all",
-			"run": "make test"
-		},
+  "$schema": "https://raw.githubusercontent.com/contest-framework/server/refs/heads/main/documentation/schema.json",
+  "actions": [
+    {
+      "comment": "entire test suite",
+      "type": "test-all",
+      "run": "make test"
+    },
 
-		{
-			"comment": "all tests in a Cucumber file",
-			"type": "test-file",
-			"files": "*.feature",
-			"run": "cargo test --release --quiet --locked --test cuke -- --input {{file}}"
-		},
+    {
+      "comment": "all tests in a Cucumber file",
+      "type": "test-file",
+      "files": "*.feature",
+      "run": "cargo test --release --quiet --locked --test cuke -- --input {{file}}"
+    },
 
-		{
-			"comment": "all unit tests in Rust file",
-			"type": "test-file",
-			"files": "*.rs",
-			"run": "cargo test --quiet --locked {{modulename}}",
-			"vars": [
-				{
-					"name": "modulename",
-					"source": "file",
-					"filter": "([^/]+).rs"
-				}
-			]
-		},
+    {
+      "comment": "all unit tests in Rust file",
+      "type": "test-file",
+      "files": "*.rs",
+      "run": "cargo test --quiet --locked {{modulename}}",
+      "vars": [
+        {
+          "name": "modulename",
+          "source": "file",
+          "filter": "([^/]+).rs"
+        }
+      ]
+    },
 
-		{
-			"comment": "single test in Rust file",
-			"type": "test-file-line",
-			"files": "*.rs",
-			"run": "cargo test -- {{fn_name}} --show-output",
-			"vars": [
-				{
-					"name": "fn_name",
-					"source": "currentOrAboveLineContent",
-					"filter": "fn (.*)\\(\\)"
-				}
-			]
-		},
+    {
+      "comment": "single test in Rust file",
+      "type": "test-file-line",
+      "files": "*.rs",
+      "run": "cargo test -- {{fn_name}} --show-output",
+      "vars": [
+        {
+          "name": "fn_name",
+          "source": "currentOrAboveLineContent",
+          "filter": "fn (.*)\\(\\)"
+        }
+      ]
+    },
 
-		{
-			"comment": "only the end-to-end tests with the @this tag",
-			"type": "test-file-line",
-			"files": "*.feature",
-			"run": "make cukethis"
-		}
-	],
-	"options": {
-		"beforeRun": {
-			"clearScreen": true,
-			"newlines": 0
-		},
-		"afterRun": {
-			"newlines": 1,
-			"indicatorLines": 3,
-			"indicatorBackground": true,
-			"printResult": false
-		}
-	}
+    {
+      "comment": "only the end-to-end tests with the @this tag",
+      "type": "test-file-line",
+      "files": "*.feature",
+      "run": "make cukethis"
+    }
+  ],
+  "options": {
+    "beforeRun": {
+      "clearScreen": true,
+      "newlines": 0
+    },
+    "afterRun": {
+      "newlines": 1,
+      "indicatorLines": 3,
+      "indicatorBackground": true,
+      "printResult": false
+    }
+  }
 }
