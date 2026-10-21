@@ -11,6 +11,9 @@ Feature: custom lints
     Given a file "trident.json" with content
       """
       {
+        "applications": {
+          "biome": { "enabled": false }
+        },
         "global-lints": [
           { "command": "lints/one.sh" },
           {
@@ -42,6 +45,9 @@ Feature: custom lints
     Given a file "trident.json" with content
       """
       {
+        "applications": {
+          "biome": { "enabled": false }
+        },
         "global-lints": [
           { "command": "lints/fail.sh" }
         ]
