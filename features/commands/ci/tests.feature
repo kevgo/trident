@@ -29,7 +29,7 @@ Feature: CI runs all fixes, formatters, lints, and tests
     Then it prints the lines to STDERR
       """
       1 JSON, 1 Python, 1 other
-      running 6 tools
+      running 8 tools
       """
     And it prints the block
       """
@@ -92,7 +92,7 @@ Feature: CI runs all fixes, formatters, lints, and tests
     Then it prints the lines to STDERR
       """
       1 JSON, 1 other
-      running 3 tools
+      running 5 tools
       """
     And it prints the block
       """
@@ -132,7 +132,7 @@ Feature: CI runs all fixes, formatters, lints, and tests
     Then it prints the lines to STDERR
       """
       1 JSON, 1 other
-      running 2 tools
+      running 4 tools
       """
     And it prints the block
       """
