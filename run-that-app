@@ -1,5 +1,7 @@
 # more info at https://github.com/kevgo/run-that-app
 
+# always update the versions in feature files too
+
 actionlint 1.7.12
 biome 2.4.0
 contest 0.5.0
