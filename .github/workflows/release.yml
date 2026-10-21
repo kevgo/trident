@@ -1,10 +1,13 @@
 name: Release
+
 permissions:
   contents: write
+
 on:
   push:
     tags:
       - v[0-9]+.*
+
 jobs:
   create-release:
     runs-on: ubuntu-22.04
@@ -17,6 +20,7 @@ jobs:
           # draft: true
           # (required) GitHub token for creating GitHub Releases.
           token: ${{ secrets.RELEASE_TOKEN }}
+
   upload-assets:
     needs: create-release
     strategy:
@@ -40,6 +44,7 @@ jobs:
           - filename: trident_windows_arm_64
             target: aarch64-pc-windows-msvc
             os: windows-latest
+
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v6
