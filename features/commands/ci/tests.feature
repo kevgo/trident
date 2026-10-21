@@ -13,7 +13,7 @@ Feature: CI runs all fixes, formatters, lints, and tests
       """
       {
         "applications": {
-          "prettier": { "enabled": false }
+          "biome": { "enabled": false }
         },
         "tests": [
           { "command": "echo test one" },
@@ -53,7 +53,7 @@ Feature: CI runs all fixes, formatters, lints, and tests
       """
       {
         "applications": {
-          "prettier": { "enabled": false }
+          "biome": { "enabled": false }
         },
         "tests": [
           { "name": "failing test", "command": "tests/fail.sh" }
@@ -79,7 +79,7 @@ Feature: CI runs all fixes, formatters, lints, and tests
       """
       {
         "applications": {
-          "prettier": { "enabled": false }
+          "biome": { "enabled": false }
         },
         "tests": [
           { "name": "unit", "command": "echo unit" },
@@ -115,7 +115,7 @@ Feature: CI runs all fixes, formatters, lints, and tests
       """
       {
         "applications": {
-          "prettier": { "enabled": false }
+          "biome": { "enabled": false }
         },
         "tests": [
           { "name": "unit", "command": "echo unit" },

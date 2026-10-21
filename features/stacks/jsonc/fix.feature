@@ -10,7 +10,7 @@ Feature: fix JSONC
       """
       {
         "applications": {
-          "prettier": { "ignore-files": ["trident.json"] }
+          "biome": { "ignore-files": ["trident.json"] }
         }
       }
       """

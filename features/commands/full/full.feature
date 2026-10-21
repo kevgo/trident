@@ -69,7 +69,7 @@ Feature: full runs all fixes, lints, and tests
       """
       {
         "applications": {
-          "prettier": { "enabled": false }
+          "biome": { "enabled": false }
         },
         "tests": [
           { "name": "unit", "command": "echo unit" },

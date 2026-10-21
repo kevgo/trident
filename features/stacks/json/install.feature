@@ -4,7 +4,6 @@ Feature: install all JSON tools
   Scenario: not installed
     Given a file "run-that-app" with content
       """
-      biome 2.4.0
       delete-empty-folders 0.0.2
       """
     And a file "main.json" with content
@@ -23,5 +22,5 @@ Feature: install all JSON tools
       """
     And file "run-that-app" now has an additional line matching
       """
-      prettier \d+\.\d+\.\d+
+      biome \d+\.\d+\.\d+
       """

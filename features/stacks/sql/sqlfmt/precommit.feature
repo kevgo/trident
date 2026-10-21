@@ -17,7 +17,7 @@ Feature: precommit SQL
           "git_diff_check": {
             "enabled": false
           },
-          "prettier": {
+          "biome": {
             "enabled": false
           },
           "rumdl": {
