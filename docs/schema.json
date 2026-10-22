@@ -188,7 +188,7 @@
           }
         },
         "after": {
-          "description": "these commands run before the built-in ones",
+          "description": "these commands run after the built-in ones",
           "type": ["array", "null"],
           "items": {
             "$ref": "#/$defs/ToolDefinition"
