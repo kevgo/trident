@@ -5,8 +5,7 @@
   "record": false,
   "fail-fast": false,
   "keep-order": [],
-  "steps": [],
-  "unknown-steps": [
+  "steps": [
     "^a Git repository$",
     "^a committed file \".*\" with content$",
     "^a file \".*\" with content$",
