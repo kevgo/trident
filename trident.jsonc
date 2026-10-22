@@ -29,6 +29,16 @@
         ]
       }
     },
+    "json": {
+      "fix": {
+        "add": [
+          {
+            "name": "export JSON schema",
+            "command": "make export-json-schema"
+          }
+        ]
+      }
+    },
     "rust": {
       "lint": {
         "add": [
