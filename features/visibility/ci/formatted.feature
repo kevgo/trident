@@ -60,8 +60,8 @@ Feature: CI multiple formatted stacks
       lint Python (ruff)
       All checks passed!
       """
-    And all files are unchanged
     And the exit code is 0
+    And all files are unchanged
 
   Scenario: --show=verbose
     When executing "trident ci --show=verbose"
@@ -104,8 +104,8 @@ Feature: CI multiple formatted stacks
       ruff(.exe)? check main.py
       All checks passed!
       """
-    And all files are unchanged
     And the exit code is 0
+    And all files are unchanged
 
   Scenario: --show=names
     When executing "trident ci --show=names"
@@ -120,11 +120,11 @@ Feature: CI multiple formatted stacks
       fix TypeScript (Biome)
       lint TypeScript (Biome)
       """
-    And all files are unchanged
     And the exit code is 0
+    And all files are unchanged
 
   Scenario: --show=failed
     When executing "trident ci --show=failed"
     Then it prints nothing to STDOUT
-    And all files are unchanged
     And the exit code is 0
+    And all files are unchanged

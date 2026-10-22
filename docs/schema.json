@@ -230,6 +230,16 @@
             }
           ]
         },
+        "cucumber-sort": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ApplicationNoFile"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
         "delete-empty-folders": {
           "anyOf": [
             {

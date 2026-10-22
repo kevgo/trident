@@ -45,8 +45,8 @@ Feature: disable an application's fix operation
       """
       Taplo
       """
-    And file "Cargo.toml" is unchanged
     And the exit code is 0
+    And file "Cargo.toml" is unchanged
 
   Scenario: lint still runs the application
     When executing "trident lint --show=verbose"

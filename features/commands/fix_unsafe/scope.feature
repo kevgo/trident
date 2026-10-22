@@ -44,6 +44,7 @@ Feature: "trident fix-unsafe --scope" selects which files to fix
       unsafe-fix Python (ruff)
       Found 1 error (1 fixed, 0 remaining).
       """
+    And the exit code is 0
     And file "untracked.py" now has content
       """
       def add_to_list(item, items=None):
@@ -54,7 +55,6 @@ Feature: "trident fix-unsafe --scope" selects which files to fix
       """
     And file "committed-on-branch.py" is unchanged
     And file "on-main.py" is unchanged
-    And the exit code is 0
 
   Scenario: --scope=branch fixes files changed on the current branch
     When executing "trident fix-unsafe --scope=branch --show=output"
@@ -67,6 +67,7 @@ Feature: "trident fix-unsafe --scope" selects which files to fix
       """
       Found 2 errors (2 fixed, 0 remaining).
       """
+    And the exit code is 0
     And file "committed-on-branch.py" now has content
       """
       def add_to_list(item, items=None):
@@ -84,7 +85,6 @@ Feature: "trident fix-unsafe --scope" selects which files to fix
           return items
       """
     And file "on-main.py" is unchanged
-    And the exit code is 0
 
   Scenario: --scope=all fixes all files
     When executing "trident fix-unsafe --scope=all --show=output"
@@ -97,6 +97,7 @@ Feature: "trident fix-unsafe --scope" selects which files to fix
       """
       Found 3 errors (3 fixed, 0 remaining).
       """
+    And the exit code is 0
     And file "committed-on-branch.py" now has content
       """
       def add_to_list(item, items=None):
@@ -121,4 +122,3 @@ Feature: "trident fix-unsafe --scope" selects which files to fix
           items.append(item)
           return items
       """
-    And the exit code is 0

@@ -54,6 +54,7 @@ Feature: exclude a file from being linted by a specific app only
       fix TOML \(Taplo\)
       taplo(.exe)? format Cargo.toml other.toml
       """
+    And the exit code is 0
     And file "other.toml" now has content
       """
       key = "value"
@@ -66,7 +67,6 @@ Feature: exclude a file from being linted by a specific app only
       [lints.clippy]
       pedantic = { level = "warn" }
       """
-    And the exit code is 0
 
   Scenario: fix-unsafe still formats the file
     When executing "trident fix-unsafe --show=verbose"
@@ -75,6 +75,7 @@ Feature: exclude a file from being linted by a specific app only
       unsafe-fix TOML \(Taplo\)
       taplo(.exe)? format --force Cargo.toml other.toml
       """
+    And the exit code is 0
     And file "other.toml" now has content
       """
       key = "value"
@@ -87,4 +88,3 @@ Feature: exclude a file from being linted by a specific app only
       [lints.clippy]
       pedantic = { level = "warn" }
       """
-    And the exit code is 0

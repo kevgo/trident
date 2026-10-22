@@ -32,8 +32,8 @@ Feature: "trident fix" skips disabled applications
       """
       Taplo
       """
-    And file "config.toml" is unchanged
     And the exit code is 0
+    And file "config.toml" is unchanged
 
   Scenario: skips a disabled global application
     Given a file "trident.json" with content

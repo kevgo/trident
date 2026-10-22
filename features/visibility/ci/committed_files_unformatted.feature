@@ -76,6 +76,7 @@ Feature: CI if committed files are unformatted
       """
       diff --git a/main.py b/main.py
       """
+    And the exit code is 1
     And file "main.css" now has content
       """
       p {
@@ -90,7 +91,6 @@ Feature: CI if committed files are unformatted
       """
       print("hello")
       """
-    And the exit code is 1
 
   Scenario: --show=verbose
     When executing "trident ci --show=verbose"
@@ -153,6 +153,7 @@ Feature: CI if committed files are unformatted
       """
       diff --git a/main.py b/main.py
       """
+    And the exit code is 1
     And file "main.css" now has content
       """
       p {
@@ -167,7 +168,6 @@ Feature: CI if committed files are unformatted
       """
       print("hello")
       """
-    And the exit code is 1
 
   Scenario: --show=names
     When executing "trident ci --show=names"
@@ -220,6 +220,7 @@ Feature: CI if committed files are unformatted
       """
       diff --git a/main.py b/main.py
       """
+    And the exit code is 1
     And file "main.css" now has content
       """
       p {
@@ -234,7 +235,6 @@ Feature: CI if committed files are unformatted
       """
       print("hello")
       """
-    And the exit code is 1
 
   Scenario: --show=failed
     When executing "trident ci --show=failed"
@@ -254,6 +254,7 @@ Feature: CI if committed files are unformatted
       """
       diff --git a/main.py b/main.py
       """
+    And the exit code is 1
     And file "main.css" now has content
       """
       p {
@@ -268,4 +269,3 @@ Feature: CI if committed files are unformatted
       """
       print("hello")
       """
-    And the exit code is 1

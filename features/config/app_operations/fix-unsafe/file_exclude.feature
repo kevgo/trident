@@ -45,12 +45,12 @@ Feature: exclude a file from being unsafe-fixed by a specific app only
       """
       Cargo.toml
       """
+    And the exit code is 0
     And file "other.toml" now has content
       """
       key = "value"
       """
     And file "Cargo.toml" is unchanged
-    And the exit code is 0
 
   Scenario: lint still lints the file
     When executing "trident lint --show=verbose"
@@ -68,6 +68,7 @@ Feature: exclude a file from being unsafe-fixed by a specific app only
       fix TOML \(Taplo\)
       taplo(.exe)? format Cargo.toml other.toml
       """
+    And the exit code is 0
     And file "other.toml" now has content
       """
       key = "value"
@@ -80,4 +81,3 @@ Feature: exclude a file from being unsafe-fixed by a specific app only
       [lints.clippy]
       pedantic = { level = "warn" }
       """
-    And the exit code is 0

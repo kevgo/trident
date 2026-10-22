@@ -64,6 +64,7 @@ Feature: CI doesn't care about uncommitted files that are unformatted
       """
       lint CSS (Biome)
       """
+    And the exit code is 0
     And file "main.css" now has content
       """
       p {
@@ -78,7 +79,6 @@ Feature: CI doesn't care about uncommitted files that are unformatted
       """
       print("hello")
       """
-    And the exit code is 0
 
   Scenario: --show=verbose
     When executing "trident ci --show=verbose"
@@ -129,6 +129,7 @@ Feature: CI doesn't care about uncommitted files that are unformatted
       lint CSS \(Biome\)
       biome(.exe)? lint main.css
       """
+    And the exit code is 0
     And file "main.css" now has content
       """
       p {
@@ -143,7 +144,6 @@ Feature: CI doesn't care about uncommitted files that are unformatted
       """
       print("hello")
       """
-    And the exit code is 0
 
   Scenario: --show=names
     When executing "trident ci --show=names"
@@ -164,6 +164,7 @@ Feature: CI doesn't care about uncommitted files that are unformatted
       lint CSS (Biome)
       lint Git diff markers (git diff HEAD --check)
       """
+    And the exit code is 0
     And file "main.css" now has content
       """
       p {
@@ -178,11 +179,11 @@ Feature: CI doesn't care about uncommitted files that are unformatted
       """
       print("hello")
       """
-    And the exit code is 0
 
   Scenario: --show=failed
     When executing "trident ci --show=failed"
     Then it prints nothing to STDOUT
+    And the exit code is 0
     And file "main.css" now has content
       """
       p {
@@ -197,4 +198,3 @@ Feature: CI doesn't care about uncommitted files that are unformatted
       """
       print("hello")
       """
-    And the exit code is 0

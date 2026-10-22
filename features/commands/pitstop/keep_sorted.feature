@@ -41,6 +41,7 @@ Feature: "trident pitstop" keep-sorted only rewrites files changed on the curren
       """
       sort TOML (keep-sorted)
       """
+    And the exit code is 0
     And file "changed.toml" now has content
       """
       # keep-sorted start
@@ -49,7 +50,6 @@ Feature: "trident pitstop" keep-sorted only rewrites files changed on the curren
       # keep-sorted end
       """
     And file "untouched.toml" is unchanged
-    And the exit code is 0
 
   Scenario: on the main branch, does not sort committed files that were not changed
     Given a committed file "changed.toml" with content
@@ -71,6 +71,7 @@ Feature: "trident pitstop" keep-sorted only rewrites files changed on the curren
       """
       sort TOML (keep-sorted)
       """
+    And the exit code is 0
     And file "changed.toml" now has content
       """
       # keep-sorted start
@@ -79,4 +80,3 @@ Feature: "trident pitstop" keep-sorted only rewrites files changed on the curren
       # keep-sorted end
       """
     And file "untouched.toml" is unchanged
-    And the exit code is 0

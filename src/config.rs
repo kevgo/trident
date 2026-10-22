@@ -320,6 +320,10 @@ pub struct ApplicationSection {
 
     pub checkstyle: Option<ApplicationNoFile>,
 
+    #[serde(alias = "cucumber-sort")]
+    #[schemars(rename = "cucumber-sort")]
+    pub cucumber_sort: Option<ApplicationNoFile>,
+
     #[serde(alias = "delete-empty-folders")]
     #[schemars(rename = "delete-empty-folders")]
     pub delete_empty_folders: Option<ApplicationNoFile>,
@@ -1039,6 +1043,7 @@ mod tests {
     "actionlint": { "enabled": false },
     "biome": { "enabled": false },
     "checkstyle": { "enabled": false },
+    "cucumber-sort": { "enabled": false },
     "delete-empty-folders": { "enabled": false },
     "gherkin-lint": { "enabled": false },
     "ghokin": { "enabled": false },
@@ -1065,6 +1070,7 @@ mod tests {
                     actionlint: Some(disabled_no_file()),
                     biome: Some(disabled_with_file()),
                     checkstyle: Some(disabled_no_file()),
+                    cucumber_sort: Some(disabled_no_file()),
                     delete_empty_folders: Some(disabled_no_file()),
                     gherkin_lint: Some(disabled_with_file()),
                     ghokin: Some(disabled_with_file()),

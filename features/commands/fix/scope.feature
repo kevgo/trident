@@ -40,13 +40,13 @@ Feature: "trident fix --scope" selects which files to format
       """
       committed-on-branch.md
       """
+    And the exit code is 0
     And file "untracked.md" now has content
       """
       # Untracked
       """
     And file "committed-on-branch.md" is unchanged
     And file "on-main.md" is unchanged
-    And the exit code is 0
 
   Scenario: --scope=branch formats files changed on the current branch
     When executing "trident fix --scope=branch --show=output"
@@ -67,6 +67,7 @@ Feature: "trident fix --scope" selects which files to format
       """
       on-main.md
       """
+    And the exit code is 0
     And file "committed-on-branch.md" now has content
       """
       # Branch
@@ -76,7 +77,6 @@ Feature: "trident fix --scope" selects which files to format
       # Untracked
       """
     And file "on-main.md" is unchanged
-    And the exit code is 0
 
   Scenario: --scope=all formats all files
     When executing "trident fix --scope=all --show=output"
@@ -97,6 +97,7 @@ Feature: "trident fix --scope" selects which files to format
       """
       on-main.md:1:2: [MD019] Multiple spaces (5) after # in heading [fixed]
       """
+    And the exit code is 0
     And file "committed-on-branch.md" now has content
       """
       # Branch
@@ -109,4 +110,3 @@ Feature: "trident fix --scope" selects which files to format
       """
       # Main
       """
-    And the exit code is 0

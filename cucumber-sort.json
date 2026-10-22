@@ -1,0 +1,26 @@
+{
+  "$schema": "https://raw.githubusercontent.com/kevgo/cucumber-sort/refs/heads/main/docs/schema.json",
+  "exclude": [],
+  "fail-fast": false,
+  "keep-order": ["a committed file"],
+  "steps": [
+    "^a Git repository$",
+    [
+      "^a committed file",
+      "^a file",
+      "^I change file",
+      "^an executable file",
+      "^I ran"
+    ],
+    "^executing \".*\"$",
+    ["^it prints", "^it does not print"],
+    "^the exit code is",
+    ["^all files are unchanged$", "^file \".*\""],
+    [
+      "^the staged changes are$",
+      "^the unstaged changes are$",
+      "^there are no staged changes$",
+      "^there are no unstaged changes$"
+    ]
+  ]
+}

@@ -30,6 +30,7 @@ Feature: "trident fix-unsafe" chooses the smallest "--scope" based on the worksp
       """
       Found 1 error (1 fixed, 0 remaining).
       """
+    And the exit code is 0
     And file "on-main.py" now has content
       """
       def add_to_list(item, items=None):
@@ -38,7 +39,6 @@ Feature: "trident fix-unsafe" chooses the smallest "--scope" based on the worksp
           items.append(item)
           return items
       """
-    And the exit code is 0
 
   Scenario: on main branch, has uncommitted files
     And a file "untracked.py" with content
@@ -58,6 +58,7 @@ Feature: "trident fix-unsafe" chooses the smallest "--scope" based on the worksp
       unsafe-fix Python (ruff)
       Found 1 error (1 fixed, 0 remaining).
       """
+    And the exit code is 0
     And file "untracked.py" now has content
       """
       def add_to_list(item, items=None):
@@ -67,7 +68,6 @@ Feature: "trident fix-unsafe" chooses the smallest "--scope" based on the worksp
           return items
       """
     And file "on-main.py" is unchanged
-    And the exit code is 0
 
   Scenario: on feature branch, branch has no commits, no uncommitted files,
     Given I ran "git checkout -b feature"
@@ -81,6 +81,7 @@ Feature: "trident fix-unsafe" chooses the smallest "--scope" based on the worksp
       """
       Found 1 error (1 fixed, 0 remaining).
       """
+    And the exit code is 0
     And file "on-main.py" now has content
       """
       def add_to_list(item, items=None):
@@ -89,7 +90,6 @@ Feature: "trident fix-unsafe" chooses the smallest "--scope" based on the worksp
           items.append(item)
           return items
       """
-    And the exit code is 0
 
   Scenario: on feature branch, branch has commits, no uncommitted files,
     Given I ran "git checkout -b feature"
@@ -113,6 +113,7 @@ Feature: "trident fix-unsafe" chooses the smallest "--scope" based on the worksp
       """
       on-main.py
       """
+    And the exit code is 0
     And file "committed-on-branch.py" now has content
       """
       def add_to_list(item, items=None):
@@ -122,7 +123,6 @@ Feature: "trident fix-unsafe" chooses the smallest "--scope" based on the worksp
           return items
       """
     And file "on-main.py" is unchanged
-    And the exit code is 0
 
   Scenario: on feature branch, branch has commits, has uncommitted files
     Given I ran "git checkout -b feature"
@@ -157,6 +157,7 @@ Feature: "trident fix-unsafe" chooses the smallest "--scope" based on the worksp
       """
       on-main.py
       """
+    And the exit code is 0
     And file "untracked.py" now has content
       """
       def add_to_list(item, items=None):
@@ -167,4 +168,3 @@ Feature: "trident fix-unsafe" chooses the smallest "--scope" based on the worksp
       """
     And file "committed-on-branch.py" is unchanged
     And file "on-main.py" is unchanged
-    And the exit code is 0
