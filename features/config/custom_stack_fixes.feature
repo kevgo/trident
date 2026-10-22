@@ -15,7 +15,7 @@ Feature: stack-specific fixes
         "stacks": {
           "python": {
             "fix": {
-              "add": [
+              "before": [
                 { "name": "my fix", "command": "echo MY FIX RAN" }
               ]
             }
