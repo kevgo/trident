@@ -120,11 +120,11 @@ Feature: CI multiple formatted stacks
       fix TypeScript (Biome)
       lint TypeScript (Biome)
       """
-    And all files are unchanged
     And the exit code is 0
+    And all files are unchanged
 
   Scenario: --show=failed
     When executing "trident ci --show=failed"
-    Then the exit code is 0
     And it prints nothing to STDOUT
+    Then the exit code is 0
     And all files are unchanged
