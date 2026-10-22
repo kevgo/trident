@@ -4,6 +4,9 @@ Feature: run lints sequentially
     Given a file "trident.json" with content
       """
       {
+        "applications": {
+          "biome": { "enabled": false }
+        },
         "global-lints": [
           { "name": "slow", "command": "sleep 0.3 && echo slow done" },
           { "name": "fast", "command": "echo fast done" }

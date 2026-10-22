@@ -11,6 +11,9 @@ Feature: config file format
       """
       {
         // a comment
+        "applications": {
+          "biome": { "enabled": false }
+        },
         "global-lints": [
           {
             "name": "hello",
@@ -31,6 +34,9 @@ Feature: config file format
     Given a file "trident.jsonc" with content
       """
       {
+        "applications": {
+          "biome": { "enabled": false }
+        },
         "global-lints": [
           { "name": "from jsonc", "command": "echo from jsonc" }
         ]
@@ -48,6 +54,9 @@ Feature: config file format
     Given a file "trident.json" with content
       """
       {
+        "applications": {
+          "biome": { "enabled": false }
+        },
         "global-lints": [
           { "name": "from json", "command": "echo from json" }
         ]
@@ -56,6 +65,9 @@ Feature: config file format
     And a file "trident.jsonc" with content
       """
       {
+        "applications": {
+          "biome": { "enabled": false }
+        },
         "global-lints": [
           { "name": "from jsonc", "command": "echo from jsonc" }
         ]

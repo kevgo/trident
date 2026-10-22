@@ -3,6 +3,7 @@ Feature: pitstop SQL
   Background:
     Given a file "run-that-app" with content
       """
+      biome 2.4.0
       sqlfmt 0.32.0
       uv 0.13.0
       """
@@ -16,7 +17,7 @@ Feature: pitstop SQL
           "git_diff_check": {
             "enabled": false
           },
-          "prettier": {
+          "biome": {
             "enabled": false
           },
           "rumdl": {

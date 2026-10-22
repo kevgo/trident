@@ -6,7 +6,7 @@ Feature: run a pitstop sequentially
       {
         "applications": {
           "delete-empty-folders": { "enabled": false },
-          "prettier": { "enabled": false }
+          "biome": { "enabled": false }
         },
         "global-fixes": [
           { "name": "fix", "command": "echo fix done" }

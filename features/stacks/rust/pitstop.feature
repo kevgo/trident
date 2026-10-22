@@ -3,9 +3,8 @@ Feature: pitstop Rust
   Background:
     Given a file "run-that-app" with content
       """
+      biome 2.4.0
       delete-empty-folders 0.0.2
-      node 26.4.0
-      prettier 3.7.0
       """
     And a file "main.rs" with content
       """
@@ -38,7 +37,7 @@ Feature: pitstop Rust
                   "command": "echo 'custom fix running'",
                   "name": "my custom fix"
                 }
-              ],
+              ]
             },
             "lint": {
               "replace": [
@@ -66,7 +65,7 @@ Feature: pitstop Rust
     And it prints to STDERR
       """
       1 JSON, 1 Rust, 1 other
-      running 4 tools
+      running 5 tools
       """
     And the exit code is 0
     And file "main.rs" is unchanged

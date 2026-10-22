@@ -39,12 +39,12 @@ mod tests {
         let new = "\
 # more info at https://github.com/kevgo/run-that-app
 
-node 22.1.0
-prettier 3.7.0
+biome 2.4.0
+rumdl 0.2.14
 ";
         let patterns = r"
-node \d+\.\d+\.\d+
-prettier \d+\.\d+\.\d+
+biome \d+\.\d+\.\d+
+rumdl \d+\.\d+\.\d+
 ";
         assert_eq!(has_additional_lines(old, new, patterns), Ok(()));
     }
@@ -53,16 +53,16 @@ prettier \d+\.\d+\.\d+
     fn existing_lines_one_expected_additional() {
         let old = "\
 delete-empty-folders 0.0.2
-node 26.4.0
+rumdl 0.2.14
 ";
         let new = "\
 # more info at https://github.com/kevgo/run-that-app
 
 delete-empty-folders 0.0.2
-node 26.4.0
-prettier 3.7.0
+rumdl 0.2.14
+taplo 0.10.0
 ";
-        let patterns = r"prettier \d+\.\d+\.\d+";
+        let patterns = r"taplo \d+\.\d+\.\d+";
         assert_eq!(has_additional_lines(old, new, patterns), Ok(()));
     }
 
@@ -106,15 +106,15 @@ two 2.0.0"))
     fn pattern_not_added() {
         let old = "";
         let new = "\
-node 22.1.0
+biome 2.4.0
 ";
-        let patterns = r"prettier \d+\.\d+\.\d+";
+        let patterns = r"taplo \d+\.\d+\.\d+";
         let have = has_additional_lines(old, new, patterns);
         assert_eq!(
             have,
             Err(S("\
 want exactly one new line matching:
-prettier \\d+\\.\\d+\\.\\d+
+taplo \\d+\\.\\d+\\.\\d+
 (matched 0)"))
         );
     }
@@ -140,15 +140,15 @@ one \\d+\\.\\d+\\.\\d+
     fn unexpected_additional_line() {
         let old = "";
         let new = "\
-node 22.1.0
-prettier 3.7.0
+biome 2.4.0
+rumdl 0.2.14
 ";
-        let have = has_additional_lines(old, new, r"node \d+\.\d+\.\d+");
+        let have = has_additional_lines(old, new, r"rumdl \d+\.\d+\.\d+");
         assert_eq!(
             have,
             Err(S("\
 unexpected additional lines:
-prettier 3.7.0"))
+biome 2.4.0"))
         );
     }
 
@@ -156,12 +156,12 @@ prettier 3.7.0"))
     fn new_lines_can_be_in_any_order() {
         let old = "";
         let new = "\
-prettier 3.7.0
-node 22.1.0
+biome 2.4.0
+rumdl 0.2.14
 ";
         let patterns = r"
-node \d+\.\d+\.\d+
-prettier \d+\.\d+\.\d+
+rumdl \d+\.\d+\.\d+
+biome \d+\.\d+\.\d+
 ";
         assert_eq!(has_additional_lines(old, new, patterns), Ok(()));
     }

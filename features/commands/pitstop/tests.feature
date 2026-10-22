@@ -12,7 +12,7 @@ Feature: pitstop --test runs selected tests
       """
       {
         "applications": {
-          "prettier": { "enabled": false }
+          "biome": { "enabled": false }
         },
         "tests": [
           { "name": "unit", "command": "echo unit" },
@@ -41,7 +41,7 @@ Feature: pitstop --test runs selected tests
       """
       {
         "applications": {
-          "prettier": { "enabled": false }
+          "biome": { "enabled": false }
         },
         "tests": [
           { "name": "unit", "command": "echo unit" },
@@ -76,7 +76,7 @@ Feature: pitstop --test runs selected tests
       """
       {
         "applications": {
-          "prettier": { "enabled": false }
+          "biome": { "enabled": false }
         },
         "tests": [
           { "name": "unit", "command": "echo unit" },
@@ -111,7 +111,7 @@ Feature: pitstop --test runs selected tests
       """
       {
         "applications": {
-          "prettier": { "enabled": false }
+          "biome": { "enabled": false }
         },
         "tests": [
           { "name": "unit", "command": "echo unit" },
@@ -147,7 +147,7 @@ Feature: pitstop --test runs selected tests
       """
       {
         "applications": {
-          "prettier": { "enabled": false }
+          "biome": { "enabled": false }
         },
         "tests": [
           { "name": "failing", "command": "tests/fail.sh" }
