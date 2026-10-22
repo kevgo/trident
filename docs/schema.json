@@ -5,35 +5,53 @@
   "properties": {
     "$schema": {
       "description": "JSON Schema URL for editor support",
-      "type": ["string", "null"]
+      "type": [
+        "string",
+        "null"
+      ]
     },
     "ignore-files": {
-      "type": ["array", "null"],
+      "type": [
+        "array",
+        "null"
+      ],
       "items": {
         "type": "string"
       }
     },
     "global-fixes": {
-      "type": ["array", "null"],
+      "type": [
+        "array",
+        "null"
+      ],
       "items": {
         "$ref": "#/$defs/ToolDefinition"
       }
     },
     "global-lints": {
-      "type": ["array", "null"],
+      "type": [
+        "array",
+        "null"
+      ],
       "items": {
         "$ref": "#/$defs/ToolDefinition"
       }
     },
     "tests": {
       "description": "define the functional tests",
-      "type": ["array", "null"],
+      "type": [
+        "array",
+        "null"
+      ],
       "items": {
         "$ref": "#/$defs/ToolDefinition"
       }
     },
     "stacks": {
-      "type": ["object", "null"],
+      "type": [
+        "object",
+        "null"
+      ],
       "properties": {
         "css": {
           "$ref": "#/$defs/StackConfig"
@@ -112,7 +130,10 @@
       "properties": {
         "name": {
           "description": "display name for the fix",
-          "type": ["string", "null"]
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "command": {
           "description": "the command that implements the fix",
@@ -120,7 +141,9 @@
         }
       },
       "additionalProperties": false,
-      "required": ["command"]
+      "required": [
+        "command"
+      ]
     },
     "StackConfig": {
       "type": "object",
@@ -155,14 +178,20 @@
       "properties": {
         "add": {
           "description": "these commands run in addition to the built-in ones",
-          "type": ["array", "null"],
+          "type": [
+            "array",
+            "null"
+          ],
           "items": {
             "$ref": "#/$defs/ToolDefinition"
           }
         },
         "replace": {
           "description": "these commands replace the built-in ones",
-          "type": ["array", "null"],
+          "type": [
+            "array",
+            "null"
+          ],
           "items": {
             "$ref": "#/$defs/ToolDefinition"
           }
@@ -381,7 +410,10 @@
       "properties": {
         "enabled": {
           "description": "enable or disable the entire application",
-          "type": ["boolean", "null"]
+          "type": [
+            "boolean",
+            "null"
+          ]
         },
         "operations": {
           "description": "enable or disable individual operations",
@@ -437,7 +469,10 @@
       "type": "object",
       "properties": {
         "enabled": {
-          "type": ["boolean", "null"]
+          "type": [
+            "boolean",
+            "null"
+          ]
         }
       },
       "additionalProperties": false
@@ -447,11 +482,17 @@
       "properties": {
         "enabled": {
           "description": "enable or disable the entire application",
-          "type": ["boolean", "null"]
+          "type": [
+            "boolean",
+            "null"
+          ]
         },
         "ignore-files": {
           "description": "make this app ignore these files",
-          "type": ["array", "null"],
+          "type": [
+            "array",
+            "null"
+          ],
           "items": {
             "type": "string"
           }
@@ -511,11 +552,17 @@
       "properties": {
         "enabled": {
           "description": "enable or disable this operation",
-          "type": ["boolean", "null"]
+          "type": [
+            "boolean",
+            "null"
+          ]
         },
         "ignore-files": {
           "description": "files that this operation should ignore",
-          "type": ["array", "null"],
+          "type": [
+            "array",
+            "null"
+          ],
           "items": {
             "type": "string"
           }
@@ -580,7 +627,10 @@
       "properties": {
         "test": {
           "description": "names of tests this command runs by default",
-          "type": ["array", "null"],
+          "type": [
+            "array",
+            "null"
+          ],
           "items": {
             "type": "string"
           }
