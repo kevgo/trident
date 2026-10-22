@@ -1,5 +1,5 @@
 use crate::apps::{GetRTACmdArgs, get_rta_command};
-use crate::config::{Application, ApplicationSection, Config, Operation};
+use crate::config::{Application, ApplicationSection, Config};
 use crate::domain::{DetectedStack, EnabledWhen, Fix, Result, StackType, Tool};
 use big_s::S;
 use std::fmt::Display;
@@ -29,13 +29,8 @@ impl Fix for CucumberSort {
     fn fix_commands(
         &self,
         stack: &DetectedStack,
-        config: &Config,
+        _config: &Config,
     ) -> Result<Vec<conc::Executable>> {
-        let ignores = config.ignores_for(self, Operation::Fix)?;
-        let files = stack.files.remove(&ignores);
-        if files.is_empty() {
-            return Ok(vec![]);
-        }
         let executable = get_rta_command(&GetRTACmdArgs {
             name: format!("fix {} ({self})", stack.stack),
             app: &rta::applications::CucumberSort {},

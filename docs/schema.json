@@ -230,7 +230,7 @@
             }
           ]
         },
-        "cucumber_sort": {
+        "cucumber-sort": {
           "anyOf": [
             {
               "$ref": "#/$defs/ApplicationNoFile"
