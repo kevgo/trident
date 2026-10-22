@@ -362,7 +362,7 @@ Use the linked JSON-Schema to get help on supported settings and their meaning.
         "replace": [
           {
             "name": "This fix replaces the built-in CSS fixes",
-            "command": "echo The one and only CSS fix"
+            "command": "echo My own custom CSS fix"
           }
         ],
         "after": [
