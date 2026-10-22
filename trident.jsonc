@@ -21,7 +21,7 @@
   "stacks": {
     "cucumber": {
       "fix": {
-        "add": [
+        "before": [
           {
             "name": "sort-run-that-app",
             "command": "cargo test --test=run-that-app-content-sorted"
@@ -53,7 +53,7 @@
         ]
       },
       "fix": {
-        "add": [
+        "before": [
           {
             "name": "cargo fix",
             "command": "cargo +nightly fix --allow-dirty"
