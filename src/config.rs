@@ -280,20 +280,33 @@ pub(crate) fn to_sequences(tools: Vec<&ToolDefinition>) -> Vec<conc::Sequence> {
 #[serde(deny_unknown_fields)]
 pub struct StackConfig {
     /// customize the lints for this stack
-    pub lint: Option<StackTools>,
+    pub lint: Option<StackLints>,
 
     /// customize the fixes for this stack
-    pub fix: Option<StackTools>,
+    pub fix: Option<StackFixes>,
 }
 
 #[derive(Clone, Debug, Default, Deserialize, JsonSchema, PartialEq)]
 #[serde(deny_unknown_fields)]
-pub struct StackTools {
+pub struct StackLints {
     /// these commands run in addition to the built-in ones
     pub add: Option<Vec<ToolDefinition>>,
 
     /// these commands replace the built-in ones
     pub replace: Option<Vec<ToolDefinition>>,
+}
+
+#[derive(Clone, Debug, Default, Deserialize, JsonSchema, PartialEq)]
+#[serde(deny_unknown_fields)]
+pub struct StackFixes {
+    /// these commands run before the built-in ones
+    pub before: Option<Vec<ToolDefinition>>,
+
+    /// these commands replace the built-in ones
+    pub replace: Option<Vec<ToolDefinition>>,
+
+    /// these commands run after the built-in ones
+    pub after: Option<Vec<ToolDefinition>>,
 }
 
 #[derive(Clone, Debug, Default, Deserialize, JsonSchema, PartialEq)]
@@ -516,8 +529,10 @@ impl Application for ApplicationWithFileOperation {
 mod tests {
 
     mod parse {
-        use crate::config::StackTools;
-        use crate::config::{CommandConfig, CommandsSection, Config, StackConfig, ToolDefinition};
+        use crate::config::{
+            CommandConfig, CommandsSection, Config, StackConfig, StackFixes, StackLints,
+            ToolDefinition,
+        };
         use crate::domain::{StackType, UserError};
         use ahash::AHashMap;
         use big_s::S;
@@ -702,7 +717,7 @@ mod tests {
                 stacks: Some(stack_map(
                     StackType::Python,
                     StackConfig {
-                        lint: Some(StackTools {
+                        lint: Some(StackLints {
                             add: Some(vec![ToolDefinition {
                                 name: Some(S("mypy")),
                                 command: S("mypy ."),
@@ -741,7 +756,7 @@ mod tests {
                 stacks: Some(stack_map(
                     StackType::Rust,
                     StackConfig {
-                        lint: Some(StackTools {
+                        lint: Some(StackLints {
                             replace: Some(vec![ToolDefinition {
                                 name: Some(S("Clippy")),
                                 command: S("cargo clippy --all-targets"),
@@ -780,7 +795,7 @@ mod tests {
                 stacks: Some(stack_map(
                     StackType::Python,
                     StackConfig {
-                        lint: Some(StackTools {
+                        lint: Some(StackLints {
                             add: Some(vec![ToolDefinition {
                                 name: Some(S("mypy")),
                                 command: S("mypy ."),
@@ -788,6 +803,67 @@ mod tests {
                             replace: None,
                         }),
                         fix: None,
+                    },
+                )),
+                tests: None,
+                commands: None,
+            };
+            pretty::assert_eq!(have, want);
+        }
+
+        #[test]
+        fn stack_lints_and_fixes() {
+            let give = r#"
+{
+  "stacks": {
+    "css": {
+      "lint": {
+        "add": [{ "name": "stylelint", "command": "stylelint **/*.css" }],
+        "replace": [{ "name": "custom lint", "command": "echo custom lint" }]
+      },
+      "fix": {
+        "before": [{ "name": "initial CSS fix", "command": "echo initial CSS fix" }],
+        "replace": [{ "name": "The one and only CSS fix", "command": "echo The one and only CSS fix" }],
+        "after": [{ "name": "final CSS fix", "command": "echo final CSS fix" }]
+      }
+    }
+  }
+}
+"#;
+            let have = Config::parse(give, "test.json").unwrap();
+            let want = Config {
+                schema: None,
+                global_fixes: None,
+                global_lints: None,
+                ignore_files: None,
+                applications: None,
+                stacks: Some(stack_map(
+                    StackType::Css,
+                    StackConfig {
+                        lint: Some(StackLints {
+                            add: Some(vec![ToolDefinition {
+                                name: Some(S("stylelint")),
+                                command: S("stylelint **/*.css"),
+                            }]),
+                            replace: Some(vec![ToolDefinition {
+                                name: Some(S("custom lint")),
+                                command: S("echo custom lint"),
+                            }]),
+                        }),
+                        fix: Some(StackFixes {
+                            before: Some(vec![ToolDefinition {
+                                name: Some(S("initial CSS fix")),
+                                command: S("echo initial CSS fix"),
+                            }]),
+                            replace: Some(vec![ToolDefinition {
+                                name: Some(S("The one and only CSS fix")),
+                                command: S("echo The one and only CSS fix"),
+                            }]),
+                            after: Some(vec![ToolDefinition {
+                                name: Some(S("final CSS fix")),
+                                command: S("echo final CSS fix"),
+                            }]),
+                        }),
                     },
                 )),
                 tests: None,

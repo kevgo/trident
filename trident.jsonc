@@ -21,10 +21,20 @@
   "stacks": {
     "cucumber": {
       "fix": {
-        "add": [
+        "before": [
           {
             "name": "sort-run-that-app",
             "command": "cargo test --test=run-that-app-content-sorted"
+          }
+        ]
+      }
+    },
+    "json": {
+      "fix": {
+        "before": [
+          {
+            "name": "export JSON schema",
+            "command": "make export-json-schema"
           }
         ]
       }
@@ -43,7 +53,7 @@
         ]
       },
       "fix": {
-        "add": [
+        "before": [
           {
             "name": "cargo fix",
             "command": "cargo +nightly fix --allow-dirty"

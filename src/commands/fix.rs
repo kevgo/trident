@@ -77,8 +77,16 @@ pub fn determine_fixes(config: &Config, detected_stacks: &DetectedStacks) -> Res
         let stack_type = detected_stack.stack.stack_type();
         let stack_config = config.stack_config(stack_type);
         let stack_executables = stacks_executables.entry(stack_type).or_default();
-        // schedule either the override fixes or the default fixes
         let stack_fixes = stack_config.and_then(|stack_config| stack_config.fix.as_ref());
+        // schedule the before fixes
+        if let Some(additions) = stack_fixes.and_then(|stack_fixes| stack_fixes.before.as_ref()) {
+            stack_executables.extend(
+                additions
+                    .iter()
+                    .map(|tool| tool.to_executable(Operation::Fix, stack_type)),
+            );
+        }
+        // schedule either the override fixes or the default fixes
         if let Some(overrides) = stack_fixes.and_then(|sf| sf.replace.as_ref()) {
             stack_executables.extend(
                 overrides
@@ -94,8 +102,8 @@ pub fn determine_fixes(config: &Config, detected_stacks: &DetectedStacks) -> Res
                 }
             }
         }
-        // schedule the additional fixes
-        if let Some(additions) = stack_fixes.and_then(|stack_fixes| stack_fixes.add.as_ref()) {
+        // schedule the after fixes
+        if let Some(additions) = stack_fixes.and_then(|stack_fixes| stack_fixes.after.as_ref()) {
             stack_executables.extend(
                 additions
                     .iter()
@@ -104,7 +112,7 @@ pub fn determine_fixes(config: &Config, detected_stacks: &DetectedStacks) -> Res
         }
     }
 
-    // custom fixes
+    // global fixes
     if let Some(custom_fixes) = &config.global_fixes {
         add_custom_fixes(custom_fixes, &mut global);
     }

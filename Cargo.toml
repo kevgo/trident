@@ -56,6 +56,10 @@ test = false    # don't run this as part of "cargo test"
 name = "check_readme_config"
 harness = false              # this is a script that exits with a status code
 
+[[test]]
+name = "export_json_schema"
+test = false                # writes docs/schema.json; run via `make export-json-schema`
+
 [lints.clippy]
 pedantic = { level = "warn", priority = -1 }
 missing_errors_doc = "allow"

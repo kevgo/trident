@@ -99,6 +99,15 @@ pub fn determine_precommit_fixes(
         let stack_config = config.stack_config(stack_type);
         let stack_executables = stacks_executables.entry(stack_type).or_default();
         let stack_fixes = stack_config.and_then(|stack_config| stack_config.fix.as_ref());
+        // add the before fixes
+        if let Some(additions) = stack_fixes.and_then(|fix| fix.before.as_ref()) {
+            stack_executables.extend(
+                additions
+                    .iter()
+                    .map(|tool| tool.to_executable(Operation::Fix, stack_type)),
+            );
+        }
+        // add the built-in or replacement fixes
         if let Some(override_fixes) = stack_fixes.and_then(|fix| fix.replace.as_ref()) {
             stack_executables.extend(
                 override_fixes
@@ -114,7 +123,8 @@ pub fn determine_precommit_fixes(
                 }
             }
         }
-        if let Some(additions) = stack_fixes.and_then(|fix| fix.add.as_ref()) {
+        // add the after fixes
+        if let Some(additions) = stack_fixes.and_then(|fix| fix.after.as_ref()) {
             stack_executables.extend(
                 additions
                     .iter()
@@ -123,7 +133,7 @@ pub fn determine_precommit_fixes(
         }
     }
 
-    // custom fixes
+    // global fixes
     if let Some(custom_fixes) = &config.global_fixes {
         add_custom_fixes(custom_fixes, &mut global);
     }
