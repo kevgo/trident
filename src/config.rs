@@ -333,8 +333,6 @@ pub struct ApplicationSection {
     #[schemars(rename = "keep-sorted")]
     pub keep_sorted: Option<ApplicationWithFile>,
 
-    pub prettier: Option<ApplicationWithFile>,
-
     pub pyright: Option<ApplicationWithFile>,
 
     pub ruff: Option<ApplicationWithFile>,
@@ -973,7 +971,6 @@ mod tests {
     "golangci-lint": { "enabled": false },
     "hadolint": { "enabled": false },
     "keep-sorted": { "enabled": false },
-    "prettier": { "enabled": false },
     "pyright": { "enabled": false },
     "ruff": { "enabled": false },
     "rumdl": { "enabled": false },
@@ -1000,7 +997,6 @@ mod tests {
                     golangci_lint: Some(disabled_no_file()),
                     hadolint: Some(disabled_with_file()),
                     keep_sorted: Some(disabled_with_file()),
-                    prettier: Some(disabled_with_file()),
                     pyright: Some(disabled_with_file()),
                     ruff: Some(disabled_with_file()),
                     rumdl: Some(disabled_with_file()),

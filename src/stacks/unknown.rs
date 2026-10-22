@@ -34,7 +34,7 @@ mod tests {
             "main.toml" => true,
             "src/dir/main.toml" => true,
             "other.txt" => true,
-            ".prettierrc" => true,
+            ".gherkin-lintrc" => true,
         };
         let unknown = Unknown {};
         for (give, want) in tests {

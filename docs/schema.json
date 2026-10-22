@@ -312,16 +312,6 @@
             }
           ]
         },
-        "prettier": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/ApplicationWithFile"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
         "pyright": {
           "anyOf": [
             {
