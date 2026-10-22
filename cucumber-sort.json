@@ -1,14 +1,11 @@
 {
   "$schema": "https://raw.githubusercontent.com/kevgo/cucumber-sort/refs/heads/main/docs/schema.json",
-  "include": [],
   "exclude": [],
-  "record": false,
   "fail-fast": false,
-  "keep-order": [],
+  "keep-order": ["a committed file"],
   "steps": [
     "^a Git repository$",
     [
-      "^a committed file \"run-that-app\" with content$",
       "^a committed file",
       "^a file",
       "^I change file \".*\" to$",
