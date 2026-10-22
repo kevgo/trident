@@ -44,8 +44,8 @@ Feature: "trident lint --scope" selects which files to lint
       """
       on-main.md
       """
-    And all files are unchanged
     And the exit code is 1
+    And all files are unchanged
 
   Scenario: --scope=branch lints files changed on the current branch
     When executing "trident lint --scope=branch --show=output"
@@ -66,8 +66,8 @@ Feature: "trident lint --scope" selects which files to lint
       """
       on-main.md
       """
-    And all files are unchanged
     And the exit code is 1
+    And all files are unchanged
 
   Scenario: --scope=all lints all files
     When executing "trident lint --scope=all --show=output"
@@ -88,5 +88,5 @@ Feature: "trident lint --scope" selects which files to lint
       """
       on-main.md:1:2: [MD019] Multiple spaces (5) after # in heading [*]
       """
-    And all files are unchanged
     And the exit code is 1
+    And all files are unchanged

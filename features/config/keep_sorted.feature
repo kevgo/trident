@@ -49,6 +49,7 @@ Feature: keep-sorted support
       """
       sort TOML (keep-sorted)
       """
+    And the exit code is 0
     And file "unsorted_1.toml" now has content
       """
       # keep-sorted start
@@ -63,7 +64,6 @@ Feature: keep-sorted support
       d = 1
       # keep-sorted end
       """
-    And the exit code is 0
 
   Scenario: does not sort globally ignored files
     Given a file "trident.json" with content

@@ -44,13 +44,13 @@ Feature: "trident pitstop --scope" selects which files to process
       """
       on-main.md
       """
+    And the exit code is 0
     And file "untracked.md" now has content
       """
       # Untracked
       """
     And file "committed-on-branch.md" is unchanged
     And file "on-main.md" is unchanged
-    And the exit code is 0
 
   Scenario: --scope=branch processes files changed on the current branch
     When executing "trident pitstop --scope=branch --show=output"
@@ -71,6 +71,7 @@ Feature: "trident pitstop --scope" selects which files to process
       """
       on-main.md
       """
+    And the exit code is 0
     And file "committed-on-branch.md" now has content
       """
       # Branch
@@ -80,7 +81,6 @@ Feature: "trident pitstop --scope" selects which files to process
       # Untracked
       """
     And file "on-main.md" is unchanged
-    And the exit code is 0
 
   Scenario: --scope=all processes all files
     When executing "trident pitstop --scope=all --show=output"
@@ -101,6 +101,7 @@ Feature: "trident pitstop --scope" selects which files to process
       """
       on-main.md:1:2: [MD019] Multiple spaces (5) after # in heading [fixed]
       """
+    And the exit code is 0
     And file "committed-on-branch.md" now has content
       """
       # Branch
@@ -113,4 +114,3 @@ Feature: "trident pitstop --scope" selects which files to process
       """
       # Main
       """
-    And the exit code is 0

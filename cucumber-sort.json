@@ -7,20 +7,23 @@
   "keep-order": [],
   "steps": [
     "^a Git repository$",
-    "^a committed file \".*\" with content$",
-    "^a file \".*\" with content$",
-    "^I change file \".*\" to$",
-    "^an executable file \".*\" with content$",
-    "^I ran \".*\"$",
+    [
+      "^a committed file \"run-that-app\" with content$",
+      "^a committed file",
+      "^a file",
+      "^I change file \".*\" to$",
+      "^an executable file \".*\" with content$",
+      "^I ran \".*\"$"
+    ],
     "^executing \".*\"$",
     ["^it prints", "^it does not print"],
+    "^the exit code is",
     ["^all files are unchanged$", "^file \".*\""],
     [
       "^the staged changes are$",
       "^the unstaged changes are$",
       "^there are no staged changes$",
       "^there are no unstaged changes$"
-    ],
-    "^the exit code is"
+    ]
   ]
 }

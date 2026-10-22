@@ -23,8 +23,8 @@ Feature: "trident lint" chooses the smallest "--scope" based on the workspace st
       """
       on-main.md:1:2: [MD019] Multiple spaces (5) after # in heading [*]
       """
-    And all files are unchanged
     And the exit code is 1
+    And all files are unchanged
 
   Scenario: on main branch, has uncommitted files
     And a file "untracked.md" with content
@@ -45,8 +45,8 @@ Feature: "trident lint" chooses the smallest "--scope" based on the workspace st
       """
       on-main.md
       """
-    And all files are unchanged
     And the exit code is 1
+    And all files are unchanged
 
   Scenario: on feature branch, branch has no commits, no uncommitted files,
     Given I ran "git checkout -b feature"
@@ -60,8 +60,8 @@ Feature: "trident lint" chooses the smallest "--scope" based on the workspace st
       """
       on-main.md:1:2: [MD019] Multiple spaces (5) after # in heading [*]
       """
-    And all files are unchanged
     And the exit code is 1
+    And all files are unchanged
 
   Scenario: on feature branch, branch has commits, no uncommitted files,
     Given I ran "git checkout -b feature"
@@ -83,8 +83,8 @@ Feature: "trident lint" chooses the smallest "--scope" based on the workspace st
       """
       on-main.md
       """
-    And all files are unchanged
     And the exit code is 1
+    And all files are unchanged
 
   Scenario: on feature branch, branch has commits, has uncommitted files
     Given I ran "git checkout -b feature"
@@ -114,5 +114,5 @@ Feature: "trident lint" chooses the smallest "--scope" based on the workspace st
       """
       on-main.md
       """
-    And all files are unchanged
     And the exit code is 1
+    And all files are unchanged

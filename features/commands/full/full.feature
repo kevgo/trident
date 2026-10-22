@@ -48,6 +48,7 @@ Feature: full runs all fixes, lints, and tests
       unit tests
       unit
       """
+    And the exit code is 0
     And file "main.json" now has content
       """
       { "key": "value" }
@@ -56,7 +57,6 @@ Feature: full runs all fixes, lints, and tests
       """
       print("hello")
       """
-    And the exit code is 0
 
   Scenario: commands.full.test runs those tests by default
     Given a file "run-that-app" with content

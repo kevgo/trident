@@ -65,12 +65,12 @@ Feature: ignore files for an application
       """
       Cargo.toml
       """
+    And the exit code is 0
     And file "config.toml" now has content
       """
       key = "value"
       """
     And file "Cargo.toml" is unchanged
-    And the exit code is 0
 
   Scenario: lint honors globally ignored files
     Given a file "trident.json" with content

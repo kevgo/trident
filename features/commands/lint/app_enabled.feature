@@ -26,5 +26,5 @@ Feature: "trident lint" skips disabled applications
       """
       Taplo
       """
-    And file "config.toml" is unchanged
     And the exit code is 0
+    And file "config.toml" is unchanged
