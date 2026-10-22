@@ -29,16 +29,6 @@
         ]
       }
     },
-    "json": {
-      "fix": {
-        "before": [
-          {
-            "name": "export JSON schema",
-            "command": "make export-json-schema"
-          }
-        ]
-      }
-    },
     "rust": {
       "lint": {
         "add": [
@@ -69,6 +59,10 @@
           {
             "name": "document configuration in README.md",
             "command": "cargo test --test=check_readme_config --locked --quiet"
+          },
+          {
+            "name": "export JSON schema",
+            "command": "make export-json-schema"
           }
         ]
       }

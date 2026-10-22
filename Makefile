@@ -7,6 +7,7 @@ else
 endif
 
 RTA          = tools/rta@$(RUN_THAT_APP_VERSION)$(EXE)
+BIOME        = $(RTA) biome
 CONTEST      = $(RTA) contest
 GHOKIN       = $(RTA) ghokin
 RIPGREP      = $(RTA) ripgrep
@@ -47,8 +48,9 @@ demo:  # runs Trident in the "demo" folder
 	cargo build --release --quiet
 	(cd demo && ../target/release/trident lint)
 
-export-json-schema:  # writes docs/schema.json
+export-json-schema: ${RTA}  # writes docs/schema.json
 	cargo test --test=export_json_schema --locked --quiet
+	$(BIOME) format --write docs/schema.json
 
 install:  # installs Trident into the global path
 	cargo install --path . --locked
