@@ -125,6 +125,6 @@ Feature: CI multiple formatted stacks
 
   Scenario: --show=failed
     When executing "trident ci --show=failed"
-    And it prints nothing to STDOUT
-    Then the exit code is 0
+    Then it prints nothing to STDOUT
+    And the exit code is 0
     And all files are unchanged
