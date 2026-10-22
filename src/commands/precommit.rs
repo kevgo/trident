@@ -114,7 +114,7 @@ pub fn determine_precommit_fixes(
                 }
             }
         }
-        if let Some(additions) = stack_fixes.and_then(|fix| fix.add.as_ref()) {
+        if let Some(additions) = stack_fixes.and_then(|fix| fix.before.as_ref()) {
             stack_executables.extend(
                 additions
                     .iter()

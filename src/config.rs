@@ -280,20 +280,33 @@ pub(crate) fn to_sequences(tools: Vec<&ToolDefinition>) -> Vec<conc::Sequence> {
 #[serde(deny_unknown_fields)]
 pub struct StackConfig {
     /// customize the lints for this stack
-    pub lint: Option<StackTools>,
+    pub lint: Option<StackLints>,
 
     /// customize the fixes for this stack
-    pub fix: Option<StackTools>,
+    pub fix: Option<StackFixes>,
 }
 
 #[derive(Clone, Debug, Default, Deserialize, JsonSchema, PartialEq)]
 #[serde(deny_unknown_fields)]
-pub struct StackTools {
+pub struct StackLints {
     /// these commands run in addition to the built-in ones
     pub add: Option<Vec<ToolDefinition>>,
 
     /// these commands replace the built-in ones
     pub replace: Option<Vec<ToolDefinition>>,
+}
+
+#[derive(Clone, Debug, Default, Deserialize, JsonSchema, PartialEq)]
+#[serde(deny_unknown_fields)]
+pub struct StackFixes {
+    /// these commands run before the built-in ones
+    pub before: Option<Vec<ToolDefinition>>,
+
+    /// these commands replace the built-in ones
+    pub replace: Option<Vec<ToolDefinition>>,
+
+    /// these commands run before the built-in ones
+    pub after: Option<Vec<ToolDefinition>>,
 }
 
 #[derive(Clone, Debug, Default, Deserialize, JsonSchema, PartialEq)]
@@ -516,7 +529,7 @@ impl Application for ApplicationWithFileOperation {
 mod tests {
 
     mod parse {
-        use crate::config::StackTools;
+        use crate::config::StackLints;
         use crate::config::{CommandConfig, CommandsSection, Config, StackConfig, ToolDefinition};
         use crate::domain::{StackType, UserError};
         use ahash::AHashMap;
@@ -702,7 +715,7 @@ mod tests {
                 stacks: Some(stack_map(
                     StackType::Python,
                     StackConfig {
-                        lint: Some(StackTools {
+                        lint: Some(StackLints {
                             add: Some(vec![ToolDefinition {
                                 name: Some(S("mypy")),
                                 command: S("mypy ."),
@@ -741,7 +754,7 @@ mod tests {
                 stacks: Some(stack_map(
                     StackType::Rust,
                     StackConfig {
-                        lint: Some(StackTools {
+                        lint: Some(StackLints {
                             replace: Some(vec![ToolDefinition {
                                 name: Some(S("Clippy")),
                                 command: S("cargo clippy --all-targets"),
@@ -780,7 +793,7 @@ mod tests {
                 stacks: Some(stack_map(
                     StackType::Python,
                     StackConfig {
-                        lint: Some(StackTools {
+                        lint: Some(StackLints {
                             add: Some(vec![ToolDefinition {
                                 name: Some(S("mypy")),
                                 command: S("mypy ."),

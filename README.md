@@ -353,10 +353,10 @@ Use the linked JSON-Schema to get help on supported settings and their meaning.
         ]
       },
       "fix": {
-        "add": [
+        "before": [
           {
-            "name": "This fix gets run in addition to the built-in CSS fixes",
-            "command": "echo additional CSS fix"
+            "name": "This fix gets run before the built-in CSS fixes",
+            "command": "echo initial CSS fix"
           },
         ],
         "replace": [
@@ -364,7 +364,13 @@ Use the linked JSON-Schema to get help on supported settings and their meaning.
             "name": "This fix replaces the built-in CSS fixes",
             "command": "echo The one and only CSS fix"
           }
-        ]
+        ],
+        "after": [
+          {
+            "name": "This fix gets run after the built-in CSS fixes",
+            "command": "echo final CSS fix"
+          },
+        ],
       }
     },
     "cucumber": {},
