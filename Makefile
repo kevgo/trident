@@ -49,6 +49,7 @@ demo:  # runs Trident in the "demo" folder
 
 export-json-schema:  # writes docs/schema.json
 	cargo test --test=export_json_schema --locked --quiet
+	$(RTA) biome format --write docs/schema.json
 
 install:  # installs Trident into the global path
 	cargo install --path . --locked
