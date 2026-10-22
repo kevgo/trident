@@ -25,22 +25,22 @@ ci: build   # run the full CI pipeline
 contest: ${RTA}
 	$(CONTEST)
 
-cuke: build-release ${RTA}  # runs all end-to-end tests
+cuke: build-release  # runs all end-to-end tests
 	cargo test --test=cuke -- -t "not @online"
 
-cuke-slow: build-release ${RTA}  # runs the end-to-end tests one by one
+cuke-slow: build-release  # runs the end-to-end tests one by one
 	cargo test --test=cuke -- -t "not @online" --concurrency 1
 
-cuke-online: build-release ${RTA}  # runs the end-to-end tests online
+cuke-online: build-release  # runs the end-to-end tests online
 	cargo test --test=cuke -- -t @online --concurrency 1
 
-cuke-update: build-release ${RTA}  # updates the golden snapshots in the end-to-end tests
+cuke-update: build-release  # updates the golden snapshots in the end-to-end tests
 	TRIDENT_UPDATE_SNAPSHOTS=1 cargo test --test=cuke -- --concurrency 1
 
-cuke-all: build-release ${RTA}  # runs all end-to-end tests including the ones making network calls
+cuke-all: build-release  # runs all end-to-end tests including the ones making network calls
 	cargo test --test=cuke -- --concurrency 1
 
-cukethis: build-release ${RTA}  # runs only end-to-end tests tagged with @this
+cukethis: build-release  # runs only end-to-end tests tagged with @this
 	cargo test --test=cuke -- -t @this
 
 .PHONY: demo
@@ -55,7 +55,7 @@ export-json-schema: ${RTA}  # writes docs/schema.json
 install:  # installs Trident into the global path
 	cargo install --path . --locked
 
-fix: build ${RTA}  # corrects all auto-fixable issues
+fix: build  # corrects all auto-fixable issues
 	$(TRIDENT) fix --show=names
 
 ghokin: ${RTA}  # format the Cucumber files
@@ -64,7 +64,7 @@ ghokin: ${RTA}  # format the Cucumber files
 help:  # prints all available targets
 	grep -h -E '^[a-zA-Z_-]+:.*?# .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?# "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
-lint: build ${RTA}  # runs all linters
+lint: build  # runs all linters
 	$(TRIDENT) lint --show=names
 
 setup: setup-ci  # install development dependencies on this computer
