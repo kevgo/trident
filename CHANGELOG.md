@@ -34,6 +34,9 @@ New stacks:
   - `rust` but you need to define the commands for linting and fixing yourself because there is too much customization needed.
   - support for GitHub Actions config files via actionlint
   - support for Dockerfiles via hadolint
+
+New applications:
+  - `cucumber-sort`
   - no more support for `prettier` and `dprint`, Trident uses `biome` and `yamlfmt` now because they are faster and more compatible with corporate VPNs
 
 New behaviors:
