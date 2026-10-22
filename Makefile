@@ -47,6 +47,9 @@ demo:  # runs Trident in the "demo" folder
 	cargo build --release --quiet
 	(cd demo && ../target/release/trident lint)
 
+export-json-schema:  # writes docs/schema.json
+	cargo test --test=export_json_schema --locked --quiet
+
 install:  # installs Trident into the global path
 	cargo install --path . --locked
 
