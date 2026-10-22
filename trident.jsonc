@@ -31,7 +31,7 @@
     },
     "json": {
       "fix": {
-        "add": [
+        "before": [
           {
             "name": "export JSON schema",
             "command": "make export-json-schema"
