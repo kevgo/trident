@@ -320,6 +320,8 @@ pub struct ApplicationSection {
 
     pub checkstyle: Option<ApplicationNoFile>,
 
+    #[serde(alias = "cucumber-sort")]
+    #[schemars(rename = "cucumber-sort")]
     pub cucumber_sort: Option<ApplicationNoFile>,
 
     #[serde(alias = "delete-empty-folders")]
