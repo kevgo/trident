@@ -8,9 +8,9 @@
     [
       "^a committed file",
       "^a file",
-      "^I change file \".*\" to$",
-      "^an executable file \".*\" with content$",
-      "^I ran \".*\"$"
+      "^I change file",
+      "^an executable file",
+      "^I ran"
     ],
     "^executing \".*\"$",
     ["^it prints", "^it does not print"],
