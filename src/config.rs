@@ -305,7 +305,7 @@ pub struct StackFixes {
     /// these commands replace the built-in ones
     pub replace: Option<Vec<ToolDefinition>>,
 
-    /// these commands run before the built-in ones
+    /// these commands run after the built-in ones
     pub after: Option<Vec<ToolDefinition>>,
 }
 

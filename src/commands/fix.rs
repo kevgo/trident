@@ -112,7 +112,7 @@ pub fn determine_fixes(config: &Config, detected_stacks: &DetectedStacks) -> Res
         }
     }
 
-    // custom fixes
+    // global fixes
     if let Some(custom_fixes) = &config.global_fixes {
         add_custom_fixes(custom_fixes, &mut global);
     }
