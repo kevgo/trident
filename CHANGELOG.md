@@ -15,6 +15,7 @@ New config file:
   - the `keep-sorted` config key now lives under `applications`
   - unknown keys in the config file are now an error
   - the `ignore` config key is renamed to `ignore-files`
+  - new `before` and `after` keys for fixes
   - JSON-Schema for the config file is available at https://github.com/kevgo/trident/raw/refs/heads/main/docs/schema.json.
   - all tool definitions in the config file can now have an optional name
   - you can now enable/disable and ignore files for individual tools or operations of each tool
@@ -33,7 +34,7 @@ New stacks:
   - `rust` but you need to define the commands for linting and fixing yourself because there is too much customization needed.
   - support for GitHub Actions config files via actionlint
   - support for Dockerfiles via hadolint
-  - support for `dprint` if file `dprint.json` is present
+  - no more support for `prettier` and `dprint`, Trident uses `biome` and `yamlfmt` now because they are faster and more compatible with corporate VPNs
 
 New behaviors:
   - auto-scope: `ci`, `fix`, `fix-unsafe`, `lint`, and `pitstop` now process files based on the current situation, and accept `--scope=uncommitted|branch|all` to override the file selection
@@ -44,8 +45,6 @@ New behaviors:
   - `fix-unsafe` now prints tools as `unsafe-fix <stack> (<name>)`
   - renamed the `--show=all` flag to `--show=output`
 - custom stack tools now print `{operation} {stack} ({name})`, matching built-in tools
-
-
 
 ## 0.0.17 (2026-08-15)
 
