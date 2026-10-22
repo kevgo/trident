@@ -36,7 +36,7 @@ New stacks:
   - support for Dockerfiles via hadolint
 
 New applications:
-  - `cucumber-sort`
+  - `actionlint`, `biome`, `cucumber-sort`, `delete-empty-folders`, `hadolint`, `yamlfmt`
   - no more support for `prettier` and `dprint`, Trident uses `biome` and `yamlfmt` now because they are faster and more compatible with corporate VPNs
 
 New behaviors:
