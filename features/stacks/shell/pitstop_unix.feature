@@ -1,4 +1,5 @@
-Feature: pitstop Shell
+@unix
+Feature: pitstop Shell on Unix
 
   Background:
     Given a file "run-that-app" with content
