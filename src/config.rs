@@ -356,6 +356,8 @@ pub struct ApplicationSection {
 
     pub rumdl: Option<ApplicationWithFile>,
 
+    pub shellcheck: Option<ApplicationWithFile>,
+
     pub shfmt: Option<ApplicationWithFile>,
 
     pub sqlfmt: Option<ApplicationWithFile>,
@@ -1085,6 +1087,7 @@ mod tests {
                     pyright: Some(disabled_with_file()),
                     ruff: Some(disabled_with_file()),
                     rumdl: Some(disabled_with_file()),
+                    shellcheck: Some(disabled_with_file()),
                     shfmt: Some(disabled_with_file()),
                     sqlfmt: Some(disabled_with_file()),
                     taplo: Some(disabled_with_file()),
