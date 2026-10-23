@@ -1,4 +1,5 @@
-Feature: lint Shell
+@unix
+Feature: lint Shell on Unix
 
   Background:
     Given a file "run-that-app" with content
