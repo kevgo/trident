@@ -353,6 +353,16 @@
             }
           ]
         },
+        "shellcheck": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ApplicationWithFile"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
         "shfmt": {
           "anyOf": [
             {

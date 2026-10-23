@@ -1,3 +1,4 @@
+use crate::apps::shellcheck::Shellcheck;
 use crate::apps::shfmt::Shfmt;
 use crate::domain::{Fix, Lint, Stack, StackType};
 use std::path::Path;
@@ -14,7 +15,7 @@ impl Stack for Shell {
     }
 
     fn lints(&self) -> Vec<Box<dyn Lint>> {
-        vec![]
+        vec![Box::new(Shellcheck)]
     }
 
     fn fixes(&self) -> Vec<Box<dyn Fix>> {
