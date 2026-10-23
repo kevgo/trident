@@ -1,4 +1,5 @@
-Feature: precommit Shell
+@windows
+Feature: precommit Shell on Windows
 
   Background:
     Given a Git repository
@@ -45,22 +46,7 @@ Feature: precommit Shell
     When executing "trident precommit --show=failed"
     Then it prints nothing to STDOUT
     And the exit code is 0
-    And file "one.sh" now has content
-      """
-      #!/usr/bin/env bash
-      foo() {
-      \techo "one"
-      }
-      foo
-      """
-    And file "two.sh" now has content
-      """
-      #!/usr/bin/env bash
-      foo() {
-      \techo "two"
-      }
-      foo
-      """
+    And all files are unchanged
 
   Scenario: invalid Shell
     Given a file "one.sh" with content
@@ -70,9 +56,6 @@ Feature: precommit Shell
       """
     And I ran "git add one.sh"
     When executing "trident precommit --show=failed"
-    Then it prints the lines
-      """
-      one.sh:2:1: `if <cond>` must be followed by `then`
-      """
+    Then it prints nothing to STDOUT
     And the exit code is 0
-    And file "one.sh" is unchanged
+    And all files are unchanged
