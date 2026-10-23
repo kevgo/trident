@@ -350,6 +350,16 @@
             }
           ]
         },
+        "shfmt": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ApplicationWithFile"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
         "sqlfmt": {
           "anyOf": [
             {

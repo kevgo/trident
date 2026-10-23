@@ -37,7 +37,7 @@ impl Fix for Shfmt {
         args.extend(files.into_strings());
         let executable = get_rta_command(&GetRTACmdArgs {
             name: format!("fix {} ({self})", stack.stack),
-            app: &rta::applications::Sqlfmt {},
+            app: &rta::applications::Shfmt {},
             args,
             version: None,
         })?;
