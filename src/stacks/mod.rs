@@ -7,6 +7,7 @@ mod jsonc;
 mod markdown;
 mod python;
 mod rust;
+mod shell;
 mod sql;
 mod toml;
 mod typescript;
@@ -25,6 +26,7 @@ pub use jsonc::JsonC;
 pub use markdown::Markdown;
 pub use python::Python;
 pub use rust::Rust;
+pub use shell::Shell;
 pub use sql::Sql;
 use std::path::Path;
 pub use toml::Toml;
@@ -46,6 +48,7 @@ pub fn all() -> Vec<Box<dyn Stack>> {
         Box::new(Markdown {}),
         Box::new(Python {}),
         Box::new(Rust {}),
+        Box::new(Shell {}),
         Box::new(Sql {}),
         Box::new(Toml {}),
         Box::new(Typescript {}),
