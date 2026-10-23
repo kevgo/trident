@@ -62,7 +62,7 @@
           },
           {
             "name": "document stacks in README.md",
-            "command": "make update-readme-stacks"
+            "command": "make --no-print-directory update-readme-stacks"
           },
           {
             "name": "export JSON schema",
