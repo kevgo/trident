@@ -11,6 +11,7 @@ BIOME        = $(RTA) biome
 CONTEST      = $(RTA) contest
 GHOKIN       = $(RTA) ghokin
 RIPGREP      = $(RTA) ripgrep
+RUMDL        = $(RTA) rumdl
 TRIDENT      = target/debug/trident$(EXE)
 
 build:  # builds the project in debug mode
@@ -19,7 +20,7 @@ build:  # builds the project in debug mode
 build-release:	# builds the project in release mode
 	cargo build --release
 
-ci: build   # run the full CI pipeline
+ci: build  # run the full CI pipeline
 	$(TRIDENT) ci
 
 contest: ${RTA}
@@ -91,6 +92,10 @@ todo: ${RTA}  # lists all TODOs in the code
 
 unit:  # runs the unit tests
 	cargo nextest run --locked --workspace --status-level fail
+
+update-readme-stacks: ${RTA}  # updates the "Supported stacks" section in README.md
+	cargo test --test=update_readme_stacks --locked --quiet
+	$(RUMDL) fmt --quiet README.md
 
 update: ${RTA}  # updates all dependencies
 	cargo install cargo-edit cargo-machete

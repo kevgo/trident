@@ -221,20 +221,25 @@ trident ci --sequential
 
 ## Supported stacks
 
-| Stack      | Linter                                                       |
-| ---------- | ------------------------------------------------------------ |
-| TypeScript | biome                                                        |
-| CSS        | biome                                                        |
-| Dockerfile | hadolint                                                     |
-| JSON       | biome                                                        |
-| JSONC      | biome                                                        |
-| YAML       | yamlfmt                                                      |
-| Markdown   | rumdl                                                        |
-| TOML       | taplo                                                        |
-| Python     | ruff                                                         |
-| Rust       | (please define your Rust commands as custom lints and fixes) |
-| Go         | golangci-lint                                                |
-| SQL        | sqlfmt                                                       |
+<!-- SUPPORTED-STACKS-START -->
+
+| Stack      | Linter                       | Fix                   |
+| ---------- | ---------------------------- | --------------------- |
+| CSS        | Biome                        | Biome                 |
+| Cucumber   | gherkin-lint                 | cucumber-sort, Ghokin |
+| Dockerfile | hadolint                     |                       |
+| Go         | golangci-lint                | gofumpt               |
+| JSON       | Biome                        | Biome                 |
+| JSONC      | Biome                        | Biome                 |
+| Markdown   | rumdl, Text-Runner, tikibase | tikibase, rumdl       |
+| Python     | Pyright, Ruff                | Ruff                  |
+| Rust       | (your custom command)        | (your custom command) |
+| SQL        |                              | sqlfmt                |
+| TOML       | Taplo                        | Taplo                 |
+| TypeScript | Biome                        | Biome                 |
+| YML        | Actionlint                   | yamlfmt               |
+
+<!-- SUPPORTED-STACKS-END -->
 
 ## Q & A
 
