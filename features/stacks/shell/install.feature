@@ -26,7 +26,7 @@ Feature: install all Shell tools
     And it prints the lines
       """
       fix Shell (shfmt)
-      lint Shell (Shellcheck)
+      lint Shell (ShellCheck)
       """
     And the exit code is 0
     And file "one.sh" now has content

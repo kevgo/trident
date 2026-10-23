@@ -3,9 +3,9 @@ use crate::config::{Application, ApplicationSection, Config, Operation};
 use crate::domain::{DetectedStack, EnabledWhen, Fix, Lint, Result, Tool};
 use std::fmt::Display;
 
-pub struct Shellcheck;
+pub struct ShellCheck;
 
-impl Tool for Shellcheck {
+impl Tool for ShellCheck {
     fn enabled_when(&self) -> EnabledWhen {
         EnabledWhen::Always
     }
@@ -15,13 +15,13 @@ impl Tool for Shellcheck {
     }
 }
 
-impl Display for Shellcheck {
+impl Display for ShellCheck {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.write_str("Shellcheck")
+        f.write_str("ShellCheck")
     }
 }
 
-impl Lint for Shellcheck {
+impl Lint for ShellCheck {
     fn lint_commands(
         &self,
         stack: &DetectedStack,
@@ -42,7 +42,7 @@ impl Lint for Shellcheck {
     }
 }
 
-impl Fix for Shellcheck {
+impl Fix for ShellCheck {
     fn fix_commands(
         &self,
         _stack: &DetectedStack,

@@ -17,7 +17,7 @@ Feature: lint Shell
     When executing "trident lint --show=output"
     Then it prints the lines
       """
-      lint Shell (Shellcheck)
+      lint Shell (ShellCheck)
       """
     And the exit code is 0
     And file "one.sh" is unchanged
@@ -34,7 +34,7 @@ Feature: lint Shell
     When executing "trident lint --show=output"
     Then it prints the lines
       """
-      lint Shell (Shellcheck)
+      lint Shell (ShellCheck)
       """
     And the exit code is 0
     And file "one.sh" is unchanged
@@ -53,7 +53,7 @@ Feature: lint Shell
     When executing "trident lint --show=output"
     Then it prints the lines
       """
-      lint Shell (Shellcheck)
+      lint Shell (ShellCheck)
       In one.sh line 2:
       echo $1
       """

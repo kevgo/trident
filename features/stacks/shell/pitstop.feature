@@ -21,7 +21,7 @@ Feature: pitstop Shell
     Then it prints the lines
       """
       fix Shell (shfmt)
-      lint Shell (Shellcheck)
+      lint Shell (ShellCheck)
       """
     And the exit code is 0
     And file "one.sh" now has content
@@ -51,7 +51,7 @@ Feature: pitstop Shell
     Then it prints the lines
       """
       fix Shell (shfmt)
-      lint Shell (Shellcheck)
+      lint Shell (ShellCheck)
       In two.sh line 2:
       cd /tmp
       """
