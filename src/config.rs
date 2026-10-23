@@ -1059,6 +1059,7 @@ mod tests {
     "pyright": { "enabled": false },
     "ruff": { "enabled": false },
     "rumdl": { "enabled": false },
+    "shellcheck": { "enabled": false },
     "shfmt": { "enabled": false },
     "sqlfmt": { "enabled": false },
     "taplo": { "enabled": false },

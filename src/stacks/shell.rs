@@ -19,9 +19,6 @@ impl Stack for Shell {
     }
 
     fn fixes(&self) -> Vec<Box<dyn Fix>> {
-        // The Rust stack does not specify any fixes by default
-        // because there are too many rustfmt options.
-        // Please define your own rustfmt calls as custom fixes in trident.json.
         vec![Box::new(Shfmt)]
     }
 }

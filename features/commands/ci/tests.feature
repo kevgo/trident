@@ -6,6 +6,8 @@ Feature: CI runs all fixes, formatters, lints, and tests
       biome 2.4.0
       delete-empty-folders 0.0.2
       ruff 0.15.16
+      shellcheck 0.11.0
+      shfmt 3.14.1
       """
 
   Scenario:

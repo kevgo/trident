@@ -11,7 +11,7 @@ impl Tool for Shfmt {
     }
 
     fn config_section<'a>(&self, apps: &'a ApplicationSection) -> Option<&'a dyn Application> {
-        Some(apps.sqlfmt.as_ref()?)
+        Some(apps.shfmt.as_ref()?)
     }
 }
 

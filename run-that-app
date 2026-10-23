@@ -14,5 +14,7 @@ node 26.12.0
 ripgrep 15.2.0
 ruff 0.15.16
 rumdl 0.2.14
+shellcheck 0.11.0
+shfmt 3.14.1
 taplo 0.10.0
 yamlfmt 0.21.0
