@@ -11,6 +11,7 @@ BIOME        = $(RTA) biome
 CONTEST      = $(RTA) contest
 GHOKIN       = $(RTA) ghokin
 RIPGREP      = $(RTA) ripgrep
+RUMDL        = $(RTA) rumdl
 TRIDENT      = target/debug/trident$(EXE)
 
 build:  # builds the project in debug mode
@@ -94,7 +95,7 @@ unit:  # runs the unit tests
 
 update-readme-stacks:  # updates the "Supported stacks" section in README.md
 	cargo test --test=update_readme_stacks --locked --quiet
-	tools/rta@$(RUN_THAT_APP_VERSION) rumdl fmt --quiet README.md
+	$(RUMDL) fmt --quiet README.md
 
 update: ${RTA}  # updates all dependencies
 	cargo install cargo-edit cargo-machete
