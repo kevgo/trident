@@ -19,9 +19,20 @@ Feature: pitstop Shell on Windows
       foo
       """
     When executing "trident pitstop --show=output"
-    Then it prints nothing to STDOUT
+    Then it prints
+      """
+      delete empty folders
+      fix Shell (shfmt)
+      """
     And the exit code is 0
-    And all files are unchanged
+    And file "one.sh" now has content
+      """
+      #!/usr/bin/env bash
+      foo() {
+      \techo "one"
+      }
+      foo
+      """
 
   Scenario: unformatted Shell with lint errors
     Given a file "one.sh" with content
@@ -32,7 +43,27 @@ Feature: pitstop Shell on Windows
       }
       foo
       """
+    And a file "two.sh" with content
+      """
+      #!/usr/bin/env bash
+      cd   /tmp
+      """
     When executing "trident pitstop --show=output"
-    Then it prints nothing to STDOUT
+    Then it prints the lines
+      """
+      fix Shell (shfmt)
+      """
     And the exit code is 0
-    And all files are unchanged
+    And file "one.sh" now has content
+      """
+      #!/usr/bin/env bash
+      foo() {
+      \techo "one"
+      }
+      foo
+      """
+    And file "two.sh" now has content
+      """
+      #!/usr/bin/env bash
+      cd /tmp
+      """
