@@ -65,6 +65,9 @@
         "rust": {
           "$ref": "#/$defs/StackConfig"
         },
+        "shell": {
+          "$ref": "#/$defs/StackConfig"
+        },
         "sql": {
           "$ref": "#/$defs/StackConfig"
         },
