@@ -221,20 +221,25 @@ trident ci --sequential
 
 ## Supported stacks
 
-| Stack      | Linter                                                       |
-| ---------- | ------------------------------------------------------------ |
-| TypeScript | biome                                                        |
-| CSS        | biome                                                        |
-| Dockerfile | hadolint                                                     |
-| JSON       | biome                                                        |
-| JSONC      | biome                                                        |
-| YAML       | yamlfmt                                                      |
-| Markdown   | rumdl                                                        |
-| TOML       | taplo                                                        |
-| Python     | ruff                                                         |
-| Rust       | (please define your Rust commands as custom lints and fixes) |
-| Go         | golangci-lint                                                |
-| SQL        | sqlfmt                                                       |
+<!-- SUPPORTED-STACKS-START -->
+
+| Stack      | Linter                | Fix                   |
+| ---------- | --------------------- | --------------------- |
+| CSS        | biome                 | biome                 |
+| Cucumber   | gherkin-lint          | cucumber-sort         |
+| Dockerfile | hadolint              |                       |
+| Go         | golangci-lint         | gofumpt               |
+| JSON       | biome                 | biome                 |
+| JSONC      | biome                 | biome                 |
+| Markdown   | rumdl                 | rumdl                 |
+| TOML       | taplo                 | taplo                 |
+| Python     | ruff, pyright         | ruff                  |
+| Rust       | (your custom command) | (your custom command) |
+| SQL        | sqlfmt                |                       |
+| TypeScript | biome                 | biome                 |
+| YAML       |                       | yamlfmt               |
+
+<!-- SUPPORTED-STACKS-END -->
 
 ## Q & A
 
