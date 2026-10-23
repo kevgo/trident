@@ -233,7 +233,7 @@ trident ci --sequential
 | JSONC      | Biome                        | Biome                 |
 | Markdown   | rumdl, Text-Runner, tikibase | tikibase, rumdl       |
 | Python     | Pyright, Ruff                | Ruff                  |
-| Rust       |                              |                       |
+| Rust       | (your custom command)        | (your custom command) |
 | SQL        |                              | sqlfmt                |
 | TOML       | Taplo                        | Taplo                 |
 | TypeScript | Biome                        | Biome                 |

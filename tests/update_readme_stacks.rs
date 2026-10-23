@@ -7,6 +7,7 @@ use trident::stacks;
 
 const START: &str = "<!-- SUPPORTED-STACKS-START -->";
 const END: &str = "<!-- SUPPORTED-STACKS-END -->";
+const CUSTOM_COMMAND: &str = "(your custom command)";
 
 /// regenerates the "Supported stacks" table in README.md
 #[test]
@@ -28,8 +29,15 @@ fn table() -> String {
         if stack.stack_type() == StackType::Unknown {
             continue;
         }
-        let lints = stack.lints().iter().map(ToString::to_string).join(", ");
-        let fixes = stack.fixes().iter().map(ToString::to_string).join(", ");
+        let (lints, fixes) = if stack.stack_type() == StackType::Rust {
+            // the Rust stack has no built-in tools, users define their own
+            (CUSTOM_COMMAND.to_string(), CUSTOM_COMMAND.to_string())
+        } else {
+            (
+                stack.lints().iter().map(ToString::to_string).join(", "),
+                stack.fixes().iter().map(ToString::to_string).join(", "),
+            )
+        };
         writeln!(result, "| {stack} | {lints} | {fixes} |").expect("write to String");
     }
     result
