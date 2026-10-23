@@ -1,3 +1,4 @@
+use crate::apps::cucumber_sort::CucumberSort;
 use crate::apps::gherkin_lint::GherkinLint;
 use crate::apps::ghokin::Ghokin;
 use crate::domain::{Fix, Lint, Stack, StackType};
@@ -19,7 +20,7 @@ impl Stack for Cucumber {
     }
 
     fn fixes(&self) -> Vec<Box<dyn Fix>> {
-        vec![Box::new(Ghokin {})]
+        vec![Box::new(CucumberSort), Box::new(Ghokin {})]
     }
 }
 
