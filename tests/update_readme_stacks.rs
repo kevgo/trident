@@ -30,7 +30,6 @@ fn table() -> String {
             continue;
         }
         let (lints, fixes) = if stack.stack_type() == StackType::Rust {
-            // the Rust stack has no built-in tools, users define their own
             (CUSTOM_COMMAND.to_string(), CUSTOM_COMMAND.to_string())
         } else {
             (
@@ -38,7 +37,7 @@ fn table() -> String {
                 stack.fixes().iter().map(ToString::to_string).join(", "),
             )
         };
-        writeln!(result, "| {stack} | {lints} | {fixes} |").expect("write to String");
+        writeln!(result, "| {stack} | {lints} | {fixes} |").unwrap();
     }
     result
 }
