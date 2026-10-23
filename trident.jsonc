@@ -61,6 +61,10 @@
             "command": "cargo test --test=check_readme_config --locked --quiet"
           },
           {
+            "name": "document stacks in README.md",
+            "command": "make update-readme-stacks"
+          },
+          {
             "name": "export JSON schema",
             "command": "make export-json-schema"
           }
