@@ -94,6 +94,7 @@ unit:  # runs the unit tests
 
 update-readme-stacks:  # updates the "Supported stacks" section in README.md
 	cargo test --test=update_readme_stacks --locked --quiet
+	tools/rta@$(RUN_THAT_APP_VERSION) rumdl fmt --quiet README.md
 
 update: ${RTA}  # updates all dependencies
 	cargo install cargo-edit cargo-machete
