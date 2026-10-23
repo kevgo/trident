@@ -92,6 +92,9 @@ todo: ${RTA}  # lists all TODOs in the code
 unit:  # runs the unit tests
 	cargo nextest run --locked --workspace --status-level fail
 
+update-readme-stacks:  # updates the "Supported stacks" section in README.md
+	cargo test --test=update_readme_stacks --locked --quiet
+
 update: ${RTA}  # updates all dependencies
 	cargo install cargo-edit cargo-machete
 	cargo machete

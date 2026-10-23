@@ -223,21 +223,21 @@ trident ci --sequential
 
 <!-- SUPPORTED-STACKS-START -->
 
-| Stack      | Linter                | Fix                   |
-| ---------- | --------------------- | --------------------- |
-| CSS        | biome                 | biome                 |
-| Cucumber   | gherkin-lint          | cucumber-sort         |
-| Dockerfile | hadolint              |                       |
-| Go         | golangci-lint         | gofumpt               |
-| JSON       | biome                 | biome                 |
-| JSONC      | biome                 | biome                 |
-| Markdown   | rumdl                 | rumdl                 |
-| TOML       | taplo                 | taplo                 |
-| Python     | ruff, pyright         | ruff                  |
-| Rust       | (your custom command) | (your custom command) |
-| SQL        | sqlfmt                |                       |
-| TypeScript | biome                 | biome                 |
-| YAML       |                       | yamlfmt               |
+| Stack      | Linter                       | Fix                   |
+| ---------- | ---------------------------- | --------------------- |
+| CSS        | Biome                        | Biome                 |
+| Cucumber   | gherkin-lint                 | cucumber-sort, Ghokin |
+| Dockerfile | hadolint                     |                       |
+| Go         | golangci-lint                | gofumpt               |
+| JSON       | Biome                        | Biome                 |
+| JSONC      | Biome                        | Biome                 |
+| Markdown   | rumdl, Text-Runner, tikibase | tikibase, rumdl       |
+| Python     | Pyright, Ruff                | Ruff                  |
+| Rust       |                              |                       |
+| SQL        |                              | sqlfmt                |
+| TOML       | Taplo                        | Taplo                 |
+| TypeScript | Biome                        | Biome                 |
+| YML        | Actionlint                   | yamlfmt               |
 
 <!-- SUPPORTED-STACKS-END -->
 
