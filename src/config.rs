@@ -240,7 +240,10 @@ impl ToolDefinition {
 impl From<&TestDefinition> for ToolDefinition {
     fn from(test: &TestDefinition) -> Self {
         ToolDefinition {
-            name: test.name.as_ref().map(|name| format!("test ({name})")),
+            name: Some(format!(
+                "test ({})",
+                test.name.as_ref().unwrap_or(&test.command)
+            )),
             command: test.command.clone(),
         }
     }
