@@ -5,8 +5,8 @@ Feature: test command with passing tests
       """
       {
         "tests": [
-          { "name": "unit tests", "command": "echo unit" },
-          { "name": "E2E tests", "command": "echo e2e" }
+          { "name": "unit", "command": "echo unit" },
+          { "name": "E2E", "command": "echo e2e" }
         ]
       }
       """

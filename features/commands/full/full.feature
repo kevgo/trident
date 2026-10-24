@@ -11,7 +11,7 @@ Feature: full runs all fixes, lints, and tests
       """
       {
         "tests": [
-          { "name": "unit tests", "command": "echo unit" }
+          { "name": "unit", "command": "echo unit" }
         ]
       }
       """

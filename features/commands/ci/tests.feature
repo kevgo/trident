@@ -16,7 +16,7 @@ Feature: CI runs all fixes, formatters, lints, and tests
       {
         "tests": [
           { "command": "echo test one" },
-          { "name": "unit tests", "command": "echo unit" }
+          { "name": "unit", "command": "echo unit" }
         ]
       }
       """

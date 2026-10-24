@@ -5,8 +5,8 @@ Feature: test command with a failing test
       """
       {
         "tests": [
-          { "name": "unit tests", "command": "echo unit" },
-          { "name": "E2E tests", "command": "tests/fail.sh" }
+          { "name": "unit", "command": "echo running unit tests" },
+          { "name": "E2E", "command": "tests/fail.sh" }
         ]
       }
       """
@@ -25,12 +25,12 @@ Feature: test command with a failing test
       """
     And it prints the block
       """
-      unit tests
-      unit
+      test (unit)
+      running unit tests
       """
     And it prints the block
       """
-      E2E tests
+      test (E2E)
       failed
       """
     And the exit code is 4
@@ -43,13 +43,13 @@ Feature: test command with a failing test
       """
     And it prints the lines matching
       """
-      unit tests
-      (sh|bash.exe) -c 'echo unit'
-      unit
+      test \(unit\)
+      (sh|bash.exe) -c 'echo running unit tests'
+      running unit tests
       """
     And it prints the lines matching
       """
-      E2E tests
+      test \(E2E\)
       (sh|bash.exe) -c tests/fail.sh
       failed
       """
@@ -60,11 +60,11 @@ Feature: test command with a failing test
     Then it prints nothing to STDERR
     And it prints the lines
       """
-      unit tests
+      test (unit)
       """
     And it prints the block
       """
-      E2E tests
+      test (E2E)
       failed
       """
     And the exit code is 4
@@ -74,7 +74,7 @@ Feature: test command with a failing test
     Then it prints nothing to STDERR
     And it does not print
       """
-      unit tests
+      test (unit)
       """
     And it prints the block
       """
