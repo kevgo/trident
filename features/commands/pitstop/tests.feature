@@ -17,8 +17,8 @@ Feature: pitstop --test runs selected tests
           "biome": { "enabled": false }
         },
         "tests": [
-          { "name": "unit", "command": "echo unit" },
-          { "name": "cuke", "command": "echo cuke" }
+          { "name": "unit", "command": "echo running unit tests" },
+          { "name": "cuke", "command": "echo running cuke tests" }
         ]
       }
       """
@@ -30,11 +30,11 @@ Feature: pitstop --test runs selected tests
       """
     And it does not print
       """
-      unit
+      running unit tests
       """
     And it does not print
       """
-      cuke
+      running cuke tests
       """
     And the exit code is 0
 
@@ -46,8 +46,8 @@ Feature: pitstop --test runs selected tests
           "biome": { "enabled": false }
         },
         "tests": [
-          { "name": "unit", "command": "echo unit" },
-          { "name": "cuke", "command": "echo cuke" }
+          { "name": "unit", "command": "echo running unit tests" },
+          { "name": "cuke", "command": "echo running cuke tests" }
         ],
         "commands": {
           "pitstop": {
@@ -64,12 +64,12 @@ Feature: pitstop --test runs selected tests
       """
     And it prints the block
       """
-      unit
-      unit
+      test (unit)
+      running unit tests
       """
     And it does not print
       """
-      cuke
+      running cuke tests
       """
     And the exit code is 0
 
@@ -81,8 +81,8 @@ Feature: pitstop --test runs selected tests
           "biome": { "enabled": false }
         },
         "tests": [
-          { "name": "unit", "command": "echo unit" },
-          { "name": "cuke", "command": "echo cuke" }
+          { "name": "unit", "command": "echo running unit tests" },
+          { "name": "cuke", "command": "echo running cuke tests" }
         ],
         "commands": {
           "pitstop": {
@@ -99,12 +99,12 @@ Feature: pitstop --test runs selected tests
       """
     And it prints the block
       """
-      cuke
-      cuke
+      test (cuke)
+      running cuke tests
       """
     And it does not print
       """
-      unit
+      running unit tests
       """
     And the exit code is 0
 
@@ -116,9 +116,9 @@ Feature: pitstop --test runs selected tests
           "biome": { "enabled": false }
         },
         "tests": [
-          { "name": "unit", "command": "echo unit" },
-          { "name": "cuke", "command": "echo cuke" },
-          { "name": "slow", "command": "echo slow" }
+          { "name": "unit", "command": "echo running unit tests" },
+          { "name": "cuke", "command": "echo running cuke tests" },
+          { "name": "slow", "command": "echo running slow tests" }
         ]
       }
       """
@@ -130,17 +130,17 @@ Feature: pitstop --test runs selected tests
       """
     And it prints the block
       """
-      unit
-      unit
+      test (unit)
+      running unit tests
       """
     And it prints the block
       """
-      cuke
-      cuke
+      test (cuke)
+      running cuke tests
       """
     And it does not print
       """
-      slow
+      running slow tests
       """
     And the exit code is 0
 
@@ -165,7 +165,7 @@ Feature: pitstop --test runs selected tests
     When executing "trident pitstop --test=failing --show=output"
     Then it prints the block
       """
-      failing
+      test (failing)
       custom test failed
       """
     And the exit code is 4
