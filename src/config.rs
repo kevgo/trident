@@ -356,6 +356,10 @@ pub struct ApplicationSection {
 
     pub rumdl: Option<ApplicationWithFile>,
 
+    pub shellcheck: Option<ApplicationWithFile>,
+
+    pub shfmt: Option<ApplicationWithFile>,
+
     pub sqlfmt: Option<ApplicationWithFile>,
 
     pub taplo: Option<ApplicationWithFile>,
@@ -1055,6 +1059,8 @@ mod tests {
     "pyright": { "enabled": false },
     "ruff": { "enabled": false },
     "rumdl": { "enabled": false },
+    "shellcheck": { "enabled": false },
+    "shfmt": { "enabled": false },
     "sqlfmt": { "enabled": false },
     "taplo": { "enabled": false },
     "text-runner": { "enabled": false },
@@ -1082,6 +1088,8 @@ mod tests {
                     pyright: Some(disabled_with_file()),
                     ruff: Some(disabled_with_file()),
                     rumdl: Some(disabled_with_file()),
+                    shellcheck: Some(disabled_with_file()),
+                    shfmt: Some(disabled_with_file()),
                     sqlfmt: Some(disabled_with_file()),
                     taplo: Some(disabled_with_file()),
                     text_runner: Some(disabled_no_file()),

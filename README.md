@@ -234,6 +234,7 @@ trident ci --sequential
 | Markdown   | rumdl, Text-Runner, tikibase | tikibase, rumdl       |
 | Python     | Pyright, Ruff                | Ruff                  |
 | Rust       | (your custom command)        | (your custom command) |
+| Shell      | ShellCheck                   | shfmt                 |
 | SQL        |                              | sqlfmt                |
 | TOML       | Taplo                        | Taplo                 |
 | TypeScript | Biome                        | Biome                 |
@@ -438,6 +439,8 @@ Use the linked JSON-Schema to get help on supported settings and their meaning.
     "pyright": {},
     "ruff": {},
     "rumdl": {},
+    "shellcheck": {},
+    "shfmt": {},
     "sqlfmt": {},
     "taplo": {},
     "text_runner": {},

@@ -7,8 +7,8 @@ print_welcome() {
 	echo "Installing trident $version as $name ..."
 }
 
-VERSION="0.37.3"               # the default version of trident to download
-DEST_FILENAME="trident"            # the default name of the downloaded file
+VERSION="0.37.3"          # the default version of trident to download
+DEST_FILENAME="trident"   # the default name of the downloaded file
 TMP_DIR=./trident_install # the temporary directory to download the archive to
 
 main() {

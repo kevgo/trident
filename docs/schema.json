@@ -65,6 +65,9 @@
         "rust": {
           "$ref": "#/$defs/StackConfig"
         },
+        "shell": {
+          "$ref": "#/$defs/StackConfig"
+        },
         "sql": {
           "$ref": "#/$defs/StackConfig"
         },
@@ -341,6 +344,26 @@
           ]
         },
         "rumdl": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ApplicationWithFile"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "shellcheck": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ApplicationWithFile"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "shfmt": {
           "anyOf": [
             {
               "$ref": "#/$defs/ApplicationWithFile"

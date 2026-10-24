@@ -5,6 +5,8 @@ Feature: pitstop --test runs selected tests
       """
       delete-empty-folders 0.0.2
       ruff 0.15.16
+      shellcheck 0.11.0
+      shfmt 3.14.1
       """
 
   Scenario: without --test, configured tests do not run
