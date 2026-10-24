@@ -5,6 +5,7 @@ use crate::commands::{discover_stacks, fix, lint, resolve_scope};
 use crate::config::{Config, DefaultTests, to_sequences};
 use crate::domain::{DetectedStacks, Result, Runnables, StackType};
 use crate::git::Repo;
+use crate::subshell;
 use ahash::AHashMap;
 use std::process::ExitCode;
 
@@ -58,7 +59,7 @@ pub(crate) fn run_tasks(
 
     // step 2: run the global fixes by themselves first
     if let Some(global_fixes) = global_fixes {
-        let exit_code = conc::run(conc::RunArgs {
+        let exit_code = subshell::run(subshell::RunArgs {
             sequences: vec![global_fixes],
             error_on_output,
             sequential,
@@ -88,7 +89,7 @@ pub(crate) fn run_tasks(
         .into_values()
         .filter_map(conc::Sequence::from_vec)
         .collect();
-    let exit_code = conc::run(conc::RunArgs {
+    let exit_code = subshell::run(subshell::RunArgs {
         sequences: stack_sequences,
         error_on_output,
         sequential,
@@ -105,7 +106,7 @@ pub(crate) fn run_tasks(
     // some of them, like the global git-diff-check linter,
     // error on whitespace problems and therefore
     // depend on the formatting having been run.
-    let exit_code = conc::run(conc::RunArgs {
+    let exit_code = subshell::run(subshell::RunArgs {
         sequences: global_lints,
         error_on_output,
         sequential,

@@ -36,7 +36,7 @@ pub fn lint(args: &RunArgsWithScope) -> Result<ExitCode> {
     if lints.is_empty() {
         return Ok(ExitCode::SUCCESS);
     }
-    let exit_code = conc::run(conc::RunArgs {
+    let exit_code = subshell::run(subshell::RunArgs {
         sequences: lints.into_sequences(),
         error_on_output,
         sequential,

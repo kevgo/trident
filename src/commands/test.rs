@@ -18,7 +18,7 @@ pub fn test(args: &RunArgsWithTest) -> Result<ExitCode> {
         return Ok(ExitCode::SUCCESS);
     }
     let test_sequences = to_sequences(tests);
-    let exit_code = conc::run(conc::RunArgs {
+    let exit_code = subshell::run(subshell::RunArgs {
         sequences: test_sequences,
         error_on_output: false,
         sequential: args.run.sequential,

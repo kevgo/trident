@@ -4,6 +4,7 @@ use crate::cli::output::print_metadata;
 use crate::config::{Config, Operation};
 use crate::domain::{DetectedStacks, Result, StackType};
 use crate::git::Repo;
+use crate::subshell;
 use ahash::AHashMap;
 use std::process::ExitCode;
 
@@ -31,7 +32,7 @@ pub fn fix_unsafe(args: &RunArgsWithScope) -> Result<ExitCode> {
     }
 
     // step 4: run the fixes
-    let exit_code = conc::run(conc::RunArgs {
+    let exit_code = subshell::run(subshell::RunArgs {
         sequences: unsafe_fixes,
         error_on_output,
         sequential,

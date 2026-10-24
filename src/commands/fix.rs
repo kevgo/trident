@@ -7,6 +7,7 @@ use crate::cli::output::print_metadata;
 use crate::config::{Application, Config, Operation, ToolDefinition};
 use crate::domain::{DetectedStacks, Result, Runnables, StackType};
 use crate::git::Repo;
+use crate::subshell;
 use ahash::AHashMap;
 use std::process::ExitCode;
 
@@ -39,7 +40,7 @@ pub fn fix(args: &RunArgsWithScope) -> Result<ExitCode> {
 
     // step 4: run the global fixes
     if let Some(global) = global {
-        let exit_code = conc::run(conc::RunArgs {
+        let exit_code = subshell::run(subshell::RunArgs {
             sequences: vec![global],
             error_on_output,
             sequential,
@@ -52,8 +53,8 @@ pub fn fix(args: &RunArgsWithScope) -> Result<ExitCode> {
     }
 
     // step 5: run the stack-specific fixes
-    let exit_code = conc::run(conc::RunArgs {
-        sequences: stack_specific.into_values().collect(),
+    let exit_code = subshell::run(subshell::RunArgs {
+        calls: stack_specific,
         error_on_output,
         sequential,
         show,
@@ -72,7 +73,7 @@ pub fn determine_fixes(config: &Config, detected_stacks: &DetectedStacks) -> Res
     }
 
     // stack-specific fixes
-    let mut stacks_executables: AHashMap<StackType, Vec<conc::Executable>> = AHashMap::new();
+    let mut stacks_executables: AHashMap<StackType, Vec<ToolDefinition>> = AHashMap::new();
     for detected_stack in detected_stacks {
         let stack_type = detected_stack.stack.stack_type();
         let stack_config = config.stack_config(stack_type);

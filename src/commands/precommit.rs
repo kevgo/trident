@@ -5,8 +5,8 @@ use crate::cli::output::print_metadata;
 use crate::commands::fix::add_custom_fixes;
 use crate::config::{Application, Config, Operation};
 use crate::domain::{DetectedStacks, Result, Runnables, StackType, UserError, fingerprint};
-use crate::git;
 use crate::stacks;
+use crate::{git, subshell};
 use ahash::AHashMap;
 use std::process::ExitCode;
 
@@ -53,7 +53,7 @@ fn run(args: &RunArgs) -> Result<()> {
 
     // step 5: run the global fixes
     if let Some(global) = global {
-        let _exit_code = conc::run(conc::RunArgs {
+        let _exit_code = subshell::run(subshell::RunArgs {
             sequences: vec![global],
             error_on_output,
             sequential,
@@ -63,7 +63,7 @@ fn run(args: &RunArgs) -> Result<()> {
     }
 
     // step 6: run the stack-specific fixes
-    let _exit_code = conc::run(conc::RunArgs {
+    let _exit_code = subshell::run(subshell::RunArgs {
         sequences: stack_specific.into_values().collect(),
         error_on_output,
         sequential,

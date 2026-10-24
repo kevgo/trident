@@ -1,4 +1,4 @@
-use crate::domain::{Ignores, Result, StackType, Tool, UserError};
+use crate::domain::{Ignores, Operation, Result, StackType, Tool, ToolCall, ToolType, UserError};
 use ahash::AHashMap;
 use itertools::Itertools;
 use jsonc_parser::ParseOptions;
@@ -149,14 +149,15 @@ impl Config {
     }
 
     /// provides the tests with the given names, or all if no names are given
-    pub fn select_tests<'a>(&'a self, requested: &[String]) -> Result<Vec<ToolCall<'a>>> {
+    pub fn select_tests(&self, requested: &[String]) -> Result<Vec<ToolCall>> {
         let all_tests = self.tests.as_deref().unwrap_or_default();
         if requested.is_empty() {
             return Ok(all_tests
                 .iter()
                 .map(|tool_def| ToolCall {
                     tool_type: ToolType::Test,
-                    definition: tool_def,
+                    name: tool_def.name.clone(),
+                    command: tool_def.command.clone(),
                 })
                 .collect());
         }
@@ -181,7 +182,8 @@ impl Config {
             .into_iter()
             .map(|tool_def| ToolCall {
                 tool_type: ToolType::Test,
-                definition: tool_def,
+                name: tool_def.name.clone(),
+                command: tool_def.command.clone(),
             })
             .collect())
     }
@@ -194,7 +196,7 @@ impl Config {
         cli: &[String],
         command: impl FnOnce(&CommandsSection) -> Option<&CommandConfig>,
         default: DefaultTests,
-    ) -> Result<Vec<ToolCall<'a>>> {
+    ) -> Result<Vec<ToolCall>> {
         let requested = if cli.is_empty() {
             self.commands
                 .as_ref()
@@ -228,56 +230,6 @@ impl ToolDefinition {
     /// provides the name of the tool, or the command if the tool has no name
     fn name_or_command(&self) -> &str {
         self.name.as_deref().unwrap_or(&self.command)
-    }
-
-    /// Converts this tool into an executable whose printed name matches built-in tools:
-    /// `{operation} {stack} ({name})`.
-    #[must_use]
-    pub fn to_executable(&self, operation: Operation, stack: StackType) -> conc::Executable {
-        let tool_name = self.name.as_deref().unwrap_or(&self.command);
-        conc::Executable {
-            name: format!("{operation} {stack} ({tool_name})"),
-            command: conc::shell_command(&self.command),
-        }
-    }
-}
-
-/// definition of a test
-///
-/// Tests are defined by name ("unit", "cuke"),
-/// but the resulting tool definition will have a name like "test (unit)" or "test (cuke)".
-#[derive(Clone, Debug, PartialEq)]
-pub struct ToolCall<'a> {
-    pub tool_type: ToolType,
-
-    /// display name for the fix
-    pub definition: &'a ToolDefinition,
-}
-
-impl ToolCall<'_> {
-    #[must_use]
-    pub fn to_sequence(self) -> conc::Sequence {
-        conc::Sequence::one(conc::Executable {
-            name: format!("{} ({})", self.tool_type, self.definition.name_or_command()),
-            command: conc::shell_command(&self.definition.command),
-        })
-    }
-}
-
-#[derive(Clone, Copy, Debug, Deserialize, Eq, PartialEq)]
-pub enum ToolType {
-    Fix,
-    Lint,
-    Test,
-}
-
-impl Display for ToolType {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            ToolType::Fix => f.write_str("fix"),
-            ToolType::Lint => f.write_str("lint"),
-            ToolType::Test => f.write_str("test"),
-        }
     }
 }
 
@@ -411,27 +363,6 @@ pub struct ApplicationSection {
     pub tikibase: Option<ApplicationNoFile>,
 
     pub yamlfmt: Option<ApplicationWithFile>,
-}
-
-/// a Trident operation that applications can be configured for
-///
-/// Operations are more basic primitives than Trident commands.
-/// All Trident commands execute variations of these three basic operations on various files.
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
-pub enum Operation {
-    Lint,
-    Fix,
-    FixUnsafe,
-}
-
-impl Display for Operation {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            Operation::Lint => f.write_str("lint"),
-            Operation::Fix => f.write_str("fix"),
-            Operation::FixUnsafe => f.write_str("unsafe-fix"),
-        }
-    }
 }
 
 #[derive(Clone, Debug, Default, Deserialize, JsonSchema, PartialEq)]
