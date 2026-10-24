@@ -4,6 +4,7 @@ use itertools::Itertools;
 use jsonc_parser::ParseOptions;
 use schemars::JsonSchema;
 use serde::Deserialize;
+use std::convert::Into;
 use std::fmt::Display;
 use std::fs;
 use std::path::Path;
@@ -151,7 +152,7 @@ impl Config {
     pub fn select_tests(&self, requested: &[String]) -> Result<Vec<ToolDefinition>> {
         let all_tests = self.tests.as_deref().unwrap_or_default();
         if requested.is_empty() {
-            return Ok(all_tests.iter().map(std::convert::Into::into).collect());
+            return Ok(all_tests.iter().map(Into::into).collect());
         }
         let mut result = Vec::with_capacity(requested.len());
         let mut unknown = Vec::new();
@@ -170,7 +171,7 @@ impl Config {
                     .collect(),
             });
         }
-        Ok(result.into_iter().map(std::convert::Into::into).collect())
+        Ok(result.into_iter().map(Into::into).collect())
     }
 
     /// determines the tests to run using the given --test CLI flag,
