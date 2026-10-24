@@ -208,7 +208,7 @@ mod tests {
                     "config.json",
                     "README.md",
                     "archive.tar",
-                    "text-runner.jsonc",
+                    "trident.jsonc",
                 ],
             );
             let have = discover_all_in(dir.path(), &Ignores::empty());
@@ -224,7 +224,7 @@ mod tests {
                 },
                 DetectedStack {
                     stack: Box::new(JsonC {}),
-                    files: Files::from(vec![root.join("text-runner.jsonc")]),
+                    files: Files::from(vec![root.join("trident.jsonc")]),
                 },
                 DetectedStack {
                     stack: Box::new(Markdown {}),

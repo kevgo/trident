@@ -1,5 +1,4 @@
 use crate::apps::rumdl::Rumdl;
-use crate::apps::text_runner::TextRunner;
 use crate::apps::tikibase::Tikibase;
 use crate::domain::{Fix, Lint, Stack, StackType};
 use std::path::Path;
@@ -16,11 +15,7 @@ impl Stack for Markdown {
     }
 
     fn lints(&self) -> Vec<Box<dyn Lint>> {
-        vec![
-            Box::new(Rumdl {}),
-            Box::new(TextRunner {}),
-            Box::new(Tikibase {}),
-        ]
+        vec![Box::new(Rumdl {}), Box::new(Tikibase {})]
     }
 
     fn fixes(&self) -> Vec<Box<dyn Fix>> {

@@ -364,10 +364,6 @@ pub struct ApplicationSection {
 
     pub taplo: Option<ApplicationWithFile>,
 
-    #[serde(alias = "text-runner")]
-    #[schemars(rename = "text-runner")]
-    pub text_runner: Option<ApplicationNoFile>,
-
     pub tikibase: Option<ApplicationNoFile>,
 
     pub yamlfmt: Option<ApplicationWithFile>,
@@ -1063,7 +1059,6 @@ mod tests {
     "shfmt": { "enabled": false },
     "sqlfmt": { "enabled": false },
     "taplo": { "enabled": false },
-    "text-runner": { "enabled": false },
     "tikibase": { "enabled": false },
     "yamlfmt": { "enabled": false }
   }
@@ -1092,7 +1087,6 @@ mod tests {
                     shfmt: Some(disabled_with_file()),
                     sqlfmt: Some(disabled_with_file()),
                     taplo: Some(disabled_with_file()),
-                    text_runner: Some(disabled_no_file()),
                     tikibase: Some(disabled_no_file()),
                     yamlfmt: Some(disabled_with_file()),
                 })

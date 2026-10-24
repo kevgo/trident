@@ -18,7 +18,6 @@ pub mod shellcheck;
 pub mod shfmt;
 pub mod sqlfmt;
 pub mod taplo;
-pub mod text_runner;
 pub mod tikibase;
 pub mod yamlfmt;
 
