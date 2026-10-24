@@ -39,6 +39,8 @@ New stacks:
 New applications:
   - `actionlint`, `biome`, `cucumber-sort`, `delete-empty-folders`, `hadolint`, `yamlfmt`
   - no more support for `prettier` and `dprint`, Trident uses `biome` and `yamlfmt` now because they are faster and more compatible with corporate VPNs
+  - removed Text-Runner because running it through RTA is not compatible with loading other npm modules as plugins -
+    please install Text-Runner and its plugins through `package.json` in your folder and execute it as an additional lint.
 
 New behaviors:
   - auto-scope: `ci`, `fix`, `fix-unsafe`, `lint`, and `pitstop` now process files based on the current situation, and accept `--scope=uncommitted|branch|all` to override the file selection
