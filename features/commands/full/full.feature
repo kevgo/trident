@@ -11,7 +11,7 @@ Feature: full runs all fixes, lints, and tests
       """
       {
         "tests": [
-          { "name": "unit", "command": "echo unit" }
+          { "name": "unit", "command": "echo running unit tests" }
         ]
       }
       """
@@ -45,8 +45,8 @@ Feature: full runs all fixes, lints, and tests
       """
     And it prints the block
       """
-      unit tests
-      unit
+      test (unit)
+      running unit tests
       """
     And the exit code is 0
     And file "main.json" now has content
@@ -72,8 +72,8 @@ Feature: full runs all fixes, lints, and tests
           "biome": { "enabled": false }
         },
         "tests": [
-          { "name": "unit", "command": "echo unit" },
-          { "name": "cuke", "command": "echo cuke" }
+          { "name": "unit", "command": "echo running unit tests" },
+          { "name": "cuke", "command": "echo running cuke tests" }
         ],
         "commands": {
           "full": {
@@ -90,11 +90,11 @@ Feature: full runs all fixes, lints, and tests
       """
     And it prints the block
       """
-      unit
-      unit
+      test (unit)
+      running unit tests
       """
     And it does not print
       """
-      cuke
+      running cuke tests
       """
     And the exit code is 0
