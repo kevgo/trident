@@ -443,7 +443,6 @@ Use the linked JSON-Schema to get help on supported settings and their meaning.
     "shfmt": {},
     "sqlfmt": {},
     "taplo": {},
-    "text_runner": {},
     "tikibase": {},
   },
 
