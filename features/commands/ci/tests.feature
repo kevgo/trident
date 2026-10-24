@@ -37,7 +37,7 @@ Feature: CI runs all fixes, formatters, lints, and tests
       """
     And it prints the block
       """
-      unit tests
+      test (unit)
       unit
       """
     And it prints the block
@@ -65,7 +65,7 @@ Feature: CI runs all fixes, formatters, lints, and tests
     When executing "trident ci --show=output"
     Then it prints the block
       """
-      failing test
+      test (failing test)
       custom test failed
       """
     And the exit code is 4
@@ -75,9 +75,9 @@ Feature: CI runs all fixes, formatters, lints, and tests
       """
       {
         "tests": [
-          { "name": "unit", "command": "echo unit" },
-          { "name": "cuke", "command": "echo cuke" },
-          { "name": "slow", "command": "echo slow" }
+          { "name": "unit", "command": "echo running unit tests" },
+          { "name": "cuke", "command": "echo running cuke tests" },
+          { "name": "slow", "command": "echo running slow tests" }
         ]
       }
       """
@@ -89,17 +89,17 @@ Feature: CI runs all fixes, formatters, lints, and tests
       """
     And it prints the block
       """
-      unit
-      unit
+      test (unit)
+      running unit tests
       """
     And it prints the block
       """
-      cuke
-      cuke
+      test (cuke)
+      running cuke tests
       """
     And it does not print
       """
-      slow
+      running slow tests
       """
     And the exit code is 0
 
@@ -108,8 +108,8 @@ Feature: CI runs all fixes, formatters, lints, and tests
       """
       {
         "tests": [
-          { "name": "unit", "command": "echo unit" },
-          { "name": "cuke", "command": "echo cuke" }
+          { "name": "unit", "command": "echo running unit tests" },
+          { "name": "cuke", "command": "echo running cuke tests" }
         ],
         "commands": {
           "ci": {
@@ -126,12 +126,12 @@ Feature: CI runs all fixes, formatters, lints, and tests
       """
     And it prints the block
       """
-      unit
-      unit
+      test (unit)
+      running unit tests
       """
     And it does not print
       """
-      cuke
+      running cuke tests
       """
     And the exit code is 0
 
