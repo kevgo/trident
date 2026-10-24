@@ -393,16 +393,6 @@
             }
           ]
         },
-        "text-runner": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/ApplicationNoFile"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
         "tikibase": {
           "anyOf": [
             {

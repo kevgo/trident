@@ -12,7 +12,6 @@ Feature: install Tikibase
         "applications": {
           "biome": { "enabled": false },
           "rumdl": { "enabled": false }
-          "text-runner": { "enabled": false }
         }
       }
       """
