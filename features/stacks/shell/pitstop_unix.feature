@@ -52,8 +52,12 @@ Feature: pitstop Shell on Unix
     Then it prints the lines
       """
       fix Shell (shfmt)
+      lint Shell (ShellCheck)
+      In two.sh line 2:
+      cd /tmp
+      ^-----^ SC2164 (warning): Use 'cd ... || exit' or 'cd ... || return' in case cd fails.
       """
-    And the exit code is 0
+    And the exit code is 1
     And file "one.sh" now has content
       """
       #!/usr/bin/env bash
