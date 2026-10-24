@@ -33,6 +33,7 @@ New commands:
 New stacks:
   - `rust` but you need to define the commands for linting and fixing yourself because there is too much customization needed.
   - support for GitHub Actions config files via actionlint
+  - Shell files via `ShellCheck` and `shfmt`
   - support for Dockerfiles via hadolint
 
 New applications:
