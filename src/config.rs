@@ -1751,7 +1751,7 @@ mod tests {
             };
             let have = config.select_tests(&[S("actionlint")]).unwrap();
             let want = vec![ToolDefinition {
-                name: None,
+                name: Some(S("test (actionlint)")),
                 command: S("actionlint"),
             }];
             pretty::assert_eq!(have, want);
