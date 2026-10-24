@@ -1742,14 +1742,14 @@ mod tests {
             let config = Config {
                 tests: Some(vec![TestDefinition {
                     name: None,
-                    command: S("echo unit"),
+                    command: S("actionlint"),
                 }]),
                 ..Default::default()
             };
             let have = config.select_tests(&[S("actionlint")]).unwrap();
             let want = vec![ToolDefinition {
-                name: Some(S("test (unit)")),
-                command: S("echo unit"),
+                name: None,
+                command: S("actionlint"),
             }];
             pretty::assert_eq!(have, want);
         }
