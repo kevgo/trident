@@ -21,12 +21,12 @@ Feature: custom tests
     When executing "trident test --show=output"
     Then it prints the block
       """
-      tests/one.sh
+      test (tests/one.sh)
       custom test is running
       """
     And it prints the block
       """
-      list all files
+      test (list all files)
       . ./tests ./tests/one.sh ./trident.json
       """
     And the exit code is 0
@@ -49,7 +49,7 @@ Feature: custom tests
     When executing "trident test --show=output"
     Then it prints the block
       """
-      tests/fail.sh
+      test (tests/fail.sh)
       custom test failed
       """
     And the exit code is 4
@@ -66,7 +66,7 @@ Feature: custom tests
     When executing "trident test --show=output"
     Then it prints the block
       """
-      echo unnamed
+      test (echo unnamed)
       unnamed
       """
     And the exit code is 0
@@ -85,9 +85,9 @@ Feature: custom tests
       """
       {
         "tests": [
-          { "name": "unit", "command": "echo unit" },
-          { "name": "cuke", "command": "echo cuke" },
-          { "name": "slow", "command": "echo slow" }
+          { "name": "unit", "command": "echo running unit tests" },
+          { "name": "cuke", "command": "echo running cuke tests" },
+          { "name": "slow", "command": "echo running slow tests" }
         ]
       }
       """
@@ -98,17 +98,17 @@ Feature: custom tests
       """
     And it prints the block
       """
-      unit
-      unit
+      test (unit)
+      running unit tests
       """
     And it prints the block
       """
-      cuke
-      cuke
+      test (cuke)
+      running cuke tests
       """
     And it does not print
       """
-      slow
+      running slow tests
       """
     And the exit code is 0
 
@@ -117,8 +117,8 @@ Feature: custom tests
       """
       {
         "tests": [
-          { "name": "unit", "command": "echo unit" },
-          { "name": "cuke", "command": "echo cuke" }
+          { "name": "unit", "command": "echo running unit tests" },
+          { "name": "cuke", "command": "echo running cuke tests" }
         ],
         "commands": {
           "test": {
@@ -134,12 +134,12 @@ Feature: custom tests
       """
     And it prints the block
       """
-      unit
-      unit
+      test (unit)
+      running unit tests
       """
     And it does not print
       """
-      cuke
+      running cuke tests
       """
     And the exit code is 0
 

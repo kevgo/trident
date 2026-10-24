@@ -14,11 +14,11 @@ Feature: sequential runs continue after a failure
     When executing "trident test --sequential --show=output"
     Then it prints
       """
-      one
+      test (one)
       one failed
-      two
+      test (two)
       two done
-      three
+      test (three)
       three failed
       """
     And the exit code is 4

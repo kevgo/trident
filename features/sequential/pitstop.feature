@@ -9,7 +9,7 @@ Feature: run a pitstop sequentially
           "biome": { "enabled": false }
         },
         "global-fixes": [
-          { "name": "fix", "command": "echo fix done" }
+          { "name": "my fix", "command": "echo my fix done" }
         ],
         "global-lints": [
           { "name": "slow lint", "command": "sleep 0.3 && echo slow lint done" },
@@ -23,13 +23,13 @@ Feature: run a pitstop sequentially
     When executing "trident pitstop --sequential --test=unit --show=output"
     Then it prints
       """
-      fix
-      fix done
+      my fix
+      my fix done
       slow lint
       slow lint done
       fast lint
       fast lint done
-      unit
+      test (unit)
       unit done
       """
     And the exit code is 0
