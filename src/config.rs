@@ -43,7 +43,7 @@ pub struct Config {
     pub global_lints: Option<Vec<ToolDefinition>>,
 
     /// define the functional tests
-    pub tests: Option<Vec<ToolDefinition>>,
+    pub tests: Option<Vec<TestDefinition>>,
 
     // stack-specific configuration
     #[schemars(with = "Option<std::collections::BTreeMap<StackType, StackConfig>>")]
@@ -148,10 +148,10 @@ impl Config {
     }
 
     /// provides the tests with the given names, or all if no names are given
-    pub fn select_tests(&self, requested: &[String]) -> Result<Vec<&ToolDefinition>> {
+    pub fn select_tests(&self, requested: &[String]) -> Result<Vec<ToolDefinition>> {
         let all_tests = self.tests.as_deref().unwrap_or_default();
         if requested.is_empty() {
-            return Ok(all_tests.iter().collect());
+            return Ok(all_tests.iter().map(std::convert::Into::into).collect());
         }
         let mut result = Vec::with_capacity(requested.len());
         let mut unknown = Vec::new();
@@ -170,7 +170,7 @@ impl Config {
                     .collect(),
             });
         }
-        Ok(result)
+        Ok(result.into_iter().map(std::convert::Into::into).collect())
     }
 
     /// determines the tests to run using the given --test CLI flag,
@@ -181,7 +181,7 @@ impl Config {
         cli: &[String],
         command: impl FnOnce(&CommandsSection) -> Option<&CommandConfig>,
         default: DefaultTests,
-    ) -> Result<Vec<&ToolDefinition>> {
+    ) -> Result<Vec<ToolDefinition>> {
         let requested = if cli.is_empty() {
             self.commands
                 .as_ref()
@@ -229,11 +229,41 @@ impl ToolDefinition {
     }
 
     #[must_use]
-    pub fn to_sequence(&self) -> conc::Sequence {
+    pub fn to_sequence(self) -> conc::Sequence {
         conc::Sequence::one(conc::Executable {
             name: self.name_or_command().to_string(),
             command: conc::shell_command(&self.command),
         })
+    }
+}
+
+impl From<&TestDefinition> for ToolDefinition {
+    fn from(test: &TestDefinition) -> Self {
+        ToolDefinition {
+            name: test.name.as_ref().map(|name| format!("test ({name})")),
+            command: test.command.clone(),
+        }
+    }
+}
+
+/// definition of a test
+///
+/// Tests are defined by name ("unit", "cuke"),
+/// but the resulting tool definition will have a name like "test (unit)" or "test (cuke)".
+#[derive(Clone, Debug, Default, Deserialize, JsonSchema, PartialEq)]
+#[serde(deny_unknown_fields)]
+pub struct TestDefinition {
+    /// display name for the fix
+    pub name: Option<String>,
+
+    /// the command that implements the fix
+    pub command: String,
+}
+
+impl TestDefinition {
+    /// provides the name of the tool, or the command if the tool has no name
+    fn name_or_command(&self) -> &str {
+        self.name.as_deref().unwrap_or(&self.command)
     }
 }
 
@@ -272,7 +302,7 @@ pub struct CommandConfig {
 }
 
 /// provides the configured tests with the given names as parallel `conc::Sequences`
-pub(crate) fn to_sequences(tools: Vec<&ToolDefinition>) -> Vec<conc::Sequence> {
+pub(crate) fn to_sequences(tools: Vec<ToolDefinition>) -> Vec<conc::Sequence> {
     tools.into_iter().map(ToolDefinition::to_sequence).collect()
 }
 
@@ -535,7 +565,7 @@ mod tests {
     mod parse {
         use crate::config::{
             CommandConfig, CommandsSection, Config, StackConfig, StackFixes, StackLints,
-            ToolDefinition,
+            TestDefinition, ToolDefinition,
         };
         use crate::domain::{StackType, UserError};
         use ahash::AHashMap;
@@ -944,11 +974,11 @@ mod tests {
                 applications: None,
                 stacks: None,
                 tests: Some(vec![
-                    ToolDefinition {
+                    TestDefinition {
                         name: None,
                         command: S("make unit"),
                     },
-                    ToolDefinition {
+                    TestDefinition {
                         name: Some(S("E2E tests")),
                         command: S("make cuke"),
                     },
@@ -1624,79 +1654,103 @@ mod tests {
     }
 
     mod select_tests {
-        use crate::config::{Config, ToolDefinition};
+        use crate::config::{Config, TestDefinition, ToolDefinition};
         use crate::domain::UserError;
         use big_s::S;
 
         #[test]
         fn no_names_given() {
-            let unit_test = ToolDefinition {
-                name: Some(S("unit")),
-                command: S("echo unit"),
-            };
-            let cuke_test = ToolDefinition {
-                name: Some(S("cuke")),
-                command: S("echo cuke"),
-            };
             let config = Config {
-                tests: Some(vec![unit_test.clone(), cuke_test.clone()]),
+                tests: Some(vec![
+                    TestDefinition {
+                        name: Some(S("unit")),
+                        command: S("echo unit"),
+                    },
+                    TestDefinition {
+                        name: Some(S("cuke")),
+                        command: S("echo cuke"),
+                    },
+                ]),
                 ..Default::default()
             };
             let have = config.select_tests(&[]).unwrap();
-            let want = vec![&unit_test, &cuke_test];
+            let want = vec![
+                ToolDefinition {
+                    name: Some(S("test (unit)")),
+                    command: S("echo unit"),
+                },
+                ToolDefinition {
+                    name: Some(S("test (cuke)")),
+                    command: S("echo cuke"),
+                },
+            ];
             pretty::assert_eq!(have, want);
         }
 
         #[test]
         fn names_given() {
-            let unit_test = ToolDefinition {
-                name: Some(S("unit")),
-                command: S("echo unit"),
-            };
-            let cuke_test = ToolDefinition {
-                name: Some(S("cuke")),
-                command: S("echo cuke"),
-            };
-            let slow_test = ToolDefinition {
-                name: Some(S("slow")),
-                command: S("echo slow"),
-            };
             let config = Config {
-                tests: Some(vec![unit_test.clone(), cuke_test.clone(), slow_test]),
+                tests: Some(vec![
+                    TestDefinition {
+                        name: Some(S("unit")),
+                        command: S("echo unit"),
+                    },
+                    TestDefinition {
+                        name: Some(S("cuke")),
+                        command: S("echo cuke"),
+                    },
+                    TestDefinition {
+                        name: Some(S("slow")),
+                        command: S("echo slow"),
+                    },
+                ]),
                 ..Default::default()
             };
             let have = config.select_tests(&[S("cuke"), S("unit")]).unwrap();
-            let want = vec![&cuke_test, &unit_test];
+            let want = vec![
+                ToolDefinition {
+                    name: Some(S("test (cuke)")),
+                    command: S("echo cuke"),
+                },
+                ToolDefinition {
+                    name: Some(S("test (unit)")),
+                    command: S("echo unit"),
+                },
+            ];
             pretty::assert_eq!(have, want);
         }
 
         #[test]
         fn duplicate_names_given() {
-            let unit_test = ToolDefinition {
-                name: Some(S("unit")),
-                command: S("echo unit"),
-            };
             let config = Config {
-                tests: Some(vec![unit_test.clone()]),
+                tests: Some(vec![TestDefinition {
+                    name: Some(S("unit")),
+                    command: S("echo unit"),
+                }]),
                 ..Default::default()
             };
             let have = config.select_tests(&[S("unit"), S("unit")]).unwrap();
-            let want = vec![&unit_test];
+            let want = vec![ToolDefinition {
+                name: Some(S("test (unit)")),
+                command: S("echo unit"),
+            }];
             pretty::assert_eq!(have, want);
         }
 
         #[test]
         fn unnamed_tests() {
-            let unit_test = ToolDefinition {
-                name: None,
-                command: S("actionlint"),
-            };
             let config = Config {
-                tests: Some(vec![unit_test.clone()]),
+                tests: Some(vec![TestDefinition {
+                    name: None,
+                    command: S("echo unit"),
+                }]),
                 ..Default::default()
             };
             let have = config.select_tests(&[S("actionlint")]).unwrap();
-            let want = vec![&unit_test];
+            let want = vec![ToolDefinition {
+                name: Some(S("test (unit)")),
+                command: S("echo unit"),
+            }];
             pretty::assert_eq!(have, want);
         }
 
@@ -1704,11 +1758,11 @@ mod tests {
         fn unknown_name() {
             let config = Config {
                 tests: Some(vec![
-                    ToolDefinition {
+                    TestDefinition {
                         name: Some(S("unit")),
                         command: S("echo unit"),
                     },
-                    ToolDefinition {
+                    TestDefinition {
                         name: Some(S("cuke")),
                         command: S("echo cuke"),
                     },
@@ -1739,18 +1793,20 @@ mod tests {
     }
 
     mod tests_for {
-        use crate::config::{CommandConfig, CommandsSection, Config, DefaultTests, ToolDefinition};
+        use crate::config::{
+            CommandConfig, CommandsSection, Config, DefaultTests, TestDefinition, ToolDefinition,
+        };
         use big_s::S;
 
         #[test]
         fn cli_overrides_config() {
             let config = Config {
                 tests: Some(vec![
-                    ToolDefinition {
+                    TestDefinition {
                         name: Some(S("cuke")),
                         command: S("echo cuke"),
                     },
-                    ToolDefinition {
+                    TestDefinition {
                         name: Some(S("unit")),
                         command: S("echo unit"),
                     },
@@ -1773,8 +1829,8 @@ mod tests {
                 .unwrap();
             pretty::assert_eq!(
                 have,
-                vec![&ToolDefinition {
-                    name: Some(S("cuke")),
+                vec![ToolDefinition {
+                    name: Some(S("test (cuke)")),
                     command: S("echo cuke"),
                 }]
             );
@@ -1784,11 +1840,11 @@ mod tests {
         fn empty_cli_uses_config() {
             let config = Config {
                 tests: Some(vec![
-                    ToolDefinition {
+                    TestDefinition {
                         name: Some(S("cuke")),
                         command: S("echo cuke"),
                     },
-                    ToolDefinition {
+                    TestDefinition {
                         name: Some(S("unit")),
                         command: S("echo unit"),
                     },
@@ -1811,8 +1867,8 @@ mod tests {
                 .unwrap();
             pretty::assert_eq!(
                 have,
-                vec![&ToolDefinition {
-                    name: Some(S("unit")),
+                vec![ToolDefinition {
+                    name: Some(S("test (unit)")),
                     command: S("echo unit"),
                 }]
             );
@@ -1822,11 +1878,11 @@ mod tests {
         fn missing_config_uses_default_all() {
             let config = Config {
                 tests: Some(vec![
-                    ToolDefinition {
+                    TestDefinition {
                         name: Some(S("cuke")),
                         command: S("echo cuke"),
                     },
-                    ToolDefinition {
+                    TestDefinition {
                         name: Some(S("unit")),
                         command: S("echo unit"),
                     },
@@ -1841,12 +1897,12 @@ mod tests {
             pretty::assert_eq!(
                 have,
                 vec![
-                    &ToolDefinition {
-                        name: Some(S("cuke")),
+                    ToolDefinition {
+                        name: Some(S("test (cuke)")),
                         command: S("echo cuke"),
                     },
-                    &ToolDefinition {
-                        name: Some(S("unit")),
+                    ToolDefinition {
+                        name: Some(S("test (unit)")),
                         command: S("echo unit"),
                     },
                 ]
@@ -1857,11 +1913,11 @@ mod tests {
         fn missing_config_uses_default_none() {
             let config = Config {
                 tests: Some(vec![
-                    ToolDefinition {
+                    TestDefinition {
                         name: Some(S("cuke")),
                         command: S("echo cuke"),
                     },
-                    ToolDefinition {
+                    TestDefinition {
                         name: Some(S("unit")),
                         command: S("echo unit"),
                     },
@@ -1877,18 +1933,18 @@ mod tests {
                     DefaultTests::None,
                 )
                 .unwrap();
-            pretty::assert_eq!(have, Vec::<&ToolDefinition>::new());
+            pretty::assert_eq!(have, Vec::<ToolDefinition>::new());
         }
 
         #[test]
         fn empty_command_tests_configured() {
             let config = Config {
                 tests: Some(vec![
-                    ToolDefinition {
+                    TestDefinition {
                         name: Some(S("unit")),
                         command: S("echo unit"),
                     },
-                    ToolDefinition {
+                    TestDefinition {
                         name: Some(S("cuke")),
                         command: S("echo cuke"),
                     },
@@ -1902,7 +1958,7 @@ mod tests {
             let have = config
                 .tests_for(&[], |commands| commands.pitstop.as_ref(), DefaultTests::All)
                 .unwrap();
-            assert_eq!(have, Vec::<&ToolDefinition>::new());
+            assert_eq!(have, Vec::<ToolDefinition>::new());
         }
     }
 }
