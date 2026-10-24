@@ -16,7 +16,7 @@ Feature: CI runs all fixes, formatters, lints, and tests
       {
         "tests": [
           { "command": "echo test one" },
-          { "name": "unit", "command": "echo unit" }
+          { "name": "unit", "command": "echo running unit tests" }
         ]
       }
       """
@@ -32,13 +32,13 @@ Feature: CI runs all fixes, formatters, lints, and tests
       """
     And it prints the block
       """
-      echo test one
+      test (echo test one)
       test one
       """
     And it prints the block
       """
       test (unit)
-      unit
+      running unit tests
       """
     And it prints the block
       """
