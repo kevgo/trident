@@ -23,14 +23,6 @@ impl Runnable {
         self.name.as_deref().unwrap_or(&self.command)
     }
 
-    #[must_use]
-    pub fn to_sequence(self) -> conc::Sequence {
-        conc::Sequence::one(conc::Executable {
-            name: format!("{} ({})", self.operation, self.name_or_command()),
-            command: conc::shell_command(&self.command),
-        })
-    }
-
     /// Converts this tool into an executable whose printed name matches built-in tools:
     /// `{operation} {stack} ({name})`.
     #[must_use]
@@ -40,6 +32,11 @@ impl Runnable {
             name: format!("{operation} {stack} ({tool_name})"),
             command: conc::shell_command(&self.command),
         }
+    }
+
+    #[must_use]
+    pub fn to_sequence(self, operation: Operation, stack: StackType) -> conc::Sequence {
+        conc::Sequence::one(self.to_executable(operation, stack))
     }
 }
 
