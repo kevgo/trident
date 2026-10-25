@@ -7,7 +7,7 @@ use crate::domain::{Operation, StackType};
 /// Tests are defined by name ("unit", "cuke"),
 /// but the resulting tool definition will have a name like "test (unit)" or "test (cuke)".
 #[derive(Clone, Debug, PartialEq)]
-pub struct ToolCall {
+pub struct Runnable {
     pub operation: Operation,
 
     /// display name
@@ -17,13 +17,10 @@ pub struct ToolCall {
     pub runnable: Executable,
 }
 
-impl ToolCall {
-    pub fn to_executable(&self) -> conc::Executable {
-        let run_method = self.app.run_method(self.version, self.platform);
-        conc::Executable {
-            name: format!("{} ({})", self.operation, self.name_or_command()),
-            command: conc::shell_command(&self.command),
-        }
+impl Runnable {
+    /// provides the name of the tool, or the command if the tool has no name
+    fn name_or_command(&self) -> &str {
+        self.name.as_deref().unwrap_or(&self.command)
     }
 
     #[must_use]
@@ -32,11 +29,6 @@ impl ToolCall {
             name: format!("{} ({})", self.operation, self.name_or_command()),
             command: conc::shell_command(&self.command),
         })
-    }
-
-    /// provides the name of the tool, or the command if the tool has no name
-    fn name_or_command(&self) -> &str {
-        self.name.as_deref().unwrap_or(&self.command)
     }
 
     /// Converts this tool into an executable whose printed name matches built-in tools:
