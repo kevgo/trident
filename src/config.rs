@@ -231,6 +231,14 @@ impl ToolDefinition {
     fn name_or_command(&self) -> &str {
         self.name.as_deref().unwrap_or(&self.command)
     }
+
+    pub fn to_tool_call(&self, operation: Operation) -> ToolCall {
+        ToolCall {
+            operation,
+            name: self.name.clone(),
+            command: self.command.clone(),
+        }
+    }
 }
 
 /// the tests a command runs by default
