@@ -36,12 +36,5 @@ impl Lint for Actionlint {
                 args: vec![],
             })?,
         })
-        // let executable = get_rta_command(&GetRTACmdArgs {
-        //     name: format!("lint {} ({self})", stack.stack),
-        //     app: &rta::applications::Biome {},
-        //     args,
-        //     version: None,
-        // })?;
-        // Ok(&rta::applications::ActionLint {})
     }
 }

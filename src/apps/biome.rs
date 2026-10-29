@@ -1,6 +1,6 @@
 use crate::apps::{GetRTACmdArgs, get_rta_command};
 use crate::config::{Application, ApplicationSection, Config, Operation};
-use crate::domain::{DetectedStack, EnabledWhen, Fix, Lint, Result, Tool};
+use crate::domain::{DetectedStack, EnabledWhen, Fix, Lint, LintDefinition, Result, Tool};
 use big_s::S;
 use std::fmt::Display;
 
@@ -25,11 +25,7 @@ impl Display for Biome {
 }
 
 impl Lint for Biome {
-    fn lint_commands(
-        &self,
-        stack: &DetectedStack,
-        config: &Config,
-    ) -> Result<&'static dyn rta::applications::AppDefinition> {
+    fn lint_commands(&self, stack: &DetectedStack, config: &Config) -> Result<LintDefinition> {
         let ignores = config.ignores_for(self, Operation::Lint)?;
         let files = stack.files.remove(&ignores);
         if files.is_empty() {
