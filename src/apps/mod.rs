@@ -1,6 +1,5 @@
 pub mod actionlint;
 pub mod biome;
-pub mod checkstyle;
 pub mod cucumber_sort;
 pub mod delete_empty_folders;
 pub mod gherkin_lint;
