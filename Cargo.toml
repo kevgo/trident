@@ -17,7 +17,7 @@ conc = { package = "concurrent_shell_commands", version = "0.10.2" }
 ignore = "0.4.31"
 itertools = "0.14.0"
 jsonc-parser = { version = "0.33.1", features = ["serde"] }
-rta = { package = "run-that-app", version = "0.43.1" }
+rta = { package = "run-that-app", version = "0.43.2" }
 schemars = { version = "1.2.2", features = ["preserve_order"] }
 serde = { version = "1.0.229", features = ["derive"] }
 serde_with = "3.21.0"
