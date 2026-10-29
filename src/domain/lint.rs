@@ -9,5 +9,9 @@ pub trait Lint: Tool {
     /// If it runs, the lint should only verify the files in the given `DetectedStack`,
     /// not find all the files to lint by itself.
     /// This is for performance reasons. Finding files requires expensive OS calls.
-    fn lint_commands(&self, stack: &DetectedStack, config: &Config) -> Result<LintDefinition>;
+    fn lint_commands(
+        &self,
+        stack: &DetectedStack,
+        config: &Config,
+    ) -> Result<Option<LintDefinition>>;
 }

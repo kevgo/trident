@@ -27,14 +27,22 @@ impl Display for Actionlint {
 }
 
 impl Lint for Actionlint {
-    fn lint_commands(&self, _stack: &DetectedStack, _config: &Config) -> Result<LintDefinition> {
+    fn lint_commands(
+        &self,
+        _stack: &DetectedStack,
+        _config: &Config,
+    ) -> Result<Option<LintDefinition>> {
         let action_lint = rta::applications::ActionLint {};
-        Ok(LintDefinition {
+        let command = get_rta_command2(&super::GetRTACmd2Args {
+            app: &action_lint,
+            args: vec![],
+        })?;
+        let Some(command) = command else {
+            return Ok(None);
+        };
+        Ok(Some(LintDefinition {
             name: action_lint.name().as_str(),
-            command: get_rta_command2(&super::GetRTACmd2Args {
-                app: &action_lint,
-                args: vec![],
-            })?,
-        })
+            command,
+        }))
     }
 }

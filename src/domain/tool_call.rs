@@ -23,7 +23,7 @@ pub struct LintDefinition {
     pub name: &'static str,
 
     /// the runnable to execute
-    pub command: Option<Command>,
+    pub command: Command,
 }
 
 impl Runnable {
