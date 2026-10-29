@@ -5,7 +5,6 @@ use jsonc_parser::ParseOptions;
 use schemars::JsonSchema;
 use serde::Deserialize;
 use std::convert::Into;
-use std::fmt::Display;
 use std::fs;
 use std::path::Path;
 

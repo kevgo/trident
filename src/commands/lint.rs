@@ -4,7 +4,7 @@ use crate::apps::git_diff_check::GitDiffCheck;
 use crate::cli::input::{RunArgsWithScope, ShowExt};
 use crate::cli::output::print_metadata;
 use crate::config::{Config, Operation, ToolDefinition};
-use crate::domain::{DetectedStacks, Result, StackType, Runnable};
+use crate::domain::{DetectedStacks, Result, Runnable, StackType};
 use crate::{git, subshell};
 use ahash::AHashMap;
 use std::process::ExitCode;

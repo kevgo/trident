@@ -1,6 +1,6 @@
 use crate::apps::{GetRTACmdArgs, get_rta_command};
-use crate::config::{Application, ApplicationSection, Config, Operation};
-use crate::domain::{DetectedStack, EnabledWhen, Fix, Result, Tool};
+use crate::config::{Application, ApplicationSection, Config};
+use crate::domain::{DetectedStack, EnabledWhen, Fix, Operation, Result, Tool};
 use std::fmt::Display;
 
 pub struct Yamlfmt;
