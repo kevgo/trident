@@ -1,8 +1,8 @@
 use super::{discover_stacks, resolve_scope};
 use crate::cli::input::{RunArgsWithScope, ShowExt};
 use crate::cli::output::print_metadata;
-use crate::config::{Config, Operation};
-use crate::domain::{DetectedStacks, Result, StackType};
+use crate::config::Config;
+use crate::domain::{DetectedStacks, Operation, Result, StackType};
 use crate::git::Repo;
 use ahash::AHashMap;
 use std::process::ExitCode;

@@ -3,8 +3,10 @@ use crate::apps::{delete_empty_folders, keep_sorted};
 use crate::cli::input::{RunArgs, ShowExt};
 use crate::cli::output::print_metadata;
 use crate::commands::fix::add_custom_fixes;
-use crate::config::{Application, Config, Operation};
-use crate::domain::{DetectedStacks, Result, Runnables, StackType, UserError, fingerprint};
+use crate::config::{Application, Config};
+use crate::domain::{
+    DetectedStacks, Operation, Result, Runnables, StackType, UserError, fingerprint,
+};
 use crate::git;
 use crate::stacks;
 use ahash::AHashMap;
