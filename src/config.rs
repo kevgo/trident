@@ -1,11 +1,10 @@
-use crate::domain::{Ignores, Result, StackType, Tool, UserError};
+use crate::domain::{Ignores, Operation, Result, StackType, Tool, UserError};
 use ahash::AHashMap;
 use itertools::Itertools;
 use jsonc_parser::ParseOptions;
 use schemars::JsonSchema;
 use serde::Deserialize;
 use std::convert::Into;
-use std::fmt::Display;
 use std::fs;
 use std::path::Path;
 
@@ -401,27 +400,6 @@ pub struct ApplicationSection {
     pub tikibase: Option<ApplicationNoFile>,
 
     pub yamlfmt: Option<ApplicationWithFile>,
-}
-
-/// a Trident operation that applications can be configured for
-///
-/// Operations are more basic primitives than Trident commands.
-/// All Trident commands execute variations of these three basic operations on various files.
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
-pub enum Operation {
-    Lint,
-    Fix,
-    FixUnsafe,
-}
-
-impl Display for Operation {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            Operation::Lint => f.write_str("lint"),
-            Operation::Fix => f.write_str("fix"),
-            Operation::FixUnsafe => f.write_str("unsafe-fix"),
-        }
-    }
 }
 
 #[derive(Clone, Debug, Default, Deserialize, JsonSchema, PartialEq)]

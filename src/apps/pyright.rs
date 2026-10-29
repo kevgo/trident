@@ -1,6 +1,6 @@
 use crate::apps::{GetRTACmdArgs, get_rta_command};
-use crate::config::{Application, ApplicationSection, Config, Operation};
-use crate::domain::{DetectedStack, EnabledWhen, Lint, Result, StackType, Tool};
+use crate::config::{Application, ApplicationSection, Config};
+use crate::domain::{DetectedStack, EnabledWhen, Lint, Operation, Result, StackType, Tool};
 use std::fmt::Display;
 
 pub struct Pyright;
