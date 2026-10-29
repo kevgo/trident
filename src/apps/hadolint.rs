@@ -1,6 +1,8 @@
-use crate::apps::{GetRTACmdArgs, get_rta_command};
-use crate::config::{Application, ApplicationSection, Config, Operation};
-use crate::domain::{DetectedStack, EnabledWhen, Lint, Result, Tool};
+use rta::applications::AppDefinition;
+
+use crate::apps::{GetRTACmd2Args, GetRTACmdArgs, get_rta_command, get_rta_command2};
+use crate::config::{Application, ApplicationSection, Config};
+use crate::domain::{DetectedStack, EnabledWhen, Lint, LintDefinition, Operation, Result, Tool};
 use std::fmt::Display;
 
 pub struct Hadolint;
@@ -26,18 +28,20 @@ impl Lint for Hadolint {
         &self,
         stack: &DetectedStack,
         config: &Config,
-    ) -> Result<Option<conc::Executable>> {
+    ) -> Result<Option<LintDefinition>> {
         let ignores = config.ignores_for(self, Operation::Lint)?;
         let files = stack.files.remove(&ignores);
         if files.is_empty() {
             return Ok(None);
         }
-        let executable = get_rta_command(&GetRTACmdArgs {
-            name: format!("lint {} ({self})", stack.stack),
-            app: &rta::applications::Hadolint {},
+        let hadolint = rta::applications::Hadolint {};
+        let command = get_rta_command2(&GetRTACmd2Args {
+            app: &hadolint,
             args: files.into_strings(),
-            version: None,
         })?;
-        Ok(executable)
+        Ok(command.map(|command| LintDefinition {
+            name: hadolint.name().as_str(),
+            command,
+        }))
     }
 }
