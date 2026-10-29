@@ -1,9 +1,10 @@
-use crate::apps::{GetRTACmdArgs, get_rta_command};
+use crate::apps::{GetRTACmd2Args, GetRTACmdArgs, get_rta_command, get_rta_command2};
 use crate::config::{Application, ApplicationSection, Config};
 use crate::domain::{
     DetectedStack, EnabledWhen, Fix, Lint, LintDefinition, Operation, Result, Tool,
 };
 use big_s::S;
+use rta::applications::AppDefinition;
 use std::fmt::Display;
 
 pub struct Ruff;
@@ -36,19 +37,15 @@ impl Lint for Ruff {
         if files.is_empty() {
             return Ok(None);
         }
+        let ruff = rta::applications::Ruff {};
         let mut args = Vec::with_capacity(files.len() + 1);
         args.push(S("check"));
         args.extend(files.into_strings());
-        let executable = get_rta_command(&GetRTACmdArgs {
-            name: format!("lint {} (ruff)", stack.stack),
-            app: &rta::applications::Ruff {},
-            args,
-            version: None,
-        })?;
-        let Some(executable) = executable else {
-            return Ok(None);
-        };
-        Ok(Some(executable))
+        let command = get_rta_command2(&GetRTACmd2Args { app: &ruff, args })?;
+        Ok(command.map(|command| LintDefinition {
+            name: ruff.name().as_str(),
+            command,
+        }))
     }
 }
 
