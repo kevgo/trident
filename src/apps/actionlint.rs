@@ -37,10 +37,7 @@ impl Lint for Actionlint {
             app: &action_lint,
             args: vec![],
         })?;
-        let Some(command) = command else {
-            return Ok(None);
-        };
-        Ok(Some(LintDefinition {
+        Ok(command.map(|command| LintDefinition {
             name: action_lint.name().as_str(),
             command,
         }))
