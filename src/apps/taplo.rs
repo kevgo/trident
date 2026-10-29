@@ -1,7 +1,10 @@
-use crate::apps::{GetRTACmdArgs, get_rta_command};
+use crate::apps::{GetRTACmd2Args, GetRTACmdArgs, get_rta_command, get_rta_command2};
 use crate::config::{Application, ApplicationSection, Config};
-use crate::domain::{DetectedStack, EnabledWhen, Fix, Lint, Operation, Result, Tool};
+use crate::domain::{
+    DetectedStack, EnabledWhen, Fix, Lint, LintDefinition, Operation, Result, Tool,
+};
 use big_s::S;
+use rta::applications::AppDefinition;
 use std::fmt::Display;
 
 pub struct Taplo;
@@ -27,7 +30,7 @@ impl Lint for Taplo {
         &self,
         stack: &DetectedStack,
         config: &Config,
-    ) -> Result<Option<conc::Executable>> {
+    ) -> Result<Option<LintDefinition>> {
         let ignores = config.ignores_for(self, Operation::Lint)?;
         let files = stack.files.remove(&ignores);
         if files.is_empty() {
@@ -36,13 +39,12 @@ impl Lint for Taplo {
         let mut args = Vec::with_capacity(files.len() + 1);
         args.push(S("lint"));
         args.extend(files.into_strings());
-        let executable = get_rta_command(&GetRTACmdArgs {
-            name: format!("lint {} ({self})", stack.stack),
-            app: &rta::applications::Taplo {},
-            args,
-            version: None,
-        })?;
-        Ok(executable)
+        let taplo = rta::applications::Taplo {};
+        let command = get_rta_command2(&GetRTACmd2Args { app: &taplo, args })?;
+        Ok(command.map(|command| LintDefinition {
+            name: taplo.name().as_str(),
+            command,
+        }))
     }
 }
 
