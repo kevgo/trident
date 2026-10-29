@@ -1,5 +1,5 @@
 use crate::config::{Application, ApplicationSection, Config};
-use crate::domain::{DetectedStack, EnabledWhen, Lint, Result, Tool};
+use crate::domain::{DetectedStack, EnabledWhen, Lint, LintDefinition, Result, Tool};
 use std::fmt::Display;
 
 pub struct Checkstyle;
@@ -28,7 +28,7 @@ impl Lint for Checkstyle {
         &self,
         _stack: &DetectedStack,
         _config: &Config,
-    ) -> Result<Option<conc::Executable>> {
+    ) -> Result<Option<LintDefinition>> {
         if which::which(BINARY).is_err() {
             eprintln!(
                 "checkstyle not found on PATH - skipping. Install with: brew install checkstyle",
