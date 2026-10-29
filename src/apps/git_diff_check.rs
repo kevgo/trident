@@ -22,6 +22,8 @@ impl Display for GitDiffCheck {
     }
 }
 
+// TODO: make this a proper "Git" stack, which defines a linter called "lint Git (diff markers)"
+
 /// provides the command that checks the Git changes for whitespace errors,
 /// if the current directory is a Git repository
 #[must_use]
