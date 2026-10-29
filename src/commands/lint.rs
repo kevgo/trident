@@ -4,7 +4,7 @@ use crate::apps::git_diff_check::GitDiffCheck;
 use crate::cli::input::{RunArgsWithScope, ShowExt};
 use crate::cli::output::print_metadata;
 use crate::config::{Config, ToolDefinition};
-use crate::domain::{DetectedStacks, Operation, Result, StackType, ToolDefinition};
+use crate::domain::{DetectedStacks, LintDefinition, Operation, Result, StackType, ToolDefinition};
 use crate::{git, subshell};
 use ahash::AHashMap;
 use std::process::ExitCode;
@@ -111,8 +111,8 @@ pub fn determine_lints(
 
 // TODO: make the ToolCalls a reference
 pub struct Lints {
-    pub global: Vec<Vec<ToolDefinition>>,
-    pub stack_specific: AHashMap<StackType, Vec<Vec<ToolDefinition>>>,
+    pub global: Vec<Vec<LintDefinition>>,
+    pub stack_specific: AHashMap<StackType, Vec<Vec<LintDefinition>>>,
 }
 
 impl Lints {

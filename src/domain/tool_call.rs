@@ -14,9 +14,14 @@ pub struct LintDefinition {
 
 impl LintDefinition {
     pub fn to_conc_executable(self) -> conc::Executable {
+        let LintDefinition {
+            name,
+            command,
+            stack,
+        } = self;
         conc::Executable {
-            name: format!("lint {} ({})", self.stack, self.name),
-            command: self.command,
+            name: format!("lint {} ({})", stack, name),
+            command,
         }
     }
 }
