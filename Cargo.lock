@@ -1507,9 +1507,9 @@ dependencies = [
 
 [[package]]
 name = "run-that-app"
-version = "0.43.1"
+version = "0.43.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b765505ff4897b36046e0d639f776f32bedd2c1764db3c6bf978075d18bdeaf2"
+checksum = "5bebefc6281ec578b5db7823217776c0a5c188fd8a33b9201e3113be403c045d"
 dependencies = [
  "big_s",
  "colored 2.2.0",
