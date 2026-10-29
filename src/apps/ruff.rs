@@ -1,6 +1,8 @@
 use crate::apps::{GetRTACmdArgs, get_rta_command};
-use crate::config::{Application, ApplicationSection, Config, Operation};
-use crate::domain::{DetectedStack, EnabledWhen, Fix, Lint, Result, Tool};
+use crate::config::{Application, ApplicationSection, Config};
+use crate::domain::{
+    DetectedStack, EnabledWhen, Fix, Lint, LintDefinition, Operation, Result, Tool,
+};
 use big_s::S;
 use std::fmt::Display;
 
@@ -28,7 +30,7 @@ impl Lint for Ruff {
         &self,
         stack: &DetectedStack,
         config: &Config,
-    ) -> Result<Option<conc::Executable>> {
+    ) -> Result<Option<LintDefinition>> {
         let ignores = config.ignores_for(self, Operation::Lint)?;
         let files = stack.files.remove(&ignores);
         if files.is_empty() {
