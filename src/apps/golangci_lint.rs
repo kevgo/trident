@@ -44,7 +44,7 @@ impl Display for GolangciLint {
 impl Lint for GolangciLint {
     fn lint_commands(
         &self,
-        _stack: &DetectedStack,
+        stack: &DetectedStack,
         _config: &Config,
     ) -> Result<Option<LintDefinition>> {
         let golangci_lint = rta::applications::GolangCiLint {};
@@ -55,6 +55,7 @@ impl Lint for GolangciLint {
         Ok(command.map(|command| LintDefinition {
             name: golangci_lint.name().as_str(),
             command,
+            stack: stack.stack.stack_type(),
         }))
     }
 }

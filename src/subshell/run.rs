@@ -1,8 +1,8 @@
-use crate::domain::Runnable;
+use crate::domain::ToolDefinition;
 use std::process::ExitCode;
 
 pub struct RunArgs {
-    pub calls: Vec<Vec<Runnable>>,
+    pub calls: Vec<Vec<ToolDefinition>>,
     pub error_on_output: bool,
     pub sequential: bool,
     pub show: conc::Show,

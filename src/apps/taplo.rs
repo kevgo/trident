@@ -44,6 +44,7 @@ impl Lint for Taplo {
         Ok(command.map(|command| LintDefinition {
             name: taplo.name().as_str(),
             command,
+            stack: stack.stack.stack_type(),
         }))
     }
 }

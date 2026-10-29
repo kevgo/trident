@@ -41,6 +41,7 @@ impl Lint for Hadolint {
         Ok(command.map(|command| LintDefinition {
             name: hadolint.name().as_str(),
             command,
+            stack: stack.stack.stack_type(),
         }))
     }
 }

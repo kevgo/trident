@@ -41,7 +41,7 @@ pub fn fix(args: &RunArgsWithScope) -> Result<ExitCode> {
     // step 4: run the global fixes
     if let Some(global) = global {
         let exit_code = subshell::run(subshell::RunArgs {
-            sequences: vec![global],
+            calls: vec![global],
             error_on_output,
             sequential,
             stderr_to_stdout,

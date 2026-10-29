@@ -45,6 +45,7 @@ impl Lint for Ruff {
         Ok(command.map(|command| LintDefinition {
             name: ruff.name().as_str(),
             command,
+            stack: stack.stack.stack_type(),
         }))
     }
 }

@@ -43,6 +43,7 @@ impl Lint for ShellCheck {
         Ok(command.map(|command| LintDefinition {
             name: shellcheck.name().as_str(),
             command,
+            stack: stack.stack.stack_type(),
         }))
     }
 }

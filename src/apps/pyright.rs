@@ -46,6 +46,7 @@ impl Lint for Pyright {
         Ok(command.map(|command| LintDefinition {
             name: pyright.name().as_str(),
             command,
+            stack: stack.stack.stack_type(),
         }))
     }
 }

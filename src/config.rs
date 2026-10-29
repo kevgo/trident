@@ -1,4 +1,6 @@
-use crate::domain::{Ignores, Operation, Result, Runnable, StackType, Tool, ToolType, UserError};
+use crate::domain::{
+    Ignores, Operation, Result, StackType, Tool, ToolDefinition, ToolType, UserError,
+};
 use ahash::AHashMap;
 use itertools::Itertools;
 use jsonc_parser::ParseOptions;
@@ -148,12 +150,12 @@ impl Config {
     }
 
     /// provides the tests with the given names, or all if no names are given
-    pub fn select_tests(&self, requested: &[String]) -> Result<Vec<Runnable>> {
+    pub fn select_tests(&self, requested: &[String]) -> Result<Vec<ToolDefinition>> {
         let all_tests = self.tests.as_deref().unwrap_or_default();
         if requested.is_empty() {
             return Ok(all_tests
                 .iter()
-                .map(|tool_def| Runnable {
+                .map(|tool_def| ToolDefinition {
                     tool_type: ToolType::Test,
                     name: tool_def.name.clone(),
                     command: tool_def.command.clone(),
@@ -179,7 +181,7 @@ impl Config {
         }
         Ok(result
             .into_iter()
-            .map(|tool_def| Runnable {
+            .map(|tool_def| ToolDefinition {
                 tool_type: ToolType::Test,
                 name: tool_def.name.clone(),
                 command: tool_def.command.clone(),
@@ -195,7 +197,7 @@ impl Config {
         cli: &[String],
         command: impl FnOnce(&CommandsSection) -> Option<&CommandConfig>,
         default: DefaultTests,
-    ) -> Result<Vec<Runnable>> {
+    ) -> Result<Vec<ToolDefinition>> {
         let requested = if cli.is_empty() {
             self.commands
                 .as_ref()
@@ -231,8 +233,8 @@ impl ToolDefinition {
         self.name.as_deref().unwrap_or(&self.command)
     }
 
-    pub fn to_tool_call(&self, operation: Operation) -> Runnable {
-        Runnable {
+    pub fn to_tool_call(&self, operation: Operation) -> ToolDefinition {
+        ToolDefinition {
             operation,
             name: self.name.clone(),
             command: self.command.clone(),
@@ -275,8 +277,8 @@ pub struct CommandConfig {
 }
 
 /// provides the configured tests with the given names as parallel `conc::Sequences`
-pub(crate) fn to_sequences(tools: Vec<Runnable>) -> Vec<conc::Sequence> {
-    tools.into_iter().map(Runnable::to_sequence).collect()
+pub(crate) fn to_sequences(tools: Vec<ToolDefinition>) -> Vec<conc::Sequence> {
+    tools.into_iter().map(ToolDefinition::to_sequence).collect()
 }
 
 #[derive(Clone, Debug, Default, Deserialize, JsonSchema, PartialEq)]
@@ -1606,7 +1608,7 @@ mod tests {
     }
 
     mod select_tests {
-        use crate::config::{Config, Runnable, ToolDefinition, ToolType};
+        use crate::config::{Config, ToolDefinition, ToolType};
         use crate::domain::UserError;
         use big_s::S;
 
@@ -1626,11 +1628,11 @@ mod tests {
             };
             let have = config.select_tests(&[]).unwrap();
             let want = vec![
-                Runnable {
+                ToolDefinition {
                     tool_type: ToolType::Test,
                     definition: &unit_tests,
                 },
-                Runnable {
+                ToolDefinition {
                     tool_type: ToolType::Test,
                     definition: &cuke_tests,
                 },
@@ -1662,11 +1664,11 @@ mod tests {
             };
             let have = config.select_tests(&[S("cuke"), S("unit")]).unwrap();
             let want = vec![
-                Runnable {
+                ToolDefinition {
                     tool_type: ToolType::Test,
                     definition: &cuke_tests,
                 },
-                Runnable {
+                ToolDefinition {
                     tool_type: ToolType::Test,
                     definition: &unit_tests,
                 },
@@ -1685,7 +1687,7 @@ mod tests {
                 ..Default::default()
             };
             let have = config.select_tests(&[S("unit"), S("unit")]).unwrap();
-            let want = vec![Runnable {
+            let want = vec![ToolDefinition {
                 tool_type: ToolType::Test,
                 definition: &unit_tests,
             }];
@@ -1703,7 +1705,7 @@ mod tests {
                 ..Default::default()
             };
             let have = config.select_tests(&[S("actionlint")]).unwrap();
-            let want = vec![Runnable {
+            let want = vec![ToolDefinition {
                 tool_type: ToolType::Test,
                 definition: &actionlint,
             }];
@@ -1750,8 +1752,7 @@ mod tests {
 
     mod tests_for {
         use crate::config::{
-            CommandConfig, CommandsSection, Config, DefaultTests, Runnable, ToolDefinition,
-            ToolType,
+            CommandConfig, CommandsSection, Config, DefaultTests, ToolDefinition, ToolType,
         };
         use big_s::S;
 
@@ -1787,7 +1788,7 @@ mod tests {
                 .unwrap();
             pretty::assert_eq!(
                 have,
-                vec![Runnable {
+                vec![ToolDefinition {
                     tool_type: ToolType::Test,
                     definition: &cuke,
                 }],
@@ -1826,7 +1827,7 @@ mod tests {
                 .unwrap();
             pretty::assert_eq!(
                 have,
-                vec![Runnable {
+                vec![ToolDefinition {
                     tool_type: ToolType::Test,
                     definition: &unit,
                 }]
@@ -1855,11 +1856,11 @@ mod tests {
             pretty::assert_eq!(
                 have,
                 vec![
-                    Runnable {
+                    ToolDefinition {
                         tool_type: ToolType::Test,
                         definition: &cuke,
                     },
-                    Runnable {
+                    ToolDefinition {
                         tool_type: ToolType::Test,
                         definition: &unit,
                     },
@@ -1891,7 +1892,7 @@ mod tests {
                     DefaultTests::None,
                 )
                 .unwrap();
-            pretty::assert_eq!(have, Vec::<Runnable>::new());
+            pretty::assert_eq!(have, Vec::<ToolDefinition>::new());
         }
 
         #[test]
@@ -1916,7 +1917,7 @@ mod tests {
             let have = config
                 .tests_for(&[], |commands| commands.pitstop.as_ref(), DefaultTests::All)
                 .unwrap();
-            assert_eq!(have, Vec::<Runnable>::new());
+            assert_eq!(have, Vec::<ToolDefinition>::new());
         }
     }
 }

@@ -50,6 +50,7 @@ impl Lint for Rumdl {
         Ok(command.map(|command| LintDefinition {
             name: rumdl.name().as_str(),
             command,
+            stack: stack.stack.stack_type(),
         }))
     }
 }

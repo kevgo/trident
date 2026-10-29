@@ -1,21 +1,5 @@
-use std::process::Command;
-
 use crate::domain::{Operation, StackType};
-
-/// A Trident-specific definition for calling a tool.
-///
-/// Tests are defined by name ("unit", "cuke"),
-/// but the resulting tool definition will have a name like "test (unit)" or "test (cuke)".
-#[derive(Clone, Debug, PartialEq)]
-pub struct Runnable {
-    pub operation: Operation,
-
-    /// display name
-    pub name: Option<String>,
-
-    /// the runnable to execute
-    pub executable: Executable,
-}
+use std::process::Command;
 
 /// Definition for a linter
 pub struct LintDefinition {
@@ -24,9 +8,35 @@ pub struct LintDefinition {
 
     /// the runnable to execute
     pub command: Command,
+
+    pub stack: StackType,
 }
 
-impl Runnable {
+impl LintDefinition {
+    pub fn to_conc_executable(self) -> conc::Executable {
+        conc::Executable {
+            name: format!("lint {} ({})", self.stack, self.name),
+            command: self.command,
+        }
+    }
+}
+
+/// A Trident-specific definition for calling a tool.
+///
+/// Tests are defined by name ("unit", "cuke"),
+/// but the resulting tool definition will have a name like "test (unit)" or "test (cuke)".
+#[derive(Clone, Debug, PartialEq)]
+pub struct ToolDefinition {
+    pub operation: Operation,
+
+    /// display name
+    pub name: Option<String>,
+
+    /// the runnable to execute
+    pub executable: Runnable,
+}
+
+impl ToolDefinition {
     /// provides the name of the tool, or the command if the tool has no name
     fn name_or_command(&self) -> &str {
         self.name.as_deref().unwrap_or(&self.command)
@@ -46,39 +56,5 @@ impl Runnable {
     #[must_use]
     pub fn to_sequence(self, operation: Operation, stack: StackType) -> conc::Sequence {
         conc::Sequence::one(self.to_executable(operation, stack))
-    }
-}
-
-/// anything that Trident can execute
-///
-/// Either an RTA app (a built-in tool)
-/// or a shell script (a user-provided script)
-#[derive(Clone, Debug, PartialEq)]
-pub enum Executable {
-    RTAApp {
-        /// the RTA app to execute
-        app: &'static dyn rta::applications::AppDefinition,
-
-        /// arguments to the command
-        args: Vec<String>,
-    },
-
-    /// a user-provided shell script
-    ShellScript(String),
-}
-
-impl Executable {
-    pub fn to_command(&self) -> Command {
-        match self {
-            Executable::RTAApp { app, version, args } => {
-                let platform = rta::platform::detect(log);
-                let run_method = app.run_method(version, platform);
-
-                conc::Executable {
-                    name: format!("{} ({})", operation, name_or_command()),
-                    command: conc::shell_command(&command),
-                }
-            }
-        }
     }
 }

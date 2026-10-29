@@ -45,6 +45,7 @@ impl Lint for GherkinLint {
         Ok(command.map(|command| LintDefinition {
             name: gherkin_lint.name().as_str(),
             command,
+            stack: stack.stack.stack_type(),
         }))
     }
 }

@@ -44,6 +44,7 @@ impl Lint for Tikibase {
         Ok(command.map(|command| LintDefinition {
             name: tikibase.name().as_str(),
             command,
+            stack: stack.stack.stack_type(),
         }))
     }
 }

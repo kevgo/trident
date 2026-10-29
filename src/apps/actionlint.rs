@@ -29,7 +29,7 @@ impl Display for Actionlint {
 impl Lint for Actionlint {
     fn lint_commands(
         &self,
-        _stack: &DetectedStack,
+        stack: &DetectedStack,
         _config: &Config,
     ) -> Result<Option<LintDefinition>> {
         let action_lint = rta::applications::ActionLint {};
@@ -40,6 +40,7 @@ impl Lint for Actionlint {
         Ok(command.map(|command| LintDefinition {
             name: action_lint.name().as_str(),
             command,
+            stack: stack.stack.stack_type(),
         }))
     }
 }

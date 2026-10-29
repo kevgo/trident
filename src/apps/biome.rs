@@ -46,6 +46,7 @@ impl Lint for Biome {
         Ok(command.map(|command| LintDefinition {
             name: biome.name().as_str(),
             command,
+            stack: stack.stack.stack_type(),
         }))
     }
 }

@@ -25,4 +25,4 @@ pub use runnables::Runnables;
 pub use stack::Stack;
 pub use stack_type::StackType;
 pub use tool::{EnabledWhen, Tool};
-pub use tool_call::{Executable, LintDefinition, Runnable};
+pub use tool_call::{LintDefinition, Runnable, ToolDefinition};

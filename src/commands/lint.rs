@@ -3,8 +3,8 @@ use crate::apps::git_diff_check;
 use crate::apps::git_diff_check::GitDiffCheck;
 use crate::cli::input::{RunArgsWithScope, ShowExt};
 use crate::cli::output::print_metadata;
-use crate::config::{Config, Operation, ToolDefinition};
-use crate::domain::{DetectedStacks, Result, Runnable, StackType};
+use crate::config::{Config, ToolDefinition};
+use crate::domain::{DetectedStacks, Operation, Result, StackType, ToolDefinition};
 use crate::{git, subshell};
 use ahash::AHashMap;
 use std::process::ExitCode;
@@ -52,7 +52,7 @@ pub fn determine_lints(
     git_repo: Option<&git::Repo>,
 ) -> Result<Lints> {
     // determine the lints for the stacks
-    let mut stack_specific: AHashMap<StackType, Vec<Runnable>> = AHashMap::new();
+    let mut stack_specific: AHashMap<StackType, Vec<ToolDefinition>> = AHashMap::new();
     for detected_stack in detected_stacks {
         let stack_type = detected_stack.stack.stack_type();
         let stack_config = config.stack_config(stack_type);
@@ -111,8 +111,8 @@ pub fn determine_lints(
 
 // TODO: make the ToolCalls a reference
 pub struct Lints {
-    pub global: Vec<Vec<Runnable>>,
-    pub stack_specific: AHashMap<StackType, Vec<Vec<Runnable>>>,
+    pub global: Vec<Vec<ToolDefinition>>,
+    pub stack_specific: AHashMap<StackType, Vec<Vec<ToolDefinition>>>,
 }
 
 impl Lints {
