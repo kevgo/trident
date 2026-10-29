@@ -1,7 +1,10 @@
-use crate::apps::{GetRTACmdArgs, get_rta_command};
+use crate::apps::{GetRTACmd2Args, GetRTACmdArgs, get_rta_command, get_rta_command2};
 use crate::config::{Application, ApplicationSection, Config};
-use crate::domain::{DetectedStack, EnabledWhen, Fix, Lint, Result, StackType, Tool};
+use crate::domain::{
+    DetectedStack, EnabledWhen, Fix, Lint, LintDefinition, Result, StackType, Tool,
+};
 use big_s::S;
+use rta::applications::AppDefinition;
 use std::fmt::Display;
 
 pub struct Tikibase;
@@ -30,16 +33,18 @@ impl Lint for Tikibase {
         &self,
         stack: &DetectedStack,
         _config: &Config,
-    ) -> Result<Option<conc::Executable>> {
+    ) -> Result<Option<LintDefinition>> {
         let mut args = Vec::with_capacity(stack.files.len() + 1);
         args.push(S("check"));
-        let executable = get_rta_command(&GetRTACmdArgs {
-            name: format!("lint {} ({self})", stack.stack),
-            app: &rta::applications::Tikibase {},
+        let tikibase = rta::applications::Tikibase {};
+        let command = get_rta_command2(&GetRTACmd2Args {
+            app: &tikibase,
             args,
-            version: None,
         })?;
-        Ok(executable)
+        Ok(command.map(|command| LintDefinition {
+            name: tikibase.name().as_str(),
+            command,
+        }))
     }
 }
 
