@@ -1,7 +1,8 @@
-use crate::apps::{GetRTACmdArgs, get_rta_command};
+use rta::applications::AppDefinition;
+
+use crate::apps::{get_rta_command, get_rta_command2};
 use crate::config::{Application, ApplicationSection, Config};
-use crate::domain::{DetectedStack, EnabledWhen, Lint, Result, Runnable, StackType, Tool};
-use big_s::S;
+use crate::domain::{DetectedStack, EnabledWhen, Lint, LintDefinition, Result, StackType, Tool};
 use std::fmt::Display;
 
 pub struct Actionlint;
@@ -26,13 +27,23 @@ impl Display for Actionlint {
 }
 
 impl Lint for Actionlint {
-    fn lint_commands(&self, _stack: &DetectedStack, _config: &Config) -> Result<Option<Runnable>> {
-        let executable = get_rta_command(&GetRTACmdArgs {
-            name: S("GitHub Actions (actionlint)"),
-            app: &rta::applications::ActionLint {},
-            args: vec![],
-            version: None,
-        })?;
-        Ok(executable)
+    fn lint_commands(&self, _stack: &DetectedStack, _config: &Config) -> Result<LintDefinition> {
+        let action_lint = rta::applications::ActionLint {};
+        let name = action_lint.name();
+        let name_str = name.as_str();
+        Ok(LintDefinition {
+            name: name_str,
+            command: get_rta_command2(&super::GetRTACmd2Args {
+                app: &action_lint,
+                args: vec![],
+            })?,
+        })
+        // let executable = get_rta_command(&GetRTACmdArgs {
+        //     name: format!("lint {} ({self})", stack.stack),
+        //     app: &rta::applications::Biome {},
+        //     args,
+        //     version: None,
+        // })?;
+        // Ok(&rta::applications::ActionLint {})
     }
 }

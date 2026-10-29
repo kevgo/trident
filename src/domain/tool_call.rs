@@ -14,7 +14,16 @@ pub struct Runnable {
     pub name: Option<String>,
 
     /// the runnable to execute
-    pub runnable: Executable,
+    pub executable: Executable,
+}
+
+/// Definition for a linter
+pub struct LintDefinition {
+    /// name of the linter app
+    pub name: &'static str,
+
+    /// the runnable to execute
+    pub command: Option<Command>,
 }
 
 impl Runnable {
@@ -49,9 +58,6 @@ pub enum Executable {
     RTAApp {
         /// the RTA app to execute
         app: &'static dyn rta::applications::AppDefinition,
-
-        /// the version of the RTA app to execute
-        version: rta::Version,
 
         /// arguments to the command
         args: Vec<String>,

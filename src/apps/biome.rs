@@ -29,7 +29,7 @@ impl Lint for Biome {
         &self,
         stack: &DetectedStack,
         config: &Config,
-    ) -> Result<Option<conc::Executable>> {
+    ) -> Result<&'static dyn rta::applications::AppDefinition> {
         let ignores = config.ignores_for(self, Operation::Lint)?;
         let files = stack.files.remove(&ignores);
         if files.is_empty() {
