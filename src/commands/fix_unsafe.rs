@@ -5,6 +5,7 @@ use crate::config::Config;
 use crate::domain::{DetectedStacks, Operation, Result, StackType};
 use crate::git::Repo;
 use ahash::AHashMap;
+use nonempty::NonEmpty;
 use std::process::ExitCode;
 
 pub fn fix_unsafe(args: &RunArgsWithScope) -> Result<ExitCode> {
@@ -44,7 +45,7 @@ pub fn fix_unsafe(args: &RunArgsWithScope) -> Result<ExitCode> {
 pub fn determine_unsafe_fixes(
     stacks: &DetectedStacks,
     config: &Config,
-) -> Result<Vec<conc::Sequence>> {
+) -> Result<Vec<NonEmpty<conc::Executable>>> {
     let mut stacks_executables: AHashMap<StackType, Vec<conc::Executable>> = AHashMap::new();
     for stack in stacks {
         let stack_executables = stacks_executables
@@ -58,12 +59,8 @@ pub fn determine_unsafe_fixes(
             }
         }
     }
-    let mut result = Vec::new();
-    for (_stack_type, mut stack_executables) in stacks_executables {
-        if !stack_executables.is_empty() {
-            let first = stack_executables.remove(0);
-            result.push(conc::Sequence::many(first, stack_executables));
-        }
-    }
-    Ok(result)
+    Ok(stacks_executables
+        .into_values()
+        .filter_map(NonEmpty::from_vec)
+        .collect())
 }

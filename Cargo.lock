@@ -328,11 +328,12 @@ dependencies = [
 
 [[package]]
 name = "concurrent_shell_commands"
-version = "0.10.2"
+version = "0.11.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bc2a83a52811af02fcb1e870ca0a1e7e4639b6cb7280de0088ccf301041365b5"
+checksum = "66eaf05311bf298fe468795185c090cc384d72a75d4a130fe0efb97df8555754"
 dependencies = [
  "colored 3.1.1",
+ "nonempty",
  "shlex",
  "which 8.0.6",
 ]
@@ -1238,6 +1239,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "nonempty"
+version = "0.12.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9737e026353e5cd0736f98eddae28665118eb6f6600902a7f50db585621fecb6"
+
+[[package]]
 name = "num-conv"
 version = "0.2.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2102,6 +2109,7 @@ dependencies = [
  "jsonc-parser",
  "maplit",
  "mio",
+ "nonempty",
  "pretty_assertions",
  "rand",
  "regex",

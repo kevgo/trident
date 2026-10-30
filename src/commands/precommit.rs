@@ -10,6 +10,7 @@ use crate::domain::{
 use crate::git;
 use crate::stacks;
 use ahash::AHashMap;
+use nonempty::NonEmpty;
 use std::process::ExitCode;
 
 pub fn precommit(args: &RunArgs) -> Result<ExitCode> {
@@ -163,17 +164,13 @@ pub fn determine_precommit_fixes(
     }
 
     // step 6: convert to runnables and return
-    let mut stack_specific: AHashMap<StackType, conc::Sequence> = AHashMap::new();
+    let mut stack_specific: AHashMap<StackType, NonEmpty<conc::Executable>> = AHashMap::new();
     for (stack_type, stack_executables) in stacks_executables {
-        if let Some(stack_sequences) = conc::Sequence::from_vec(stack_executables) {
+        if let Some(stack_sequences) = NonEmpty::from_vec(stack_executables) {
             stack_specific.insert(stack_type, stack_sequences);
         }
     }
-    let global = if global.is_empty() {
-        None
-    } else {
-        conc::Sequence::from_vec(global)
-    };
+    let global = NonEmpty::from_vec(global);
     Ok(Runnables {
         global,
         stack_specific,
