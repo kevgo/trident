@@ -7,6 +7,7 @@ use crate::domain::{DetectedStacks, Result, Runnables, StackType};
 use crate::git::Repo;
 use crate::subshell;
 use ahash::AHashMap;
+use nonempty::NonEmpty;
 use std::process::ExitCode;
 
 pub fn pitstop(args: &RunArgsWithTestAndScope) -> Result<ExitCode> {
@@ -31,7 +32,7 @@ pub(crate) fn run_tasks(
     config: &Config,
     stacks: &DetectedStacks,
     repo: Option<&Repo>,
-    tests: Vec<conc::Sequence>,
+    tests: Vec<NonEmpty<conc::Executable>>,
 ) -> Result<ExitCode> {
     let show = args.show.unwrap_or(conc::Show::Names);
     let error_on_output = false;
@@ -87,7 +88,7 @@ pub(crate) fn run_tasks(
     }
     let stack_sequences = stack_executables
         .into_values()
-        .filter_map(conc::Sequence::from_vec)
+        .filter_map(NonEmpty::from_vec)
         .collect();
     let exit_code = subshell::run(subshell::RunArgs {
         sequences: stack_sequences,

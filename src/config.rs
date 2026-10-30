@@ -2,6 +2,7 @@ use crate::domain::{Ignores, Operation, Result, StackType, Tool, ToolDefinition,
 use ahash::AHashMap;
 use itertools::Itertools;
 use jsonc_parser::ParseOptions;
+use nonempty::NonEmpty;
 use schemars::JsonSchema;
 use serde::Deserialize;
 use std::convert::Into;
@@ -266,8 +267,8 @@ pub struct CommandConfig {
     pub test: Option<Vec<String>>,
 }
 
-/// provides the configured tests with the given names as parallel `conc::Sequences`
-pub(crate) fn to_sequences(tools: Vec<ToolDefinition>) -> Vec<conc::Sequence> {
+/// provides the configured tests with the given names as parallel sequences
+pub(crate) fn to_sequences(tools: Vec<ToolDefinition>) -> Vec<NonEmpty<conc::Executable>> {
     tools.into_iter().map(ToolDefinition::to_sequence).collect()
 }
 

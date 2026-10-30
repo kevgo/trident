@@ -9,6 +9,7 @@ use crate::domain::{DetectedStacks, Operation, Result, Runnables, StackType};
 use crate::git::Repo;
 use crate::subshell;
 use ahash::AHashMap;
+use nonempty::NonEmpty;
 use std::process::ExitCode;
 
 pub fn fix(args: &RunArgsWithScope) -> Result<ExitCode> {
@@ -143,15 +144,11 @@ pub fn determine_fixes(config: &Config, detected_stacks: &DetectedStacks) -> Res
     // convert to runnables and return
     let mut stack_specific = AHashMap::new();
     for (stack_type, stack_executables) in stacks_executables {
-        if let Some(stack_sequence) = conc::Sequence::from_vec(stack_executables) {
+        if let Some(stack_sequence) = NonEmpty::from_vec(stack_executables) {
             stack_specific.insert(stack_type, stack_sequence);
         }
     }
-    let global = if global.is_empty() {
-        None
-    } else {
-        conc::Sequence::from_vec(global)
-    };
+    let global = NonEmpty::from_vec(global);
     Ok(Runnables {
         global,
         stack_specific,

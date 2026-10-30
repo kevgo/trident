@@ -1,13 +1,14 @@
 use crate::domain::StackType;
 use ahash::AHashMap;
+use nonempty::NonEmpty;
 
 #[derive(Debug)]
 pub struct Runnables {
     /// fixes that affect all files
-    pub global: Option<Vec<ToolDefinition>>,
+    pub global: Option<NonEmpty<ToolDefinition>>,
 
     /// fixes that affect stack-specific files
-    pub stack_specific: AHashMap<StackType, Vec<ToolDefinition>>,
+    pub stack_specific: AHashMap<StackType, NonEmpty<ToolDefinition>>,
 }
 
 impl Runnables {
@@ -18,7 +19,7 @@ impl Runnables {
 
     #[must_use]
     pub fn len(&self) -> usize {
-        let mut result = self.global.as_ref().map_or(0, |global| global.len());
+        let mut result = self.global.as_ref().map_or(0, NonEmpty::len);
         for (_, sequence) in &self.stack_specific {
             result += sequence.len();
         }
@@ -42,6 +43,7 @@ mod tests {
         use super::tool_def;
         use crate::domain::StackType;
         use ahash::AHashMap;
+        use nonempty::nonempty;
 
         #[test]
         fn empty() {
@@ -57,7 +59,7 @@ mod tests {
         #[test]
         fn single_global() {
             let give = Runnables {
-                global: Some(vec![tool_def()]),
+                global: Some(nonempty![tool_def()]),
                 stack_specific: AHashMap::new(),
             };
             let have = give.len();
@@ -68,7 +70,7 @@ mod tests {
         #[test]
         fn multiple_globals() {
             let give = Runnables {
-                global: Some(vec![tool_def(), tool_def()]),
+                global: Some(nonempty![tool_def(), tool_def()]),
                 stack_specific: AHashMap::new(),
             };
             let have = give.len();
@@ -81,8 +83,8 @@ mod tests {
             let give = Runnables {
                 global: None,
                 stack_specific: AHashMap::from([
-                    (StackType::Rust, vec![tool_def()]),
-                    (StackType::Markdown, vec![tool_def(), tool_def()]),
+                    (StackType::Rust, nonempty![tool_def()]),
+                    (StackType::Markdown, nonempty![tool_def(), tool_def()]),
                 ]),
             };
             let have = give.len();
@@ -93,8 +95,8 @@ mod tests {
         #[test]
         fn all_fields_set() {
             let give = Runnables {
-                global: Some(vec![tool_def(), tool_def()]),
-                stack_specific: AHashMap::from([(StackType::Rust, vec![tool_def()])]),
+                global: Some(nonempty![tool_def(), tool_def()]),
+                stack_specific: AHashMap::from([(StackType::Rust, nonempty![tool_def()])]),
             };
             let have = give.len();
             let want = 3;
