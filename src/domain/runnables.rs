@@ -1,13 +1,14 @@
 use crate::domain::StackType;
 use ahash::AHashMap;
+use nonempty::NonEmpty;
 
 #[derive(Debug)]
 pub struct Runnables {
     /// fixes that affect all files
-    pub global: Option<conc::Sequence>,
+    pub global: Option<NonEmpty<conc::Executable>>,
 
     /// fixes that affect stack-specific files
-    pub stack_specific: AHashMap<StackType, conc::Sequence>,
+    pub stack_specific: AHashMap<StackType, NonEmpty<conc::Executable>>,
 }
 
 impl Runnables {
@@ -18,7 +19,7 @@ impl Runnables {
 
     #[must_use]
     pub fn len(&self) -> usize {
-        let mut result = self.global.as_ref().map_or(0, conc::Sequence::len);
+        let mut result = self.global.as_ref().map_or(0, NonEmpty::len);
         for (_, sequence) in &self.stack_specific {
             result += sequence.len();
         }
@@ -38,6 +39,7 @@ mod tests {
         use super::executable;
         use crate::domain::StackType;
         use ahash::AHashMap;
+        use nonempty::nonempty;
 
         #[test]
         fn empty() {
@@ -53,7 +55,7 @@ mod tests {
         #[test]
         fn single_global() {
             let give = Runnables {
-                global: Some(conc::Sequence::one(executable())),
+                global: Some(nonempty![executable()]),
                 stack_specific: AHashMap::new(),
             };
             let have = give.len();
@@ -64,7 +66,7 @@ mod tests {
         #[test]
         fn multiple_globals() {
             let give = Runnables {
-                global: Some(conc::Sequence::many(executable(), vec![executable()])),
+                global: Some(nonempty![executable(), executable()]),
                 stack_specific: AHashMap::new(),
             };
             let have = give.len();
@@ -77,11 +79,8 @@ mod tests {
             let give = Runnables {
                 global: None,
                 stack_specific: AHashMap::from([
-                    (StackType::Rust, conc::Sequence::one(executable())),
-                    (
-                        StackType::Markdown,
-                        conc::Sequence::many(executable(), vec![executable()]),
-                    ),
+                    (StackType::Rust, nonempty![executable()]),
+                    (StackType::Markdown, nonempty![executable(), executable()]),
                 ]),
             };
             let have = give.len();
@@ -92,11 +91,8 @@ mod tests {
         #[test]
         fn all_fields_set() {
             let give = Runnables {
-                global: Some(conc::Sequence::many(executable(), vec![executable()])),
-                stack_specific: AHashMap::from([(
-                    StackType::Rust,
-                    conc::Sequence::one(executable()),
-                )]),
+                global: Some(nonempty![executable(), executable()]),
+                stack_specific: AHashMap::from([(StackType::Rust, nonempty![executable()])]),
             };
             let have = give.len();
             let want = 3;

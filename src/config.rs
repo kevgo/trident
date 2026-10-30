@@ -2,6 +2,7 @@ use crate::domain::{Ignores, Operation, Result, StackType, Tool, UserError};
 use ahash::AHashMap;
 use itertools::Itertools;
 use jsonc_parser::ParseOptions;
+use nonempty::NonEmpty;
 use schemars::JsonSchema;
 use serde::Deserialize;
 use std::convert::Into;
@@ -229,8 +230,8 @@ impl ToolDefinition {
     }
 
     #[must_use]
-    pub fn to_sequence(self) -> conc::Sequence {
-        conc::Sequence::one(conc::Executable {
+    pub fn to_sequence(self) -> NonEmpty<conc::Executable> {
+        NonEmpty::new(conc::Executable {
             name: self.name_or_command().to_string(),
             command: conc::shell_command(&self.command),
         })
@@ -304,8 +305,8 @@ pub struct CommandConfig {
     pub test: Option<Vec<String>>,
 }
 
-/// provides the configured tests with the given names as parallel `conc::Sequences`
-pub(crate) fn to_sequences(tools: Vec<ToolDefinition>) -> Vec<conc::Sequence> {
+/// provides the configured tests with the given names as parallel sequences
+pub(crate) fn to_sequences(tools: Vec<ToolDefinition>) -> Vec<NonEmpty<conc::Executable>> {
     tools.into_iter().map(ToolDefinition::to_sequence).collect()
 }
 

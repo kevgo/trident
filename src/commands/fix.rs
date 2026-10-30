@@ -73,7 +73,7 @@ pub fn determine_fixes(config: &Config, detected_stacks: &DetectedStacks) -> Res
     }
 
     // stack-specific fixes
-    let mut stacks_executables: AHashMap<StackType, NonEmpty<conc::Executable>> = AHashMap::new();
+    let mut stacks_executables: AHashMap<StackType, Vec<conc::Executable>> = AHashMap::new();
     for detected_stack in detected_stacks {
         let stack_type = detected_stack.stack.stack_type();
         let stack_config = config.stack_config(stack_type);
@@ -143,15 +143,11 @@ pub fn determine_fixes(config: &Config, detected_stacks: &DetectedStacks) -> Res
     // convert to runnables and return
     let mut stack_specific = AHashMap::new();
     for (stack_type, stack_executables) in stacks_executables {
-        if let Some(stack_sequence) = conc::Sequence::from_vec(stack_executables) {
+        if let Some(stack_sequence) = NonEmpty::from_vec(stack_executables) {
             stack_specific.insert(stack_type, stack_sequence);
         }
     }
-    let global = if global.is_empty() {
-        None
-    } else {
-        conc::Sequence::from_vec(global)
-    };
+    let global = NonEmpty::from_vec(global);
     Ok(Runnables {
         global,
         stack_specific,

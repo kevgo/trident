@@ -7,6 +7,7 @@ use crate::config::{Config, ToolDefinition};
 use crate::domain::{DetectedStacks, Operation, Result, StackType};
 use crate::git;
 use ahash::AHashMap;
+use nonempty::NonEmpty;
 use std::process::ExitCode;
 
 pub fn lint(args: &RunArgsWithScope) -> Result<ExitCode> {
@@ -85,10 +86,10 @@ pub fn determine_lints(
     }
 
     // determine the runnables for the custom lints
-    let mut global: Vec<conc::Sequence> = vec![];
+    let mut global: Vec<NonEmpty<conc::Executable>> = vec![];
     if let Some(custom_lints) = &config.global_lints {
         for ToolDefinition { name, command } in custom_lints {
-            global.push(conc::Sequence::one(conc::Executable {
+            global.push(NonEmpty::new(conc::Executable {
                 name: name.clone().unwrap_or_else(|| command.clone()),
                 command: conc::shell_command(command),
             }));
@@ -100,7 +101,7 @@ pub fn determine_lints(
         && let Some(repo) = git_repo
     {
         let executable = git_diff_check::lint_command(repo);
-        global.push(conc::Sequence::one(executable));
+        global.push(NonEmpty::new(executable));
     }
 
     Ok(Lints {
@@ -110,7 +111,7 @@ pub fn determine_lints(
 }
 
 pub struct Lints {
-    pub global: Vec<conc::Sequence>,
+    pub global: Vec<NonEmpty<conc::Executable>>,
     pub stack_specific: AHashMap<StackType, Vec<conc::Executable>>,
 }
 
@@ -135,18 +136,13 @@ impl Lints {
         global.is_empty() && stack_specific.values().all(Vec::is_empty)
     }
 
-    pub fn into_sequences(self) -> Vec<conc::Sequence> {
+    pub fn into_sequences(self) -> Vec<NonEmpty<conc::Executable>> {
         let Lints {
             global,
             stack_specific,
         } = self;
         let mut result = global;
-        result.extend(
-            stack_specific
-                .into_values()
-                .flatten()
-                .map(conc::Sequence::one),
-        );
+        result.extend(stack_specific.into_values().flatten().map(NonEmpty::new));
         result
     }
 }
