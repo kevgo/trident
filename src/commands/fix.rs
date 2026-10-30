@@ -8,6 +8,7 @@ use crate::config::{Application, Config, ToolDefinition};
 use crate::domain::{DetectedStacks, Operation, Result, Runnables, StackType};
 use crate::git::Repo;
 use ahash::AHashMap;
+use nonempty::NonEmpty;
 use std::process::ExitCode;
 
 pub fn fix(args: &RunArgsWithScope) -> Result<ExitCode> {
@@ -72,7 +73,7 @@ pub fn determine_fixes(config: &Config, detected_stacks: &DetectedStacks) -> Res
     }
 
     // stack-specific fixes
-    let mut stacks_executables: AHashMap<StackType, Vec<conc::Executable>> = AHashMap::new();
+    let mut stacks_executables: AHashMap<StackType, NonEmpty<conc::Executable>> = AHashMap::new();
     for detected_stack in detected_stacks {
         let stack_type = detected_stack.stack.stack_type();
         let stack_config = config.stack_config(stack_type);
