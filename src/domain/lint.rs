@@ -1,6 +1,6 @@
 use crate::config::Config;
-use crate::domain::tool_call::LintDefinition;
-use crate::domain::{DetectedStack, Result, Tool};
+use crate::domain::{DetectedStack, Result, StackType, Tool, ToolDefinition};
+use std::process::Command;
 
 /// a lint that Trident can run
 pub trait Lint: Tool {
@@ -14,4 +14,29 @@ pub trait Lint: Tool {
         stack: &DetectedStack,
         config: &Config,
     ) -> Result<Option<LintDefinition>>;
+}
+
+/// Definition for a linter
+pub struct LintDefinition {
+    /// name of the linter app
+    pub name: &'static str,
+
+    /// the runnable to execute
+    pub command: Command,
+
+    pub stack: StackType,
+}
+
+impl LintDefinition {
+    pub fn into_conc_executable(self) -> conc::Executable {
+        let LintDefinition {
+            name,
+            command,
+            stack,
+        } = self;
+        conc::Executable {
+            name: format!("lint {} ({})", stack, name),
+            command,
+        }
+    }
 }

@@ -3,7 +3,7 @@ use crate::apps::git_diff_check;
 use crate::apps::git_diff_check::GitDiffCheck;
 use crate::cli::input::{RunArgsWithScope, ShowExt};
 use crate::cli::output::print_metadata;
-use crate::config::{Config, ToolDefinition};
+use crate::config::Config;
 use crate::domain::{DetectedStacks, LintDefinition, Operation, Result, StackType, ToolDefinition};
 use crate::{git, subshell};
 use ahash::AHashMap;
@@ -37,7 +37,7 @@ pub fn lint(args: &RunArgsWithScope) -> Result<ExitCode> {
         return Ok(ExitCode::SUCCESS);
     }
     let exit_code = subshell::run(subshell::RunArgs {
-        calls: lints.into_sequences(),
+        sequences: vec![lints.into_tool_definitions()],
         error_on_output,
         sequential,
         show,
@@ -52,7 +52,7 @@ pub fn determine_lints(
     git_repo: Option<&git::Repo>,
 ) -> Result<Lints> {
     // determine the lints for the stacks
-    let mut stack_specific: AHashMap<StackType, Vec<ToolDefinition>> = AHashMap::new();
+    let mut stack_specific: AHashMap<StackType, Vec<LintDefinition>> = AHashMap::new();
     for detected_stack in detected_stacks {
         let stack_type = detected_stack.stack.stack_type();
         let stack_config = config.stack_config(stack_type);
@@ -60,18 +60,22 @@ pub fn determine_lints(
         // schedule either the override lints or the default lints
         let stack_lints = stack_config.and_then(|sc| sc.lint.as_ref());
         if let Some(overrides) = stack_lints.and_then(|lint| lint.replace.as_ref()) {
-            stack_toolcalls.extend(
-                overrides
-                    .iter()
-                    .map(|tool| tool.to_tool_call(Operation::Lint)),
-            );
+            stack_toolcalls.extend(overrides.iter().map(|tool| LintDefinition {
+                name: tool.name,
+                command: conc::shell_command(&tool.command),
+                stack: stack_type,
+            }));
         } else {
             for default_lint in detected_stack.stack.lints() {
                 if config.operation_enabled(default_lint.as_ref(), Operation::Lint)
                     && default_lint.enabled_when().enabled_on_disk()
-                    && let executables = default_lint.lint_commands(detected_stack, config)?
+                    && let lint_defs = default_lint.lint_commands(detected_stack, config)?
                 {
-                    stack_toolcalls.extend(executables);
+                    stack_toolcalls.extend(
+                        lint_defs
+                            .into_iter()
+                            .map(|lint_def| lint_def.into_tool_definition()),
+                    );
                 }
             }
         }
@@ -136,18 +140,24 @@ impl Lints {
         global.is_empty() && stack_specific.values().all(Vec::is_empty)
     }
 
-    pub fn into_sequences(self) -> Vec<conc::Sequence> {
+    pub fn into_tool_definitions(self) -> Vec<ToolDefinition> {
         let Lints {
             global,
             stack_specific,
         } = self;
-        let mut result = global;
-        result.extend(
-            stack_specific
-                .into_values()
-                .flatten()
-                .map(conc::Sequence::one),
-        );
+        let mut result = Vec::with_capacity(global.len() + stack_specific.len());
+        for global in global {
+            for lint in global {
+                result.push(lint.into_tool_definition());
+            }
+        }
+        for (_stack, stack_lints) in stack_specific {
+            for lints in stack_lints {
+                for lint in lints {
+                    result.push(lint.into_tool_definition());
+                }
+            }
+        }
         result
     }
 }

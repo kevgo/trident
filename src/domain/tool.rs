@@ -1,7 +1,6 @@
 use crate::config::{Application, ApplicationSection};
-use crate::domain::StackType;
+use crate::domain::EnabledWhen;
 use std::fmt::Display;
-use std::path::Path;
 
 /// a tool (lint or fix) that Trident can run
 pub trait Tool: Display {
@@ -9,38 +8,4 @@ pub trait Tool: Display {
     fn config_section<'a>(&self, apps: &'a ApplicationSection) -> Option<&'a dyn Application>;
 
     fn enabled_when(&self) -> EnabledWhen;
-}
-
-/// describes under which conditions a tool is enabled
-pub enum EnabledWhen {
-    /// the tool is always enabled
-    Always,
-
-    /// the tool is enabled when a file with the given name
-    FilePresent {
-        filename: &'static str,
-        stack_type: StackType,
-    },
-
-    // the tool is enabled when a folder with the given name exists
-    // and it contains at least one file of the given type
-    FolderContainingFileOfType {
-        folder: &'static str,
-        file_type: StackType,
-    },
-}
-
-impl EnabledWhen {
-    /// whether the tool is enabled based on files present on disk
-    ///
-    /// This is useful when the detected stacks contains only a subset of workspace files
-    /// (uncommitted, staged, or changed on the current branch).
-    #[must_use]
-    pub fn enabled_on_disk(&self) -> bool {
-        match self {
-            Self::Always => true,
-            Self::FilePresent { filename, .. } => Path::new(filename).exists(),
-            Self::FolderContainingFileOfType { folder, .. } => Path::new(folder).exists(),
-        }
-    }
 }

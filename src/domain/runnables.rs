@@ -1,4 +1,3 @@
-use crate::config::ToolDefinition;
 use crate::domain::StackType;
 use ahash::AHashMap;
 

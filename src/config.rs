@@ -1,6 +1,4 @@
-use crate::domain::{
-    Ignores, Operation, Result, StackType, Tool, ToolDefinition, ToolType, UserError,
-};
+use crate::domain::{Ignores, Operation, Result, StackType, Tool, ToolDefinition, UserError};
 use ahash::AHashMap;
 use itertools::Itertools;
 use jsonc_parser::ParseOptions;
@@ -231,14 +229,6 @@ impl ToolDefinition {
     /// provides the name of the tool, or the command if the tool has no name
     fn name_or_command(&self) -> &str {
         self.name.as_deref().unwrap_or(&self.command)
-    }
-
-    pub fn to_tool_call(&self, operation: Operation) -> ToolDefinition {
-        ToolDefinition {
-            operation,
-            name: self.name.clone(),
-            command: self.command.clone(),
-        }
     }
 }
 

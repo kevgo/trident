@@ -1,4 +1,5 @@
 mod detected_stack;
+mod enabled_when;
 mod error;
 mod file;
 mod files;
@@ -14,15 +15,16 @@ mod tool;
 mod tool_call;
 
 pub use detected_stack::{DetectedStack, DetectedStacks};
+pub use enabled_when::EnabledWhen;
 pub use error::{Result, UserError};
 pub use file::File;
 pub use files::Files;
 pub use fix::Fix;
 pub use ignores::Ignores;
-pub use lint::Lint;
+pub use lint::{Lint, LintDefinition};
 pub use operation::Operation;
 pub use runnables::Runnables;
 pub use stack::Stack;
 pub use stack_type::StackType;
-pub use tool::{EnabledWhen, Tool};
-pub use tool_call::{LintDefinition, Runnable, ToolDefinition};
+pub use tool::Tool;
+pub use tool_call::ToolDefinition;
