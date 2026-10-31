@@ -25,7 +25,7 @@ Feature: config file format
     When executing "trident lint --show=output"
     Then it prints the block
       """
-      hello
+      lint all (hello)
       hello
       """
     And the exit code is 0
@@ -45,7 +45,7 @@ Feature: config file format
     When executing "trident lint --show=output"
     Then it prints the block
       """
-      from jsonc
+      lint all (from jsonc)
       from jsonc
       """
     And the exit code is 0
@@ -76,7 +76,7 @@ Feature: config file format
     When executing "trident lint --show=output"
     Then it prints the block
       """
-      from json
+      lint all (from json)
       from json
       """
     And it does not print
