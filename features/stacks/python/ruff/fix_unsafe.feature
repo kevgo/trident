@@ -50,7 +50,7 @@ Feature: unsafe-fix Python
     When executing "trident fix --show=output"
     Then it prints the lines
       """
-      delete empty folders
+      fix all (delete empty folders)
       fix Python (Ruff)
       B006 Do not use mutable data structures for argument defaults
       No fixes available (1 hidden fix can be enabled with the `--unsafe-fixes` option).

@@ -21,7 +21,7 @@ Feature: GitHub Actions workflow files not in a Git repository
     When executing "trident lint --show=output"
     Then it prints the block matching
       """
-      GitHub Actions \(actionlint\)
+      lint YML \(Actionlint\)
       no project was found in any parent directories of ".*". check workflows directory is put correctly in your Git repository
       """
     And it prints the lines to STDERR

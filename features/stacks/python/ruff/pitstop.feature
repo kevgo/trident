@@ -15,7 +15,7 @@ Feature: pitstop Python
     When executing "trident pitstop --show=output"
     Then it prints
       """
-      delete empty folders
+      fix all (delete empty folders)
       fix Python (Ruff)
       All checks passed!
       format Python (Ruff)
@@ -38,7 +38,7 @@ Feature: pitstop Python
     When executing "trident pitstop --show=output"
     Then it prints
       """
-      delete empty folders
+      fix all (delete empty folders)
       fix Python (Ruff)
       F841 Local variable `a` is assigned to but never used
        --> main.py:2:3

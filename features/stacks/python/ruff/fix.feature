@@ -19,7 +19,7 @@ Feature: fix Python
     When executing "trident fix --show=output"
     Then it prints
       """
-      delete empty folders
+      fix all (delete empty folders)
       fix Python (Ruff)
       All checks passed!
       format Python (Ruff)
@@ -41,7 +41,7 @@ Feature: fix Python
     When executing "trident fix --show=output"
     Then it prints
       """
-      delete empty folders
+      fix all (delete empty folders)
       fix Python (Ruff)
       All checks passed!
       format Python (Ruff)
@@ -69,7 +69,7 @@ Feature: fix Python
     When executing "trident fix --show=output"
     Then it prints
       """
-      delete empty folders
+      fix all (delete empty folders)
       fix Python (Ruff)
       invalid-syntax: missing closing quote in string literal
        --> main.py:1:7
