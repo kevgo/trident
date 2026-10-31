@@ -32,7 +32,7 @@ pub(crate) fn lint_command(repo: &git::Repo) -> ToolCall {
     ToolCall {
         operation: crate::domain::Operation::Lint,
         stack: None,
-        name: S("lint Git diff markers (git diff HEAD --check)"),
+        name: S("git diff HEAD --check"),
         command,
     }
 }
