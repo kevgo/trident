@@ -41,19 +41,19 @@ impl Fix for Ghokin {
             };
             args.push(filename);
         }
-        let Some(command) = get_rta_command(&GetRTACmdArgs {
+        let command = get_rta_command(&GetRTACmdArgs {
             app: &rta::applications::Ghokin {},
             args,
-        })?
-        else {
-            return Ok(vec![]);
-        };
-        Ok(vec![ToolCall {
-            operation: Operation::Fix,
-            stack: Some(stack.stack.stack_type()),
-            name: self.to_string(),
-            command,
-        }])
+        })?;
+        Ok(command
+            .into_iter()
+            .map(|command| ToolCall {
+                operation: Operation::Fix,
+                stack: Some(stack.stack.stack_type()),
+                name: self.to_string(),
+                command,
+            })
+            .collect())
     }
 
     fn unsafe_fix_commands(
