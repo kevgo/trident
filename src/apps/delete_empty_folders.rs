@@ -1,4 +1,4 @@
-use crate::apps::{GetRTACmdArgs2, get_rta_command2};
+use crate::apps::{GetRTACmdArgs, get_rta_command};
 use crate::domain::{EnabledWhen, Operation, Result, Tool};
 use crate::subshell::ToolCall;
 use big_s::S;
@@ -26,7 +26,7 @@ impl Display for DeleteEmptyFolders {
 }
 
 pub fn format_command() -> Result<Option<ToolCall>> {
-    let Some(command) = get_rta_command2(&GetRTACmdArgs2 {
+    let Some(command) = get_rta_command(&GetRTACmdArgs {
         app: &rta::applications::DeleteEmptyFolders {},
         args: vec![],
     })?

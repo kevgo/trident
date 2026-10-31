@@ -1,4 +1,4 @@
-use crate::apps::{GetRTACmdArgs2, get_rta_command2, ripgrep};
+use crate::apps::{GetRTACmdArgs, get_rta_command, ripgrep};
 use crate::domain::{DetectedStacks, Result, StackType};
 use crate::domain::{File, Operation};
 use crate::subshell::ToolCall;
@@ -41,7 +41,7 @@ pub fn fix_commands(
     for (stack_type, mut files) in grouped {
         files.sort_unstable();
         let args = files.into_iter().map(Into::into).collect();
-        let command = get_rta_command2(&GetRTACmdArgs2 {
+        let command = get_rta_command(&GetRTACmdArgs {
             app: &rta::applications::KeepSorted {},
             args,
         })?;

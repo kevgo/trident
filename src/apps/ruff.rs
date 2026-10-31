@@ -1,4 +1,4 @@
-use crate::apps::{GetRTACmdArgs2, get_rta_command2};
+use crate::apps::{GetRTACmdArgs, get_rta_command};
 use crate::config::{Application, ApplicationSection, Config};
 use crate::domain::{DetectedStack, EnabledWhen, Fix, Lint, Operation, Result, Tool};
 use crate::subshell::ToolCall;
@@ -34,7 +34,7 @@ impl Lint for Ruff {
         let mut args = Vec::with_capacity(files.len() + 1);
         args.push(S("check"));
         args.extend(files.into_strings());
-        let Some(command) = get_rta_command2(&GetRTACmdArgs2 {
+        let Some(command) = get_rta_command(&GetRTACmdArgs {
             app: &rta::applications::Ruff {},
             args,
         })?
@@ -68,7 +68,7 @@ impl Fix for Ruff {
         args.push(S("--fix"));
         args.extend(files.clone().into_strings());
         let ruff = rta::applications::Ruff {};
-        let command = get_rta_command2(&GetRTACmdArgs2 { app: &ruff, args })?;
+        let command = get_rta_command(&GetRTACmdArgs { app: &ruff, args })?;
         if let Some(command) = command {
             commands.push(ToolCall {
                 operation: Operation::Fix,
@@ -82,7 +82,7 @@ impl Fix for Ruff {
         let mut args = Vec::with_capacity(files.len() + 1);
         args.push(S("format"));
         args.extend(files.into_strings());
-        let command = get_rta_command2(&GetRTACmdArgs2 { app: &ruff, args })?;
+        let command = get_rta_command(&GetRTACmdArgs { app: &ruff, args })?;
         if let Some(command) = command {
             commands.push(ToolCall {
                 operation: Operation::Format,
@@ -110,7 +110,7 @@ impl Fix for Ruff {
         args.push(S("--unsafe-fixes"));
         args.extend(files.clone().into_strings());
         let ruff = rta::applications::Ruff {};
-        let command = get_rta_command2(&GetRTACmdArgs2 { app: &ruff, args })?;
+        let command = get_rta_command(&GetRTACmdArgs { app: &ruff, args })?;
         if let Some(command) = command {
             executables.push(ToolCall {
                 operation: Operation::FixUnsafe,
@@ -124,7 +124,7 @@ impl Fix for Ruff {
         let mut args = Vec::with_capacity(files.len() + 1);
         args.push(S("format"));
         args.extend(files.into_strings());
-        let command = get_rta_command2(&GetRTACmdArgs2 { app: &ruff, args })?;
+        let command = get_rta_command(&GetRTACmdArgs { app: &ruff, args })?;
         if let Some(command) = command {
             executables.push(ToolCall {
                 operation: Operation::Format,

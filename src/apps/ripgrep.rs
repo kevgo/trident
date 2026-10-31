@@ -1,4 +1,4 @@
-use crate::apps::{GetRTACmdArgs2, get_rta_command2};
+use crate::apps::{GetRTACmdArgs, get_rta_command};
 use crate::domain::{File, Result, UserError};
 use big_s::S;
 use std::path::Path;
@@ -18,7 +18,7 @@ fn files_with_matches_in(
         args.push(format!("--glob=!{ignore}"));
     }
     args.push(pattern.to_string());
-    let Some(mut command) = get_rta_command2(&GetRTACmdArgs2 {
+    let Some(mut command) = get_rta_command(&GetRTACmdArgs {
         app: &rta::applications::RipGrep {},
         args,
     })?

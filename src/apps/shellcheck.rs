@@ -1,4 +1,4 @@
-use crate::apps::{GetRTACmdArgs2, get_rta_command2};
+use crate::apps::{GetRTACmdArgs, get_rta_command};
 use crate::config::{Application, ApplicationSection, Config};
 use crate::domain::{DetectedStack, EnabledWhen, Lint, Operation, Result, Tool};
 use crate::subshell::ToolCall;
@@ -29,7 +29,7 @@ impl Lint for ShellCheck {
         if files.is_empty() {
             return Ok(None);
         }
-        let Some(command) = get_rta_command2(&GetRTACmdArgs2 {
+        let Some(command) = get_rta_command(&GetRTACmdArgs {
             app: &rta::applications::ShellCheck {},
             args: files.into_strings(),
         })?

@@ -27,7 +27,7 @@ use rta::applications::AppDefinition;
 
 /// Provides the RTA command to run the given RTA App.
 /// Installs the app if needed.
-pub(crate) fn get_rta_command2(args: &GetRTACmdArgs2<'_>) -> Result<Option<Command>> {
+pub(crate) fn get_rta_command(args: &GetRTACmdArgs<'_>) -> Result<Option<Command>> {
     // Apps like gherkin-lint need to install multiple apps to run (first Node, then gherkin-lint).
     // So we keep trying in a loop until either the command is available,
     // or we get stuck needing the same app installed again after having already installed it.
@@ -79,7 +79,7 @@ pub(crate) fn get_rta_command2(args: &GetRTACmdArgs2<'_>) -> Result<Option<Comma
     }
 }
 
-pub struct GetRTACmdArgs2<'a> {
+pub struct GetRTACmdArgs<'a> {
     app: &'a dyn AppDefinition,
     args: Vec<String>,
 }

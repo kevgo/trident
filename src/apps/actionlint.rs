@@ -1,4 +1,4 @@
-use crate::apps::{GetRTACmdArgs2, get_rta_command2};
+use crate::apps::{GetRTACmdArgs, get_rta_command};
 use crate::config::{Application, ApplicationSection, Config};
 use crate::domain::{DetectedStack, EnabledWhen, Lint, Operation, Result, StackType, Tool};
 use crate::subshell::ToolCall;
@@ -27,7 +27,7 @@ impl Display for Actionlint {
 
 impl Lint for Actionlint {
     fn lint_commands(&self, stack: &DetectedStack, _config: &Config) -> Result<Option<ToolCall>> {
-        let Some(command) = get_rta_command2(&GetRTACmdArgs2 {
+        let Some(command) = get_rta_command(&GetRTACmdArgs {
             app: &rta::applications::ActionLint {},
             args: vec![],
         })?

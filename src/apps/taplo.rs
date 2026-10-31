@@ -1,4 +1,4 @@
-use crate::apps::{GetRTACmdArgs2, get_rta_command2};
+use crate::apps::{GetRTACmdArgs, get_rta_command};
 use crate::config::{Application, ApplicationSection, Config};
 use crate::domain::{DetectedStack, EnabledWhen, Fix, Lint, Operation, Result, Tool};
 use crate::subshell::ToolCall;
@@ -33,7 +33,7 @@ impl Lint for Taplo {
         let mut args = Vec::with_capacity(files.len() + 1);
         args.push(S("lint"));
         args.extend(files.into_strings());
-        let Some(command) = get_rta_command2(&GetRTACmdArgs2 {
+        let Some(command) = get_rta_command(&GetRTACmdArgs {
             app: &rta::applications::Taplo {},
             args,
         })?
@@ -59,7 +59,7 @@ impl Fix for Taplo {
         let mut args = Vec::with_capacity(files.len() + 1);
         args.push(S("format"));
         args.extend(files.into_strings());
-        let Some(command) = get_rta_command2(&GetRTACmdArgs2 {
+        let Some(command) = get_rta_command(&GetRTACmdArgs {
             app: &rta::applications::Taplo {},
             args,
         })?
@@ -84,7 +84,7 @@ impl Fix for Taplo {
         args.push(S("format"));
         args.push(S("--force"));
         args.extend(files.into_strings());
-        let Some(command) = get_rta_command2(&GetRTACmdArgs2 {
+        let Some(command) = get_rta_command(&GetRTACmdArgs {
             app: &rta::applications::Taplo {},
             args,
         })?
