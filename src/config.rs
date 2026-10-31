@@ -388,6 +388,8 @@ pub struct Operations<T> {
     #[serde(alias = "fix-unsafe")]
     #[schemars(rename = "fix-unsafe")]
     pub fix_unsafe: Option<T>,
+
+    pub format: Option<T>,
 }
 
 impl<T> Operations<T> {
@@ -396,6 +398,7 @@ impl<T> Operations<T> {
             Operation::Lint => self.lint.as_ref(),
             Operation::Fix => self.fix.as_ref(),
             Operation::FixUnsafe => self.fix_unsafe.as_ref(),
+            Operation::Format => self.format.as_ref(),
             Operation::Test => unimplemented!(), // TODO: implement this
         }
     }

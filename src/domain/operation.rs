@@ -9,6 +9,7 @@ pub enum Operation {
     Lint,
     Fix,
     FixUnsafe,
+    Format,
     Test,
 }
 
@@ -18,6 +19,7 @@ impl Display for Operation {
             Operation::Lint => f.write_str("lint"),
             Operation::Fix => f.write_str("fix"),
             Operation::FixUnsafe => f.write_str("unsafe-fix"),
+            Operation::Format => f.write_str("format"),
             Operation::Test => f.write_str("test"),
         }
     }

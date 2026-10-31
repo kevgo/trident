@@ -82,7 +82,7 @@ impl Fix for Ruff {
         let command = get_rta_command2(&GetRTACmdArgs2 { app: &ruff, args })?;
         if let Some(command) = command {
             commands.push(ToolCall {
-                operation: Operation::Fix, // TODO: change to Operation::Format
+                operation: Operation::Format,
                 stack: Some(stack.stack.stack_type()),
                 name: self.to_string(),
                 command,
@@ -124,7 +124,7 @@ impl Fix for Ruff {
         let command = get_rta_command2(&GetRTACmdArgs2 { app: &ruff, args })?;
         if let Some(command) = command {
             executables.push(ToolCall {
-                operation: Operation::Fix, // TODO: change to Operation::Format
+                operation: Operation::Format,
                 stack: Some(stack.stack.stack_type()),
                 name: self.to_string(),
                 command,
