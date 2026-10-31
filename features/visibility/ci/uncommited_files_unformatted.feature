@@ -162,7 +162,7 @@ Feature: CI doesn't care about uncommitted files that are unformatted
       lint Python (Ruff)
       lint TypeScript (Biome)
       lint CSS (Biome)
-      lint Git diff markers (git diff HEAD --check)
+      lint all (git diff HEAD --check)
       """
     And the exit code is 0
     And file "main.css" now has content
