@@ -33,12 +33,12 @@ Feature: custom lints
     When executing "trident lint --show=output"
     Then it prints the block
       """
-      lints/one.sh
+      lint all (lints/one.sh)
       custom lint is running
       """
     And it prints the block
       """
-      list all files
+      lint all (list all files)
       . ./lints ./lints/one.sh ./run-that-app ./trident.json
       """
     And the exit code is 0
@@ -64,7 +64,7 @@ Feature: custom lints
     When executing "trident lint --show=output"
     Then it prints the block
       """
-      lints/fail.sh
+      lint all (lints/fail.sh)
       custom lint failed
       """
     And the exit code is 4
