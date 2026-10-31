@@ -28,19 +28,19 @@ impl Display for CucumberSort {
 
 impl Fix for CucumberSort {
     fn fix_commands(&self, stack: &DetectedStack, _config: &Config) -> Result<Vec<ToolCall>> {
-        let Some(command) = get_rta_command(&GetRTACmdArgs {
+        let command = get_rta_command(&GetRTACmdArgs {
             app: &rta::applications::CucumberSort {},
             args: vec![S("format")],
-        })?
-        else {
-            return Ok(vec![]);
-        };
-        Ok(vec![ToolCall {
-            operation: Operation::Fix,
-            stack: Some(stack.stack.stack_type()),
-            name: self.to_string(),
-            command,
-        }])
+        })?;
+        Ok(command
+            .into_iter()
+            .map(|command| ToolCall {
+                operation: Operation::Fix,
+                stack: Some(stack.stack.stack_type()),
+                name: self.to_string(),
+                command,
+            })
+            .collect())
     }
 
     fn unsafe_fix_commands(

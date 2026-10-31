@@ -26,14 +26,11 @@ impl Display for DeleteEmptyFolders {
 }
 
 pub fn format_command() -> Result<Option<ToolCall>> {
-    let Some(command) = get_rta_command(&GetRTACmdArgs {
+    let command = get_rta_command(&GetRTACmdArgs {
         app: &rta::applications::DeleteEmptyFolders {},
         args: vec![],
-    })?
-    else {
-        return Ok(None);
-    };
-    Ok(Some(ToolCall {
+    })?;
+    Ok(command.map(|command| ToolCall {
         operation: Operation::Fix,
         stack: None,
         name: S("delete empty folders"),
