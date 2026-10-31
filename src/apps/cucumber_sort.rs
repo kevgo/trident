@@ -1,7 +1,9 @@
-use crate::apps::{GetRTACmdArgs, get_rta_command};
+use crate::apps::{GetRTACmdArgs, GetRTACmdArgs2, get_rta_command, get_rta_command2};
 use crate::config::{Application, ApplicationSection, Config};
-use crate::domain::{DetectedStack, EnabledWhen, Fix, Result, StackType, Tool};
+use crate::domain::{DetectedStack, EnabledWhen, Fix, Operation, Result, StackType, Tool};
+use crate::subshell::ToolCall;
 use big_s::S;
+use rta::applications::AppDefinition;
 use std::fmt::Display;
 
 pub struct CucumberSort;
@@ -26,25 +28,28 @@ impl Display for CucumberSort {
 }
 
 impl Fix for CucumberSort {
-    fn fix_commands(
-        &self,
-        stack: &DetectedStack,
-        _config: &Config,
-    ) -> Result<Vec<conc::Executable>> {
-        let executable = get_rta_command(&GetRTACmdArgs {
-            name: format!("fix {} ({self})", stack.stack),
+    fn fix_commands(&self, stack: &DetectedStack, _config: &Config) -> Result<Vec<ToolCall>> {
+        let cucumber_sort = rta::applications::CucumberSort {};
+        let Some(command) = get_rta_command2(&GetRTACmdArgs2 {
             app: &rta::applications::CucumberSort {},
             args: vec![S("format")],
-            version: None,
-        })?;
-        Ok(executable.into_iter().collect())
+        })?
+        else {
+            return Ok(vec![]);
+        };
+        Ok(vec![ToolCall {
+            operation: Operation::Fix,
+            stack: Some(stack.stack.stack_type()),
+            name: cucumber_sort.name().to_string(),
+            command,
+        }])
     }
 
     fn unsafe_fix_commands(
         &self,
         _stack: &DetectedStack,
         _config: &Config,
-    ) -> Result<Vec<conc::Executable>> {
+    ) -> Result<Vec<ToolCall>> {
         Ok(vec![])
     }
 }
