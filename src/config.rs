@@ -150,10 +150,10 @@ impl Config {
     }
 
     /// provides the tests with the given names, or all if no names are given
-    pub fn select_tests(&self, requested: &[String]) -> Result<Vec<ToolDefinition>> {
+    pub fn select_tests<'a>(&'a self, requested: &[String]) -> Result<Vec<&'a ToolDefinition>> {
         let all_tests = self.tests.as_deref().unwrap_or_default();
         if requested.is_empty() {
-            return Ok(all_tests.to_vec());
+            return Ok(all_tests.iter().collect());
         }
         let mut result = Vec::with_capacity(requested.len());
         let mut unknown = Vec::new();
@@ -172,18 +172,18 @@ impl Config {
                     .collect(),
             });
         }
-        Ok(result.into_iter().cloned().collect())
+        Ok(result)
     }
 
     /// determines the tests to run using the given --test CLI flag,
     /// the config file settings,
     /// and default tests for the command
-    pub fn tests_for(
-        &self,
+    pub fn tests_for<'a>(
+        &'a self,
         cli: &[String],
         command: impl FnOnce(&CommandsSection) -> Option<&CommandConfig>,
         default: DefaultTests,
-    ) -> Result<Vec<ToolDefinition>> {
+    ) -> Result<Vec<&'a ToolDefinition>> {
         let requested = if cli.is_empty() {
             self.commands
                 .as_ref()
@@ -274,14 +274,14 @@ pub struct CommandConfig {
 }
 
 /// provides the configured tests with the given names as parallel sequences
-pub(crate) fn to_sequences(
-    tools: Vec<ToolDefinition>,
+pub(crate) fn to_sequences<'a>(
+    tools: impl IntoIterator<Item = &'a ToolDefinition>,
     operation: Operation,
     stack: Option<StackType>,
 ) -> Vec<NonEmpty<ToolCall>> {
     tools
         .into_iter()
-        .map(|tool_def| tool_def.to_sequence(operation, stack))
+        .map(|tool_def| NonEmpty::new(tool_def.to_call(operation, stack)))
         .collect()
 }
 
@@ -1584,6 +1584,10 @@ mod tests {
         use crate::domain::UserError;
         use big_s::S;
 
+        fn cloned(tests: Vec<&ToolDefinition>) -> Vec<ToolDefinition> {
+            tests.into_iter().cloned().collect()
+        }
+
         #[test]
         fn no_names_given() {
             let config = Config {
@@ -1599,7 +1603,7 @@ mod tests {
                 ]),
                 ..Default::default()
             };
-            let have = config.select_tests(&[]).unwrap();
+            let have = cloned(config.select_tests(&[]).unwrap());
             let want = vec![
                 ToolDefinition {
                     name: Some(S("unit")),
@@ -1632,7 +1636,7 @@ mod tests {
                 ]),
                 ..Default::default()
             };
-            let have = config.select_tests(&[S("cuke"), S("unit")]).unwrap();
+            let have = cloned(config.select_tests(&[S("cuke"), S("unit")]).unwrap());
             let want = vec![
                 ToolDefinition {
                     name: Some(S("cuke")),
@@ -1655,7 +1659,7 @@ mod tests {
                 }]),
                 ..Default::default()
             };
-            let have = config.select_tests(&[S("unit"), S("unit")]).unwrap();
+            let have = cloned(config.select_tests(&[S("unit"), S("unit")]).unwrap());
             let want = vec![ToolDefinition {
                 name: Some(S("unit")),
                 command: S("echo unit"),
@@ -1672,7 +1676,7 @@ mod tests {
                 }]),
                 ..Default::default()
             };
-            let have = config.select_tests(&[S("actionlint")]).unwrap();
+            let have = cloned(config.select_tests(&[S("actionlint")]).unwrap());
             let want = vec![ToolDefinition {
                 name: None,
                 command: S("actionlint"),
@@ -1722,6 +1726,10 @@ mod tests {
         use crate::config::{CommandConfig, CommandsSection, Config, DefaultTests, ToolDefinition};
         use big_s::S;
 
+        fn cloned(tests: Vec<&ToolDefinition>) -> Vec<ToolDefinition> {
+            tests.into_iter().cloned().collect()
+        }
+
         #[test]
         fn cli_overrides_config() {
             let config = Config {
@@ -1744,13 +1752,15 @@ mod tests {
                 ..Default::default()
             };
             let cli = &[S("cuke")];
-            let have = config
-                .tests_for(
-                    cli,
-                    |commands| commands.pitstop.as_ref(),
-                    DefaultTests::None,
-                )
-                .unwrap();
+            let have = cloned(
+                config
+                    .tests_for(
+                        cli,
+                        |commands| commands.pitstop.as_ref(),
+                        DefaultTests::None,
+                    )
+                    .unwrap(),
+            );
             pretty::assert_eq!(
                 have,
                 vec![ToolDefinition {
@@ -1782,13 +1792,15 @@ mod tests {
                 ..Default::default()
             };
             let cli = &[];
-            let have = config
-                .tests_for(
-                    cli,
-                    |commands| commands.pitstop.as_ref(),
-                    DefaultTests::None,
-                )
-                .unwrap();
+            let have = cloned(
+                config
+                    .tests_for(
+                        cli,
+                        |commands| commands.pitstop.as_ref(),
+                        DefaultTests::None,
+                    )
+                    .unwrap(),
+            );
             pretty::assert_eq!(
                 have,
                 vec![ToolDefinition {
@@ -1815,9 +1827,11 @@ mod tests {
                 ..Default::default()
             };
             let cli = &[];
-            let have = config
-                .tests_for(cli, |commands| commands.pitstop.as_ref(), DefaultTests::All)
-                .unwrap();
+            let have = cloned(
+                config
+                    .tests_for(cli, |commands| commands.pitstop.as_ref(), DefaultTests::All)
+                    .unwrap(),
+            );
             pretty::assert_eq!(
                 have,
                 vec![
@@ -1850,13 +1864,15 @@ mod tests {
                 ..Default::default()
             };
             let cli = &[];
-            let have = config
-                .tests_for(
-                    cli,
-                    |commands| commands.pitstop.as_ref(),
-                    DefaultTests::None,
-                )
-                .unwrap();
+            let have = cloned(
+                config
+                    .tests_for(
+                        cli,
+                        |commands| commands.pitstop.as_ref(),
+                        DefaultTests::None,
+                    )
+                    .unwrap(),
+            );
             pretty::assert_eq!(have, Vec::<ToolDefinition>::new());
         }
 
@@ -1879,9 +1895,11 @@ mod tests {
                 }),
                 ..Default::default()
             };
-            let have = config
-                .tests_for(&[], |commands| commands.pitstop.as_ref(), DefaultTests::All)
-                .unwrap();
+            let have = cloned(
+                config
+                    .tests_for(&[], |commands| commands.pitstop.as_ref(), DefaultTests::All)
+                    .unwrap(),
+            );
             assert_eq!(have, Vec::<ToolDefinition>::new());
         }
     }
