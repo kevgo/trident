@@ -5,6 +5,7 @@ use crate::commands::{discover_stacks, fix, lint, resolve_scope};
 use crate::config::{Config, DefaultTests, to_sequences};
 use crate::domain::{DetectedStacks, Result, Runnables, StackType};
 use crate::git::Repo;
+use crate::subshell::{self, ToolCall};
 use ahash::AHashMap;
 use nonempty::NonEmpty;
 use std::process::ExitCode;
@@ -72,7 +73,7 @@ pub(crate) fn run_tasks(
     }
 
     // step 3: run concurrent sequences of stack-specific fixes and lints
-    let mut stack_executables: AHashMap<StackType, Vec<conc::Executable>> = AHashMap::new();
+    let mut stack_executables: AHashMap<StackType, Vec<ToolCall>> = AHashMap::new();
     for (stack_type, stack_specific_fixes) in stack_specific_fixes {
         let entry = stack_executables.entry(stack_type).or_default();
         entry.extend(stack_specific_fixes);
@@ -106,7 +107,7 @@ pub(crate) fn run_tasks(
     // some of them, like the global git-diff-check linter,
     // error on whitespace problems and therefore
     // depend on the formatting having been run.
-    let exit_code = conc::run(conc::RunArgs {
+    let exit_code = subshell::run(subshell::RunArgs {
         sequences: global_lints,
         error_on_output,
         sequential,

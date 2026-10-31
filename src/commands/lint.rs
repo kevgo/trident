@@ -54,7 +54,7 @@ pub fn determine_lints(
     git_repo: Option<&git::Repo>,
 ) -> Result<Lints> {
     // determine the lints for the stacks
-    let mut stack_specific: AHashMap<StackType, Vec<conc::Executable>> = AHashMap::new();
+    let mut stack_specific: AHashMap<StackType, Vec<ToolCall>> = AHashMap::new();
     for detected_stack in detected_stacks {
         let stack_type = detected_stack.stack.stack_type();
         let stack_config = config.stack_config(stack_type);
@@ -65,7 +65,7 @@ pub fn determine_lints(
             stack_executables.extend(
                 overrides
                     .iter()
-                    .map(|tool| tool.to_executable(Operation::Lint, stack_type)),
+                    .map(|tool| tool.to_call(Operation::Lint, stack_type)),
             );
         } else {
             for default_lint in detected_stack.stack.lints() {
@@ -81,7 +81,7 @@ pub fn determine_lints(
             stack_executables.extend(
                 additions
                     .iter()
-                    .map(|tool| tool.to_executable(Operation::Lint, stack_type)),
+                    .map(|tool_def| tool_def.to_call(Operation::Lint, stack_type)),
             );
         }
     }

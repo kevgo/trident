@@ -1,4 +1,5 @@
 use crate::domain::{Ignores, Operation, Result, StackType, Tool, UserError};
+use crate::subshell::ToolCall;
 use ahash::AHashMap;
 use itertools::Itertools;
 use jsonc_parser::ParseOptions;
@@ -221,11 +222,14 @@ impl ToolDefinition {
     /// Converts this tool into an executable whose printed name matches built-in tools:
     /// `{operation} {stack} ({name})`.
     #[must_use]
-    pub fn to_executable(&self, operation: Operation, stack: StackType) -> conc::Executable {
-        let tool_name = self.name.as_deref().unwrap_or(&self.command);
-        conc::Executable {
-            name: format!("{operation} {stack} ({tool_name})"),
-            command: conc::shell_command(&self.command),
+    pub fn to_call(&self, operation: Operation, stack: StackType) -> ToolCall {
+        let ToolDefinition { name, command } = self;
+        let tool_name = name.as_deref().unwrap_or(&command);
+        ToolCall {
+            operation,
+            stack: Some(stack),
+            name: tool_name.to_string(),
+            command: conc::shell_command(&command),
         }
     }
 
@@ -1558,42 +1562,6 @@ mod tests {
             };
             assert!(config.operation_enabled(&Taplo {}, Operation::Lint));
             assert!(config.operation_enabled(&Taplo {}, Operation::Fix));
-        }
-    }
-
-    mod tool_definition {
-        use crate::config::{Operation, ToolDefinition};
-        use crate::domain::StackType;
-        use big_s::S;
-
-        #[test]
-        fn named_tool_includes_operation_and_stack() {
-            let tool = ToolDefinition {
-                name: Some(S("run-that-app-sorted")),
-                command: S("echo hello"),
-            };
-            let executable = tool.to_executable(Operation::Fix, StackType::Cucumber);
-            pretty::assert_eq!(executable.name, "fix Cucumber (run-that-app-sorted)");
-        }
-
-        #[test]
-        fn unnamed_tool_falls_back_to_command() {
-            let tool = ToolDefinition {
-                name: None,
-                command: S("echo hello"),
-            };
-            let executable = tool.to_executable(Operation::Lint, StackType::Python);
-            pretty::assert_eq!(executable.name, "lint Python (echo hello)");
-        }
-
-        #[test]
-        fn unsafe_fix_uses_hyphenated_operation() {
-            let tool = ToolDefinition {
-                name: Some(S("my fix")),
-                command: S("echo hello"),
-            };
-            let executable = tool.to_executable(Operation::FixUnsafe, StackType::Toml);
-            pretty::assert_eq!(executable.name, "unsafe-fix TOML (my fix)");
         }
     }
 

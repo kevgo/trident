@@ -7,6 +7,7 @@ use crate::cli::output::print_metadata;
 use crate::config::{Application, Config, ToolDefinition};
 use crate::domain::{DetectedStacks, Operation, Result, Runnables, StackType};
 use crate::git::Repo;
+use crate::subshell::{self, ToolCall};
 use ahash::AHashMap;
 use nonempty::NonEmpty;
 use std::process::ExitCode;
@@ -40,7 +41,7 @@ pub fn fix(args: &RunArgsWithScope) -> Result<ExitCode> {
 
     // step 4: run the global fixes
     if let Some(global) = global {
-        let exit_code = conc::run(conc::RunArgs {
+        let exit_code = subshell::run(subshell::RunArgs {
             sequences: vec![global],
             error_on_output,
             sequential,
@@ -53,7 +54,7 @@ pub fn fix(args: &RunArgsWithScope) -> Result<ExitCode> {
     }
 
     // step 5: run the stack-specific fixes
-    let exit_code = conc::run(conc::RunArgs {
+    let exit_code = subshell::run(subshell::RunArgs {
         sequences: stack_specific.into_values().collect(),
         error_on_output,
         sequential,
@@ -73,7 +74,7 @@ pub fn determine_fixes(config: &Config, detected_stacks: &DetectedStacks) -> Res
     }
 
     // stack-specific fixes
-    let mut stacks_executables: AHashMap<StackType, Vec<conc::Executable>> = AHashMap::new();
+    let mut stacks_executables: AHashMap<StackType, Vec<ToolCall>> = AHashMap::new();
     for detected_stack in detected_stacks {
         let stack_type = detected_stack.stack.stack_type();
         let stack_config = config.stack_config(stack_type);
@@ -84,7 +85,7 @@ pub fn determine_fixes(config: &Config, detected_stacks: &DetectedStacks) -> Res
             stack_executables.extend(
                 additions
                     .iter()
-                    .map(|tool| tool.to_executable(Operation::Fix, stack_type)),
+                    .map(|tool_def| tool_def.to_call(Operation::Fix, stack_type)),
             );
         }
         // schedule either the override fixes or the default fixes
@@ -92,7 +93,7 @@ pub fn determine_fixes(config: &Config, detected_stacks: &DetectedStacks) -> Res
             stack_executables.extend(
                 overrides
                     .iter()
-                    .map(|tool| tool.to_executable(Operation::Fix, stack_type)),
+                    .map(|tool_def| tool_def.to_call(Operation::Fix, stack_type)),
             );
         } else {
             for default_fix in detected_stack.stack.fixes() {
@@ -108,7 +109,7 @@ pub fn determine_fixes(config: &Config, detected_stacks: &DetectedStacks) -> Res
             stack_executables.extend(
                 additions
                     .iter()
-                    .map(|tool| tool.to_executable(Operation::Fix, stack_type)),
+                    .map(|tool_def| tool_def.to_call(Operation::Fix, stack_type)),
             );
         }
     }
@@ -155,12 +156,11 @@ pub fn determine_fixes(config: &Config, detected_stacks: &DetectedStacks) -> Res
 }
 
 /// adds the custom fixes defined in the config file to the global fix collection
-pub(crate) fn add_custom_fixes(
-    custom_fixes: &[ToolDefinition],
-    global: &mut Vec<conc::Executable>,
-) {
+pub(crate) fn add_custom_fixes(custom_fixes: &[ToolDefinition], global: &mut Vec<ToolCall>) {
     for fix in custom_fixes {
-        global.push(conc::Executable {
+        global.push(ToolCall {
+            operation: Operation::Fix,
+            stack: None,
             name: fix.name.clone().unwrap_or_else(|| fix.command.clone()),
             command: conc::shell_command(&fix.command),
         });
@@ -171,12 +171,13 @@ pub(crate) fn add_custom_fixes(
 mod tests {
     use super::add_custom_fixes;
     use crate::config::ToolDefinition;
+    use crate::subshell::ToolCall;
     use big_s::S;
 
-    fn executable_names(executables: &[conc::Executable]) -> Vec<&str> {
-        executables
+    fn executable_names(tool_calls: &[ToolCall]) -> Vec<&str> {
+        tool_calls
             .iter()
-            .map(|executable| executable.name.as_str())
+            .map(|tool_call| tool_call.name.as_str())
             .collect()
     }
 

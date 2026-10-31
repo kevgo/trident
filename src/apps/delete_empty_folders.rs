@@ -1,5 +1,6 @@
-use crate::apps::{GetRTACmdArgs, get_rta_command};
-use crate::domain::{EnabledWhen, Result, Tool};
+use crate::apps::{GetRTACmdArgs2, get_rta_command2};
+use crate::domain::{EnabledWhen, Operation, Result, Tool};
+use crate::subshell::ToolCall;
 use big_s::S;
 use std::fmt::Display;
 
@@ -24,11 +25,18 @@ impl Display for DeleteEmptyFolders {
     }
 }
 
-pub fn format_command() -> Result<Option<conc::Executable>> {
-    get_rta_command(&GetRTACmdArgs {
-        name: S("delete empty folders"),
+pub fn format_command() -> Result<Option<ToolCall>> {
+    let Some(command) = get_rta_command2(&GetRTACmdArgs2 {
         app: &rta::applications::DeleteEmptyFolders {},
         args: vec![],
-        version: None,
-    })
+    })?
+    else {
+        return Ok(None);
+    };
+    Ok(Some(ToolCall {
+        operation: Operation::Fix,
+        stack: None,
+        name: S("delete empty folders"),
+        command,
+    }))
 }
