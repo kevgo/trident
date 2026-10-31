@@ -37,7 +37,7 @@ impl Lint for GherkinLint {
         }
         let gherkin_lint = rta::applications::GherkinLint {};
         let Some(command) = get_rta_command2(&GetRTACmdArgs2 {
-            app: &rta::applications::GherkinLint {},
+            app: &gherkin_lint,
             args: files.into_strings(),
         })?
         else {

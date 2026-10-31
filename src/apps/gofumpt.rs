@@ -37,7 +37,7 @@ impl Fix for Gofumpt {
         args.extend(files.into_strings());
         let gofumpt = rta::applications::Gofumpt {};
         let Some(command) = get_rta_command2(&GetRTACmdArgs2 {
-            app: &rta::applications::Gofumpt {},
+            app: &gofumpt,
             args,
         })?
         else {
