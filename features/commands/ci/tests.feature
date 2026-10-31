@@ -42,7 +42,7 @@ Feature: CI runs all fixes, formatters, lints, and tests
       """
     And it prints the block
       """
-      lint Python (ruff)
+      lint Python (Ruff)
       All checks passed!
       """
     And the exit code is 0

@@ -151,12 +151,12 @@ Feature: pitstop multiple unformatted stacks
       """
     And it prints only these lines in any order
       """
-      delete empty folders
-      fix Python (ruff)
-      format Python (ruff)
+      fix all (delete empty folders)
+      fix Python (Ruff)
+      fix Python (Ruff)
       fix TypeScript (Biome)
       fix CSS (Biome)
-      lint Python (ruff)
+      lint Python (Ruff)
       lint TypeScript (Biome)
       lint CSS (Biome)
       """
