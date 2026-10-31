@@ -19,7 +19,7 @@ Feature: lint Python
     When executing "trident lint --show=output"
     Then it prints
       """
-      lint Python (ruff)
+      lint Python (Ruff)
       All checks passed!
       """
     And the exit code is 0

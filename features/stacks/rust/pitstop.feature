@@ -15,7 +15,7 @@ Feature: pitstop Rust
     When executing "trident pitstop --show=output"
     Then it prints
       """
-      delete empty folders
+      fix all (delete empty folders)
       """
     And it prints to STDERR
       """

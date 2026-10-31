@@ -1,6 +1,7 @@
 use crate::apps::{GetRTACmdArgs, get_rta_command};
 use crate::config::{Application, ApplicationSection, Config};
 use crate::domain::{DetectedStack, EnabledWhen, Fix, Lint, Operation, Result, Tool};
+use crate::subshell::ToolCall;
 use big_s::S;
 use std::fmt::Display;
 
@@ -29,11 +30,7 @@ impl Display for Rumdl {
 }
 
 impl Lint for Rumdl {
-    fn lint_commands(
-        &self,
-        stack: &DetectedStack,
-        config: &Config,
-    ) -> Result<Option<conc::Executable>> {
+    fn lint_commands(&self, stack: &DetectedStack, config: &Config) -> Result<Option<ToolCall>> {
         let ignores = config.ignores_for(self, Operation::Lint)?;
         let files = stack.files.remove(&ignores);
         if files.is_empty() {
@@ -42,22 +39,21 @@ impl Lint for Rumdl {
         let mut args = Vec::with_capacity(files.len() + 1);
         args.push(S("check"));
         args.extend(files.into_strings());
-        let executable = get_rta_command(&GetRTACmdArgs {
-            name: format!("lint {} ({self})", stack.stack),
+        let command = get_rta_command(&GetRTACmdArgs {
             app: &rta::applications::Rumdl {},
             args,
-            version: None,
         })?;
-        Ok(executable)
+        Ok(command.map(|command| ToolCall {
+            operation: Operation::Lint,
+            stack: Some(stack.stack.stack_type()),
+            name: self.to_string(),
+            command,
+        }))
     }
 }
 
 impl Fix for Rumdl {
-    fn fix_commands(
-        &self,
-        stack: &DetectedStack,
-        config: &Config,
-    ) -> Result<Vec<conc::Executable>> {
+    fn fix_commands(&self, stack: &DetectedStack, config: &Config) -> Result<Vec<ToolCall>> {
         let ignores = config.ignores_for(self, Operation::Fix)?;
         let files = stack.files.remove(&ignores);
         if files.is_empty() {
@@ -66,20 +62,26 @@ impl Fix for Rumdl {
         let mut args = Vec::with_capacity(files.len() + 1);
         args.push(S("fmt"));
         args.extend(files.into_strings());
-        let executable = get_rta_command(&GetRTACmdArgs {
-            name: format!("fix {} ({self})", stack.stack),
+        let command = get_rta_command(&GetRTACmdArgs {
             app: &rta::applications::Rumdl {},
             args,
-            version: None,
         })?;
-        Ok(executable.into_iter().collect())
+        Ok(command
+            .into_iter()
+            .map(|command| ToolCall {
+                operation: Operation::Fix,
+                stack: Some(stack.stack.stack_type()),
+                name: self.to_string(),
+                command,
+            })
+            .collect())
     }
 
     fn unsafe_fix_commands(
         &self,
         _stack: &DetectedStack,
         _config: &Config,
-    ) -> Result<Vec<conc::Executable>> {
+    ) -> Result<Vec<ToolCall>> {
         Ok(vec![])
     }
 }

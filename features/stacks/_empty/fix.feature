@@ -10,7 +10,7 @@ Feature: formatting a codebase without any code
     When executing "trident fix --show=output"
     Then it prints
       """
-      delete empty folders
+      fix all (delete empty folders)
       """
     And it prints to STDERR
       """
@@ -23,7 +23,7 @@ Feature: formatting a codebase without any code
     When executing "trident fix --show=names"
     Then it prints
       """
-      delete empty folders
+      fix all (delete empty folders)
       """
     And the exit code is 0
 

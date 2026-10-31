@@ -32,17 +32,17 @@ Feature: CI runs all fixes, formatters, lints, and tests
       """
     And it prints the block
       """
-      test (echo test one)
+      test all (echo test one)
       test one
       """
     And it prints the block
       """
-      test (unit)
+      test all (unit)
       running unit tests
       """
     And it prints the block
       """
-      lint Python (ruff)
+      lint Python (Ruff)
       All checks passed!
       """
     And the exit code is 0
@@ -65,7 +65,7 @@ Feature: CI runs all fixes, formatters, lints, and tests
     When executing "trident ci --show=output"
     Then it prints the block
       """
-      test (failing test)
+      test all (failing test)
       custom test failed
       """
     And the exit code is 4
@@ -89,12 +89,12 @@ Feature: CI runs all fixes, formatters, lints, and tests
       """
     And it prints the block
       """
-      test (unit)
+      test all (unit)
       running unit tests
       """
     And it prints the block
       """
-      test (cuke)
+      test all (cuke)
       running cuke tests
       """
     And it does not print
@@ -126,7 +126,7 @@ Feature: CI runs all fixes, formatters, lints, and tests
       """
     And it prints the block
       """
-      test (unit)
+      test all (unit)
       running unit tests
       """
     And it does not print

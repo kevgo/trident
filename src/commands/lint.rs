@@ -5,7 +5,8 @@ use crate::cli::input::{RunArgsWithScope, ShowExt};
 use crate::cli::output::print_metadata;
 use crate::config::{Config, ToolDefinition};
 use crate::domain::{DetectedStacks, Operation, Result, StackType};
-use crate::git;
+use crate::subshell::ToolCall;
+use crate::{git, subshell};
 use ahash::AHashMap;
 use nonempty::NonEmpty;
 use std::process::ExitCode;
@@ -37,7 +38,7 @@ pub fn lint(args: &RunArgsWithScope) -> Result<ExitCode> {
     if lints.is_empty() {
         return Ok(ExitCode::SUCCESS);
     }
-    let exit_code = conc::run(conc::RunArgs {
+    let exit_code = subshell::run(subshell::RunArgs {
         sequences: lints.into_sequences(),
         error_on_output,
         sequential,
@@ -53,7 +54,7 @@ pub fn determine_lints(
     git_repo: Option<&git::Repo>,
 ) -> Result<Lints> {
     // determine the lints for the stacks
-    let mut stack_specific: AHashMap<StackType, Vec<conc::Executable>> = AHashMap::new();
+    let mut stack_specific: AHashMap<StackType, Vec<ToolCall>> = AHashMap::new();
     for detected_stack in detected_stacks {
         let stack_type = detected_stack.stack.stack_type();
         let stack_config = config.stack_config(stack_type);
@@ -64,7 +65,7 @@ pub fn determine_lints(
             stack_executables.extend(
                 overrides
                     .iter()
-                    .map(|tool| tool.to_executable(Operation::Lint, stack_type)),
+                    .map(|tool| tool.to_call(Operation::Lint, Some(stack_type))),
             );
         } else {
             for default_lint in detected_stack.stack.lints() {
@@ -80,16 +81,18 @@ pub fn determine_lints(
             stack_executables.extend(
                 additions
                     .iter()
-                    .map(|tool| tool.to_executable(Operation::Lint, stack_type)),
+                    .map(|tool_def| tool_def.to_call(Operation::Lint, Some(stack_type))),
             );
         }
     }
 
     // determine the runnables for the custom lints
-    let mut global: Vec<NonEmpty<conc::Executable>> = vec![];
+    let mut global: Vec<NonEmpty<ToolCall>> = vec![];
     if let Some(custom_lints) = &config.global_lints {
         for ToolDefinition { name, command } in custom_lints {
-            global.push(NonEmpty::new(conc::Executable {
+            global.push(NonEmpty::new(ToolCall {
+                operation: Operation::Lint,
+                stack: None,
                 name: name.clone().unwrap_or_else(|| command.clone()),
                 command: conc::shell_command(command),
             }));
@@ -111,8 +114,8 @@ pub fn determine_lints(
 }
 
 pub struct Lints {
-    pub global: Vec<NonEmpty<conc::Executable>>,
-    pub stack_specific: AHashMap<StackType, Vec<conc::Executable>>,
+    pub global: Vec<NonEmpty<ToolCall>>,
+    pub stack_specific: AHashMap<StackType, Vec<ToolCall>>,
 }
 
 impl Lints {
@@ -136,7 +139,7 @@ impl Lints {
         global.is_empty() && stack_specific.values().all(Vec::is_empty)
     }
 
-    pub fn into_sequences(self) -> Vec<NonEmpty<conc::Executable>> {
+    pub fn into_sequences(self) -> Vec<NonEmpty<ToolCall>> {
         let Lints {
             global,
             stack_specific,

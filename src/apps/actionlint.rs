@@ -1,7 +1,7 @@
 use crate::apps::{GetRTACmdArgs, get_rta_command};
 use crate::config::{Application, ApplicationSection, Config};
-use crate::domain::{DetectedStack, EnabledWhen, Lint, Result, StackType, Tool};
-use big_s::S;
+use crate::domain::{DetectedStack, EnabledWhen, Lint, Operation, Result, StackType, Tool};
+use crate::subshell::ToolCall;
 use std::fmt::Display;
 
 pub struct Actionlint;
@@ -26,17 +26,16 @@ impl Display for Actionlint {
 }
 
 impl Lint for Actionlint {
-    fn lint_commands(
-        &self,
-        _stack: &DetectedStack,
-        _config: &Config,
-    ) -> Result<Option<conc::Executable>> {
-        let executable = get_rta_command(&GetRTACmdArgs {
-            name: S("GitHub Actions (actionlint)"),
+    fn lint_commands(&self, stack: &DetectedStack, _config: &Config) -> Result<Option<ToolCall>> {
+        let command = get_rta_command(&GetRTACmdArgs {
             app: &rta::applications::ActionLint {},
             args: vec![],
-            version: None,
         })?;
-        Ok(executable)
+        Ok(command.map(|command| ToolCall {
+            operation: Operation::Lint,
+            stack: Some(stack.stack.stack_type()),
+            name: self.to_string(),
+            command,
+        }))
     }
 }

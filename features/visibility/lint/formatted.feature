@@ -39,7 +39,7 @@ Feature: lint multiple stacks
       """
     And it prints the block
       """
-      lint Python (ruff)
+      lint Python (Ruff)
       All checks passed!
       """
     And all files are unchanged
@@ -61,7 +61,7 @@ Feature: lint multiple stacks
       """
     And it prints the lines matching
       """
-      lint Python \(ruff\)
+      lint Python \(Ruff\)
       ruff(.exe)? check main.py
       All checks passed!
       """
@@ -73,7 +73,7 @@ Feature: lint multiple stacks
       """
       lint TypeScript (Biome)
       lint CSS (Biome)
-      lint Python (ruff)
+      lint Python (Ruff)
       """
     And it prints nothing to STDERR
     And all files are unchanged

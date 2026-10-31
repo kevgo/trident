@@ -3,8 +3,9 @@ use crate::cli::output::print_metadata;
 use crate::commands::lint::Lints;
 use crate::commands::{discover_stacks, fix, lint, resolve_scope};
 use crate::config::{Config, DefaultTests, to_sequences};
-use crate::domain::{DetectedStacks, Result, Runnables, StackType};
+use crate::domain::{DetectedStacks, Operation, Result, Runnables, StackType};
 use crate::git::Repo;
+use crate::subshell::{self, ToolCall};
 use ahash::AHashMap;
 use nonempty::NonEmpty;
 use std::process::ExitCode;
@@ -15,11 +16,15 @@ pub fn pitstop(args: &RunArgsWithTestAndScope) -> Result<ExitCode> {
     let repo = Repo::load();
     let scope = resolve_scope(&args.scope, repo.as_ref());
     let stacks = discover_stacks(scope, repo.as_ref(), &ignores)?;
-    let tests = to_sequences(config.tests_for(
-        &args.test,
-        |commands| commands.pitstop.as_ref(),
-        DefaultTests::None,
-    )?);
+    let tests = to_sequences(
+        config.tests_for(
+            &args.test,
+            |commands| commands.pitstop.as_ref(),
+            DefaultTests::None,
+        )?,
+        Operation::Test,
+        None,
+    );
     run_tasks(&args.run, &config, &stacks, repo.as_ref(), tests)
 }
 
@@ -31,7 +36,7 @@ pub(crate) fn run_tasks(
     config: &Config,
     stacks: &DetectedStacks,
     repo: Option<&Repo>,
-    tests: Vec<NonEmpty<conc::Executable>>,
+    tests: Vec<NonEmpty<ToolCall>>,
 ) -> Result<ExitCode> {
     let show = args.show.unwrap_or(conc::Show::Names);
     let error_on_output = false;
@@ -59,7 +64,7 @@ pub(crate) fn run_tasks(
 
     // step 2: run the global fixes by themselves first
     if let Some(global_fixes) = global_fixes {
-        let exit_code = conc::run(conc::RunArgs {
+        let exit_code = subshell::run(subshell::RunArgs {
             sequences: vec![global_fixes],
             error_on_output,
             sequential,
@@ -72,7 +77,7 @@ pub(crate) fn run_tasks(
     }
 
     // step 3: run concurrent sequences of stack-specific fixes and lints
-    let mut stack_executables: AHashMap<StackType, Vec<conc::Executable>> = AHashMap::new();
+    let mut stack_executables: AHashMap<StackType, Vec<ToolCall>> = AHashMap::new();
     for (stack_type, stack_specific_fixes) in stack_specific_fixes {
         let entry = stack_executables.entry(stack_type).or_default();
         entry.extend(stack_specific_fixes);
@@ -89,7 +94,7 @@ pub(crate) fn run_tasks(
         .into_values()
         .filter_map(NonEmpty::from_vec)
         .collect();
-    let exit_code = conc::run(conc::RunArgs {
+    let exit_code = subshell::run(subshell::RunArgs {
         sequences: stack_sequences,
         error_on_output,
         sequential,
@@ -106,7 +111,7 @@ pub(crate) fn run_tasks(
     // some of them, like the global git-diff-check linter,
     // error on whitespace problems and therefore
     // depend on the formatting having been run.
-    let exit_code = conc::run(conc::RunArgs {
+    let exit_code = subshell::run(subshell::RunArgs {
         sequences: global_lints,
         error_on_output,
         sequential,

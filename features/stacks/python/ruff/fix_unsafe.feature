@@ -27,9 +27,9 @@ Feature: unsafe-fix Python
     When executing "trident fix-unsafe --show=output"
     Then it prints the lines
       """
-      unsafe-fix Python (ruff)
+      unsafe-fix Python (Ruff)
       Found 1 error (1 fixed, 0 remaining).
-      format Python (ruff)
+      format Python (Ruff)
       1 file left unchanged
       """
     And the exit code is 0
@@ -50,8 +50,8 @@ Feature: unsafe-fix Python
     When executing "trident fix --show=output"
     Then it prints the lines
       """
-      delete empty folders
-      fix Python (ruff)
+      fix all (delete empty folders)
+      fix Python (Ruff)
       B006 Do not use mutable data structures for argument defaults
       No fixes available (1 hidden fix can be enabled with the `--unsafe-fixes` option).
       """

@@ -19,12 +19,12 @@ Feature: test command with passing tests
       """
     And it prints the block
       """
-      test (unit)
+      test all (unit)
       running unit tests
       """
     And it prints the block
       """
-      test (E2E)
+      test all (E2E)
       running E2E tests
       """
     And the exit code is 0
@@ -37,13 +37,13 @@ Feature: test command with passing tests
       """
     And it prints the lines matching
       """
-      test \(unit\)
+      test all \(unit\)
       (sh|bash.exe) -c 'echo running unit tests'
       running unit tests
       """
     And it prints the lines matching
       """
-      test \(E2E\)
+      test all \(E2E\)
       (sh|bash.exe) -c 'echo running E2E tests'
       running E2E tests
       """
@@ -53,8 +53,8 @@ Feature: test command with passing tests
     When executing "trident test --show=names"
     Then it prints only these lines in any order
       """
-      test (unit)
-      test (E2E)
+      test all (unit)
+      test all (E2E)
       """
     And it prints nothing to STDERR
     And the exit code is 0

@@ -4,6 +4,7 @@ Feature: lint Python with Pyright
   Background:
     Given a file "run-that-app" with content
       """
+      biome 2.4.0
       delete-empty-folders 0.0.2
       pyright 1.1.414
       ruff 0.15.16
@@ -43,7 +44,7 @@ Feature: lint Python with Pyright
     When executing "trident lint --show=output"
     Then it prints the block
       """
-      lint Python (ruff)
+      lint Python (Ruff)
       All checks passed!
       """
     And it prints the block
@@ -67,7 +68,7 @@ Feature: lint Python with Pyright
     When executing "trident lint --show=output"
     Then it prints the block
       """
-      lint Python (ruff)
+      lint Python (Ruff)
       All checks passed!
       """
     And it prints the block
@@ -112,7 +113,7 @@ Feature: lint Python with Pyright
     When executing "trident lint --show=output"
     Then it prints the block
       """
-      lint Python (ruff)
+      lint Python (Ruff)
       invalid-syntax: unexpected EOF while parsing
       """
     And it prints the lines

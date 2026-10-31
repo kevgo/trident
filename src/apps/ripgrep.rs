@@ -18,16 +18,13 @@ fn files_with_matches_in(
         args.push(format!("--glob=!{ignore}"));
     }
     args.push(pattern.to_string());
-    let Some(executable) = get_rta_command(&GetRTACmdArgs {
-        name: S("ripgrep"),
+    let Some(mut command) = get_rta_command(&GetRTACmdArgs {
         app: &rta::applications::RipGrep {},
         args,
-        version: None,
     })?
     else {
         return Ok(vec![]);
     };
-    let mut command = executable.command;
     if let Some(path) = path {
         command.current_dir(path);
     }

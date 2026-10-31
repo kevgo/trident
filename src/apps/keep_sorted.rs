@@ -1,8 +1,9 @@
-use crate::apps::ripgrep;
-use crate::apps::{GetRTACmdArgs, get_rta_command};
-use crate::domain::File;
+use crate::apps::{GetRTACmdArgs, get_rta_command, ripgrep};
 use crate::domain::{DetectedStacks, Result, StackType};
+use crate::domain::{File, Operation};
+use crate::subshell::ToolCall;
 use ahash::AHashMap;
+use big_s::S;
 
 const MARKER: &str = "keep-sorted end";
 
@@ -15,7 +16,7 @@ pub fn fix_commands(
         global_ignores,
         keep_sorted_ignores,
     }: FixCommandsArgs,
-) -> Result<Vec<(StackType, conc::Executable)>> {
+) -> Result<Vec<(StackType, ToolCall)>> {
     // step 2: find all files that contain the "keep-sorted end" marker
     let mut ignores = vec![];
     if let Some(global_ignores) = global_ignores {
@@ -40,14 +41,18 @@ pub fn fix_commands(
     for (stack_type, mut files) in grouped {
         files.sort_unstable();
         let args = files.into_iter().map(Into::into).collect();
-        let executable = get_rta_command(&GetRTACmdArgs {
-            name: format!("sort {stack_type} (keep-sorted)"),
+        let command = get_rta_command(&GetRTACmdArgs {
             app: &rta::applications::KeepSorted {},
             args,
-            version: None,
         })?;
-        if let Some(executable) = executable {
-            result.push((stack_type, executable));
+        if let Some(command) = command {
+            let tool_call = ToolCall {
+                operation: Operation::Fix,
+                stack: Some(stack_type),
+                name: S("keep-sorted"),
+                command,
+            };
+            result.push((stack_type, tool_call));
         }
     }
     Ok(result)

@@ -4,6 +4,7 @@ use crate::cli::output::print_metadata;
 use crate::config::Config;
 use crate::domain::{DetectedStacks, Operation, Result, StackType};
 use crate::git::Repo;
+use crate::subshell::{self, ToolCall};
 use ahash::AHashMap;
 use nonempty::NonEmpty;
 use std::process::ExitCode;
@@ -32,7 +33,7 @@ pub fn fix_unsafe(args: &RunArgsWithScope) -> Result<ExitCode> {
     }
 
     // step 4: run the fixes
-    let exit_code = conc::run(conc::RunArgs {
+    let exit_code = subshell::run(subshell::RunArgs {
         sequences: unsafe_fixes,
         error_on_output,
         sequential,
@@ -45,8 +46,8 @@ pub fn fix_unsafe(args: &RunArgsWithScope) -> Result<ExitCode> {
 pub fn determine_unsafe_fixes(
     stacks: &DetectedStacks,
     config: &Config,
-) -> Result<Vec<NonEmpty<conc::Executable>>> {
-    let mut stacks_executables: AHashMap<StackType, Vec<conc::Executable>> = AHashMap::new();
+) -> Result<Vec<NonEmpty<ToolCall>>> {
+    let mut stacks_executables: AHashMap<StackType, Vec<ToolCall>> = AHashMap::new();
     for stack in stacks {
         let stack_executables = stacks_executables
             .entry(stack.stack.stack_type())

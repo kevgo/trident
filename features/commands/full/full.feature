@@ -35,17 +35,17 @@ Feature: full runs all fixes, lints, and tests
       """
     And it prints the block
       """
-      format Python (ruff)
+      format Python (Ruff)
       1 file reformatted
       """
     And it prints the block
       """
-      lint Python (ruff)
+      lint Python (Ruff)
       All checks passed!
       """
     And it prints the block
       """
-      test (unit)
+      test all (unit)
       running unit tests
       """
     And the exit code is 0
@@ -90,7 +90,7 @@ Feature: full runs all fixes, lints, and tests
       """
     And it prints the block
       """
-      test (unit)
+      test all (unit)
       running unit tests
       """
     And it does not print

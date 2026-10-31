@@ -47,17 +47,17 @@ Feature: pitstop multiple good stacks
       """
     And it prints the block
       """
-      fix Python (ruff)
+      fix Python (Ruff)
       All checks passed!
       """
     And it prints the block
       """
-      format Python (ruff)
+      format Python (Ruff)
       1 file left unchanged
       """
     And it prints the block
       """
-      lint Python (ruff)
+      lint Python (Ruff)
       All checks passed!
       """
     And all files are unchanged
@@ -87,19 +87,19 @@ Feature: pitstop multiple good stacks
       """
     And it prints the lines matching
       """
-      fix Python \(ruff\)
+      fix Python \(Ruff\)
       ruff(.exe)? check --fix main.py
       All checks passed!
       """
     And it prints the lines matching
       """
-      format Python \(ruff\)
+      format Python \(Ruff\)
       ruff(.exe)? format main.py
       1 file left unchanged
       """
     And it prints the lines matching
       """
-      lint Python \(ruff\)
+      lint Python \(Ruff\)
       ruff(.exe)? check main.py
       All checks passed!
       """
@@ -109,10 +109,10 @@ Feature: pitstop multiple good stacks
     When executing "trident pitstop --show=names"
     Then it prints only these lines in any order
       """
-      delete empty folders
-      fix Python (ruff)
-      format Python (ruff)
-      lint Python (ruff)
+      fix all (delete empty folders)
+      fix Python (Ruff)
+      format Python (Ruff)
+      lint Python (Ruff)
       fix CSS (Biome)
       lint CSS (Biome)
       fix TypeScript (Biome)

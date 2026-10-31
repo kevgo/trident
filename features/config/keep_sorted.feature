@@ -47,7 +47,7 @@ Feature: keep-sorted support
     When executing "trident fix --show=output"
     Then it prints the block
       """
-      sort TOML (keep-sorted)
+      fix TOML (keep-sorted)
       """
     And the exit code is 0
     And file "unsorted_1.toml" now has content

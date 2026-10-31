@@ -15,7 +15,7 @@ Feature: fix Rust
     When executing "trident fix --show=output"
     Then it prints
       """
-      delete empty folders
+      fix all (delete empty folders)
       """
     And it prints to STDERR
       """
@@ -46,7 +46,7 @@ Feature: fix Rust
     When executing "trident fix --show=output"
     Then it prints the block
       """
-      delete empty folders
+      fix all (delete empty folders)
       """
     And it prints the block
       """

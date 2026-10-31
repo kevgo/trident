@@ -3,7 +3,7 @@ use crate::cli::input::{RunArgs, Scope, ShowExt};
 use crate::cli::output::print_metadata;
 use crate::config::Config;
 use crate::domain::Result;
-use crate::git;
+use crate::{git, subshell};
 use std::process::ExitCode;
 
 pub fn post_edit(args: &RunArgs) -> Result<ExitCode> {
@@ -32,7 +32,7 @@ pub fn post_edit(args: &RunArgs) -> Result<ExitCode> {
     if lints.is_empty() {
         return Ok(ExitCode::SUCCESS);
     }
-    let exit_code = conc::run(conc::RunArgs {
+    let exit_code = subshell::run(subshell::RunArgs {
         sequences: lints.into_sequences(),
         error_on_output,
         sequential,

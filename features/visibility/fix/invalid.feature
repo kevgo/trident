@@ -106,8 +106,8 @@ Feature: fix multiple stacks with invalid code
       """
       fix CSS (Biome)
       fix TypeScript (Biome)
-      fix Python (ruff)
-      format Python (ruff)
+      fix Python (Ruff)
+      format Python (Ruff)
       """
     And it prints the block
       """

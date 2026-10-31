@@ -1,14 +1,15 @@
 use crate::domain::StackType;
+use crate::subshell::ToolCall;
 use ahash::AHashMap;
 use nonempty::NonEmpty;
 
 #[derive(Debug)]
 pub struct Runnables {
     /// fixes that affect all files
-    pub global: Option<NonEmpty<conc::Executable>>,
+    pub global: Option<NonEmpty<ToolCall>>,
 
     /// fixes that affect stack-specific files
-    pub stack_specific: AHashMap<StackType, NonEmpty<conc::Executable>>,
+    pub stack_specific: AHashMap<StackType, NonEmpty<ToolCall>>,
 }
 
 impl Runnables {
@@ -29,9 +30,16 @@ impl Runnables {
 
 #[cfg(test)]
 mod tests {
+    use crate::domain::Operation;
+    use crate::subshell::ToolCall;
 
-    fn executable() -> conc::Executable {
-        conc::shell_executable("true")
+    fn executable() -> ToolCall {
+        ToolCall {
+            operation: Operation::Fix,
+            stack: None,
+            name: "true".to_string(),
+            command: conc::shell_command("true"),
+        }
     }
 
     mod len {

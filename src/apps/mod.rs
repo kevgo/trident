@@ -22,20 +22,22 @@ pub mod yamlfmt;
 
 use crate::domain::{Result, UserError};
 use rta::applications::AppDefinition;
+use std::process::Command;
 
 /// Provides the RTA command to run the given RTA App.
 /// Installs the app if needed.
-pub(crate) fn get_rta_command(args: &GetRTACmdArgs<'_>) -> Result<Option<conc::Executable>> {
+pub(crate) fn get_rta_command(args: &GetRTACmdArgs<'_>) -> Result<Option<Command>> {
     // Apps like gherkin-lint need to install multiple apps to run (first Node, then gherkin-lint).
     // So we keep trying in a loop until either the command is available,
     // or we get stuck needing the same app installed again after having already installed it.
+    // TODO: make this a global variable and inject instead of re-creating on every call
     let apps = rta::applications::all();
     let mut added = Vec::new();
     loop {
         let cmd_result = rta::get_cmd(rta::GetCmdArgs {
             app: args.app,
             app_args: args.args.clone(),
-            version: args.version.clone(),
+            version: None,
             apps: &apps,
             from_source: false,
             include_apps: vec![],
@@ -43,12 +45,7 @@ pub(crate) fn get_rta_command(args: &GetRTACmdArgs<'_>) -> Result<Option<conc::E
             verbose: false,
         });
         match cmd_result {
-            Ok(cmd) => {
-                return Ok(cmd.map(|command| conc::Executable {
-                    name: args.name.clone(),
-                    command,
-                }));
-            }
+            Ok(cmd) => return Ok(cmd),
             Err(err) => match &err {
                 rta::error::UserError::RunRequestMissingVersion { app }
                 | rta::error::UserError::MissingRuntime {
@@ -80,8 +77,6 @@ pub(crate) fn get_rta_command(args: &GetRTACmdArgs<'_>) -> Result<Option<conc::E
 }
 
 pub struct GetRTACmdArgs<'a> {
-    name: String,
     app: &'a dyn AppDefinition,
     args: Vec<String>,
-    version: Option<rta::Version>,
 }

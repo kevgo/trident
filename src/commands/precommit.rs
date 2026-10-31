@@ -7,8 +7,9 @@ use crate::config::{Application, Config};
 use crate::domain::{
     DetectedStacks, Operation, Result, Runnables, StackType, UserError, fingerprint,
 };
-use crate::git;
 use crate::stacks;
+use crate::subshell::ToolCall;
+use crate::{git, subshell};
 use ahash::AHashMap;
 use nonempty::NonEmpty;
 use std::process::ExitCode;
@@ -56,7 +57,7 @@ fn run(args: &RunArgs) -> Result<()> {
 
     // step 5: run the global fixes
     if let Some(global) = global {
-        let _exit_code = conc::run(conc::RunArgs {
+        let _exit_code = subshell::run(subshell::RunArgs {
             sequences: vec![global],
             error_on_output,
             sequential,
@@ -66,7 +67,7 @@ fn run(args: &RunArgs) -> Result<()> {
     }
 
     // step 6: run the stack-specific fixes
-    let _exit_code = conc::run(conc::RunArgs {
+    let _exit_code = subshell::run(subshell::RunArgs {
         sequences: stack_specific.into_values().collect(),
         error_on_output,
         sequential,
@@ -96,7 +97,7 @@ pub fn determine_precommit_fixes(
     }
 
     // stack-specific fixes
-    let mut stacks_executables: AHashMap<StackType, Vec<conc::Executable>> = AHashMap::new();
+    let mut stacks_executables: AHashMap<StackType, Vec<ToolCall>> = AHashMap::new();
     for staged_stack in staged_stacks {
         let stack_type = staged_stack.stack.stack_type();
         let stack_config = config.stack_config(stack_type);
@@ -107,7 +108,7 @@ pub fn determine_precommit_fixes(
             stack_executables.extend(
                 additions
                     .iter()
-                    .map(|tool| tool.to_executable(Operation::Fix, stack_type)),
+                    .map(|tool| tool.to_call(Operation::Fix, Some(stack_type))),
             );
         }
         // add the built-in or replacement fixes
@@ -115,7 +116,7 @@ pub fn determine_precommit_fixes(
             stack_executables.extend(
                 override_fixes
                     .iter()
-                    .map(|tool| tool.to_executable(Operation::Fix, stack_type)),
+                    .map(|tool| tool.to_call(Operation::Fix, Some(stack_type))),
             );
         } else {
             for default_fix in staged_stack.stack.fixes() {
@@ -131,7 +132,7 @@ pub fn determine_precommit_fixes(
             stack_executables.extend(
                 additions
                     .iter()
-                    .map(|tool| tool.to_executable(Operation::Fix, stack_type)),
+                    .map(|tool| tool.to_call(Operation::Fix, Some(stack_type))),
             );
         }
     }
@@ -164,7 +165,7 @@ pub fn determine_precommit_fixes(
     }
 
     // step 6: convert to runnables and return
-    let mut stack_specific: AHashMap<StackType, NonEmpty<conc::Executable>> = AHashMap::new();
+    let mut stack_specific: AHashMap<StackType, NonEmpty<ToolCall>> = AHashMap::new();
     for (stack_type, stack_executables) in stacks_executables {
         if let Some(stack_sequences) = NonEmpty::from_vec(stack_executables) {
             stack_specific.insert(stack_type, stack_sequences);

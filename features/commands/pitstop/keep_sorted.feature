@@ -39,7 +39,7 @@ Feature: "trident pitstop" keep-sorted only rewrites files changed on the curren
     When executing "trident pitstop --show=output"
     Then it prints the block
       """
-      sort TOML (keep-sorted)
+      fix TOML (keep-sorted)
       """
     And the exit code is 0
     And file "changed.toml" now has content
@@ -69,7 +69,7 @@ Feature: "trident pitstop" keep-sorted only rewrites files changed on the curren
     When executing "trident pitstop --show=output"
     Then it prints the block
       """
-      sort TOML (keep-sorted)
+      fix TOML (keep-sorted)
       """
     And the exit code is 0
     And file "changed.toml" now has content

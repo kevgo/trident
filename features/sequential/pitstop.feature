@@ -23,13 +23,13 @@ Feature: run a pitstop sequentially
     When executing "trident pitstop --sequential --test=unit --show=output"
     Then it prints
       """
-      my fix
+      fix all (my fix)
       my fix done
-      slow lint
+      lint all (slow lint)
       slow lint done
-      fast lint
+      lint all (fast lint)
       fast lint done
-      test (unit)
+      test all (unit)
       unit done
       """
     And the exit code is 0

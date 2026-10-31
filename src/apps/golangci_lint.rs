@@ -1,6 +1,7 @@
 use crate::apps::{GetRTACmdArgs, get_rta_command};
 use crate::config::{Application, ApplicationSection, Config};
-use crate::domain::{DetectedStack, EnabledWhen, Lint, Result, Tool};
+use crate::domain::{DetectedStack, EnabledWhen, Lint, Operation, Result, Tool};
+use crate::subshell::ToolCall;
 use big_s::S;
 use std::fmt::Display;
 
@@ -41,17 +42,16 @@ impl Display for GolangciLint {
 }
 
 impl Lint for GolangciLint {
-    fn lint_commands(
-        &self,
-        stack: &DetectedStack,
-        _config: &Config,
-    ) -> Result<Option<conc::Executable>> {
-        let executable = get_rta_command(&GetRTACmdArgs {
-            name: format!("lint {} ({self})", stack.stack),
+    fn lint_commands(&self, stack: &DetectedStack, _config: &Config) -> Result<Option<ToolCall>> {
+        let command = get_rta_command(&GetRTACmdArgs {
             app: &rta::applications::GolangCiLint {},
             args: vec![S("run"), S("--allow-parallel-runners")],
-            version: None,
         })?;
-        Ok(executable)
+        Ok(command.map(|command| ToolCall {
+            operation: Operation::Lint,
+            stack: Some(stack.stack.stack_type()),
+            name: self.to_string(),
+            command,
+        }))
     }
 }

@@ -21,12 +21,12 @@ Feature: custom tests
     When executing "trident test --show=output"
     Then it prints the block
       """
-      test (tests/one.sh)
+      test all (tests/one.sh)
       custom test is running
       """
     And it prints the block
       """
-      test (list all files)
+      test all (list all files)
       . ./tests ./tests/one.sh ./trident.json
       """
     And the exit code is 0
@@ -49,7 +49,7 @@ Feature: custom tests
     When executing "trident test --show=output"
     Then it prints the block
       """
-      test (tests/fail.sh)
+      test all (tests/fail.sh)
       custom test failed
       """
     And the exit code is 4
@@ -66,7 +66,7 @@ Feature: custom tests
     When executing "trident test --show=output"
     Then it prints the block
       """
-      test (echo unnamed)
+      test all (echo unnamed)
       unnamed
       """
     And the exit code is 0
@@ -98,12 +98,12 @@ Feature: custom tests
       """
     And it prints the block
       """
-      test (unit)
+      test all (unit)
       running unit tests
       """
     And it prints the block
       """
-      test (cuke)
+      test all (cuke)
       running cuke tests
       """
     And it does not print
@@ -134,7 +134,7 @@ Feature: custom tests
       """
     And it prints the block
       """
-      test (unit)
+      test all (unit)
       running unit tests
       """
     And it does not print

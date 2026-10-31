@@ -44,17 +44,17 @@ Feature: CI if committed files are unformatted
       """
     And it prints the block
       """
-      fix Python (ruff)
+      fix Python (Ruff)
       All checks passed!
       """
     And it prints the block
       """
-      format Python (ruff)
+      format Python (Ruff)
       1 file reformatted
       """
     And it prints the block
       """
-      lint Python (ruff)
+      lint Python (Ruff)
       """
     And it prints the block
       """
@@ -116,19 +116,19 @@ Feature: CI if committed files are unformatted
       """
     And it prints the lines matching
       """
-      fix Python \(ruff\)
+      fix Python \(Ruff\)
       ruff(.exe)? check --fix main.py
       All checks passed!
       """
     And it prints the lines matching
       """
-      format Python \(ruff\)
+      format Python \(Ruff\)
       ruff(.exe)? format main.py
       1 file reformatted
       """
     And it prints the lines matching
       """
-      lint Python \(ruff\)
+      lint Python \(Ruff\)
       ruff(.exe)? check main.py
       """
     And it prints the lines matching
@@ -190,15 +190,15 @@ Feature: CI if committed files are unformatted
       """
     And it prints the block
       """
-      fix Python (ruff)
+      fix Python (Ruff)
       """
     And it prints the block
       """
-      format Python (ruff)
+      format Python (Ruff)
       """
     And it prints the block
       """
-      lint Python (ruff)
+      lint Python (Ruff)
       """
     And it prints the block
       """

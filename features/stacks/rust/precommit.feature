@@ -16,7 +16,7 @@ Feature: precommit Rust
     When executing "trident precommit --show=output"
     Then it prints
       """
-      delete empty folders
+      fix all (delete empty folders)
       """
     And it prints to STDERR
       """
