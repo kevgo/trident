@@ -30,7 +30,7 @@ Feature: stack-specific fixes
     When executing "trident fix --show=output"
     Then it prints the block
       """
-      fix Python (ruff)
+      fix Python (Ruff)
       """
     And it prints the block
       """
@@ -66,7 +66,7 @@ Feature: stack-specific fixes
       """
     And it does not print any of these lines
       """
-      fix Python (ruff)
+      fix Python (Ruff)
       """
     And the exit code is 0
 
@@ -90,7 +90,7 @@ Feature: stack-specific fixes
     When executing "trident fix --show=output"
     Then it does not print any of these lines
       """
-      fix Python (ruff)
+      fix Python (Ruff)
       """
     And the exit code is 0
 

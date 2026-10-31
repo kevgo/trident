@@ -39,12 +39,12 @@ Feature: fix multiple good stacks
       """
     And it prints the block
       """
-      fix Python (ruff)
+      fix Python (Ruff)
       All checks passed!
       """
     And it prints the block
       """
-      format Python (ruff)
+      format Python (Ruff)
       1 file left unchanged
       """
     And all files are unchanged
@@ -83,8 +83,8 @@ Feature: fix multiple good stacks
     Then it prints only these lines in any order
       """
       delete empty folders
-      fix Python (ruff)
-      format Python (ruff)
+      fix Python (Ruff)
+      format Python (Ruff)
       fix CSS (Biome)
       fix TypeScript (Biome)
       """

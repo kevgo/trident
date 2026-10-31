@@ -30,7 +30,7 @@ Feature: stack-specific lints
     When executing "trident lint --show=output"
     Then it prints the block
       """
-      lint Python (ruff)
+      lint Python (Ruff)
       """
     And it prints the block
       """
@@ -66,7 +66,7 @@ Feature: stack-specific lints
       """
     And it does not print any of these lines
       """
-      lint Python (ruff)
+      lint Python (Ruff)
       """
     And the exit code is 0
 
@@ -90,7 +90,7 @@ Feature: stack-specific lints
     When executing "trident lint --show=output"
     Then it does not print any of these lines
       """
-      lint Python (ruff)
+      lint Python (Ruff)
       """
     And the exit code is 0
 

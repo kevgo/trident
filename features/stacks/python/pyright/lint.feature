@@ -43,7 +43,7 @@ Feature: lint Python with Pyright
     When executing "trident lint --show=output"
     Then it prints the block
       """
-      lint Python (ruff)
+      lint Python (Ruff)
       All checks passed!
       """
     And it prints the block
@@ -67,7 +67,7 @@ Feature: lint Python with Pyright
     When executing "trident lint --show=output"
     Then it prints the block
       """
-      lint Python (ruff)
+      lint Python (Ruff)
       All checks passed!
       """
     And it prints the block
@@ -112,7 +112,7 @@ Feature: lint Python with Pyright
     When executing "trident lint --show=output"
     Then it prints the block
       """
-      lint Python (ruff)
+      lint Python (Ruff)
       invalid-syntax: unexpected EOF while parsing
       """
     And it prints the lines

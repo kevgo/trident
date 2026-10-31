@@ -39,12 +39,12 @@ Feature: fix multiple stacks
       """
     And it prints the block
       """
-      fix Python (ruff)
+      fix Python (Ruff)
       All checks passed!
       """
     And it prints the block
       """
-      format Python (ruff)
+      format Python (Ruff)
       1 file reformatted
       """
     And file "main.css" now has content
@@ -116,8 +116,8 @@ Feature: fix multiple stacks
     And it prints only these lines in any order
       """
       delete empty folders
-      fix Python (ruff)
-      format Python (ruff)
+      fix Python (Ruff)
+      format Python (Ruff)
       fix TypeScript (Biome)
       fix CSS (Biome)
       """

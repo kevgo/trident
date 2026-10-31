@@ -24,7 +24,7 @@ Feature: install all Python tools
       """
     And it prints the block
       """
-      lint Python (ruff)
+      lint Python (Ruff)
       All checks passed!
       """
     And it prints the block

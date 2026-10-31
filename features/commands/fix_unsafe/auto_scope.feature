@@ -55,7 +55,7 @@ Feature: "trident fix-unsafe" chooses the smallest "--scope" based on the worksp
       """
     And it prints the lines
       """
-      unsafe-fix Python (ruff)
+      unsafe-fix Python (Ruff)
       Found 1 error (1 fixed, 0 remaining).
       """
     And the exit code is 0
@@ -146,7 +146,7 @@ Feature: "trident fix-unsafe" chooses the smallest "--scope" based on the worksp
       """
     And it prints the lines
       """
-      unsafe-fix Python (ruff)
+      unsafe-fix Python (Ruff)
       Found 1 error (1 fixed, 0 remaining).
       """
     And it does not print

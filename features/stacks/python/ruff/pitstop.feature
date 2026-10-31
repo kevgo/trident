@@ -16,11 +16,11 @@ Feature: pitstop Python
     Then it prints
       """
       delete empty folders
-      fix Python (ruff)
+      fix Python (Ruff)
       All checks passed!
-      format Python (ruff)
+      format Python (Ruff)
       1 file reformatted
-      lint Python (ruff)
+      lint Python (Ruff)
       All checks passed!
       """
     And the exit code is 0
@@ -39,7 +39,7 @@ Feature: pitstop Python
     Then it prints
       """
       delete empty folders
-      fix Python (ruff)
+      fix Python (Ruff)
       F841 Local variable `a` is assigned to but never used
        --> main.py:2:3
         |

@@ -41,7 +41,7 @@ Feature: "trident fix-unsafe --scope" selects which files to fix
       """
     And it prints the lines
       """
-      unsafe-fix Python (ruff)
+      unsafe-fix Python (Ruff)
       Found 1 error (1 fixed, 0 remaining).
       """
     And the exit code is 0

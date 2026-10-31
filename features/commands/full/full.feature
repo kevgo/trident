@@ -35,12 +35,12 @@ Feature: full runs all fixes, lints, and tests
       """
     And it prints the block
       """
-      format Python (ruff)
+      format Python (Ruff)
       1 file reformatted
       """
     And it prints the block
       """
-      lint Python (ruff)
+      lint Python (Ruff)
       All checks passed!
       """
     And it prints the block

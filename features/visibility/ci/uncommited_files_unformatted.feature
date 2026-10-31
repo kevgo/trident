@@ -44,17 +44,17 @@ Feature: CI doesn't care about uncommitted files that are unformatted
       """
     And it prints the block
       """
-      fix Python (ruff)
+      fix Python (Ruff)
       All checks passed!
       """
     And it prints the block
       """
-      format Python (ruff)
+      format Python (Ruff)
       1 file reformatted
       """
     And it prints the block
       """
-      lint Python (ruff)
+      lint Python (Ruff)
       """
     And it prints the block
       """
@@ -155,11 +155,11 @@ Feature: CI doesn't care about uncommitted files that are unformatted
     And it prints only these lines in any order
       """
       delete empty folders
-      fix Python (ruff)
-      format Python (ruff)
+      fix Python (Ruff)
+      format Python (Ruff)
       fix TypeScript (Biome)
       fix CSS (Biome)
-      lint Python (ruff)
+      lint Python (Ruff)
       lint TypeScript (Biome)
       lint CSS (Biome)
       lint Git diff markers (git diff HEAD --check)

@@ -44,17 +44,17 @@ Feature: CI if committed files are unformatted
       """
     And it prints the block
       """
-      fix Python (ruff)
+      fix Python (Ruff)
       All checks passed!
       """
     And it prints the block
       """
-      format Python (ruff)
+      format Python (Ruff)
       1 file reformatted
       """
     And it prints the block
       """
-      lint Python (ruff)
+      lint Python (Ruff)
       """
     And it prints the block
       """
@@ -190,15 +190,15 @@ Feature: CI if committed files are unformatted
       """
     And it prints the block
       """
-      fix Python (ruff)
+      fix Python (Ruff)
       """
     And it prints the block
       """
-      format Python (ruff)
+      format Python (Ruff)
       """
     And it prints the block
       """
-      lint Python (ruff)
+      lint Python (Ruff)
       """
     And it prints the block
       """

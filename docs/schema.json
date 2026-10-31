@@ -469,6 +469,16 @@
               "type": "null"
             }
           ]
+        },
+        "format": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ApplicationNoFileOperation"
+            },
+            {
+              "type": "null"
+            }
+          ]
         }
       },
       "additionalProperties": false
@@ -534,6 +544,16 @@
           ]
         },
         "fix-unsafe": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ApplicationWithFileOperation"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "format": {
           "anyOf": [
             {
               "$ref": "#/$defs/ApplicationWithFileOperation"

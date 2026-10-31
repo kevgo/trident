@@ -47,17 +47,17 @@ Feature: CI multiple formatted stacks
       """
     And it prints the block
       """
-      fix Python (ruff)
+      fix Python (Ruff)
       All checks passed!
       """
     And it prints the block
       """
-      format Python (ruff)
+      format Python (Ruff)
       1 file left unchanged
       """
     And it prints the block
       """
-      lint Python (ruff)
+      lint Python (Ruff)
       All checks passed!
       """
     And the exit code is 0
@@ -112,9 +112,9 @@ Feature: CI multiple formatted stacks
     Then it prints only these lines in any order
       """
       delete empty folders
-      fix Python (ruff)
-      format Python (ruff)
-      lint Python (ruff)
+      fix Python (Ruff)
+      format Python (Ruff)
+      lint Python (Ruff)
       fix CSS (Biome)
       lint CSS (Biome)
       fix TypeScript (Biome)

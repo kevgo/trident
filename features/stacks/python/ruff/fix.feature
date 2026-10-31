@@ -20,9 +20,9 @@ Feature: fix Python
     Then it prints
       """
       delete empty folders
-      fix Python (ruff)
+      fix Python (Ruff)
       All checks passed!
-      format Python (ruff)
+      format Python (Ruff)
       2 files left unchanged
       """
     And the exit code is 0
@@ -42,9 +42,9 @@ Feature: fix Python
     Then it prints
       """
       delete empty folders
-      fix Python (ruff)
+      fix Python (Ruff)
       All checks passed!
-      format Python (ruff)
+      format Python (Ruff)
       2 files reformatted
       """
     And the exit code is 0
@@ -70,7 +70,7 @@ Feature: fix Python
     Then it prints
       """
       delete empty folders
-      fix Python (ruff)
+      fix Python (Ruff)
       invalid-syntax: missing closing quote in string literal
        --> main.py:1:7
         |

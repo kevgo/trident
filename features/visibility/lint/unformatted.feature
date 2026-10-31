@@ -31,7 +31,7 @@ Feature: lint multiple stacks with unformatted files
       """
     And it prints the block
       """
-      lint Python (ruff)
+      lint Python (Ruff)
       All checks passed!
       """
     And it prints the block
@@ -76,7 +76,7 @@ Feature: lint multiple stacks with unformatted files
     Then it prints nothing to STDERR
     And it prints only these lines in any order
       """
-      lint Python (ruff)
+      lint Python (Ruff)
       lint TypeScript (Biome)
       lint CSS (Biome)
       """
