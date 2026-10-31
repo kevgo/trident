@@ -45,9 +45,7 @@ pub(crate) fn get_rta_command(args: &GetRTACmdArgs<'_>) -> Result<Option<Command
             verbose: false,
         });
         match cmd_result {
-            Ok(cmd) => {
-                return Ok(cmd);
-            }
+            Ok(cmd) => return Ok(cmd),
             Err(err) => match &err {
                 rta::error::UserError::RunRequestMissingVersion { app }
                 | rta::error::UserError::MissingRuntime {
