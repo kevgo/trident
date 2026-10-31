@@ -11,6 +11,7 @@ pub enum Operation {
     FixUnsafe,
     Format,
     Test,
+    TypeCheck,
 }
 
 impl Display for Operation {
@@ -21,6 +22,7 @@ impl Display for Operation {
             Operation::FixUnsafe => f.write_str("unsafe-fix"),
             Operation::Format => f.write_str("format"),
             Operation::Test => f.write_str("test"),
+            Operation::TypeCheck => f.write_str("type-check"),
         }
     }
 }

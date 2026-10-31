@@ -37,7 +37,7 @@ impl Lint for Pyright {
             args: files.into_strings(),
         })?;
         Ok(command.map(|command| ToolCall {
-            operation: Operation::Lint,
+            operation: Operation::TypeCheck,
             stack: Some(stack.stack.stack_type()),
             name: self.to_string(),
             command,

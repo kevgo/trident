@@ -400,6 +400,7 @@ impl<T> Operations<T> {
             Operation::FixUnsafe => self.fix_unsafe.as_ref(),
             Operation::Format => self.format.as_ref(),
             Operation::Test => unimplemented!(), // TODO: implement this
+            Operation::TypeCheck => unimplemented!(), // TODO: implement this
         }
     }
 }
