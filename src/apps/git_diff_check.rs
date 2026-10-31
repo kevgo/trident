@@ -1,6 +1,7 @@
 use crate::config::{Application, ApplicationSection};
 use crate::domain::{EnabledWhen, Tool};
 use crate::git;
+use crate::subshell::ToolCall;
 use big_s::S;
 use std::fmt::Display;
 
@@ -25,10 +26,12 @@ impl Display for GitDiffCheck {
 /// provides the command that checks the Git changes for whitespace errors,
 /// if the current directory is a Git repository
 #[must_use]
-pub(crate) fn lint_command(repo: &git::Repo) -> conc::Executable {
+pub(crate) fn lint_command(repo: &git::Repo) -> ToolCall {
     let mut command = repo.git_command();
     command.args(["diff", "HEAD", "--check"]);
-    conc::Executable {
+    ToolCall {
+        operation: crate::domain::Operation::Lint,
+        stack: None,
         name: S("lint Git diff markers (git diff HEAD --check)"),
         command,
     }
