@@ -1,0 +1,58 @@
+use crate::domain::{Operation, StackType};
+use std::process::Command;
+
+pub struct ToolCall {
+    pub operation: Operation,
+    pub stack: Option<StackType>,
+    pub name: String,
+    pub command: Command,
+}
+
+impl From<ToolCall> for conc::Executable {
+    fn from(value: ToolCall) -> Self {
+        let ToolCall {
+            operation,
+            stack,
+            name,
+            command,
+        } = value;
+        conc::Executable {
+            name: conc_name(operation, stack, &name),
+            command,
+        }
+    }
+}
+
+fn conc_name(operation: Operation, stack: Option<StackType>, name: &str) -> String {
+    match stack {
+        Some(stack) => format!("{operation} {stack} ({name})"),
+        None => format!("{operation} all ({name})"),
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::conc_name;
+    use crate::domain::{Operation, StackType};
+
+    #[test]
+    fn with_stack() {
+        let have = conc_name(Operation::Lint, Some(StackType::Rust), "clippy");
+        let want = "lint Rust (clippy)";
+        assert_eq!(have, want);
+    }
+
+    #[test]
+    fn no_stack() {
+        let have = conc_name(Operation::Fix, None, "git diff markers");
+        let want = "fix all (git diff markers)";
+        assert_eq!(have, want);
+    }
+
+    #[test]
+    fn unsafe_fix() {
+        let have = conc_name(Operation::FixUnsafe, Some(StackType::Css), "Biome");
+        let want = "unsafe-fix CSS (Biome)";
+        assert_eq!(have, want);
+    }
+}

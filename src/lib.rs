@@ -9,3 +9,4 @@ pub mod git;
 pub mod gittown;
 pub mod shellscripts;
 pub mod stacks;
+pub mod subshell;
