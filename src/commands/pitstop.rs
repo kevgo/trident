@@ -3,7 +3,7 @@ use crate::cli::output::print_metadata;
 use crate::commands::lint::Lints;
 use crate::commands::{discover_stacks, fix, lint, resolve_scope};
 use crate::config::{Config, DefaultTests, to_sequences};
-use crate::domain::{DetectedStacks, Result, Runnables, StackType};
+use crate::domain::{DetectedStacks, Operation, Result, Runnables, StackType};
 use crate::git::Repo;
 use crate::subshell::{self, ToolCall};
 use ahash::AHashMap;
@@ -16,11 +16,15 @@ pub fn pitstop(args: &RunArgsWithTestAndScope) -> Result<ExitCode> {
     let repo = Repo::load();
     let scope = resolve_scope(&args.scope, repo.as_ref());
     let stacks = discover_stacks(scope, repo.as_ref(), &ignores)?;
-    let tests = to_sequences(config.tests_for(
-        &args.test,
-        |commands| commands.pitstop.as_ref(),
-        DefaultTests::None,
-    )?);
+    let tests = to_sequences(
+        config.tests_for(
+            &args.test,
+            |commands| commands.pitstop.as_ref(),
+            DefaultTests::None,
+        )?,
+        Operation::Test,
+        None,
+    );
     run_tasks(&args.run, &config, &stacks, repo.as_ref(), tests)
 }
 
@@ -60,7 +64,7 @@ pub(crate) fn run_tasks(
 
     // step 2: run the global fixes by themselves first
     if let Some(global_fixes) = global_fixes {
-        let exit_code = conc::run(conc::RunArgs {
+        let exit_code = subshell::run(subshell::RunArgs {
             sequences: vec![global_fixes],
             error_on_output,
             sequential,
@@ -90,7 +94,7 @@ pub(crate) fn run_tasks(
         .into_values()
         .filter_map(NonEmpty::from_vec)
         .collect();
-    let exit_code = conc::run(conc::RunArgs {
+    let exit_code = subshell::run(subshell::RunArgs {
         sequences: stack_sequences,
         error_on_output,
         sequential,

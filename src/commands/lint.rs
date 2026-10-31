@@ -65,7 +65,7 @@ pub fn determine_lints(
             stack_executables.extend(
                 overrides
                     .iter()
-                    .map(|tool| tool.to_call(Operation::Lint, stack_type)),
+                    .map(|tool| tool.to_call(Operation::Lint, Some(stack_type))),
             );
         } else {
             for default_lint in detected_stack.stack.lints() {
@@ -81,7 +81,7 @@ pub fn determine_lints(
             stack_executables.extend(
                 additions
                     .iter()
-                    .map(|tool_def| tool_def.to_call(Operation::Lint, stack_type)),
+                    .map(|tool_def| tool_def.to_call(Operation::Lint, Some(stack_type))),
             );
         }
     }
