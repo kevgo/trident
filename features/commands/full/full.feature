@@ -45,7 +45,7 @@ Feature: full runs all fixes, lints, and tests
       """
     And it prints the block
       """
-      test (unit)
+      test all (unit)
       running unit tests
       """
     And the exit code is 0
@@ -90,7 +90,7 @@ Feature: full runs all fixes, lints, and tests
       """
     And it prints the block
       """
-      test (unit)
+      test all (unit)
       running unit tests
       """
     And it does not print

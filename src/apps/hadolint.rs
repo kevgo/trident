@@ -1,5 +1,3 @@
-use rta::applications::AppDefinition;
-
 use crate::apps::{GetRTACmdArgs2, get_rta_command2};
 use crate::config::{Application, ApplicationSection, Config};
 use crate::domain::{DetectedStack, EnabledWhen, Lint, Operation, Result, Tool};
@@ -42,7 +40,7 @@ impl Lint for Hadolint {
         Ok(Some(ToolCall {
             operation: Operation::Lint,
             stack: Some(stack.stack.stack_type()),
-            name: hadolint.name().to_string(),
+            name: self.to_string(),
             command,
         }))
     }

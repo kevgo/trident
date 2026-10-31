@@ -25,12 +25,12 @@ Feature: test command with a failing test
       """
     And it prints the block
       """
-      test (unit)
+      test all (unit)
       running unit tests
       """
     And it prints the block
       """
-      test (E2E)
+      test all (E2E)
       failed
       """
     And the exit code is 4
@@ -43,13 +43,13 @@ Feature: test command with a failing test
       """
     And it prints the lines matching
       """
-      test \(unit\)
+      test all \(unit\)
       (sh|bash.exe) -c 'echo running unit tests'
       running unit tests
       """
     And it prints the lines matching
       """
-      test \(E2E\)
+      test all \(E2E\)
       (sh|bash.exe) -c tests/fail.sh
       failed
       """
@@ -60,11 +60,11 @@ Feature: test command with a failing test
     Then it prints nothing to STDERR
     And it prints the lines
       """
-      test (unit)
+      test all (unit)
       """
     And it prints the block
       """
-      test (E2E)
+      test all (E2E)
       failed
       """
     And the exit code is 4
@@ -74,7 +74,7 @@ Feature: test command with a failing test
     Then it prints nothing to STDERR
     And it does not print
       """
-      test (unit)
+      test all (unit)
       """
     And it prints the block
       """

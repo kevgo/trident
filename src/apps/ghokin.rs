@@ -3,7 +3,6 @@ use crate::config::{Application, ApplicationSection, Config};
 use crate::domain::{DetectedStack, EnabledWhen, Fix, Operation, Result, Tool};
 use crate::subshell::ToolCall;
 use big_s::S;
-use rta::applications::AppDefinition;
 use std::fmt::Display;
 
 pub struct Ghokin;
@@ -49,7 +48,7 @@ impl Fix for Ghokin {
         Ok(vec![ToolCall {
             operation: Operation::Fix,
             stack: Some(stack.stack.stack_type()),
-            name: ghokin.name().to_string(),
+            name: self.to_string(),
             command,
         }])
     }

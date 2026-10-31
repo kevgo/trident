@@ -15,9 +15,9 @@ Feature: run tests sequentially
     When executing "trident test --show=output"
     Then it prints
       """
-      test (fast)
+      test all (fast)
       fast done
-      test (slow)
+      test all (slow)
       slow done
       """
     And the exit code is 0
@@ -26,9 +26,9 @@ Feature: run tests sequentially
     When executing "trident test --sequential --show=output"
     Then it prints
       """
-      test (slow)
+      test all (slow)
       slow done
-      test (fast)
+      test all (fast)
       fast done
       """
     And the exit code is 0

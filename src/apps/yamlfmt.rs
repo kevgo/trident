@@ -2,7 +2,6 @@ use crate::apps::{GetRTACmdArgs2, get_rta_command2};
 use crate::config::{Application, ApplicationSection, Config};
 use crate::domain::{DetectedStack, EnabledWhen, Fix, Operation, Result, Tool};
 use crate::subshell::ToolCall;
-use rta::applications::AppDefinition;
 use std::fmt::Display;
 
 pub struct Yamlfmt;
@@ -41,7 +40,7 @@ impl Fix for Yamlfmt {
         Ok(vec![ToolCall {
             operation: Operation::Fix,
             stack: Some(stack.stack.stack_type()),
-            name: yamlfmt.name().to_string(),
+            name: self.to_string(),
             command,
         }])
     }

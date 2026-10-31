@@ -29,7 +29,7 @@ Feature: run a pitstop sequentially
       slow lint done
       fast lint
       fast lint done
-      test (unit)
+      test all (unit)
       unit done
       """
     And the exit code is 0

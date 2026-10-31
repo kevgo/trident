@@ -3,7 +3,6 @@ use crate::config::{Application, ApplicationSection, Config};
 use crate::domain::{DetectedStack, EnabledWhen, Lint, Operation, Result, Tool};
 use crate::subshell::ToolCall;
 use big_s::S;
-use rta::applications::AppDefinition;
 use std::fmt::Display;
 
 pub struct GolangciLint;
@@ -55,7 +54,7 @@ impl Lint for GolangciLint {
         Ok(Some(ToolCall {
             operation: Operation::Lint,
             stack: Some(stack.stack.stack_type()),
-            name: golangci_lint.name().to_string(),
+            name: self.to_string(),
             command,
         }))
     }

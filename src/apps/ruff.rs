@@ -3,7 +3,6 @@ use crate::config::{Application, ApplicationSection, Config};
 use crate::domain::{DetectedStack, EnabledWhen, Fix, Lint, Operation, Result, Tool};
 use crate::subshell::ToolCall;
 use big_s::S;
-use rta::applications::AppDefinition;
 use std::fmt::Display;
 
 pub struct Ruff;
@@ -42,7 +41,7 @@ impl Lint for Ruff {
         Ok(Some(ToolCall {
             operation: Operation::Lint,
             stack: Some(stack.stack.stack_type()),
-            name: ruff.name().to_string(),
+            name: self.to_string(),
             command,
         }))
     }
@@ -71,7 +70,7 @@ impl Fix for Ruff {
             commands.push(ToolCall {
                 operation: Operation::Fix,
                 stack: Some(stack.stack.stack_type()),
-                name: ruff.name().to_string(),
+                name: self.to_string(),
                 command,
             });
         }
@@ -85,7 +84,7 @@ impl Fix for Ruff {
             commands.push(ToolCall {
                 operation: Operation::Fix, // TODO: change to Operation::Format
                 stack: Some(stack.stack.stack_type()),
-                name: ruff.name().to_string(),
+                name: self.to_string(),
                 command,
             });
         }
@@ -113,7 +112,7 @@ impl Fix for Ruff {
             executables.push(ToolCall {
                 operation: Operation::FixUnsafe,
                 stack: Some(stack.stack.stack_type()),
-                name: ruff.name().to_string(),
+                name: self.to_string(),
                 command,
             });
         }
@@ -127,7 +126,7 @@ impl Fix for Ruff {
             executables.push(ToolCall {
                 operation: Operation::Fix, // TODO: change to Operation::Format
                 stack: Some(stack.stack.stack_type()),
-                name: ruff.name().to_string(),
+                name: self.to_string(),
                 command,
             });
         }

@@ -2,7 +2,6 @@ use crate::apps::{GetRTACmdArgs2, get_rta_command2};
 use crate::config::{Application, ApplicationSection, Config};
 use crate::domain::{DetectedStack, EnabledWhen, Lint, Operation, Result, StackType, Tool};
 use crate::subshell::ToolCall;
-use rta::applications::AppDefinition;
 use std::fmt::Display;
 
 pub struct Actionlint;
@@ -39,7 +38,7 @@ impl Lint for Actionlint {
         Ok(Some(ToolCall {
             operation: Operation::Lint,
             stack: Some(stack.stack.stack_type()),
-            name: actionlint.name().to_string(),
+            name: self.to_string(),
             command,
         }))
     }

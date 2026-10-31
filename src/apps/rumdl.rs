@@ -3,7 +3,6 @@ use crate::config::{Application, ApplicationSection, Config};
 use crate::domain::{DetectedStack, EnabledWhen, Fix, Lint, Operation, Result, Tool};
 use crate::subshell::ToolCall;
 use big_s::S;
-use rta::applications::AppDefinition;
 use std::fmt::Display;
 
 pub struct Rumdl;
@@ -40,7 +39,6 @@ impl Lint for Rumdl {
         let mut args = Vec::with_capacity(files.len() + 1);
         args.push(S("check"));
         args.extend(files.into_strings());
-        let rumdl = rta::applications::Rumdl {};
         let Some(command) = get_rta_command2(&GetRTACmdArgs2 {
             app: &rta::applications::Rumdl {},
             args,
@@ -51,7 +49,7 @@ impl Lint for Rumdl {
         Ok(Some(ToolCall {
             operation: Operation::Lint,
             stack: Some(stack.stack.stack_type()),
-            name: rumdl.name().to_string(),
+            name: self.to_string(),
             command,
         }))
     }
@@ -74,7 +72,7 @@ impl Fix for Rumdl {
         Ok(vec![ToolCall {
             operation: Operation::Fix,
             stack: Some(stack.stack.stack_type()),
-            name: rumdl.name().to_string(),
+            name: self.to_string(),
             command,
         }])
     }

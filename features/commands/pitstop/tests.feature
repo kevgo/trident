@@ -64,7 +64,7 @@ Feature: pitstop --test runs selected tests
       """
     And it prints the block
       """
-      test (unit)
+      test all (unit)
       running unit tests
       """
     And it does not print
@@ -99,7 +99,7 @@ Feature: pitstop --test runs selected tests
       """
     And it prints the block
       """
-      test (cuke)
+      test all (cuke)
       running cuke tests
       """
     And it does not print
@@ -130,12 +130,12 @@ Feature: pitstop --test runs selected tests
       """
     And it prints the block
       """
-      test (unit)
+      test all (unit)
       running unit tests
       """
     And it prints the block
       """
-      test (cuke)
+      test all (cuke)
       running cuke tests
       """
     And it does not print
@@ -165,7 +165,7 @@ Feature: pitstop --test runs selected tests
     When executing "trident pitstop --test=failing --show=output"
     Then it prints the block
       """
-      test (failing)
+      test all (failing)
       custom test failed
       """
     And the exit code is 4

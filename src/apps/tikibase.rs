@@ -3,7 +3,6 @@ use crate::config::{Application, ApplicationSection, Config};
 use crate::domain::{DetectedStack, EnabledWhen, Fix, Lint, Operation, Result, StackType, Tool};
 use crate::subshell::ToolCall;
 use big_s::S;
-use rta::applications::AppDefinition;
 use std::fmt::Display;
 
 pub struct Tikibase;
@@ -42,7 +41,7 @@ impl Lint for Tikibase {
         Ok(Some(ToolCall {
             operation: Operation::Lint,
             stack: Some(stack.stack.stack_type()),
-            name: tikibase.name().to_string(),
+            name: self.to_string(),
             command,
         }))
     }
@@ -63,7 +62,7 @@ impl Fix for Tikibase {
         Ok(vec![ToolCall {
             operation: Operation::Fix,
             stack: Some(stack.stack.stack_type()),
-            name: tikibase.name().to_string(),
+            name: self.to_string(),
             command,
         }])
     }

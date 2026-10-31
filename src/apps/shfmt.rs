@@ -1,5 +1,3 @@
-use rta::applications::AppDefinition;
-
 use crate::apps::{GetRTACmdArgs2, get_rta_command2};
 use crate::config::{Application, ApplicationSection, Config};
 use crate::domain::{DetectedStack, EnabledWhen, Fix, Operation, Result, Tool};
@@ -41,7 +39,7 @@ impl Fix for Shfmt {
         Ok(vec![ToolCall {
             operation: Operation::Fix,
             stack: Some(stack.stack.stack_type()),
-            name: shfmt.name().to_string(),
+            name: self.to_string(),
             command,
         }])
     }

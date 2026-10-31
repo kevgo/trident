@@ -3,7 +3,6 @@ use crate::config::{Application, ApplicationSection, Config};
 use crate::domain::{DetectedStack, EnabledWhen, Fix, Operation, Result, StackType, Tool};
 use crate::subshell::ToolCall;
 use big_s::S;
-use rta::applications::AppDefinition;
 use std::fmt::Display;
 
 pub struct CucumberSort;
@@ -40,7 +39,7 @@ impl Fix for CucumberSort {
         Ok(vec![ToolCall {
             operation: Operation::Fix,
             stack: Some(stack.stack.stack_type()),
-            name: cucumber_sort.name().to_string(),
+            name: self.to_string(),
             command,
         }])
     }
