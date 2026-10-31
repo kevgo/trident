@@ -29,13 +29,13 @@ Feature: custom fixes
     When executing "trident fix --show=output"
     Then it prints the lines
       """
-      delete empty folders
-      my global fix 1
+      fix all (delete empty folders)
+      fix all (my global fix 1)
       global fix 1 running
       """
     And it prints the lines
       """
-      my global fix 2
+      fix all (my global fix 2)
       global fix 2 running
       """
     And it prints the lines
@@ -62,7 +62,7 @@ Feature: custom fixes
     When executing "trident lint --show=output"
     Then it prints the block
       """
-      lints/fail.sh
+      lint all (lints/fail.sh)
       custom lint failed
       """
     And the exit code is 4
