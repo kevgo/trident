@@ -56,19 +56,19 @@ impl Fix for Taplo {
         let mut args = Vec::with_capacity(files.len() + 1);
         args.push(S("format"));
         args.extend(files.into_strings());
-        let Some(command) = get_rta_command(&GetRTACmdArgs {
+        let command = get_rta_command(&GetRTACmdArgs {
             app: &rta::applications::Taplo {},
             args,
-        })?
-        else {
-            return Ok(vec![]);
-        };
-        Ok(vec![ToolCall {
-            operation: Operation::Fix,
-            stack: Some(stack.stack.stack_type()),
-            name: self.to_string(),
-            command,
-        }])
+        })?;
+        Ok(command
+            .into_iter()
+            .map(|command| ToolCall {
+                operation: Operation::Fix,
+                stack: Some(stack.stack.stack_type()),
+                name: self.to_string(),
+                command,
+            })
+            .collect())
     }
 
     fn unsafe_fix_commands(&self, stack: &DetectedStack, config: &Config) -> Result<Vec<ToolCall>> {
