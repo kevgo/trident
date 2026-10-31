@@ -21,7 +21,7 @@ Feature: pitstop Shell on Windows
     When executing "trident pitstop --show=output"
     Then it prints
       """
-      delete empty folders
+      fix all (delete empty folders)
       fix Shell (shfmt)
       """
     And the exit code is 0
