@@ -214,12 +214,6 @@ pub struct ToolDefinition {
 }
 
 impl ToolDefinition {
-    /// provides the name of the tool, or the command if the tool has no name
-    // TODO: inline this method
-    fn name_or_command(&self) -> &str {
-        self.name.as_deref().unwrap_or(&self.command)
-    }
-
     /// Converts this tool into an executable whose printed name matches built-in tools:
     /// `{operation} {stack} ({name})`.
     #[must_use]
