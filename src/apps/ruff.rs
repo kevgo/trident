@@ -1,4 +1,4 @@
-use crate::apps::{GetRTACmdArgs, GetRTACmdArgs2, get_rta_command, get_rta_command2};
+use crate::apps::{GetRTACmdArgs2, get_rta_command2};
 use crate::config::{Application, ApplicationSection, Config};
 use crate::domain::{DetectedStack, EnabledWhen, Fix, Lint, Operation, Result, Tool};
 use crate::subshell::ToolCall;
@@ -108,10 +108,7 @@ impl Fix for Ruff {
         args.push(S("--unsafe-fixes"));
         args.extend(files.clone().into_strings());
         let ruff = rta::applications::Ruff {};
-        let command = get_rta_command2(&GetRTACmdArgs2 {
-            app: &rta::applications::Ruff {},
-            args,
-        })?;
+        let command = get_rta_command2(&GetRTACmdArgs2 { app: &ruff, args })?;
         if let Some(command) = command {
             executables.push(ToolCall {
                 operation: Operation::FixUnsafe,
@@ -125,10 +122,7 @@ impl Fix for Ruff {
         let mut args = Vec::with_capacity(files.len() + 1);
         args.push(S("format"));
         args.extend(files.into_strings());
-        let command = get_rta_command2(&GetRTACmdArgs2 {
-            app: &rta::applications::Ruff {},
-            args,
-        })?;
+        let command = get_rta_command2(&GetRTACmdArgs2 { app: &ruff, args })?;
         if let Some(command) = command {
             executables.push(ToolCall {
                 operation: Operation::Fix, // TODO: change to Operation::Format

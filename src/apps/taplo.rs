@@ -1,4 +1,4 @@
-use crate::apps::{GetRTACmdArgs, GetRTACmdArgs2, get_rta_command, get_rta_command2};
+use crate::apps::{GetRTACmdArgs2, get_rta_command2};
 use crate::config::{Application, ApplicationSection, Config};
 use crate::domain::{DetectedStack, EnabledWhen, Fix, Lint, Operation, Result, Tool};
 use crate::subshell::ToolCall;
@@ -58,11 +58,7 @@ impl Fix for Taplo {
         args.push(S("format"));
         args.extend(files.into_strings());
         let taplo = rta::applications::Taplo {};
-        let Some(command) = get_rta_command2(&GetRTACmdArgs2 {
-            app: &rta::applications::Taplo {},
-            args,
-        })?
-        else {
+        let Some(command) = get_rta_command2(&GetRTACmdArgs2 { app: &taplo, args })? else {
             return Ok(vec![]);
         };
         Ok(vec![ToolCall {
@@ -84,11 +80,7 @@ impl Fix for Taplo {
         args.push(S("--force"));
         args.extend(files.into_strings());
         let taplo = rta::applications::Taplo {};
-        let Some(command) = get_rta_command2(&GetRTACmdArgs2 {
-            app: &rta::applications::Taplo {},
-            args,
-        })?
-        else {
+        let Some(command) = get_rta_command2(&GetRTACmdArgs2 { app: &taplo, args })? else {
             return Ok(vec![]);
         };
         Ok(vec![ToolCall {

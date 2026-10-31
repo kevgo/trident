@@ -225,12 +225,12 @@ impl ToolDefinition {
     #[must_use]
     pub fn to_call(&self, operation: Operation, stack: Option<StackType>) -> ToolCall {
         let ToolDefinition { name, command } = self;
-        let tool_name = name.as_deref().unwrap_or(&command);
+        let tool_name = name.as_deref().unwrap_or(command);
         ToolCall {
             operation,
-            stack: stack,
+            stack,
             name: tool_name.to_string(),
-            command: conc::shell_command(&command),
+            command: conc::shell_command(command),
         }
     }
 
