@@ -27,9 +27,8 @@ impl Display for Actionlint {
 
 impl Lint for Actionlint {
     fn lint_commands(&self, stack: &DetectedStack, _config: &Config) -> Result<Option<ToolCall>> {
-        let actionlint = rta::applications::ActionLint {};
         let Some(command) = get_rta_command2(&GetRTACmdArgs2 {
-            app: &actionlint,
+            app: &rta::applications::ActionLint {},
             args: vec![],
         })?
         else {
