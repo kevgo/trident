@@ -10,7 +10,7 @@ Feature: pitstop for a codebase without any code
     When executing "trident pitstop --show=output"
     Then it prints
       """
-      delete empty folders
+      fix all (delete empty folders)
       """
     And it prints to STDERR
       """
@@ -23,7 +23,7 @@ Feature: pitstop for a codebase without any code
     When executing "trident pitstop --show=names"
     Then it prints
       """
-      delete empty folders
+      fix all (delete empty folders)
       """
     And it prints nothing to STDERR
     And the exit code is 0

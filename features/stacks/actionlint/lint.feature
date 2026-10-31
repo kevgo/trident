@@ -24,8 +24,8 @@ Feature: lint GitHub Actions workflow files
     When executing "trident lint --show=output"
     Then it prints only these lines in any order
       """
-      lint Git diff markers (git diff HEAD --check)
-      GitHub Actions (actionlint)
+      lint all (git diff HEAD --check)
+      lint YML (Actionlint)
       """
     And it prints the lines to STDERR
       """
