@@ -54,7 +54,7 @@ Feature: lint multiple stacks with unformatted files
       """
     And it prints the lines matching
       """
-      lint Python \(ruff\)
+      lint Python \(Ruff\)
       ruff(.exe)? check main.py
       All checks passed!
       """

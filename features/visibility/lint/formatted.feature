@@ -61,7 +61,7 @@ Feature: lint multiple stacks
       """
     And it prints the lines matching
       """
-      lint Python \(ruff\)
+      lint Python \(Ruff\)
       ruff(.exe)? check main.py
       All checks passed!
       """

@@ -66,13 +66,13 @@ Feature: fix multiple good stacks
       """
     And it prints the lines matching
       """
-      fix Python \(ruff\)
+      fix Python \(Ruff\)
       ruff(.exe)? check --fix main.py
       All checks passed!
       """
     And it prints the lines matching
       """
-      format Python \(ruff\)
+      format Python \(Ruff\)
       ruff(.exe)? format main.py
       1 file left unchanged
       """
@@ -82,7 +82,7 @@ Feature: fix multiple good stacks
     When executing "trident fix --show=names"
     Then it prints only these lines in any order
       """
-      delete empty folders
+      fix all (delete empty folders)
       fix Python (Ruff)
       format Python (Ruff)
       fix CSS (Biome)

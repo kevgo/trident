@@ -104,19 +104,19 @@ Feature: CI doesn't care about uncommitted files that are unformatted
       """
     And it prints the lines matching
       """
-      fix Python \(ruff\)
+      fix Python \(Ruff\)
       ruff(.exe)? check --fix main.py
       All checks passed!
       """
     And it prints the lines matching
       """
-      format Python \(ruff\)
+      format Python \(Ruff\)
       ruff(.exe)? format main.py
       1 file reformatted
       """
     And it prints the lines matching
       """
-      lint Python \(ruff\)
+      lint Python \(Ruff\)
       ruff(.exe)? check main.py
       """
     And it prints the lines matching
@@ -154,7 +154,7 @@ Feature: CI doesn't care about uncommitted files that are unformatted
       """
     And it prints only these lines in any order
       """
-      delete empty folders
+      fix all (delete empty folders)
       fix Python (Ruff)
       format Python (Ruff)
       fix TypeScript (Biome)
