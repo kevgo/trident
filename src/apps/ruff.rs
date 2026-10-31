@@ -1,7 +1,9 @@
-use crate::apps::{GetRTACmdArgs, get_rta_command};
+use crate::apps::{GetRTACmdArgs, GetRTACmdArgs2, get_rta_command, get_rta_command2};
 use crate::config::{Application, ApplicationSection, Config};
 use crate::domain::{DetectedStack, EnabledWhen, Fix, Lint, Operation, Result, Tool};
+use crate::subshell::ToolCall;
 use big_s::S;
+use rta::applications::AppDefinition;
 use std::fmt::Display;
 
 pub struct Ruff;
@@ -24,11 +26,7 @@ impl Display for Ruff {
 }
 
 impl Lint for Ruff {
-    fn lint_commands(
-        &self,
-        stack: &DetectedStack,
-        config: &Config,
-    ) -> Result<Option<conc::Executable>> {
+    fn lint_commands(&self, stack: &DetectedStack, config: &Config) -> Result<Option<ToolCall>> {
         let ignores = config.ignores_for(self, Operation::Lint)?;
         let files = stack.files.remove(&ignores);
         if files.is_empty() {
@@ -37,26 +35,22 @@ impl Lint for Ruff {
         let mut args = Vec::with_capacity(files.len() + 1);
         args.push(S("check"));
         args.extend(files.into_strings());
-        let executable = get_rta_command(&GetRTACmdArgs {
-            name: format!("lint {} (ruff)", stack.stack),
-            app: &rta::applications::Ruff {},
-            args,
-            version: None,
-        })?;
-        let Some(executable) = executable else {
+        let ruff = rta::applications::Ruff {};
+        let Some(command) = get_rta_command2(&GetRTACmdArgs2 { app: &ruff, args })? else {
             return Ok(None);
         };
-        Ok(Some(executable))
+        Ok(Some(ToolCall {
+            operation: Operation::Lint,
+            stack: Some(stack.stack.stack_type()),
+            name: ruff.name().to_string(),
+            command,
+        }))
     }
 }
 
 impl Fix for Ruff {
-    fn fix_commands(
-        &self,
-        stack: &DetectedStack,
-        config: &Config,
-    ) -> Result<Vec<conc::Executable>> {
-        let mut executables = Vec::with_capacity(2);
+    fn fix_commands(&self, stack: &DetectedStack, config: &Config) -> Result<Vec<ToolCall>> {
+        let mut commands = Vec::with_capacity(2);
 
         // NOTE: Ruff has separate commands for formatting and linting
         // until https://github.com/astral-sh/ruff/issues/8232 ships.
@@ -71,38 +65,35 @@ impl Fix for Ruff {
         args.push(S("check"));
         args.push(S("--fix"));
         args.extend(files.clone().into_strings());
-        let executable = get_rta_command(&GetRTACmdArgs {
-            name: format!("fix {} (ruff)", stack.stack),
-            app: &rta::applications::Ruff {},
-            args,
-            version: None,
-        })?;
-        if let Some(executable) = executable {
-            executables.push(executable);
+        let ruff = rta::applications::Ruff {};
+        let command = get_rta_command2(&GetRTACmdArgs2 { app: &ruff, args })?;
+        if let Some(command) = command {
+            commands.push(ToolCall {
+                operation: Operation::Fix,
+                stack: Some(stack.stack.stack_type()),
+                name: ruff.name().to_string(),
+                command,
+            });
         }
 
         // run "ruff format"
         let mut args = Vec::with_capacity(files.len() + 1);
         args.push(S("format"));
         args.extend(files.into_strings());
-        let executable = get_rta_command(&GetRTACmdArgs {
-            name: format!("format {} (ruff)", stack.stack),
-            app: &rta::applications::Ruff {},
-            args,
-            version: None,
-        })?;
-        if let Some(executable) = executable {
-            executables.push(executable);
+        let command = get_rta_command2(&GetRTACmdArgs2 { app: &ruff, args })?;
+        if let Some(command) = command {
+            commands.push(ToolCall {
+                operation: Operation::Fix, // TODO: change to Operation::Format
+                stack: Some(stack.stack.stack_type()),
+                name: ruff.name().to_string(),
+                command,
+            });
         }
 
-        Ok(executables)
+        Ok(commands)
     }
 
-    fn unsafe_fix_commands(
-        &self,
-        stack: &DetectedStack,
-        config: &Config,
-    ) -> Result<Vec<conc::Executable>> {
+    fn unsafe_fix_commands(&self, stack: &DetectedStack, config: &Config) -> Result<Vec<ToolCall>> {
         let mut executables = Vec::with_capacity(2);
 
         // run "ruff format --check"
@@ -116,28 +107,35 @@ impl Fix for Ruff {
         args.push(S("--fix"));
         args.push(S("--unsafe-fixes"));
         args.extend(files.clone().into_strings());
-        let executable = get_rta_command(&GetRTACmdArgs {
-            name: format!("unsafe-fix {} (ruff)", stack.stack),
+        let ruff = rta::applications::Ruff {};
+        let command = get_rta_command2(&GetRTACmdArgs2 {
             app: &rta::applications::Ruff {},
             args,
-            version: None,
         })?;
-        if let Some(executable) = executable {
-            executables.push(executable);
+        if let Some(command) = command {
+            executables.push(ToolCall {
+                operation: Operation::FixUnsafe,
+                stack: Some(stack.stack.stack_type()),
+                name: ruff.name().to_string(),
+                command,
+            });
         }
 
         // run "ruff format"
         let mut args = Vec::with_capacity(files.len() + 1);
         args.push(S("format"));
         args.extend(files.into_strings());
-        let executable = get_rta_command(&GetRTACmdArgs {
-            name: format!("format {} (ruff)", stack.stack),
+        let command = get_rta_command2(&GetRTACmdArgs2 {
             app: &rta::applications::Ruff {},
             args,
-            version: None,
         })?;
-        if let Some(executable) = executable {
-            executables.push(executable);
+        if let Some(command) = command {
+            executables.push(ToolCall {
+                operation: Operation::Fix, // TODO: change to Operation::Format
+                stack: Some(stack.stack.stack_type()),
+                name: ruff.name().to_string(),
+                command,
+            });
         }
 
         Ok(executables)

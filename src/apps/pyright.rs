@@ -36,7 +36,7 @@ impl Lint for Pyright {
         }
         let pyright = rta::applications::Pyright {};
         let Some(command) = get_rta_command2(&GetRTACmdArgs2 {
-            app: &rta::applications::Pyright {},
+            app: &pyright,
             args: files.into_strings(),
         })?
         else {
