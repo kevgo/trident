@@ -1,6 +1,6 @@
 use crate::apps::{GetRTACmdArgs, get_rta_command};
 use crate::config::{Application, ApplicationSection, Config};
-use crate::domain::{DetectedStack, EnabledWhen, Fix, Lint, Operation, Result, Tool};
+use crate::domain::{DetectedStack, EnabledWhen, Lint, Operation, Result, Tool};
 use std::fmt::Display;
 
 pub struct ShellCheck;
@@ -39,23 +39,5 @@ impl Lint for ShellCheck {
             version: None,
         })?;
         Ok(executable)
-    }
-}
-
-impl Fix for ShellCheck {
-    fn fix_commands(
-        &self,
-        _stack: &DetectedStack,
-        _config: &Config,
-    ) -> Result<Vec<conc::Executable>> {
-        Ok(vec![])
-    }
-
-    fn unsafe_fix_commands(
-        &self,
-        _stack: &DetectedStack,
-        _config: &Config,
-    ) -> Result<Vec<conc::Executable>> {
-        Ok(vec![])
     }
 }
