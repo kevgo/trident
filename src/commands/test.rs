@@ -1,6 +1,7 @@
 use crate::cli::input::{RunArgsWithTest, ShowExt};
 use crate::config::{Config, DefaultTests, to_sequences};
-use crate::domain::Result;
+use crate::domain::{Operation, Result};
+use crate::subshell;
 use std::process::ExitCode;
 
 pub fn test(args: &RunArgsWithTest) -> Result<ExitCode> {
@@ -17,8 +18,8 @@ pub fn test(args: &RunArgsWithTest) -> Result<ExitCode> {
     if tests.is_empty() {
         return Ok(ExitCode::SUCCESS);
     }
-    let test_sequences = to_sequences(tests);
-    let exit_code = conc::run(conc::RunArgs {
+    let test_sequences = to_sequences(tests, Operation::Test, None);
+    let exit_code = subshell::run(subshell::RunArgs {
         sequences: test_sequences,
         error_on_output: false,
         sequential: args.run.sequential,
