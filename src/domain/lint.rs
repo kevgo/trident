@@ -10,4 +10,5 @@ pub trait Lint: Tool {
     /// not find all the files to lint by itself.
     /// This is for performance reasons. Finding files requires expensive OS calls.
     fn lint_commands(&self, stack: &DetectedStack, config: &Config) -> Result<Option<ToolCall>>;
+    // TODO: instead of returning a `ToolCall`, return a new struct that contains only the name and command
 }
