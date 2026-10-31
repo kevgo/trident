@@ -153,7 +153,7 @@ impl Config {
     pub fn select_tests(&self, requested: &[String]) -> Result<Vec<ToolDefinition>> {
         let all_tests = self.tests.as_deref().unwrap_or_default();
         if requested.is_empty() {
-            return Ok(all_tests.iter().map(Clone::clone).collect());
+            return Ok(all_tests.to_vec());
         }
         let mut result = Vec::with_capacity(requested.len());
         let mut unknown = Vec::new();
