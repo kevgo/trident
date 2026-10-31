@@ -29,19 +29,19 @@ impl Fix for Sqlfmt {
         if files.is_empty() {
             return Ok(vec![]);
         }
-        let Some(command) = get_rta_command(&GetRTACmdArgs {
+        let command = get_rta_command(&GetRTACmdArgs {
             app: &rta::applications::Sqlfmt {},
             args: files.into_strings(),
-        })?
-        else {
-            return Ok(vec![]);
-        };
-        Ok(vec![ToolCall {
-            operation: Operation::Fix,
-            stack: Some(stack.stack.stack_type()),
-            name: self.to_string(),
-            command,
-        }])
+        })?;
+        Ok(command
+            .into_iter()
+            .map(|command| ToolCall {
+                operation: Operation::Fix,
+                stack: Some(stack.stack.stack_type()),
+                name: self.to_string(),
+                command,
+            })
+            .collect())
     }
 
     fn unsafe_fix_commands(

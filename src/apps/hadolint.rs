@@ -29,14 +29,11 @@ impl Lint for Hadolint {
         if files.is_empty() {
             return Ok(None);
         }
-        let Some(command) = get_rta_command(&GetRTACmdArgs {
+        let command = get_rta_command(&GetRTACmdArgs {
             app: &rta::applications::Hadolint {},
             args: files.into_strings(),
-        })?
-        else {
-            return Ok(None);
-        };
-        Ok(Some(ToolCall {
+        })?;
+        Ok(command.map(|command| ToolCall {
             operation: Operation::Lint,
             stack: Some(stack.stack.stack_type()),
             name: self.to_string(),
