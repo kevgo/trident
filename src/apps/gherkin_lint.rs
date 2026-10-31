@@ -1,6 +1,9 @@
-use crate::apps::{GetRTACmdArgs, get_rta_command};
+use rta::applications::AppDefinition;
+
+use crate::apps::{GetRTACmdArgs, GetRTACmdArgs2, get_rta_command, get_rta_command2};
 use crate::config::{Application, ApplicationSection, Config};
 use crate::domain::{DetectedStack, EnabledWhen, Lint, Operation, Result, Tool};
+use crate::subshell::ToolCall;
 use std::fmt::Display;
 
 pub struct GherkinLint;
@@ -26,22 +29,25 @@ impl Display for GherkinLint {
 }
 
 impl Lint for GherkinLint {
-    fn lint_commands(
-        &self,
-        stack: &DetectedStack,
-        config: &Config,
-    ) -> Result<Option<conc::Executable>> {
+    fn lint_commands(&self, stack: &DetectedStack, config: &Config) -> Result<Option<ToolCall>> {
         let ignores = config.ignores_for(self, Operation::Lint)?;
         let files = stack.files.remove(&ignores);
         if files.is_empty() {
             return Ok(None);
         }
-        let executable = get_rta_command(&GetRTACmdArgs {
-            name: format!("lint {} ({self})", stack.stack),
+        let gherkin_lint = rta::applications::GherkinLint {};
+        let Some(command) = get_rta_command2(&GetRTACmdArgs2 {
             app: &rta::applications::GherkinLint {},
             args: files.into_strings(),
-            version: None,
-        })?;
-        Ok(executable)
+        })?
+        else {
+            return Ok(None);
+        };
+        Ok(Some(ToolCall {
+            operation: Operation::Lint,
+            stack: Some(stack.stack.stack_type()),
+            name: gherkin_lint.name().to_string(),
+            command,
+        }))
     }
 }
