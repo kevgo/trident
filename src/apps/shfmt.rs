@@ -1,6 +1,9 @@
-use crate::apps::{GetRTACmdArgs, get_rta_command};
+use rta::applications::AppDefinition;
+
+use crate::apps::{GetRTACmdArgs, GetRTACmdArgs2, get_rta_command, get_rta_command2};
 use crate::config::{Application, ApplicationSection, Config};
 use crate::domain::{DetectedStack, EnabledWhen, Fix, Operation, Result, Tool};
+use crate::subshell::ToolCall;
 use std::fmt::Display;
 
 pub struct Shfmt;
@@ -22,11 +25,7 @@ impl Display for Shfmt {
 }
 
 impl Fix for Shfmt {
-    fn fix_commands(
-        &self,
-        stack: &DetectedStack,
-        config: &Config,
-    ) -> Result<Vec<conc::Executable>> {
+    fn fix_commands(&self, stack: &DetectedStack, config: &Config) -> Result<Vec<ToolCall>> {
         let ignores = config.ignores_for(self, Operation::Fix)?;
         let files = stack.files.remove(&ignores);
         if files.is_empty() {
@@ -35,20 +34,23 @@ impl Fix for Shfmt {
         let mut args = Vec::with_capacity(files.len() + 1);
         args.push("--write".to_string());
         args.extend(files.into_strings());
-        let executable = get_rta_command(&GetRTACmdArgs {
-            name: format!("fix {} ({self})", stack.stack),
-            app: &rta::applications::Shfmt {},
-            args,
-            version: None,
-        })?;
-        Ok(executable.into_iter().collect())
+        let shfmt = rta::applications::Shfmt {};
+        let Some(command) = get_rta_command2(&GetRTACmdArgs2 { app: &shfmt, args })? else {
+            return Ok(vec![]);
+        };
+        Ok(vec![ToolCall {
+            operation: Operation::Fix,
+            stack: Some(stack.stack.stack_type()),
+            name: shfmt.name().to_string(),
+            command,
+        }])
     }
 
     fn unsafe_fix_commands(
         &self,
         _stack: &DetectedStack,
         _config: &Config,
-    ) -> Result<Vec<conc::Executable>> {
+    ) -> Result<Vec<ToolCall>> {
         Ok(vec![])
     }
 }
