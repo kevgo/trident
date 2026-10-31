@@ -34,8 +34,11 @@ impl Lint for Ruff {
         let mut args = Vec::with_capacity(files.len() + 1);
         args.push(S("check"));
         args.extend(files.into_strings());
-        let ruff = rta::applications::Ruff {};
-        let Some(command) = get_rta_command2(&GetRTACmdArgs2 { app: &ruff, args })? else {
+        let Some(command) = get_rta_command2(&GetRTACmdArgs2 {
+            app: &rta::applications::Ruff {},
+            args,
+        })?
+        else {
             return Ok(None);
         };
         Ok(Some(ToolCall {

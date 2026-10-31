@@ -29,9 +29,8 @@ impl Fix for Sqlfmt {
         if files.is_empty() {
             return Ok(vec![]);
         }
-        let sqlfmt = rta::applications::Sqlfmt {};
         let Some(command) = get_rta_command2(&GetRTACmdArgs2 {
-            app: &sqlfmt,
+            app: &rta::applications::Sqlfmt {},
             args: files.into_strings(),
         })?
         else {

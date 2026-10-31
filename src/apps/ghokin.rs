@@ -41,8 +41,11 @@ impl Fix for Ghokin {
             };
             args.push(filename);
         }
-        let ghokin = rta::applications::Ghokin {};
-        let Some(command) = get_rta_command2(&GetRTACmdArgs2 { app: &ghokin, args })? else {
+        let Some(command) = get_rta_command2(&GetRTACmdArgs2 {
+            app: &rta::applications::Ghokin {},
+            args,
+        })?
+        else {
             return Ok(vec![]);
         };
         Ok(vec![ToolCall {

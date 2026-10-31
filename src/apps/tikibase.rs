@@ -30,9 +30,8 @@ impl Lint for Tikibase {
     fn lint_commands(&self, stack: &DetectedStack, _config: &Config) -> Result<Option<ToolCall>> {
         let mut args = Vec::with_capacity(stack.files.len() + 1);
         args.push(S("check"));
-        let tikibase = rta::applications::Tikibase {};
         let Some(command) = get_rta_command2(&GetRTACmdArgs2 {
-            app: &tikibase,
+            app: &rta::applications::Tikibase {},
             args,
         })?
         else {
@@ -51,9 +50,8 @@ impl Fix for Tikibase {
     fn fix_commands(&self, stack: &DetectedStack, _config: &Config) -> Result<Vec<ToolCall>> {
         let mut args = Vec::with_capacity(stack.files.len() + 1);
         args.push(S("fix"));
-        let tikibase = rta::applications::Tikibase {};
         let Some(command) = get_rta_command2(&GetRTACmdArgs2 {
-            app: &tikibase,
+            app: &rta::applications::Tikibase {},
             args,
         })?
         else {

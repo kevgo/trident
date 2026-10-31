@@ -29,9 +29,8 @@ impl Lint for ShellCheck {
         if files.is_empty() {
             return Ok(None);
         }
-        let shellcheck = rta::applications::ShellCheck {};
         let Some(command) = get_rta_command2(&GetRTACmdArgs2 {
-            app: &shellcheck,
+            app: &rta::applications::ShellCheck {},
             args: files.into_strings(),
         })?
         else {

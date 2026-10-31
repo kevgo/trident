@@ -29,9 +29,8 @@ impl Lint for Hadolint {
         if files.is_empty() {
             return Ok(None);
         }
-        let hadolint = rta::applications::Hadolint {};
         let Some(command) = get_rta_command2(&GetRTACmdArgs2 {
-            app: &hadolint,
+            app: &rta::applications::Hadolint {},
             args: files.into_strings(),
         })?
         else {

@@ -35,8 +35,11 @@ impl Lint for Biome {
         let mut args = Vec::with_capacity(files.len() + 1);
         args.push(S("lint"));
         args.extend(files.into_strings());
-        let biome = rta::applications::Biome {};
-        let Some(command) = get_rta_command2(&GetRTACmdArgs2 { app: &biome, args })? else {
+        let Some(command) = get_rta_command2(&GetRTACmdArgs2 {
+            app: &rta::applications::Biome {},
+            args,
+        })?
+        else {
             return Ok(None);
         };
         Ok(Some(ToolCall {
@@ -59,8 +62,11 @@ impl Fix for Biome {
         args.push(S("format"));
         args.push(S("--write"));
         args.extend(files.into_strings());
-        let biome = rta::applications::Biome {};
-        let Some(command) = get_rta_command2(&GetRTACmdArgs2 { app: &biome, args })? else {
+        let Some(command) = get_rta_command2(&GetRTACmdArgs2 {
+            app: &rta::applications::Biome {},
+            args,
+        })?
+        else {
             return Ok(vec![]);
         };
         Ok(vec![ToolCall {
@@ -82,8 +88,11 @@ impl Fix for Biome {
         args.push(S("--write"));
         args.push(S("--unsafe"));
         args.extend(files.into_strings());
-        let biome = rta::applications::Biome {};
-        let Some(command) = get_rta_command2(&GetRTACmdArgs2 { app: &biome, args })? else {
+        let Some(command) = get_rta_command2(&GetRTACmdArgs2 {
+            app: &rta::applications::Biome {},
+            args,
+        })?
+        else {
             return Ok(vec![]);
         };
         Ok(vec![ToolCall {

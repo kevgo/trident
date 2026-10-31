@@ -34,9 +34,8 @@ impl Fix for Gofumpt {
         args.push(S("-l"));
         args.push(S("-w"));
         args.extend(files.into_strings());
-        let gofumpt = rta::applications::Gofumpt {};
         let Some(command) = get_rta_command2(&GetRTACmdArgs2 {
-            app: &gofumpt,
+            app: &rta::applications::Gofumpt {},
             args,
         })?
         else {

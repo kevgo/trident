@@ -28,9 +28,8 @@ impl Display for CucumberSort {
 
 impl Fix for CucumberSort {
     fn fix_commands(&self, stack: &DetectedStack, _config: &Config) -> Result<Vec<ToolCall>> {
-        let cucumber_sort = rta::applications::CucumberSort {};
         let Some(command) = get_rta_command2(&GetRTACmdArgs2 {
-            app: &cucumber_sort,
+            app: &rta::applications::CucumberSort {},
             args: vec![S("format")],
         })?
         else {

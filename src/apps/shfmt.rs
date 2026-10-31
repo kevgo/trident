@@ -32,8 +32,11 @@ impl Fix for Shfmt {
         let mut args = Vec::with_capacity(files.len() + 1);
         args.push("--write".to_string());
         args.extend(files.into_strings());
-        let shfmt = rta::applications::Shfmt {};
-        let Some(command) = get_rta_command2(&GetRTACmdArgs2 { app: &shfmt, args })? else {
+        let Some(command) = get_rta_command2(&GetRTACmdArgs2 {
+            app: &rta::applications::Shfmt {},
+            args,
+        })?
+        else {
             return Ok(vec![]);
         };
         Ok(vec![ToolCall {

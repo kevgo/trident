@@ -29,9 +29,8 @@ impl Fix for Yamlfmt {
         if files.is_empty() {
             return Ok(Vec::new());
         }
-        let yamlfmt = rta::applications::Yamlfmt {};
         let Some(command) = get_rta_command2(&GetRTACmdArgs2 {
-            app: &yamlfmt,
+            app: &rta::applications::Yamlfmt {},
             args: files.into_strings(),
         })?
         else {

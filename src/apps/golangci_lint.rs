@@ -43,9 +43,8 @@ impl Display for GolangciLint {
 
 impl Lint for GolangciLint {
     fn lint_commands(&self, stack: &DetectedStack, _config: &Config) -> Result<Option<ToolCall>> {
-        let golangci_lint = rta::applications::GolangCiLint {};
         let Some(command) = get_rta_command2(&GetRTACmdArgs2 {
-            app: &golangci_lint,
+            app: &rta::applications::GolangCiLint {},
             args: vec![S("run"), S("--allow-parallel-runners")],
         })?
         else {

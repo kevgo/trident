@@ -65,8 +65,11 @@ impl Fix for Rumdl {
         let mut args = Vec::with_capacity(files.len() + 1);
         args.push(S("fmt"));
         args.extend(files.into_strings());
-        let rumdl = rta::applications::Rumdl {};
-        let Some(command) = get_rta_command2(&GetRTACmdArgs2 { app: &rumdl, args })? else {
+        let Some(command) = get_rta_command2(&GetRTACmdArgs2 {
+            app: &rta::applications::Rumdl {},
+            args,
+        })?
+        else {
             return Ok(vec![]);
         };
         Ok(vec![ToolCall {
