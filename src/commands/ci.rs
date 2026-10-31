@@ -2,7 +2,7 @@ use super::discover_stacks;
 use super::pitstop::run_tasks;
 use crate::cli::input::{RunArgsWithTestAndScope, Scope};
 use crate::config::{Config, DefaultTests, to_sequences};
-use crate::domain::{Result, UserError};
+use crate::domain::{Operation, Result, UserError};
 use crate::git::Repo;
 use std::process::ExitCode;
 
@@ -20,7 +20,7 @@ pub fn ci(args: RunArgsWithTestAndScope) -> Result<ExitCode> {
         |commands| commands.ci.as_ref(),
         DefaultTests::All,
     )?;
-    let test_sequences = to_sequences(tests);
+    let test_sequences = to_sequences(tests, Operation::Test, None);
     let exit_code = run_tasks(&args_show, &config, &stacks, repo.as_ref(), test_sequences)?;
     if exit_code != ExitCode::SUCCESS {
         return Ok(exit_code);

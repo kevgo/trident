@@ -32,7 +32,7 @@ pub(crate) fn run_tasks(
     config: &Config,
     stacks: &DetectedStacks,
     repo: Option<&Repo>,
-    tests: Vec<NonEmpty<conc::Executable>>,
+    tests: Vec<NonEmpty<ToolCall>>,
 ) -> Result<ExitCode> {
     let show = args.show.unwrap_or(conc::Show::Names);
     let error_on_output = false;

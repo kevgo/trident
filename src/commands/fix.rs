@@ -85,7 +85,7 @@ pub fn determine_fixes(config: &Config, detected_stacks: &DetectedStacks) -> Res
             stack_executables.extend(
                 additions
                     .iter()
-                    .map(|tool_def| tool_def.to_call(Operation::Fix, stack_type)),
+                    .map(|tool_def| tool_def.to_call(Operation::Fix, Some(stack_type))),
             );
         }
         // schedule either the override fixes or the default fixes
@@ -93,7 +93,7 @@ pub fn determine_fixes(config: &Config, detected_stacks: &DetectedStacks) -> Res
             stack_executables.extend(
                 overrides
                     .iter()
-                    .map(|tool_def| tool_def.to_call(Operation::Fix, stack_type)),
+                    .map(|tool_def| tool_def.to_call(Operation::Fix, Some(stack_type))),
             );
         } else {
             for default_fix in detected_stack.stack.fixes() {
@@ -109,7 +109,7 @@ pub fn determine_fixes(config: &Config, detected_stacks: &DetectedStacks) -> Res
             stack_executables.extend(
                 additions
                     .iter()
-                    .map(|tool_def| tool_def.to_call(Operation::Fix, stack_type)),
+                    .map(|tool_def| tool_def.to_call(Operation::Fix, Some(stack_type))),
             );
         }
     }

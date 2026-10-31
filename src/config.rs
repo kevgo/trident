@@ -215,6 +215,7 @@ pub struct ToolDefinition {
 
 impl ToolDefinition {
     /// provides the name of the tool, or the command if the tool has no name
+    // TODO: inline this method
     fn name_or_command(&self) -> &str {
         self.name.as_deref().unwrap_or(&self.command)
     }
@@ -222,23 +223,20 @@ impl ToolDefinition {
     /// Converts this tool into an executable whose printed name matches built-in tools:
     /// `{operation} {stack} ({name})`.
     #[must_use]
-    pub fn to_call(&self, operation: Operation, stack: StackType) -> ToolCall {
+    pub fn to_call(&self, operation: Operation, stack: Option<StackType>) -> ToolCall {
         let ToolDefinition { name, command } = self;
         let tool_name = name.as_deref().unwrap_or(&command);
         ToolCall {
             operation,
-            stack: Some(stack),
+            stack: stack,
             name: tool_name.to_string(),
             command: conc::shell_command(&command),
         }
     }
 
     #[must_use]
-    pub fn to_sequence(self) -> NonEmpty<conc::Executable> {
-        NonEmpty::new(conc::Executable {
-            name: self.name_or_command().to_string(),
-            command: conc::shell_command(&self.command),
-        })
+    pub fn to_sequence(self, operation: Operation, stack: Option<StackType>) -> NonEmpty<ToolCall> {
+        NonEmpty::new(self.to_call(operation, stack))
     }
 }
 
@@ -310,8 +308,15 @@ pub struct CommandConfig {
 }
 
 /// provides the configured tests with the given names as parallel sequences
-pub(crate) fn to_sequences(tools: Vec<ToolDefinition>) -> Vec<NonEmpty<conc::Executable>> {
-    tools.into_iter().map(ToolDefinition::to_sequence).collect()
+pub(crate) fn to_sequences(
+    tools: Vec<ToolDefinition>,
+    operation: Operation,
+    stack: Option<StackType>,
+) -> Vec<NonEmpty<ToolCall>> {
+    tools
+        .into_iter()
+        .map(|tool_def| tool_def.to_sequence(operation, stack))
+        .collect()
 }
 
 #[derive(Clone, Debug, Default, Deserialize, JsonSchema, PartialEq)]
@@ -425,6 +430,7 @@ impl<T> Operations<T> {
             Operation::Lint => self.lint.as_ref(),
             Operation::Fix => self.fix.as_ref(),
             Operation::FixUnsafe => self.fix_unsafe.as_ref(),
+            Operation::Test => unimplemented!(), // TODO: implement this
         }
     }
 }
