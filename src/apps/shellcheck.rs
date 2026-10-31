@@ -1,8 +1,6 @@
 use crate::apps::{GetRTACmd2Args, get_rta_command2};
 use crate::config::{Application, ApplicationSection, Config};
-use crate::domain::{
-    DetectedStack, EnabledWhen, Fix, Lint, LintDefinition, Operation, Result, Tool,
-};
+use crate::domain::{DetectedStack, EnabledWhen, Lint, LintDefinition, Operation, Result, Tool};
 use rta::applications::AppDefinition;
 use std::fmt::Display;
 
@@ -45,23 +43,5 @@ impl Lint for ShellCheck {
             command,
             stack: stack.stack.stack_type(),
         }))
-    }
-}
-
-impl Fix for ShellCheck {
-    fn fix_commands(
-        &self,
-        _stack: &DetectedStack,
-        _config: &Config,
-    ) -> Result<Vec<conc::Executable>> {
-        Ok(vec![])
-    }
-
-    fn unsafe_fix_commands(
-        &self,
-        _stack: &DetectedStack,
-        _config: &Config,
-    ) -> Result<Vec<conc::Executable>> {
-        Ok(vec![])
     }
 }
