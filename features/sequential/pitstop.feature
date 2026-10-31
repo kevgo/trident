@@ -1,6 +1,5 @@
 Feature: run a pitstop sequentially
 
-  @this
   Scenario: custom fixes, lints, and tests
     Given a file "trident.json" with content
       """
