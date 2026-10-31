@@ -8,6 +8,7 @@ Feature: "trident postedit" lints only uncommitted files
       rumdl 0.2.14
       """
 
+  @this
   Scenario: no uncommitted files
     Given a committed file "committed.md" with content
       """
