@@ -2,28 +2,12 @@ use crate::domain::{Operation, StackType};
 use std::fmt::Debug;
 use std::process::Command;
 
+#[derive(Debug)]
 pub struct ToolCall {
     pub operation: Operation,
     pub stack: Option<StackType>,
     pub name: String,
     pub command: Command,
-}
-
-impl Debug for ToolCall {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let ToolCall {
-            operation,
-            stack,
-            name,
-            command,
-        } = self;
-        f.debug_struct("ToolCall")
-            .field("operation", &operation)
-            .field("stack", &stack)
-            .field("name", &name)
-            .field("command", &command)
-            .finish()
-    }
 }
 
 impl From<ToolCall> for conc::Executable {
