@@ -20,10 +20,9 @@ pub mod taplo;
 pub mod tikibase;
 pub mod yamlfmt;
 
-use std::process::Command;
-
 use crate::domain::{Result, UserError};
 use rta::applications::AppDefinition;
+use std::process::Command;
 
 /// Provides the RTA command to run the given RTA App.
 /// Installs the app if needed.
