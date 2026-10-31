@@ -27,14 +27,11 @@ impl Display for Actionlint {
 
 impl Lint for Actionlint {
     fn lint_commands(&self, stack: &DetectedStack, _config: &Config) -> Result<Option<ToolCall>> {
-        let Some(command) = get_rta_command(&GetRTACmdArgs {
+        let command = get_rta_command(&GetRTACmdArgs {
             app: &rta::applications::ActionLint {},
             args: vec![],
-        })?
-        else {
-            return Ok(None);
-        };
-        Ok(Some(ToolCall {
+        })?;
+        Ok(command.map(|command| ToolCall {
             operation: Operation::Lint,
             stack: Some(stack.stack.stack_type()),
             name: self.to_string(),

@@ -62,19 +62,16 @@ impl Fix for Biome {
         args.push(S("format"));
         args.push(S("--write"));
         args.extend(files.into_strings());
-        let Some(command) = get_rta_command(&GetRTACmdArgs {
+        let command = get_rta_command(&GetRTACmdArgs {
             app: &rta::applications::Biome {},
             args,
         })?
-        else {
-            return Ok(vec![]);
-        };
-        Ok(vec![ToolCall {
+        Ok(command.map(|command| ToolCall {
             operation: Operation::Fix,
             stack: Some(stack.stack.stack_type()),
             name: self.to_string(),
             command,
-        }])
+        }))
     }
 
     fn unsafe_fix_commands(&self, stack: &DetectedStack, config: &Config) -> Result<Vec<ToolCall>> {
