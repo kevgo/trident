@@ -29,7 +29,7 @@
       "description": "define the functional tests",
       "type": ["array", "null"],
       "items": {
-        "$ref": "#/$defs/TestDefinition"
+        "$ref": "#/$defs/ToolDefinition"
       }
     },
     "stacks": {
@@ -111,22 +111,6 @@
   "additionalProperties": false,
   "$defs": {
     "ToolDefinition": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "description": "display name for the fix",
-          "type": ["string", "null"]
-        },
-        "command": {
-          "description": "the command that implements the fix",
-          "type": "string"
-        }
-      },
-      "additionalProperties": false,
-      "required": ["command"]
-    },
-    "TestDefinition": {
-      "description": "definition of a test\n\nTests are defined by name (\"unit\", \"cuke\"),\nbut the resulting tool definition will have a name like \"test (unit)\" or \"test (cuke)\".",
       "type": "object",
       "properties": {
         "name": {

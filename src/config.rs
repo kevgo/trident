@@ -45,7 +45,7 @@ pub struct Config {
     pub global_lints: Option<Vec<ToolDefinition>>,
 
     /// define the functional tests
-    pub tests: Option<Vec<TestDefinition>>,
+    pub tests: Option<Vec<ToolDefinition>>,
 
     // stack-specific configuration
     #[schemars(with = "Option<std::collections::BTreeMap<StackType, StackConfig>>")]
@@ -153,7 +153,7 @@ impl Config {
     pub fn select_tests(&self, requested: &[String]) -> Result<Vec<ToolDefinition>> {
         let all_tests = self.tests.as_deref().unwrap_or_default();
         if requested.is_empty() {
-            return Ok(all_tests.iter().map(Into::into).collect());
+            return Ok(all_tests.iter().map(std::clone::Clone::clone).collect());
         }
         let mut result = Vec::with_capacity(requested.len());
         let mut unknown = Vec::new();
@@ -172,7 +172,7 @@ impl Config {
                     .collect(),
             });
         }
-        Ok(result.into_iter().map(Into::into).collect())
+        Ok(result.into_iter().cloned().collect())
     }
 
     /// determines the tests to run using the given --test CLI flag,
@@ -214,6 +214,11 @@ pub struct ToolDefinition {
 }
 
 impl ToolDefinition {
+    /// provides the name of the tool, or the command if the tool has no name
+    fn name_or_command(&self) -> &str {
+        self.name.as_deref().unwrap_or(&self.command)
+    }
+
     /// Converts this tool into an executable whose printed name matches built-in tools:
     /// `{operation} {stack} ({name})`.
     #[must_use]
@@ -231,39 +236,6 @@ impl ToolDefinition {
     #[must_use]
     pub fn to_sequence(self, operation: Operation, stack: Option<StackType>) -> NonEmpty<ToolCall> {
         NonEmpty::new(self.to_call(operation, stack))
-    }
-}
-
-impl From<&TestDefinition> for ToolDefinition {
-    fn from(test: &TestDefinition) -> Self {
-        ToolDefinition {
-            name: Some(format!(
-                "test ({})",
-                test.name.as_ref().unwrap_or(&test.command)
-            )),
-            command: test.command.clone(),
-        }
-    }
-}
-
-/// definition of a test
-///
-/// Tests are defined by name ("unit", "cuke"),
-/// but the resulting tool definition will have a name like "test (unit)" or "test (cuke)".
-#[derive(Clone, Debug, Default, Deserialize, JsonSchema, PartialEq)]
-#[serde(deny_unknown_fields)]
-pub struct TestDefinition {
-    /// display name for the fix
-    pub name: Option<String>,
-
-    /// the command that implements the fix
-    pub command: String,
-}
-
-impl TestDefinition {
-    /// provides the name of the tool, or the command if the tool has no name
-    fn name_or_command(&self) -> &str {
-        self.name.as_deref().unwrap_or(&self.command)
     }
 }
 
@@ -552,7 +524,7 @@ mod tests {
     mod parse {
         use crate::config::{
             CommandConfig, CommandsSection, Config, StackConfig, StackFixes, StackLints,
-            TestDefinition, ToolDefinition,
+            ToolDefinition,
         };
         use crate::domain::{StackType, UserError};
         use ahash::AHashMap;
@@ -961,11 +933,11 @@ mod tests {
                 applications: None,
                 stacks: None,
                 tests: Some(vec![
-                    TestDefinition {
+                    ToolDefinition {
                         name: None,
                         command: S("make unit"),
                     },
-                    TestDefinition {
+                    ToolDefinition {
                         name: Some(S("E2E tests")),
                         command: S("make cuke"),
                     },
@@ -1605,7 +1577,7 @@ mod tests {
     }
 
     mod select_tests {
-        use crate::config::{Config, TestDefinition, ToolDefinition};
+        use crate::config::{Config, ToolDefinition};
         use crate::domain::UserError;
         use big_s::S;
 
@@ -1613,11 +1585,11 @@ mod tests {
         fn no_names_given() {
             let config = Config {
                 tests: Some(vec![
-                    TestDefinition {
+                    ToolDefinition {
                         name: Some(S("unit")),
                         command: S("echo unit"),
                     },
-                    TestDefinition {
+                    ToolDefinition {
                         name: Some(S("cuke")),
                         command: S("echo cuke"),
                     },
@@ -1627,11 +1599,11 @@ mod tests {
             let have = config.select_tests(&[]).unwrap();
             let want = vec![
                 ToolDefinition {
-                    name: Some(S("test (unit)")),
+                    name: Some(S("unit")),
                     command: S("echo unit"),
                 },
                 ToolDefinition {
-                    name: Some(S("test (cuke)")),
+                    name: Some(S("cuke")),
                     command: S("echo cuke"),
                 },
             ];
@@ -1642,15 +1614,15 @@ mod tests {
         fn names_given() {
             let config = Config {
                 tests: Some(vec![
-                    TestDefinition {
+                    ToolDefinition {
                         name: Some(S("unit")),
                         command: S("echo unit"),
                     },
-                    TestDefinition {
+                    ToolDefinition {
                         name: Some(S("cuke")),
                         command: S("echo cuke"),
                     },
-                    TestDefinition {
+                    ToolDefinition {
                         name: Some(S("slow")),
                         command: S("echo slow"),
                     },
@@ -1660,11 +1632,11 @@ mod tests {
             let have = config.select_tests(&[S("cuke"), S("unit")]).unwrap();
             let want = vec![
                 ToolDefinition {
-                    name: Some(S("test (cuke)")),
+                    name: Some(S("cuke")),
                     command: S("echo cuke"),
                 },
                 ToolDefinition {
-                    name: Some(S("test (unit)")),
+                    name: Some(S("unit")),
                     command: S("echo unit"),
                 },
             ];
@@ -1674,7 +1646,7 @@ mod tests {
         #[test]
         fn duplicate_names_given() {
             let config = Config {
-                tests: Some(vec![TestDefinition {
+                tests: Some(vec![ToolDefinition {
                     name: Some(S("unit")),
                     command: S("echo unit"),
                 }]),
@@ -1682,7 +1654,7 @@ mod tests {
             };
             let have = config.select_tests(&[S("unit"), S("unit")]).unwrap();
             let want = vec![ToolDefinition {
-                name: Some(S("test (unit)")),
+                name: Some(S("unit")),
                 command: S("echo unit"),
             }];
             pretty::assert_eq!(have, want);
@@ -1691,7 +1663,7 @@ mod tests {
         #[test]
         fn unnamed_tests() {
             let config = Config {
-                tests: Some(vec![TestDefinition {
+                tests: Some(vec![ToolDefinition {
                     name: None,
                     command: S("actionlint"),
                 }]),
@@ -1699,7 +1671,7 @@ mod tests {
             };
             let have = config.select_tests(&[S("actionlint")]).unwrap();
             let want = vec![ToolDefinition {
-                name: Some(S("test (actionlint)")),
+                name: None,
                 command: S("actionlint"),
             }];
             pretty::assert_eq!(have, want);
@@ -1709,11 +1681,11 @@ mod tests {
         fn unknown_name() {
             let config = Config {
                 tests: Some(vec![
-                    TestDefinition {
+                    ToolDefinition {
                         name: Some(S("unit")),
                         command: S("echo unit"),
                     },
-                    TestDefinition {
+                    ToolDefinition {
                         name: Some(S("cuke")),
                         command: S("echo cuke"),
                     },
@@ -1744,20 +1716,18 @@ mod tests {
     }
 
     mod tests_for {
-        use crate::config::{
-            CommandConfig, CommandsSection, Config, DefaultTests, TestDefinition, ToolDefinition,
-        };
+        use crate::config::{CommandConfig, CommandsSection, Config, DefaultTests, ToolDefinition};
         use big_s::S;
 
         #[test]
         fn cli_overrides_config() {
             let config = Config {
                 tests: Some(vec![
-                    TestDefinition {
+                    ToolDefinition {
                         name: Some(S("cuke")),
                         command: S("echo cuke"),
                     },
-                    TestDefinition {
+                    ToolDefinition {
                         name: Some(S("unit")),
                         command: S("echo unit"),
                     },
@@ -1781,7 +1751,7 @@ mod tests {
             pretty::assert_eq!(
                 have,
                 vec![ToolDefinition {
-                    name: Some(S("test (cuke)")),
+                    name: Some(S("cuke")),
                     command: S("echo cuke"),
                 }]
             );
@@ -1791,11 +1761,11 @@ mod tests {
         fn empty_cli_uses_config() {
             let config = Config {
                 tests: Some(vec![
-                    TestDefinition {
+                    ToolDefinition {
                         name: Some(S("cuke")),
                         command: S("echo cuke"),
                     },
-                    TestDefinition {
+                    ToolDefinition {
                         name: Some(S("unit")),
                         command: S("echo unit"),
                     },
@@ -1819,7 +1789,7 @@ mod tests {
             pretty::assert_eq!(
                 have,
                 vec![ToolDefinition {
-                    name: Some(S("test (unit)")),
+                    name: Some(S("unit")),
                     command: S("echo unit"),
                 }]
             );
@@ -1829,11 +1799,11 @@ mod tests {
         fn missing_config_uses_default_all() {
             let config = Config {
                 tests: Some(vec![
-                    TestDefinition {
+                    ToolDefinition {
                         name: Some(S("cuke")),
                         command: S("echo cuke"),
                     },
-                    TestDefinition {
+                    ToolDefinition {
                         name: Some(S("unit")),
                         command: S("echo unit"),
                     },
@@ -1849,11 +1819,11 @@ mod tests {
                 have,
                 vec![
                     ToolDefinition {
-                        name: Some(S("test (cuke)")),
+                        name: Some(S("cuke")),
                         command: S("echo cuke"),
                     },
                     ToolDefinition {
-                        name: Some(S("test (unit)")),
+                        name: Some(S("unit")),
                         command: S("echo unit"),
                     },
                 ]
@@ -1864,11 +1834,11 @@ mod tests {
         fn missing_config_uses_default_none() {
             let config = Config {
                 tests: Some(vec![
-                    TestDefinition {
+                    ToolDefinition {
                         name: Some(S("cuke")),
                         command: S("echo cuke"),
                     },
-                    TestDefinition {
+                    ToolDefinition {
                         name: Some(S("unit")),
                         command: S("echo unit"),
                     },
@@ -1891,11 +1861,11 @@ mod tests {
         fn empty_command_tests_configured() {
             let config = Config {
                 tests: Some(vec![
-                    TestDefinition {
+                    ToolDefinition {
                         name: Some(S("unit")),
                         command: S("echo unit"),
                     },
-                    TestDefinition {
+                    ToolDefinition {
                         name: Some(S("cuke")),
                         command: S("echo cuke"),
                     },
@@ -1910,6 +1880,32 @@ mod tests {
                 .tests_for(&[], |commands| commands.pitstop.as_ref(), DefaultTests::All)
                 .unwrap();
             assert_eq!(have, Vec::<ToolDefinition>::new());
+        }
+    }
+
+    mod tool_definition {
+
+        mod name_or_command {
+            use crate::config::ToolDefinition;
+            use big_s::S;
+
+            #[test]
+            fn has_name() {
+                let tool = ToolDefinition {
+                    name: Some(S("unit")),
+                    command: S("echo unit"),
+                };
+                assert_eq!(tool.name_or_command(), "unit");
+            }
+
+            #[test]
+            fn no_name() {
+                let tool = ToolDefinition {
+                    name: None,
+                    command: S("echo unit"),
+                };
+                assert_eq!(tool.name_or_command(), "echo unit");
+            }
         }
     }
 }
