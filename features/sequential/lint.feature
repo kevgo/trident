@@ -16,9 +16,9 @@ Feature: run lints sequentially
     When executing "trident lint --sequential --show=output"
     Then it prints
       """
-      slow
+      lint all (slow)
       slow done
-      fast
+      lint all (fast)
       fast done
       """
     And the exit code is 0
