@@ -1,4 +1,4 @@
-use crate::apps::{GetRTACmdArgs, get_rta_command};
+use crate::apps::{GetRTACmdArgs2, get_rta_command2};
 use crate::domain::{File, Result, UserError};
 use big_s::S;
 use std::path::Path;
@@ -18,16 +18,13 @@ fn files_with_matches_in(
         args.push(format!("--glob=!{ignore}"));
     }
     args.push(pattern.to_string());
-    let Some(executable) = get_rta_command(&GetRTACmdArgs {
-        name: S("ripgrep"),
+    let Some(mut command) = get_rta_command2(&GetRTACmdArgs2 {
         app: &rta::applications::RipGrep {},
         args,
-        version: None,
     })?
     else {
         return Ok(vec![]);
     };
-    let mut command = executable.command;
     if let Some(path) = path {
         command.current_dir(path);
     }
