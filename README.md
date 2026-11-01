@@ -9,9 +9,10 @@ For all file types in your codebase, concurrently for fast results.
 
 Trident provides support to run these guardrails in different situations:
 
-- inside the agentic loop
-- in a pre-commit hook
-- on your CI server
+- [inside the agentic loop](#Trident-postedit)
+- [in a pre-commit hook](#Trident-precommit)
+- [on your CI server](#Trident-ci)
+- [during interactive development](#Trident-pitstop)
 
 ## Demo
 
