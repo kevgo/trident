@@ -1,19 +1,17 @@
 # more info at https://github.com/kevgo/run-that-app
 
-# always update the versions in feature files too
-
 actionlint 1.7.12
-biome 2.4.0
+biome 2.6.4
 contest 0.5.0
 cucumber-sort 0.2.0
 delete-empty-folders 0.0.2
 gherkin-lint 4.2.4
 ghokin 3.10.0
-keep-sorted 0.9.1
-node 26.12.0
+keep-sorted 0.10.0
+node 26.13.0
 ripgrep 15.2.0
-ruff 0.15.16
-rumdl 0.2.14
+ruff 0.17.3
+rumdl 0.3.2
 shellcheck 0.11.0
 shfmt 3.14.1
 taplo 0.10.0
