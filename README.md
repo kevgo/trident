@@ -230,7 +230,7 @@ trident ci --sequential
 
 No. You can override which tools Trident runs in its config file.
 
-> I want to add a stack, linter, or formatter to Trident.
+> I want to add a stack or tool to Trident.
 
 Send a pull request or open an issue!
 
