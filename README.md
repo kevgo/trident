@@ -277,12 +277,9 @@ cargo install --git https://github.com/kevgo/trident
 
 ## Configuration
 
-You can configure Trident and define custom linters
-and formatters in **trident.json** or **trident.jsonc**.
-Both file types use JSONC format, so comments are allowed.
-If both exist, **trident.json** takes precedence.
-
-Use the linked JSON-Schema to get help on supported settings and their meaning.
+You can configure Trident using a **trident.json** or **trident.jsonc** file.
+Both file types use JSONC format, so comments are always allowed.
+The linked JSON-Schema provides help for supported settings.
 
 <!-- CONFIG-EXAMPLE-START -->
 
