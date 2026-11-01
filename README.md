@@ -258,7 +258,6 @@ curl https://raw.githubusercontent.com/kevgo/trident/main/download.sh | sh -S --
 
 Try to install and run Tricorder from a Bash environment on Windows,
 for example the Git Bash.
-
 Tricorder is designed as a cross-platform development tool,
 so it tries to run the tools it runs consistently inside a bash environment on
 all platform.
