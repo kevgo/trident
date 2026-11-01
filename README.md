@@ -275,6 +275,22 @@ Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/kev
 cargo install --git https://github.com/kevgo/trident
 ```
 
+## Tool types
+
+Trident supports four types of tools:
+
+- Checks only verify files and don't change them:
+  - built-in checks are determined by Trident and run automatically
+  - user-provided checks runs based on how they are configured
+    or provided on the CLI
+-
+- a **formatter** improves how code is formatted
+- a **fix** corrects code structure.
+  It is guaranteed to see formatted code,
+  and can leave code unformatted
+  because Trident will run the appropriate formatter
+  after a fix has made changes.
+
 ## Configuration
 
 You can configure Trident using a **trident.json** or **trident.jsonc** file.
@@ -382,18 +398,18 @@ The linked JSON-Schema provides help for supported settings.
     "biome": {
       // enable or disable the entire biome tool
       "enabled": true,
-      // don't process this file with Biome at all
-      // (but run other tools on it)
-      "ignore-files": ["ignore-completely.css"],
+      // don't process this file with Biome
+      // (but other tools will process it)
+      "ignore-files": ["not-by-biome.css"],
       "operations": {
         "lint": {
-          // enable or disable all Biome lint functionality
+          // enable or disable the Biome lint functionality
           "enabled": true,
-          // don't lint this CSS file
+          // or don't lint this CSS file
           "ignore-files": ["dont-lint.css"]
         },
         "fix": {
-          // enable or disable all Biome fix functionality
+          // enable or disable the Biome fix functionality
           "enabled": true,
           // don't fix this CSS file
           "ignore-files": ["dont-fix.css"]
