@@ -6,7 +6,7 @@
 Trident determines and runs all applicable automated software quality
 guardrails: type checkers, linters, formatters, fixes, unit tests, etc.
 For all file types in your codebase, concurrently for fast results.
-This is useful for AI engineering as well as manual coding.
+This is useful for AI engineering and manual coding.
 
 ## Demo
 
