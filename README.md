@@ -28,7 +28,7 @@ lint Cucumber (gherkin-lint)
 ```
 
 Trident has analyzed 315 files and executed 7 linters concurrently.
-You don't need to know about or even install these third-party tools.
+You don't need to know about or even install these third-party tools,
 Trident [downloads and runs them](https://github.com/kevgo/run-that-app)
 as needed.
 
