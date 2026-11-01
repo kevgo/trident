@@ -3,19 +3,21 @@
 [![linux](https://github.com/kevgo/Trident/actions/workflows/linux.yml/badge.svg)](https://github.com/kevgo/trident/actions/workflows/linux.yml)
 [![windows](https://github.com/kevgo/Trident/actions/workflows/windows.yml/badge.svg)](https://github.com/kevgo/trident/actions/workflows/windows.yml)
 
-Trident runs all applicable type checkers, linters,
-and formatters for the various file types in your codebase.
-Concurrently for the fastest results.
+Trident determines and runs all applicable automated software quality
+guardrails: type checkers, linters, formatters, fixes, unit tests, etc.
+For all file types in your codebase, concurrently for fast results.
 
-Type checking, linting, and automated testing are essential
-for high-quality software engineering, no matter who writes the code: AI,
-humans, or code templates.
+Trident provides support to run these guardrails in different situations:
+
+- inside the agentic loop
+- in a pre-commit hook
+- on your CI server
 
 ## Demo
 
 If I run `trident lint --scope=all --show=output` on the Trident codebase,
 using a 2021 MacBook Pro M1 running Linux,
-it finishes in about 200ms and prints:
+it finishes in about 0.2 seconds (!) and prints:
 
 ```sh
 163 Cucumber, 4 JSON, 1 JSONC, 4 Markdown, 127 Rust, 4 TOML, 4 YML, 8 other
@@ -30,22 +32,12 @@ lint Rust (cargo clippy)
 lint Cucumber (gherkin-lint)
 ```
 
-Trident has analyzed 315 files and executed 7 linters to verify
+Trident has analyzed 315 files and executed 7 linters concurrently to verify
 and improve them.
-In this example:
-
-- [Taplo](https://github.com/tamasfe/taplo) for the 3 TOML files
-- [rumdl](https://github.com/rvben/rumdl) for the 4 Markdown files
-- [gherkin-lint](https://github.com/gherkin-lint/gherkin-lint)
-  for the 98 Cucumber files
-- [actionlint](https://github.com/rhysd/actionlint)
-  for the GitHub Action configuration
-- [git diff --check](https://git-scm.com/docs/git-diff#Documentation/git-diff.txt---check)
-  to detect unresolved merge conflict markers
-- [Cargo clippy](https://doc.rust-lang.org/clippy)
 
 You don't need to know about or even install these third-party linters.
-Trident downloads them as needed.
+Trident downloads them as needed
+([more info](https://github.com/kevgo/run-that-app)).
 
 ## Why is it so fast
 
@@ -53,13 +45,14 @@ Trident is designed from the ground up for speed.
 
 - It is written in Rust.
 - It favors modern linters and formatters that execute quickly.
-- It runs all tools concurrently.
+- It runs all tools concurrently, even tools that change files!
 - It passes each tool the exact files to process.
   This way each tool doesn't need to scan the entire file tree again to discover
   files it can process.
 
 At the same time, Trident is extremely minimalistic:
-It executes the tools directly on your machine, without Docker or emulation.
+It executes the tools directly on your machine,
+without any emulation or container layer.
 
 ## Usage
 
