@@ -40,8 +40,8 @@ Trident is designed from the ground up for speed.
 - It runs all tools concurrently, even tools that change files!
 - It passes each tool the exact files to process,
   so that tools don't need to discover files again.
-- It is written in Rust.
 - It executes the tools without any emulation or container layer.
+- It is written in Rust.
 
 ## Usage
 
