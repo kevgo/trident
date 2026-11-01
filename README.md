@@ -43,8 +43,7 @@ Trident is designed from the ground up for speed.
 - It is written in Rust.
 
 At the same time, Trident is extremely minimalistic:
-It executes the tools directly on your machine,
-without any emulation or container layer.
+It executes the tools without any emulation or container layer.
 
 ## Usage
 
