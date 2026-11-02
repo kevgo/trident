@@ -118,7 +118,7 @@ It ensures everything is green, i.e. it fails if either:
 
 - some code is unformatted, i.e. a formatter or fix would modify a file
 - a check reports an unresolved issue
-- any of the tests defined in `trident.jsonc` fails
+- any of the global tests defined in `trident.jsonc` fails
 
 To run only some of those tests,
 configure them in the config file or pass their names joined with `+`:
