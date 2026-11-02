@@ -284,7 +284,7 @@ Trident supports three types of tools, running in this order:
    Trident runs the formatter afterwards.
 2. **Formatters** improve how code is formatted.
 3. **Checks** look for all remaining not auto-fixable code smells
-   and verify functional correctness.
+   and run unit tests.
 
 ## Configuration
 
