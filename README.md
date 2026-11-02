@@ -277,7 +277,7 @@ cargo install --git https://github.com/kevgo/trident
 
 ## Tool types
 
-Trident supports three types of tools:
+Trident supports three types of tools, running in this order:
 
 1. **Fixes** correct code smells.
    They don't need to worry about formatting,
