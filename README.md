@@ -120,8 +120,8 @@ It ensures everything is green, i.e. it fails if either:
 - a check reports an unresolved issue
 - any of the global tests defined in `trident.jsonc` fails
 
-To run only some of those tests,
-configure them in the config file or pass their names joined with `+`:
+To run only some tests, configure them in the config file
+or pass their names on the CLI, joined with `+`:
 
 ```sh
 trident ci --test=unit+e2e
