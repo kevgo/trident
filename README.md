@@ -280,10 +280,10 @@ cargo install --git https://github.com/kevgo/trident
 Trident supports three types of tools:
 
 1. **Fixes** correct code structure,
-   but don't need to format code because Trident runs the formatters later.
+   but don't need to format code because Trident runs the formatter afterwards.
 2. **Formatters** improve how code is formatted.
-3. **Checks** verify code structure, but don't change it
-   (doing so would make them a fix).
+3. **Checks** verify code, but don't change it
+   (doing so would make them a fix or formatter).
 
 ## Configuration
 
