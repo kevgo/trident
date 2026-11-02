@@ -45,7 +45,7 @@ Trident is designed from the ground up for speed.
 
 ## Usage
 
-Trident supports three types of tools, running in this order:
+Trident supports three categories of tools, running in this order:
 
 1. **Fixes** correct code smells.
    They don't need to worry about formatting,
