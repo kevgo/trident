@@ -283,7 +283,7 @@ Trident supports three types of tools, running in this order:
    They don't need to worry about formatting,
    Trident runs the formatter afterwards.
 2. **Formatters** improve how code is formatted.
-3. **Checks** look for all remaining not auto-fixable code issues.
+3. **Checks** look for all remaining not auto-fixable problems.
 
 ## Configuration
 
