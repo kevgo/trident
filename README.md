@@ -114,7 +114,7 @@ that got formatted to make sure the formatting changes get committed too.
 ### `trident ci`
 
 This command runs inside your CI pipeline.
-It ensures all code passes all checks, i.e. it fails if either:
+It ensures everything is green, i.e. it fails if either:
 
 - a linter reports an unresolved issue
 - some code is unformatted, i.e. a formatter would modify a file
