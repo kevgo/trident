@@ -116,9 +116,9 @@ that got formatted to make sure the formatting changes get committed too.
 This command runs inside your CI pipeline.
 It ensures everything is green, i.e. it fails if either:
 
-- a linter reports an unresolved issue
-- some code is unformatted, i.e. a formatter would modify a file
-- a test defined in `trident.jsonc` fails
+- some code is unformatted, i.e. a formatter or fix would modify a file
+- a check reports an unresolved issue
+- any of the tests defined in `trident.jsonc` fails
 
 To run only some of those tests,
 configure them in the config file or pass their names joined with `+`:
