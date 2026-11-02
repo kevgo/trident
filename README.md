@@ -279,13 +279,13 @@ cargo install --git https://github.com/kevgo/trident
 
 Trident supports four types of tools:
 
-- Checks only verify files and don't change them:
-  - **built-in checks** are determined by Trident and run automatically
-  - **user-provided checks** run as configured
+- **Checks** only verify files and don't change them:
+  - built-in checks are determined by Trident and run automatically
+  - user-provided checks run as configured by the user
 - a **formatter** improves how code is formatted
 - a **fix** corrects code structure.
-  Trident runs fixes first, then formatters,
-  so fixes don't need to worry about code formatting.
+  Fixes don't need to worry about leaving the code formatted because
+  for each stack, Trident runs the fixes first, then the formatters.
 
 ## Configuration
 
