@@ -45,25 +45,34 @@ Trident is designed from the ground up for speed.
 
 ## Usage
 
+Trident supports three categories of tools, running in this order:
+
+1. **Fixes** correct code smells.
+   They don't need to worry about formatting,
+   Trident runs the formatter afterwards.
+2. **Formatters** improve how code is formatted.
+3. **Checks** look for all remaining not auto-fixable code smells
+   and run unit tests.
+
 Trident provides special commands
 for all relevant phases of the software development workflow:
 
 ### `trident pitstop`
 
 Run this command at any time during human development.
-It first applies all safe automatic fixes to your current work,
+It first applies all safe fixes, then formats everything,
 then reports any remaining code problems that require (manual or AI) attention.
 
-By default, this command reviews the smallest scope you currently work on:
+This command reviews the scope you currently work on:
 
-- uncommitted changes exist: reviews only those
-- no uncommitted changes but you are on a feature branch with changes:
-  reviews all changes made on that branch
-- otherwise: reviews the entire repo
+- if uncommitted changes exist: it reviews only those
+- without uncommitted changes but the feature branch you are on has changes:
+  it reviews all changes made on that branch
+- otherwise: it reviews the entire repo
 
-To process a different set of files, use `--scope`.
+You can configure which changes get processed with the `--scope` CLI flag.
 
-You can also configure it to run certain tests during a pitstop:
+You can also configure it to run certain global tests during a pitstop:
 
 ```jsonc
 {
@@ -81,34 +90,38 @@ This command is the equivalent of `trident pitstop` for AI agents.
 Each time your agent generates code, this command checks it for code smells.
 It does not format files because coding agents cache file contents
 and can get tripped up by unexpected file changes.
-The changes get formatted when being committed.
+In the AI workflow, the changes get formatted when being committed.
 
 ### `trident precommit`
 
-This command runs inside the Git precommit hook and formats the staged changes
-while they are getting committed.
+This command runs inside the Git precommit hook.
+It formats all staged files.
 It always exits with status code 0, so the commit always goes through,
-even if there are formatting problems.
+even if the staged changes cannot be formatted.
 
-This command re-stages files that got formatted.
-Re-staging operates on the entire file.
-If you want to commit only part of a modified file,
-run `trident pitstop` or `trident fix` to format everything
-before partially staging your changes.
-That way, Trident precommit won't introduce additional formatting changes
-and won't need to re-stage the file.
+This command stages files
+that got formatted to make sure the formatting changes get committed too.
+
+> [!TIP]
+> Re-staging operates on the entire file.
+> If you want to commit only part of a modified file,
+> run [Trident pitstop](#trident-pitstop)
+> or [Trident fix](#trident-fix) to format everything before partially staging
+> and committing your changes.
+> That way, Trident precommit won't introduce additional formatting changes
+> and won't need to re-stage the file.
 
 ### `trident ci`
 
 This command runs inside your CI pipeline.
-It ensures all code passes all checks, i.e. it fails if either:
+It ensures everything is green, i.e. it fails if either:
 
-- a linter reports an unresolved issue
-- some code is unformatted, i.e. a formatter would modify a file
-- a test defined in `trident.jsonc` fails
+- some code is unformatted, i.e. a formatter or fix would modify a file
+- a check reports an unresolved issue
+- any of the global tests defined in `trident.jsonc` fails
 
-To run only some of those tests,
-configure them in the config file or pass their names joined with `+`:
+To run only some tests, configure them in the config file
+or pass their names on the CLI, joined with `+`:
 
 ```sh
 trident ci --test=unit+e2e
@@ -274,17 +287,6 @@ Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/kev
 ```sh
 cargo install --git https://github.com/kevgo/trident
 ```
-
-## Tool types
-
-Trident supports three types of tools, running in this order:
-
-1. **Fixes** correct code smells.
-   They don't need to worry about formatting,
-   Trident runs the formatter afterwards.
-2. **Formatters** improve how code is formatted.
-3. **Checks** look for all remaining not auto-fixable code smells
-   and run unit tests.
 
 ## Configuration
 
