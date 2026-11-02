@@ -105,8 +105,9 @@ that got formatted to make sure the formatting changes get committed too.
 > [!TIP]
 > Re-staging operates on the entire file.
 > If you want to commit only part of a modified file,
-> run `trident pitstop` or `trident fix` to format everything
-> before partially staging and committing your changes.
+> run [Trident pitstop](#trident-pitstop)
+> or [Trident fix](#trident-fix) to format everything before partially staging
+> and committing your changes.
 > That way, Trident precommit won't introduce additional formatting changes
 > and won't need to re-stage the file.
 
