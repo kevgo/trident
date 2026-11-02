@@ -45,6 +45,15 @@ Trident is designed from the ground up for speed.
 
 ## Usage
 
+Trident supports three types of tools, running in this order:
+
+1. **Fixes** correct code smells.
+   They don't need to worry about formatting,
+   Trident runs the formatter afterwards.
+2. **Formatters** improve how code is formatted.
+3. **Checks** look for all remaining not auto-fixable code smells
+   and run unit tests.
+
 Trident provides special commands
 for all relevant phases of the software development workflow:
 
@@ -274,17 +283,6 @@ Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/kev
 ```sh
 cargo install --git https://github.com/kevgo/trident
 ```
-
-## Tool types
-
-Trident supports three types of tools, running in this order:
-
-1. **Fixes** correct code smells.
-   They don't need to worry about formatting,
-   Trident runs the formatter afterwards.
-2. **Formatters** improve how code is formatted.
-3. **Checks** look for all remaining not auto-fixable code smells
-   and run unit tests.
 
 ## Configuration
 
