@@ -99,9 +99,10 @@ It formats all staged files.
 It always exits with status code 0, so the commit always goes through,
 even if the staged changes cannot be formatted.
 
+This command stages files
+that got formatted to make sure the formatting changes get committed too.
+
 > [!TIP]
-> This command stages files
-> that got formatted to make sure the formatting changes get committed too.
 > Re-staging operates on the entire file.
 > If you want to commit only part of a modified file,
 > run `trident pitstop` or `trident fix` to format everything
