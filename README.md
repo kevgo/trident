@@ -3,19 +3,16 @@
 [![linux](https://github.com/kevgo/Trident/actions/workflows/linux.yml/badge.svg)](https://github.com/kevgo/trident/actions/workflows/linux.yml)
 [![windows](https://github.com/kevgo/Trident/actions/workflows/windows.yml/badge.svg)](https://github.com/kevgo/trident/actions/workflows/windows.yml)
 
-Trident runs all applicable type checkers, linters,
-and formatters for the various file types in your codebase.
-Concurrently for the fastest results.
-
-Type checking, linting, and automated testing are essential
-for high-quality software engineering, no matter who writes the code: AI,
-humans, or code templates.
+Trident determines and runs all applicable automated software quality
+guardrails: type checkers, linters, formatters, fixes, unit tests, etc.
+For all file types in your codebase, concurrently for fast results.
+This is useful for AI engineering and manual coding.
 
 ## Demo
 
 If I run `trident lint --scope=all --show=output` on the Trident codebase,
 using a 2021 MacBook Pro M1 running Linux,
-it finishes in about 200ms and prints:
+it finishes in about 0.2 seconds (!) and prints:
 
 ```sh
 163 Cucumber, 4 JSON, 1 JSONC, 4 Markdown, 127 Rust, 4 TOML, 4 YML, 8 other
@@ -30,36 +27,21 @@ lint Rust (cargo clippy)
 lint Cucumber (gherkin-lint)
 ```
 
-Trident has analyzed 315 files and executed 7 linters to verify
-and improve them.
-In this example:
-
-- [Taplo](https://github.com/tamasfe/taplo) for the 3 TOML files
-- [rumdl](https://github.com/rvben/rumdl) for the 4 Markdown files
-- [gherkin-lint](https://github.com/gherkin-lint/gherkin-lint)
-  for the 98 Cucumber files
-- [actionlint](https://github.com/rhysd/actionlint)
-  for the GitHub Action configuration
-- [git diff --check](https://git-scm.com/docs/git-diff#Documentation/git-diff.txt---check)
-  to detect unresolved merge conflict markers
-- [Cargo clippy](https://doc.rust-lang.org/clippy)
-
-You don't need to know about or even install these third-party linters.
-Trident downloads them as needed.
+Trident has analyzed 315 files and executed 7 linters concurrently.
+You don't need to know about or even install these third-party tools,
+Trident [downloads and runs them](https://github.com/kevgo/run-that-app)
+as needed.
 
 ## Why is it so fast
 
 Trident is designed from the ground up for speed.
 
-- It is written in Rust.
 - It favors modern linters and formatters that execute quickly.
-- It runs all tools concurrently.
-- It passes each tool the exact files to process.
-  This way each tool doesn't need to scan the entire file tree again to discover
-  files it can process.
-
-At the same time, Trident is extremely minimalistic:
-It executes the tools directly on your machine, without Docker or emulation.
+- It runs all tools concurrently, even tools that change files!
+- It passes each tool the exact files to process,
+  so that tools don't need to discover files again.
+- It executes the tools without any emulation or container layer.
+- It is written in Rust.
 
 ## Usage
 
@@ -248,7 +230,7 @@ trident ci --sequential
 
 No. You can override which tools Trident runs in its config file.
 
-> I want to add a stack, linter, or formatter to Trident.
+> I want to add a stack or tool to Trident.
 
 Send a pull request or open an issue!
 
@@ -276,12 +258,12 @@ curl https://raw.githubusercontent.com/kevgo/trident/main/download.sh | sh -S --
 
 Try to install and run Tricorder from a Bash environment on Windows,
 for example the Git Bash.
+Tricorder is a cross-platform development tool,
+so it tries to run the tools it runs consistently inside a Bash environment on
+all platforms.
 
-Tricorder is designed as a cross-platform development tool,
-so it tries to run the tools it runs consistently inside a bash environment on
-all platform.
-
-If you don't have a Bash environment available:
+If you don't have a Bash environment available,
+you can also install using Powershell:
 
 ```powershell
 Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/kevgo/trident/main/download.ps1" -UseBasicParsing).Content
@@ -293,14 +275,22 @@ Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/kev
 cargo install --git https://github.com/kevgo/trident
 ```
 
+## Tool types
+
+Trident supports three types of tools, running in this order:
+
+1. **Fixes** correct code smells.
+   They don't need to worry about formatting,
+   Trident runs the formatter afterwards.
+2. **Formatters** improve how code is formatted.
+3. **Checks** look for all remaining not auto-fixable code smells
+   and run unit tests.
+
 ## Configuration
 
-You can configure Trident and define custom linters
-and formatters in **trident.json** or **trident.jsonc**.
-Both file types use JSONC format, so comments are allowed.
-If both exist, **trident.json** takes precedence.
-
-Use the linked JSON-Schema to get help on supported settings and their meaning.
+You can configure Trident using a **trident.json** or **trident.jsonc** file.
+Both file types use JSONC format, so comments are always allowed.
+The linked JSON-Schema provides help for supported settings.
 
 <!-- CONFIG-EXAMPLE-START -->
 
@@ -403,18 +393,18 @@ Use the linked JSON-Schema to get help on supported settings and their meaning.
     "biome": {
       // enable or disable the entire biome tool
       "enabled": true,
-      // don't process this file with Biome at all
-      // (but run other tools on it)
-      "ignore-files": ["ignore-completely.css"],
+      // don't process this file with Biome
+      // (but other tools will process it)
+      "ignore-files": ["not-by-biome.css"],
       "operations": {
         "lint": {
-          // enable or disable all Biome lint functionality
+          // enable or disable the Biome lint functionality
           "enabled": true,
-          // don't lint this CSS file
+          // or don't lint this CSS file
           "ignore-files": ["dont-lint.css"]
         },
         "fix": {
-          // enable or disable all Biome fix functionality
+          // enable or disable the Biome fix functionality
           "enabled": true,
           // don't fix this CSS file
           "ignore-files": ["dont-fix.css"]
