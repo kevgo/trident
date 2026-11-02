@@ -60,19 +60,19 @@ for all relevant phases of the software development workflow:
 ### `trident pitstop`
 
 Run this command at any time during human development.
-It first applies all safe automatic fixes to your current work,
+It first applies all safe fixes, then formats everything,
 then reports any remaining code problems that require (manual or AI) attention.
 
-By default, this command reviews the smallest scope you currently work on:
+This command reviews the scope you currently work on:
 
-- uncommitted changes exist: reviews only those
-- no uncommitted changes but you are on a feature branch with changes:
-  reviews all changes made on that branch
-- otherwise: reviews the entire repo
+- if uncommitted changes exist: it reviews only those
+- without uncommitted changes but the feature branch you are on has changes:
+  it reviews all changes made on that branch
+- otherwise: it reviews the entire repo
 
-To process a different set of files, use `--scope`.
+You can configure which changes get processed with the `--scope` CLI flag.
 
-You can also configure it to run certain tests during a pitstop:
+You can also configure it to run certain global tests during a pitstop:
 
 ```jsonc
 {
@@ -90,22 +90,24 @@ This command is the equivalent of `trident pitstop` for AI agents.
 Each time your agent generates code, this command checks it for code smells.
 It does not format files because coding agents cache file contents
 and can get tripped up by unexpected file changes.
-The changes get formatted when being committed.
+In the AI workflow, the changes get formatted when being committed.
 
 ### `trident precommit`
 
-This command runs inside the Git precommit hook and formats the staged changes
-while they are getting committed.
+This command runs inside the Git precommit hook.
+It formats all staged files.
 It always exits with status code 0, so the commit always goes through,
-even if there are formatting problems.
+even if the staged changes cannot be formatted.
 
-This command re-stages files that got formatted.
-Re-staging operates on the entire file.
-If you want to commit only part of a modified file,
-run `trident pitstop` or `trident fix` to format everything
-before partially staging your changes.
-That way, Trident precommit won't introduce additional formatting changes
-and won't need to re-stage the file.
+> [!TIP]
+> This command stages files
+> that got formatted to make sure the formatting changes get committed too.
+> Re-staging operates on the entire file.
+> If you want to commit only part of a modified file,
+> run `trident pitstop` or `trident fix` to format everything
+> before partially staging and committing your changes.
+> That way, Trident precommit won't introduce additional formatting changes
+> and won't need to re-stage the file.
 
 ### `trident ci`
 
