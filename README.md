@@ -283,7 +283,7 @@ Trident supports three types of tools:
    They don't need to worry about formatting,
    Trident runs the formatter afterwards.
 2. **Formatters** improve how code is formatted.
-3. **Checks** look for not auto-fixable code smells.
+3. **Checks** look for not auto-fixable code issues.
 
 ## Configuration
 
