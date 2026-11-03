@@ -43,7 +43,7 @@ Feature: "trident precommit" operates only on staged files that still exist in t
     And I delete file "removed.md"
     And I ran "git add -A"
     When executing "trident precommit --show=output"
-    Then it prints to STDERR
+    Then it prints the lines to STDERR
       """
       2 Markdown
       running 2 tasks
@@ -71,7 +71,7 @@ Feature: "trident precommit" operates only on staged files that still exist in t
     And I ran "git add -A"
     And I delete file "removed.md"
     When executing "trident precommit --show=output"
-    Then it prints to STDERR
+    Then it prints the lines to STDERR
       """
       2 Markdown
       running 2 tasks
