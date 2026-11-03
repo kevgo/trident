@@ -32,7 +32,7 @@ pub fn fix(args: &RunArgsWithScope) -> Result<ExitCode> {
     // step 3: discover the fixes to run
     let fixes = determine_fixes(&config, &stacks)?;
     if show.display_metadata() {
-        eprintln!("running {} tools", fixes.len());
+        eprintln!("running {} tasks", fixes.len());
     }
     let Runnables {
         global,

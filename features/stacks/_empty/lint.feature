@@ -12,7 +12,7 @@ Feature: checking a codebase without any code
     And it prints to STDERR
       """
       1 other
-      running 0 tools
+      running 0 tasks
       """
     And the exit code is 0
 

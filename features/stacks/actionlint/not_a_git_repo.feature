@@ -27,7 +27,7 @@ Feature: GitHub Actions workflow files not in a Git repository
     And it prints the lines to STDERR
       """
       1 YML, 1 other
-      running 1 tools
+      running 1 tasks
       """
     And the exit code is 3
     And all files are unchanged

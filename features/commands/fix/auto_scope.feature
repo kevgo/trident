@@ -17,7 +17,7 @@ Feature: "trident fix" chooses the smallest "--scope" based on the workspace sta
     Then it prints to STDERR
       """
       1 Markdown, 1 other
-      running 2 tools
+      running 2 tasks
       """
     And it prints the block
       """
@@ -38,7 +38,7 @@ Feature: "trident fix" chooses the smallest "--scope" based on the workspace sta
     Then it prints to STDERR
       """
       1 Markdown
-      running 2 tools
+      running 2 tasks
       """
     And it prints the block
       """
@@ -57,7 +57,7 @@ Feature: "trident fix" chooses the smallest "--scope" based on the workspace sta
     Then it prints to STDERR
       """
       1 Markdown, 1 other
-      running 2 tools
+      running 2 tasks
       """
     And it prints the block
       """
@@ -79,7 +79,7 @@ Feature: "trident fix" chooses the smallest "--scope" based on the workspace sta
     Then it prints to STDERR
       """
       1 Markdown
-      running 2 tools
+      running 2 tasks
       """
     And it prints the block
       """
@@ -110,7 +110,7 @@ Feature: "trident fix" chooses the smallest "--scope" based on the workspace sta
     Then it prints to STDERR
       """
       1 Markdown
-      running 2 tools
+      running 2 tasks
       """
     And it prints the block
       """

@@ -27,7 +27,7 @@ Feature: full runs all fixes, lints, and tests
     Then it prints the lines to STDERR
       """
       2 JSON, 1 Python, 1 other
-      running 7 tools
+      running 7 tasks
       """
     And it prints the lines
       """
@@ -86,7 +86,7 @@ Feature: full runs all fixes, lints, and tests
     Then it prints the lines to STDERR
       """
       1 JSON, 1 other
-      running 2 tools
+      running 2 tasks
       """
     And it prints the block
       """

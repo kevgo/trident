@@ -27,7 +27,7 @@ Feature: pitstop multiple unformatted stacks
     Then it prints to STDERR
       """
       1 CSS, 1 Python, 1 TypeScript, 1 other
-      running 8 tools
+      running 8 tasks
       """
     And it prints the block
       """
@@ -83,7 +83,7 @@ Feature: pitstop multiple unformatted stacks
     Then it prints to STDERR
       """
       1 CSS, 1 Python, 1 TypeScript, 1 other
-      running 8 tools
+      running 8 tasks
       """
     And it prints the lines matching
       """
@@ -147,7 +147,7 @@ Feature: pitstop multiple unformatted stacks
     Then it does not print
       """
       1 CSS, 1 Python, 1 TypeScript, 1 other
-      running 4 tools
+      running 4 tasks
       """
     And it prints only these lines in any order
       """
