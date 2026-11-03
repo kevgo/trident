@@ -1,7 +1,9 @@
 use crate::cli::input::{RunArgs, RunArgsWithTestAndScope, ShowExt};
 use crate::cli::output::print_metadata;
 use crate::commands::lint::Lints;
-use crate::commands::{discover_lint_stacks, discover_stacks, fix, lint, resolve_scope};
+use crate::commands::{
+    discover_changed_stacks, discover_lint_stacks, discover_stacks, fix, lint, resolve_scope,
+};
 use crate::config::{Config, DefaultTests, to_sequences};
 use crate::domain::{DetectedStacks, Operation, Result, Runnables, StackType};
 use crate::git::Repo;
@@ -15,6 +17,7 @@ pub fn pitstop(args: &RunArgsWithTestAndScope) -> Result<ExitCode> {
     let ignores = config.ignores()?;
     let repo = Repo::load();
     let scope = resolve_scope(&args.scope, repo.as_ref());
+    let changed_stacks = discover_changed_stacks(scope, repo.as_ref(), &ignores)?;
     let fix_stacks = discover_stacks(scope, repo.as_ref(), &ignores)?;
     let lint_stacks = discover_lint_stacks(scope, repo.as_ref(), &ignores)?;
     let tests = to_sequences(
@@ -29,6 +32,7 @@ pub fn pitstop(args: &RunArgsWithTestAndScope) -> Result<ExitCode> {
     run_tasks(
         &args.run,
         &config,
+        &changed_stacks,
         &fix_stacks,
         &lint_stacks,
         repo.as_ref(),
@@ -38,10 +42,12 @@ pub fn pitstop(args: &RunArgsWithTestAndScope) -> Result<ExitCode> {
 
 /// runs global fixes, then stack-specific fixes on `fix_stacks`, then lints on `lint_stacks`
 ///
+/// `changed_stacks` are the stacks to report to the user.
 /// `tests` run together with the global lints.
 pub(crate) fn run_tasks(
     args: &RunArgs,
     config: &Config,
+    changed_stacks: &DetectedStacks,
     fix_stacks: &DetectedStacks,
     lint_stacks: &DetectedStacks,
     repo: Option<&Repo>,
@@ -53,7 +59,7 @@ pub(crate) fn run_tasks(
     let stderr_to_stdout = true;
 
     if show.display_metadata() {
-        print_metadata(lint_stacks);
+        print_metadata(changed_stacks);
     }
 
     // step 1: discover the runnables

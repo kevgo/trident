@@ -11,6 +11,10 @@ Feature: "trident pitstop" fixes only existing changed files and lints all files
       """
       #     Unrelated
       """
+    And a committed file "also-unrelated.md" with content
+      """
+      # Also unrelated
+      """
     And a committed file "removed.md" with content
       """
       # Removed
@@ -90,4 +94,54 @@ Feature: "trident pitstop" fixes only existing changed files and lints all files
       unrelated.md:1:2: [MD019] Multiple spaces (5) after # in heading [*]
       """
     And the exit code is 1
+    And all files are unchanged
+
+  Scenario: uncommitted deletion next to a changed file
+    Given a file "untracked.md" with content
+      """
+      # Untracked
+      """
+    And I delete file "removed.md"
+    When executing "trident pitstop --show=output"
+    Then it prints to STDERR
+      """
+      2 Markdown
+      running 4 tasks
+      """
+    And it prints the block
+      """
+      unrelated.md:1:2: [MD019] Multiple spaces (5) after # in heading [*]
+      """
+    And the exit code is 1
+    And all files are unchanged
+
+  Scenario: uncommitted deletion of the last file in a stack
+    Given a committed file "removed.py" with content
+      """
+      print("removed")
+      """
+    And I delete file "removed.py"
+    When executing "trident pitstop --show=output"
+    Then it prints to STDERR
+      """
+      1 Python
+      running 2 tasks
+      """
+    And the exit code is 0
+    And all files are unchanged
+
+  Scenario: uncommitted deletion of an ignored file
+    Given a committed file "trident.jsonc" with content
+      """
+      {
+        "ignore-files": ["removed.md"]
+      }
+      """
+    And I delete file "removed.md"
+    When executing "trident pitstop --show=output"
+    Then it prints to STDERR
+      """
+      running 2 tasks
+      """
+    And the exit code is 0
     And all files are unchanged

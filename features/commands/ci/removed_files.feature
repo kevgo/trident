@@ -11,6 +11,10 @@ Feature: "trident ci" with a limited scope lints all files of stacks with delete
       """
       #     Unrelated
       """
+    And a committed file "also-unrelated.md" with content
+      """
+      # Also unrelated
+      """
     And a committed file "removed.md" with content
       """
       # Removed
@@ -49,6 +53,21 @@ Feature: "trident ci" with a limited scope lints all files of stacks with delete
     And it does not print
       """
       fix Markdown
+      """
+    And it prints the block
+      """
+      unrelated.md:1:2: [MD019] Multiple spaces (5) after # in heading [*]
+      """
+    And the exit code is 1
+    And all files are unchanged
+
+  Scenario: --scope=uncommitted with an uncommitted rename
+    Given I rename file "removed.md" to "renamed.md"
+    When executing "trident ci --scope=uncommitted --show=output"
+    Then it prints the lines to STDERR
+      """
+      2 Markdown
+      running 4 tasks
       """
     And it prints the block
       """

@@ -1,5 +1,5 @@
 use super::pitstop::run_tasks;
-use super::{discover_lint_stacks, discover_stacks};
+use super::{discover_changed_stacks, discover_lint_stacks, discover_stacks};
 use crate::cli::input::{RunArgsWithTestAndScope, Scope};
 use crate::config::{Config, DefaultTests, to_sequences};
 use crate::domain::{Operation, Result, UserError};
@@ -13,6 +13,7 @@ pub fn ci(args: RunArgsWithTestAndScope) -> Result<ExitCode> {
     let config = Config::load()?;
     let ignores = config.ignores()?;
     let scope = args.scope.unwrap_or(Scope::All);
+    let changed_stacks = discover_changed_stacks(scope, repo.as_ref(), &ignores)?;
     let fix_stacks = discover_stacks(scope, repo.as_ref(), &ignores)?;
     let lint_stacks = discover_lint_stacks(scope, repo.as_ref(), &ignores)?;
     let args_show = args.run.with_default_show(conc::Show::Output);
@@ -25,6 +26,7 @@ pub fn ci(args: RunArgsWithTestAndScope) -> Result<ExitCode> {
     let exit_code = run_tasks(
         &args_show,
         &config,
+        &changed_stacks,
         &fix_stacks,
         &lint_stacks,
         repo.as_ref(),
