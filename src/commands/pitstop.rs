@@ -1,7 +1,7 @@
 use crate::cli::input::{RunArgs, RunArgsWithTestAndScope, ShowExt};
 use crate::cli::output::print_metadata;
 use crate::commands::lint::Lints;
-use crate::commands::{discover_stacks, fix, lint, resolve_scope};
+use crate::commands::{discover_stacks, fix, lint, resolve_scope, stacks_to_test};
 use crate::config::{Config, DefaultTests};
 use crate::domain::{DetectedStacks, Result, Runnables, StackType};
 use crate::git::Repo;
@@ -20,7 +20,7 @@ pub fn pitstop(args: &RunArgsWithTestAndScope) -> Result<ExitCode> {
         &args.test,
         |commands| commands.pitstop.as_ref(),
         DefaultTests::None,
-        &stacks,
+        &stacks_to_test(&config, args.scope.scope, repo.as_ref(), &ignores)?,
     )?;
     run_tasks(&args.run, &config, &stacks, repo.as_ref(), tests)
 }

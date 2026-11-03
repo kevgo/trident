@@ -1,6 +1,6 @@
 Feature: "trident full" runs stack-specific tests
 
-  Scenario: runs the tests of all stacks even if only one stack has changes
+  Background:
     Given a Git repository
     And a committed file "run-that-app" with content
       """
@@ -45,7 +45,9 @@ Feature: "trident full" runs stack-specific tests
       # Readme
       """
 
-    And a file "uncommitted.rs" with content
+
+  Scenario: runs the tests of all stacks even if only one stack has changes
+    Given a file "uncommitted.rs" with content
       """
       // Rust code
       """
@@ -64,5 +66,17 @@ Feature: "trident full" runs stack-specific tests
       """
       test TypeScript (frontend)
       running TypeScript tests
+      """
+    And the exit code is 0
+
+  Scenario: runs the tests of a stack whose last file the branch deleted
+    Given I ran "git checkout -b feature"
+    And I ran "git rm main.rs"
+    And I ran "git commit --message=delete"
+    When executing "trident full --show=output"
+    Then it prints the block
+      """
+      test Rust (backend)
+      running Rust tests
       """
     And the exit code is 0

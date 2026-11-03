@@ -244,3 +244,220 @@ Feature: "trident test" runs the tests of the stacks that have changes
       """
     And it prints nothing to STDOUT
     And the exit code is 0
+
+  @unix
+  Scenario: unstaged deletion
+    Given I ran "rm main.rs"
+    When executing "trident test --show=output"
+    Then it prints to STDERR
+      """
+      running 1 tasks
+      """
+    And it prints the block
+      """
+      test Rust (backend)
+      running Rust tests
+      """
+    And the exit code is 0
+
+  Scenario: staged deletion
+    Given I ran "git rm main.rs"
+    When executing "trident test --show=output"
+    Then it prints to STDERR
+      """
+      running 1 tasks
+      """
+    And it prints the block
+      """
+      test Rust (backend)
+      running Rust tests
+      """
+    And the exit code is 0
+
+  Scenario: uncommitted deletion together with an uncommitted change in another stack
+    Given I ran "git rm main.rs"
+    And a file "uncommitted.md" with content
+      """
+      # Uncommitted
+      """
+    When executing "trident test --show=output"
+    Then it prints to STDERR
+      """
+      running 2 tasks
+      """
+    And it prints the block
+      """
+      test Markdown (text-runner)
+      running Markdown tests
+      """
+    And it prints the block
+      """
+      test Rust (backend)
+      running Rust tests
+      """
+    And the exit code is 0
+
+  Scenario: uncommitted deletion takes priority over the changes on the branch
+    Given I ran "git checkout -b feature"
+    And a committed file "branch.ts" with content
+      """
+      // TypeScript code
+      """
+    And I ran "git rm main.rs"
+    When executing "trident test --show=output"
+    Then it prints to STDERR
+      """
+      running 1 tasks
+      """
+    And it prints the block
+      """
+      test Rust (backend)
+      running Rust tests
+      """
+    And the exit code is 0
+
+  Scenario: branch only deletes a file
+    Given I ran "git checkout -b feature"
+    And I ran "git rm main.rs"
+    And I ran "git commit --message=delete"
+    When executing "trident test --show=output"
+    Then it prints to STDERR
+      """
+      running 1 tasks
+      """
+    And it prints the block
+      """
+      test Rust (backend)
+      running Rust tests
+      """
+    And the exit code is 0
+
+  Scenario: branch deletes a file and changes another stack
+    Given I ran "git checkout -b feature"
+    And I ran "git rm main.rs"
+    And I ran "git commit --message=delete"
+    And a committed file "branch.ts" with content
+      """
+      // TypeScript code
+      """
+    When executing "trident test --show=output"
+    Then it prints to STDERR
+      """
+      running 2 tasks
+      """
+    And it prints the block
+      """
+      test Rust (backend)
+      running Rust tests
+      """
+    And it prints the block
+      """
+      test TypeScript (frontend)
+      running TypeScript tests
+      """
+    And the exit code is 0
+
+  Scenario: file added and deleted on the same branch
+    Given I ran "git checkout -b feature"
+    And a committed file "branch.ts" with content
+      """
+      // TypeScript code
+      """
+    And a committed file "temp.rs" with content
+      """
+      // Rust code
+      """
+    And I ran "git rm temp.rs"
+    And I ran "git commit --message=delete"
+    When executing "trident test --show=output"
+    Then it prints to STDERR
+      """
+      running 1 tasks
+      """
+    And it prints the block
+      """
+      test TypeScript (frontend)
+      running TypeScript tests
+      """
+    And the exit code is 0
+
+  Scenario: staged rename into another stack
+    Given I ran "git mv main.rs renamed.md"
+    When executing "trident test --show=output"
+    Then it prints to STDERR
+      """
+      running 2 tasks
+      """
+    And it prints the block
+      """
+      test Markdown (text-runner)
+      running Markdown tests
+      """
+    And it prints the block
+      """
+      test Rust (backend)
+      running Rust tests
+      """
+    And the exit code is 0
+
+  Scenario: committed rename into another stack
+    Given I ran "git checkout -b feature"
+    And I ran "git mv main.rs renamed.md"
+    And I ran "git commit --message=rename"
+    When executing "trident test --show=output"
+    Then it prints to STDERR
+      """
+      running 2 tasks
+      """
+    And it prints the block
+      """
+      test Markdown (text-runner)
+      running Markdown tests
+      """
+    And it prints the block
+      """
+      test Rust (backend)
+      running Rust tests
+      """
+    And the exit code is 0
+
+  Scenario: --scope=uncommitted ignores deletions committed on the branch
+    Given I ran "git checkout -b feature"
+    And I ran "git rm main.rs"
+    And I ran "git commit --message=delete"
+    When executing "trident test --scope=uncommitted --show=output"
+    Then it prints to STDERR
+      """
+      running 0 tasks
+      """
+    And it prints nothing to STDOUT
+    And the exit code is 0
+
+  Scenario: --scope=branch includes uncommitted deletions
+    Given I ran "git checkout -b feature"
+    And I ran "git rm main.rs"
+    When executing "trident test --scope=branch --show=output"
+    Then it prints to STDERR
+      """
+      running 1 tasks
+      """
+    And it prints the block
+      """
+      test Rust (backend)
+      running Rust tests
+      """
+    And the exit code is 0
+
+  Scenario: --scope=all runs the tests of a stack whose last file was deleted
+    Given I ran "git rm main.rs"
+    When executing "trident test --scope=all --show=output"
+    Then it prints to STDERR
+      """
+      running 3 tasks
+      """
+    And it prints the block
+      """
+      test Rust (backend)
+      running Rust tests
+      """
+    And the exit code is 0

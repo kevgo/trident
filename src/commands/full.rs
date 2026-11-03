@@ -1,5 +1,6 @@
 use super::pitstop::run_tasks;
-use crate::cli::input::RunArgsWithTest;
+use super::stacks_to_test;
+use crate::cli::input::{RunArgsWithTest, Scope};
 use crate::config::{Config, DefaultTests};
 use crate::domain::Result;
 use crate::git::Repo;
@@ -15,7 +16,7 @@ pub fn full(args: &RunArgsWithTest) -> Result<ExitCode> {
         &args.test,
         |commands| commands.full.as_ref(),
         DefaultTests::All,
-        &stacks,
+        &stacks_to_test(&config, Some(Scope::All), repo.as_ref(), &ignores)?,
     )?;
     run_tasks(&args.run, &config, &stacks, repo.as_ref(), tests)
 }

@@ -249,6 +249,8 @@ Tests that verify the code of a particular stack can be defined for that stack:
 The `ci`, `full`, `pitstop`,
 and `test` commands run the tests of a stack when the [`--scope`](#--scope) of
 that command contains files of that stack.
+Deleted files count as well, since deleting a file can break the remaining code.
+This includes the old name of a renamed file.
 They run after all fixes and lints have passed, together with the global tests.
 
 ## Supported stacks

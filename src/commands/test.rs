@@ -1,4 +1,4 @@
-use super::{discover_stacks, resolve_scope};
+use super::stacks_to_test;
 use crate::cli::input::{RunArgsWithTestAndScope, ShowExt};
 use crate::config::{Config, DefaultTests};
 use crate::domain::Result;
@@ -11,8 +11,7 @@ pub fn test(args: &RunArgsWithTestAndScope) -> Result<ExitCode> {
     let ignores = config.ignores()?;
     let show = args.run.show.unwrap_or(conc::Show::Names);
     let repo = Repo::load();
-    let scope = resolve_scope(&args.scope, repo.as_ref());
-    let stacks = discover_stacks(scope, repo.as_ref(), &ignores)?;
+    let stacks = stacks_to_test(&config, args.scope.scope, repo.as_ref(), &ignores)?;
     let tests = config.test_sequences(
         &args.test,
         |commands| commands.test.as_ref(),

@@ -11,7 +11,8 @@ mod test;
 mod update_tools;
 
 use crate::cli::input::{Scope, ScopeArg};
-use crate::domain::{DetectedStacks, Ignores, Result};
+use crate::config::Config;
+use crate::domain::{DetectedStacks, Ignores, Result, StackType};
 use crate::git::Repo;
 use crate::stacks;
 pub use ci::ci;
@@ -78,12 +79,71 @@ pub(crate) fn discover_stacks(
     }
 }
 
+/// provides the stacks whose tests should run
+///
+/// Other than for lints and fixes, deleted files count as changes here,
+/// because deleting a file can break the remaining code of its stack.
+/// When no scope is given, this uses [`infer_test_scope`].
+pub(crate) fn stacks_to_test(
+    config: &Config,
+    scope: Option<Scope>,
+    repo: Option<&Repo>,
+    ignores: &Ignores,
+) -> Result<Vec<StackType>> {
+    if !config.has_stack_tests() {
+        return Ok(Vec::new());
+    }
+    let scope = scope.unwrap_or_else(|| infer_test_scope(repo));
+    let existing = discover_stacks(scope, repo, ignores)?;
+    let deleted_files = match (scope, repo) {
+        (_, None) => Vec::new(),
+        (Scope::Uncommitted, Some(repo)) => repo.uncommitted_deleted()?,
+        (Scope::Branch | Scope::All, Some(repo)) => repo.branch_deleted_files()?,
+    };
+    let deleted = stacks::from_files(&deleted_files, ignores);
+    Ok(stacks::all()
+        .iter()
+        .map(|stack| stack.stack_type())
+        .filter(|stack_type| {
+            existing.get_stack(*stack_type).is_some() || deleted.get_stack(*stack_type).is_some()
+        })
+        .collect())
+}
+
+/// infers the file scope for tests when `--scope` is omitted
+///
+/// Works like [`infer_scope`], but also considers deleted files to be changes.
+fn infer_test_scope(repo: Option<&Repo>) -> Scope {
+    let inferred = infer_scope(repo);
+    let Some(repo) = repo else {
+        return inferred;
+    };
+    if inferred == Scope::Uncommitted {
+        return inferred;
+    }
+    if repo
+        .uncommitted_deleted()
+        .is_ok_and(|files| !files.is_empty())
+    {
+        return Scope::Uncommitted;
+    }
+    if repo
+        .branch_deleted_files()
+        .is_ok_and(|files| !files.is_empty())
+    {
+        return Scope::Branch;
+    }
+    inferred
+}
+
 #[cfg(test)]
 mod tests {
-    use super::{discover_stacks, infer_scope, resolve_scope};
+    use super::{discover_stacks, infer_scope, infer_test_scope, resolve_scope, stacks_to_test};
     use crate::cli::input::{Scope, ScopeArg};
-    use crate::domain::{DetectedStacks, File, Ignores, Result};
-    use crate::git::Repo;
+    use crate::config::Config;
+    use crate::domain::{DetectedStacks, File, Ignores, Result, StackType};
+    use crate::git::{GitCommandExt, Repo};
+    use std::fs;
     use tempfile::TempDir;
 
     fn filenames(stacks: &DetectedStacks) -> Vec<File> {
@@ -171,6 +231,112 @@ mod tests {
         let have = infer_scope(Some(&repo));
         let want = Scope::All;
         pretty::assert_eq!(have, want);
+    }
+
+    /// a repo with committed Rust and Markdown files on a feature branch without changes
+    fn feature_branch(dir: &TempDir) -> Result<Repo> {
+        let repo = Repo::init(dir.path())?;
+        repo.create_and_commit_file("gone.rs")?;
+        repo.create_and_commit_file("kept.rs")?;
+        repo.create_and_commit_file("kept.md")?;
+        repo.create_and_switch_to_branch("feature")?;
+        Ok(repo)
+    }
+
+    fn commit_deletion(repo: &Repo, file: &str) -> Result<()> {
+        repo.git_command().args(["rm", "--quiet", file]).run()?;
+        repo.git_command()
+            .args(["commit", "--quiet", "--message=delete"])
+            .run()
+    }
+
+    fn config_with_stack_tests() -> Config {
+        Config::parse(
+            r#"{ "stacks": { "rust": { "tests": [{ "command": "echo rust" }] } } }"#,
+            "trident.json",
+        )
+        .unwrap()
+    }
+
+    #[test]
+    fn infer_test_uncommitted_when_only_uncommitted_deletions_exist() -> Result<()> {
+        let dir = TempDir::new().unwrap();
+        let repo = feature_branch(&dir)?;
+        repo.create_and_commit_file("on-branch.md")?;
+        fs::remove_file(repo.file_path("gone.rs")).unwrap();
+        pretty::assert_eq!(infer_scope(Some(&repo)), Scope::Branch);
+        pretty::assert_eq!(infer_test_scope(Some(&repo)), Scope::Uncommitted);
+        Ok(())
+    }
+
+    #[test]
+    fn infer_test_branch_when_branch_only_deletes_files() -> Result<()> {
+        let dir = TempDir::new().unwrap();
+        let repo = feature_branch(&dir)?;
+        commit_deletion(&repo, "gone.rs")?;
+        pretty::assert_eq!(infer_scope(Some(&repo)), Scope::All);
+        pretty::assert_eq!(infer_test_scope(Some(&repo)), Scope::Branch);
+        Ok(())
+    }
+
+    #[test]
+    fn infer_test_all_without_changes() -> Result<()> {
+        let dir = TempDir::new().unwrap();
+        let repo = feature_branch(&dir)?;
+        pretty::assert_eq!(infer_test_scope(Some(&repo)), Scope::All);
+        Ok(())
+    }
+
+    #[test]
+    fn infer_test_all_without_git_repo() {
+        pretty::assert_eq!(infer_test_scope(None), Scope::All);
+    }
+
+    #[test]
+    fn stacks_to_test_includes_stack_of_deleted_file() -> Result<()> {
+        let dir = TempDir::new().unwrap();
+        let repo = feature_branch(&dir)?;
+        repo.create_and_commit_file("on-branch.md")?;
+        commit_deletion(&repo, "gone.rs")?;
+        let have = stacks_to_test(
+            &config_with_stack_tests(),
+            Some(Scope::Branch),
+            Some(&repo),
+            &Ignores::empty(),
+        )?;
+        pretty::assert_eq!(have, vec![StackType::Markdown, StackType::Rust]);
+        Ok(())
+    }
+
+    #[test]
+    fn stacks_to_test_skips_ignored_deleted_file() -> Result<()> {
+        let dir = TempDir::new().unwrap();
+        let repo = feature_branch(&dir)?;
+        commit_deletion(&repo, "gone.rs")?;
+        let ignores = Ignores::new(&["gone.rs".to_string()], std::path::Path::new("./"))?;
+        let have = stacks_to_test(
+            &config_with_stack_tests(),
+            Some(Scope::Branch),
+            Some(&repo),
+            &ignores,
+        )?;
+        pretty::assert_eq!(have, Vec::<StackType>::new());
+        Ok(())
+    }
+
+    #[test]
+    fn stacks_to_test_without_configured_stack_tests() -> Result<()> {
+        let dir = TempDir::new().unwrap();
+        let repo = feature_branch(&dir)?;
+        commit_deletion(&repo, "gone.rs")?;
+        let have = stacks_to_test(
+            &Config::default(),
+            Some(Scope::Branch),
+            Some(&repo),
+            &Ignores::empty(),
+        )?;
+        pretty::assert_eq!(have, Vec::<StackType>::new());
+        Ok(())
     }
 
     #[test]

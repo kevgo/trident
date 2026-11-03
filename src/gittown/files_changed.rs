@@ -4,11 +4,19 @@ use crate::git::Repo;
 
 /// provides the files that the current branch has changed compared to its parent branch
 ///
-/// does not include uncommitted files
+/// Does not include uncommitted files.
+/// Includes deleted files and both the old and new names of renamed files.
 pub(crate) fn files_changed_on_current_branch(repo: &Repo) -> Option<Vec<File>> {
     let Ok(output) = repo
         .git_command()
-        .args(["town", "diff-parent", "--name-only", "--non-interactive"])
+        .args([
+            "-c",
+            "diff.renames=false",
+            "town",
+            "diff-parent",
+            "--name-only",
+            "--non-interactive",
+        ])
         .run_stdout_trimmed()
     else {
         return None;

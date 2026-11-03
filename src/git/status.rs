@@ -119,6 +119,11 @@ impl Record<'_> {
         )
     }
 
+    /// provides whether this record describes the deletion of a file
+    pub fn is_deleted(&self) -> bool {
+        self.index == 'D' || self.worktree == 'D'
+    }
+
     pub fn is_uncommitted(&self) -> bool {
         if self.index == '!' || self.worktree == '!' {
             return false;

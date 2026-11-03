@@ -27,6 +27,24 @@ impl Repo {
         let committed = self.branch_committed_files(&merge_base)?;
         Ok(unique_existing(self, committed, uncommitted))
     }
+
+    /// provides the names of all files deleted on the current branch, including uncommitted deletions
+    /// and the old names of renamed files
+    pub(crate) fn branch_deleted_files(&self) -> Result<Vec<File>> {
+        let mut files = self.uncommitted_deleted()?;
+        if let Some(gittown_files) = gittown::files_changed_on_current_branch(self) {
+            files.extend(gittown_files);
+        } else if let Some(merge_base) = self
+            .default_branch()
+            .and_then(|default_branch| self.merge_base(&default_branch))
+        {
+            files.extend(self.branch_committed_deleted_files(&merge_base)?);
+        }
+        files.retain(|file| !self.file_exists(file));
+        files.sort();
+        files.dedup();
+        Ok(files)
+    }
 }
 
 /// provides the actually existing files from both lists
@@ -68,6 +86,106 @@ mod tests {
             let have = repo.branch_changed_files()?;
             let want = vec![File::from("on-branch.rs"), File::from("uncommitted.rs")];
             pretty::assert_eq!(have, want);
+            Ok(())
+        }
+    }
+
+    mod branch_deleted_files {
+        use crate::domain::{File, Result};
+        use crate::git::{GitCommandExt, Repo};
+        use std::fs;
+        use std::process::Stdio;
+        use tempfile::TempDir;
+
+        fn commit_all(repo: &Repo) -> Result<()> {
+            repo.git_command().args(["add", "--all"]).run()?;
+            repo.git_command()
+                .args(["commit", "--quiet", "--message=change"])
+                .run()
+        }
+
+        fn feature_branch(dir: &TempDir) -> Result<Repo> {
+            let repo = Repo::init(dir.path())?;
+            repo.create_and_commit_file("kept.rs")?;
+            repo.create_and_commit_file("gone.rs")?;
+            repo.create_and_switch_to_branch("feature")?;
+            Ok(repo)
+        }
+
+        #[test]
+        fn committed_deletion() -> Result<()> {
+            let dir = TempDir::new().unwrap();
+            let repo = feature_branch(&dir)?;
+            fs::remove_file(repo.file_path("gone.rs")).unwrap();
+            commit_all(&repo)?;
+            pretty::assert_eq!(repo.branch_deleted_files()?, vec![File::from("gone.rs")]);
+            pretty::assert_eq!(repo.branch_changed_files()?, Vec::<File>::new());
+            Ok(())
+        }
+
+        #[test]
+        fn uncommitted_deletion() -> Result<()> {
+            let dir = TempDir::new().unwrap();
+            let repo = feature_branch(&dir)?;
+            fs::remove_file(repo.file_path("gone.rs")).unwrap();
+            pretty::assert_eq!(repo.branch_deleted_files()?, vec![File::from("gone.rs")]);
+            Ok(())
+        }
+
+        #[test]
+        fn committed_rename_deletes_the_old_name() -> Result<()> {
+            let dir = TempDir::new().unwrap();
+            let repo = feature_branch(&dir)?;
+            repo.git_command().args(["mv", "gone.rs", "new.md"]).run()?;
+            commit_all(&repo)?;
+            pretty::assert_eq!(repo.branch_deleted_files()?, vec![File::from("gone.rs")]);
+            Ok(())
+        }
+
+        #[test]
+        fn file_added_and_deleted_on_the_branch() -> Result<()> {
+            let dir = TempDir::new().unwrap();
+            let repo = feature_branch(&dir)?;
+            repo.create_and_commit_file("temp.rs")?;
+            fs::remove_file(repo.file_path("temp.rs")).unwrap();
+            commit_all(&repo)?;
+            pretty::assert_eq!(repo.branch_deleted_files()?, Vec::<File>::new());
+            Ok(())
+        }
+
+        #[test]
+        fn on_main_branch() -> Result<()> {
+            let dir = TempDir::new().unwrap();
+            let repo = Repo::init(dir.path())?;
+            repo.create_and_commit_file("kept.rs")?;
+            pretty::assert_eq!(repo.branch_deleted_files()?, Vec::<File>::new());
+            Ok(())
+        }
+
+        #[test]
+        fn git_town_branch() -> Result<()> {
+            if which::which("git-town").is_err() {
+                return Ok(());
+            }
+            let dir = TempDir::new().unwrap();
+            let repo = Repo::init(dir.path())?;
+            repo.git_command()
+                .args(["config", "git-town.main-branch", "main"])
+                .run()?;
+            repo.create_and_commit_file("gone.rs")?;
+            repo.create_and_commit_file("renamed.rs")?;
+            repo.git_command()
+                .args(["town", "append", "feature"])
+                .stdout(Stdio::null())
+                .stderr(Stdio::null())
+                .run()?;
+            fs::remove_file(repo.file_path("gone.rs")).unwrap();
+            repo.git_command()
+                .args(["mv", "renamed.rs", "new.md"])
+                .run()?;
+            commit_all(&repo)?;
+            let want = vec![File::from("gone.rs"), File::from("renamed.rs")];
+            pretty::assert_eq!(repo.branch_deleted_files()?, want);
             Ok(())
         }
     }

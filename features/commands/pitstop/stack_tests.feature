@@ -107,6 +107,49 @@ Feature: "trident pitstop" runs the tests of the stacks that have changes
       """
     And the exit code is 0
 
+  Scenario: uncommitted deletion runs only the tests of the stack of the deleted file
+    Given I ran "git rm main.rs"
+    When executing "trident pitstop --show=output"
+    Then it prints the block
+      """
+      test Rust (backend)
+      running Rust tests
+      """
+    And it does not print
+      """
+      running Markdown tests
+      """
+    And it does not print
+      """
+      running TypeScript tests
+      """
+    And the exit code is 0
+
+  Scenario: branch deletes a file
+    Given I ran "git checkout -b feature"
+    And I ran "git rm main.rs"
+    And I ran "git commit --message=delete"
+    And a committed file "branch.ts" with content
+      """
+      // TypeScript code
+      """
+    When executing "trident pitstop --show=output"
+    Then it prints the block
+      """
+      test Rust (backend)
+      running Rust tests
+      """
+    And it prints the block
+      """
+      test TypeScript (frontend)
+      running TypeScript tests
+      """
+    And it does not print
+      """
+      running Markdown tests
+      """
+    And the exit code is 0
+
   Scenario: --scope=all runs the tests of all stacks
     Given a file "uncommitted.rs" with content
       """

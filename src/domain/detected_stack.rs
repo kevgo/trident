@@ -4,7 +4,7 @@ use crate::domain::{EnabledWhen, File, Files, Stack, StackType};
 /// and the workspace files belonging to it.
 #[must_use]
 pub struct DetectedStack {
-    pub stack: Box<dyn Stack>,
+    pub stack: Box<dyn Stack>, // TODO: change this to StackType
     pub files: Files,
 }
 

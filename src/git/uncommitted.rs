@@ -13,6 +13,17 @@ impl Repo {
             .map(|record| record.path.into())
             .collect())
     }
+
+    /// provides the files that uncommitted changes delete, including the old names of renamed files
+    pub(crate) fn uncommitted_deleted(&self) -> Result<Vec<File>> {
+        Ok(self
+            .status(&["--no-renames"])?
+            .records()
+            .filter(Record::is_deleted)
+            .map(|record| File::from(record.path))
+            .filter(|file| !self.file_exists(file))
+            .collect())
+    }
 }
 
 #[cfg(test)]
@@ -77,5 +88,69 @@ mod tests {
         let have = repo.uncommitted()?;
         pretty::assert_eq!(have, vec![File::from("new file.txt")]);
         Ok(())
+    }
+
+    mod uncommitted_deleted {
+        use crate::domain::{File, Result};
+        use crate::git::{GitCommandExt, Repo};
+        use std::fs;
+        use tempfile::TempDir;
+
+        fn repo_with_file(dir: &TempDir, file: &str) -> Result<Repo> {
+            let repo = Repo::init(dir.path())?;
+            repo.create_and_commit_file(file)?;
+            Ok(repo)
+        }
+
+        #[test]
+        fn unstaged_deletion() -> Result<()> {
+            let dir = TempDir::new().unwrap();
+            let repo = repo_with_file(&dir, "gone.rs")?;
+            fs::remove_file(repo.file_path("gone.rs")).unwrap();
+            pretty::assert_eq!(repo.uncommitted_deleted()?, vec![File::from("gone.rs")]);
+            pretty::assert_eq!(repo.uncommitted()?, Vec::<File>::new());
+            Ok(())
+        }
+
+        #[test]
+        fn staged_deletion() -> Result<()> {
+            let dir = TempDir::new().unwrap();
+            let repo = repo_with_file(&dir, "gone.rs")?;
+            repo.git_command()
+                .args(["rm", "--quiet", "gone.rs"])
+                .run()?;
+            pretty::assert_eq!(repo.uncommitted_deleted()?, vec![File::from("gone.rs")]);
+            Ok(())
+        }
+
+        #[test]
+        fn staged_rename_deletes_the_old_name() -> Result<()> {
+            let dir = TempDir::new().unwrap();
+            let repo = repo_with_file(&dir, "old.rs")?;
+            repo.git_command().args(["mv", "old.rs", "new.md"]).run()?;
+            pretty::assert_eq!(repo.uncommitted_deleted()?, vec![File::from("old.rs")]);
+            Ok(())
+        }
+
+        #[test]
+        fn recreated_file_is_not_deleted() -> Result<()> {
+            let dir = TempDir::new().unwrap();
+            let repo = repo_with_file(&dir, "back.rs")?;
+            repo.git_command()
+                .args(["rm", "--quiet", "back.rs"])
+                .run()?;
+            repo.create_unstaged_file("back.rs");
+            pretty::assert_eq!(repo.uncommitted_deleted()?, Vec::<File>::new());
+            Ok(())
+        }
+
+        #[test]
+        fn no_deletions() -> Result<()> {
+            let dir = TempDir::new().unwrap();
+            let repo = repo_with_file(&dir, "kept.rs")?;
+            repo.create_unstaged_file("new.rs");
+            pretty::assert_eq!(repo.uncommitted_deleted()?, Vec::<File>::new());
+            Ok(())
+        }
     }
 }

@@ -319,6 +319,37 @@ Feature: stack-specific tests
       """
     And the exit code is 0
 
+  Scenario: deleting an ignored file does not trigger stack tests
+    Given a Git repository
+    And a committed file "trident.json" with content
+      """
+      {
+        "ignore-files": ["vendor/"],
+        "stacks": {
+          "rust": {
+            "tests": [
+              { "name": "backend", "command": "echo running Rust tests" }
+            ]
+          }
+        }
+      }
+      """
+    And a committed file "vendor/main.rs" with content
+      """
+      // Rust code
+      """
+    And I ran "git rm vendor/main.rs"
+    When executing "trident test --show=output"
+    Then it prints to STDERR
+      """
+      running 0 tasks
+      """
+    And it does not print
+      """
+      running Rust tests
+      """
+    And the exit code is 0
+
   Scenario Outline: commands that only fix or only lint do not run stack tests
     Given a Git repository
     And a committed file "run-that-app" with content
@@ -384,3 +415,50 @@ Feature: stack-specific tests
       running Rust tests
       """
     And the exit code is 0
+
+  Scenario Outline: fixes and lints do not treat deleted files as changes
+    Given a Git repository
+    And a committed file "run-that-app" with content
+      """
+      delete-empty-folders 0.0.2
+      """
+    And a committed file "trident.json" with content
+      """
+      {
+        "applications": {
+          "biome": { "enabled": false }
+        },
+        "stacks": {
+          "rust": {
+            "fix": {
+              "replace": [
+                { "name": "my fix", "command": "echo running Rust fix" }
+              ]
+            },
+            "lint": {
+              "replace": [
+                { "name": "my lint", "command": "echo running Rust lint" }
+              ]
+            }
+          }
+        }
+      }
+      """
+    And a committed file "main.rs" with content
+      """
+      // Rust code
+      """
+    And I ran "git rm main.rs"
+    When executing "trident <COMMAND> --show=output"
+    Then it does not print
+      """
+      running Rust
+      """
+    And the exit code is 0
+
+    Examples:
+      | COMMAND  |
+      | fix      |
+      | lint     |
+      | pitstop  |
+      | postedit |

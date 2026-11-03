@@ -86,6 +86,37 @@ Feature: "trident ci" runs stack-specific tests
       """
     And the exit code is 0
 
+  Scenario: runs the tests of a stack whose last file the branch deleted
+    Given I ran "git rm main.rs"
+    And I ran "git commit --message=delete"
+    When executing "trident ci --show=output"
+    Then it prints the block
+      """
+      test Rust (backend)
+      running Rust tests
+      """
+    And the exit code is 0
+
+  Scenario: --scope=branch runs the tests of the stacks of deleted files
+    Given I ran "git rm main.rs"
+    And I ran "git commit --message=delete"
+    When executing "trident ci --scope=branch --show=output"
+    Then it prints the block
+      """
+      test Rust (backend)
+      running Rust tests
+      """
+    And it prints the block
+      """
+      test TypeScript (frontend)
+      running TypeScript tests
+      """
+    And it does not print
+      """
+      running Markdown tests
+      """
+    And the exit code is 0
+
   Scenario: failing stack test
     Given I change file "trident.json" to
       """
