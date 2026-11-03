@@ -26,7 +26,7 @@ Feature: "trident ci --scope" selects which files to process
     Then it prints the lines to STDERR
       """
       1 Markdown
-      running 4 tools
+      running 4 tasks
       """
     And it prints the block
       """
@@ -53,7 +53,7 @@ Feature: "trident ci --scope" selects which files to process
     Then it prints the lines to STDERR
       """
       2 Markdown
-      running 4 tools
+      running 4 tasks
       """
     And it prints the block
       """
@@ -83,7 +83,7 @@ Feature: "trident ci --scope" selects which files to process
     Then it prints the lines to STDERR
       """
       3 Markdown, 1 other
-      running 4 tools
+      running 4 tasks
       """
     And it prints the block
       """

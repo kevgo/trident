@@ -24,7 +24,7 @@ Feature: "trident fix-unsafe" chooses the smallest "--scope" based on the worksp
     Then it prints to STDERR
       """
       1 Python, 1 other
-      running 1 tools
+      running 1 tasks
       """
     And it prints the lines
       """
@@ -51,7 +51,7 @@ Feature: "trident fix-unsafe" chooses the smallest "--scope" based on the worksp
     Then it prints to STDERR
       """
       1 Python
-      running 1 tools
+      running 1 tasks
       """
     And it prints the lines
       """
@@ -75,7 +75,7 @@ Feature: "trident fix-unsafe" chooses the smallest "--scope" based on the worksp
     Then it prints to STDERR
       """
       1 Python, 1 other
-      running 1 tools
+      running 1 tasks
       """
     And it prints the lines
       """
@@ -103,7 +103,7 @@ Feature: "trident fix-unsafe" chooses the smallest "--scope" based on the worksp
     Then it prints to STDERR
       """
       1 Python
-      running 1 tools
+      running 1 tasks
       """
     And it prints the lines
       """
@@ -142,7 +142,7 @@ Feature: "trident fix-unsafe" chooses the smallest "--scope" based on the worksp
     Then it prints to STDERR
       """
       1 Python
-      running 1 tools
+      running 1 tasks
       """
     And it prints the lines
       """

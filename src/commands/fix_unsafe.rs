@@ -29,7 +29,7 @@ pub fn fix_unsafe(args: &RunArgsWithScope) -> Result<ExitCode> {
     // step 3: discover the unsafe fixes to run
     let unsafe_fixes = determine_unsafe_fixes(&stacks, &config)?;
     if show.display_metadata() {
-        eprintln!("running {} tools", unsafe_fixes.len());
+        eprintln!("running {} tasks", unsafe_fixes.len());
     }
 
     // step 4: run the fixes

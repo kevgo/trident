@@ -27,7 +27,7 @@ Feature: CI multiple formatted stacks
     Then it prints to STDERR
       """
       1 CSS, 1 Python, 1 TypeScript, 1 other
-      running 8 tools
+      running 8 tasks
       """
     And it prints the lines
       """
@@ -68,7 +68,7 @@ Feature: CI multiple formatted stacks
     Then it prints to STDERR
       """
       1 CSS, 1 Python, 1 TypeScript, 1 other
-      running 8 tools
+      running 8 tasks
       """
     And it prints the lines
       """

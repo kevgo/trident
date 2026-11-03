@@ -16,7 +16,7 @@ Feature: "trident postedit" lints only uncommitted files
     When executing "trident postedit --show=output"
     Then it prints to STDERR
       """
-      running 1 tools
+      running 1 tasks
       """
     And it prints the lines
       """
@@ -49,7 +49,7 @@ Feature: "trident postedit" lints only uncommitted files
     Then it prints to STDERR
       """
       2 Markdown
-      running 2 tools
+      running 2 tasks
       """
     And it prints the lines
       """
@@ -78,7 +78,7 @@ Feature: "trident postedit" lints only uncommitted files
     Then it prints to STDERR
       """
       1 Markdown
-      running 2 tools
+      running 2 tasks
       """
     And it prints the lines
       """

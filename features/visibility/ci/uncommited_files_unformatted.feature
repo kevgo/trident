@@ -28,7 +28,7 @@ Feature: CI doesn't care about uncommitted files that are unformatted
     Then it prints to STDERR
       """
       1 CSS, 1 Python, 1 TypeScript, 1 other
-      running 9 tools
+      running 9 tasks
       """
     And it prints the block
       """
@@ -85,7 +85,7 @@ Feature: CI doesn't care about uncommitted files that are unformatted
     Then it prints to STDERR
       """
       1 CSS, 1 Python, 1 TypeScript, 1 other
-      running 9 tools
+      running 9 tasks
       """
     And it prints the lines matching
       """
@@ -150,7 +150,7 @@ Feature: CI doesn't care about uncommitted files that are unformatted
     Then it does not print
       """
       1 CSS, 1 Python, 1 TypeScript, 1 other
-      running 4 tools
+      running 4 tasks
       """
     And it prints only these lines in any order
       """

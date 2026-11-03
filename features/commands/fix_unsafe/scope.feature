@@ -37,7 +37,7 @@ Feature: "trident fix-unsafe --scope" selects which files to fix
     Then it prints to STDERR
       """
       1 Python
-      running 1 tools
+      running 1 tasks
       """
     And it prints the lines
       """
@@ -61,7 +61,7 @@ Feature: "trident fix-unsafe --scope" selects which files to fix
     Then it prints to STDERR
       """
       2 Python
-      running 1 tools
+      running 1 tasks
       """
     And it prints the lines
       """
@@ -91,7 +91,7 @@ Feature: "trident fix-unsafe --scope" selects which files to fix
     Then it prints to STDERR
       """
       3 Python, 1 other
-      running 1 tools
+      running 1 tasks
       """
     And it prints the lines
       """

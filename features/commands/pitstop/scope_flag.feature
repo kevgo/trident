@@ -26,7 +26,7 @@ Feature: "trident pitstop --scope" selects which files to process
     Then it prints to STDERR
       """
       1 Markdown
-      running 4 tools
+      running 4 tasks
       """
     And it prints the lines
       """
@@ -57,7 +57,7 @@ Feature: "trident pitstop --scope" selects which files to process
     Then it prints to STDERR
       """
       2 Markdown
-      running 4 tools
+      running 4 tasks
       """
     And it prints the block
       """
@@ -87,7 +87,7 @@ Feature: "trident pitstop --scope" selects which files to process
     Then it prints to STDERR
       """
       3 Markdown, 1 other
-      running 4 tools
+      running 4 tasks
       """
     And it prints the block
       """

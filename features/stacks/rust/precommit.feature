@@ -21,7 +21,7 @@ Feature: precommit Rust
     And it prints to STDERR
       """
       1 Rust
-      running 1 tools
+      running 1 tasks
       """
     And the exit code is 0
 
@@ -52,6 +52,6 @@ Feature: precommit Rust
     And it prints to STDERR
       """
       1 Rust
-      running 2 tools
+      running 2 tasks
       """
     And the exit code is 0

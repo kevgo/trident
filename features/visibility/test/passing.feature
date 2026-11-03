@@ -15,7 +15,7 @@ Feature: test command with passing tests
     When executing "trident test --show=output"
     Then it prints to STDERR
       """
-      running 2 tools
+      running 2 tasks
       """
     And it prints the block
       """
@@ -33,7 +33,7 @@ Feature: test command with passing tests
     When executing "trident test --show=verbose"
     Then it prints to STDERR
       """
-      running 2 tools
+      running 2 tasks
       """
     And it prints the lines matching
       """
