@@ -11,10 +11,6 @@ Feature: "trident ci" with a limited scope lints all files of stacks with delete
       """
       #     Unrelated
       """
-    And a committed file "also-unrelated.md" with content
-      """
-      # Also unrelated
-      """
     And a committed file "removed.md" with content
       """
       # Removed
