@@ -46,23 +46,32 @@ pub(crate) fn infer_scope(repo: Option<&Repo>) -> Scope {
         // error running Git --> check all files
         return Scope::All;
     };
-    if !uncommitted.is_empty() {
-        // uncommitted files exist --> check only those
+    let Ok(uncommitted_removed) = repo.uncommitted_removed() else {
+        // error running Git --> check all files
+        return Scope::All;
+    };
+    if !uncommitted.is_empty() || !uncommitted_removed.is_empty() {
+        // uncommitted changes exist --> check only those
         return Scope::Uncommitted;
     }
     let Ok(branch_changed) = repo.branch_changed_files() else {
         // error running Git --> check all files
         return Scope::All;
     };
-    if branch_changed.is_empty() {
+    let Ok(branch_removed) = repo.branch_removed_files() else {
+        // error running Git --> check all files
+        return Scope::All;
+    };
+    if branch_changed.is_empty() && branch_removed.is_empty() {
         // no branch changes --> check all files
         return Scope::All;
     }
     Scope::Branch
 }
 
-/// provides the stacks that match the given file scope
+/// provides the stacks containing the files in the given scope that exist in the workspace
 ///
+/// Fixes run on these files.
 /// When the current directory is not a Git repository, every scope scans all files.
 pub(crate) fn discover_stacks(
     scope: Scope,
@@ -78,12 +87,33 @@ pub(crate) fn discover_stacks(
     }
 }
 
+/// provides the stacks and files to lint for the given file scope
+///
+/// These are the files that [`discover_stacks`] provides.
+/// If the scope deletes or renames a file, they also include all files of that file's stack
+/// because the other files might still refer to the removed file.
+pub(crate) fn discover_lint_stacks(
+    scope: Scope,
+    repo: Option<&Repo>,
+    ignores: &Ignores,
+) -> Result<DetectedStacks> {
+    let changed = discover_stacks(scope, repo, ignores)?;
+    let removed = match (scope, repo) {
+        (Scope::All, _) | (_, None) => return Ok(changed),
+        (Scope::Uncommitted, Some(repo)) => repo.uncommitted_removed()?,
+        (Scope::Branch, Some(repo)) => repo.branch_removed_files()?,
+    };
+    Ok(stacks::include_stacks_of_removed_files(
+        changed, &removed, ignores,
+    ))
+}
+
 #[cfg(test)]
 mod tests {
     use super::{discover_stacks, infer_scope, resolve_scope};
     use crate::cli::input::{Scope, ScopeArg};
     use crate::domain::{DetectedStacks, File, Ignores, Result};
-    use crate::git::Repo;
+    use crate::git::{GitCommandExt, Repo};
     use tempfile::TempDir;
 
     fn filenames(stacks: &DetectedStacks) -> Vec<File> {
@@ -147,6 +177,36 @@ mod tests {
         repo.create_and_commit_file("on-main.md").unwrap();
         repo.create_and_switch_to_branch("feature").unwrap();
         repo.create_and_commit_file("on-branch.md").unwrap();
+        let have = infer_scope(Some(&repo));
+        let want = Scope::Branch;
+        pretty::assert_eq!(have, want);
+    }
+
+    #[test]
+    fn infer_uncommitted_when_only_uncommitted_deletions_exist() {
+        let dir = TempDir::new().unwrap();
+        let repo = Repo::init(dir.path()).unwrap();
+        repo.create_and_commit_file("on-main.md").unwrap();
+        std::fs::remove_file(repo.file_path("on-main.md")).unwrap();
+        let have = infer_scope(Some(&repo));
+        let want = Scope::Uncommitted;
+        pretty::assert_eq!(have, want);
+    }
+
+    #[test]
+    fn infer_branch_when_branch_only_deletes_files() {
+        let dir = TempDir::new().unwrap();
+        let repo = Repo::init(dir.path()).unwrap();
+        repo.create_and_commit_file("on-main.md").unwrap();
+        repo.create_and_switch_to_branch("feature").unwrap();
+        repo.git_command()
+            .args(["rm", "--quiet", "on-main.md"])
+            .run()
+            .unwrap();
+        repo.git_command()
+            .args(["commit", "--quiet", "--message=Delete"])
+            .run()
+            .unwrap();
         let have = infer_scope(Some(&repo));
         let want = Scope::Branch;
         pretty::assert_eq!(have, want);

@@ -20,5 +20,5 @@ pub fn full(args: &RunArgsWithTest) -> Result<ExitCode> {
         Operation::Test,
         None,
     );
-    run_tasks(&args.run, &config, &stacks, repo.as_ref(), tests)
+    run_tasks(&args.run, &config, &stacks, &stacks, repo.as_ref(), tests)
 }
