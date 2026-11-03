@@ -11,6 +11,10 @@ Feature: "trident lint" lints all files of a stack in which files were deleted o
       """
       #     Unrelated
       """
+    And a committed file "also-unrelated.md" with content
+      """
+      # Also unrelated
+      """
     And a committed file "removed.md" with content
       """
       # Removed

@@ -11,7 +11,7 @@ mod test;
 mod update_tools;
 
 use crate::cli::input::{Scope, ScopeArg};
-use crate::domain::{DetectedStacks, File, Ignores, Result};
+use crate::domain::{DetectedStacks, Ignores, Result};
 use crate::git::Repo;
 use crate::stacks;
 pub use ci::ci;
@@ -69,67 +69,89 @@ pub(crate) fn infer_scope(repo: Option<&Repo>) -> Scope {
     Scope::Branch
 }
 
-/// provides the stacks containing the files in the given scope that exist in the workspace
+/// the stacks and files that a command operates on
+pub(crate) struct ScopedStacks {
+    /// the files in scope that exist in the workspace
+    existing: DetectedStacks,
+
+    /// the stacks that differ from `existing` because the scope removes files
+    removed: Option<RemovedStacks>,
+}
+
+/// see [`ScopedStacks::changed`] and [`ScopedStacks::lint`]
+struct RemovedStacks {
+    changed: DetectedStacks,
+    lint: DetectedStacks,
+}
+
+impl ScopedStacks {
+    /// the given files, in a scope that doesn't remove any files
+    pub(crate) fn without_removed_files(existing: DetectedStacks) -> Self {
+        Self {
+            existing,
+            removed: None,
+        }
+    }
+
+    /// all files that the scope changes, including the ones it deletes or renames away
+    ///
+    /// This is what the user sees as the files in scope.
+    pub(crate) fn changed(&self) -> &DetectedStacks {
+        match &self.removed {
+            Some(removed) => &removed.changed,
+            None => &self.existing,
+        }
+    }
+
+    /// the files to fix: the changed files that still exist in the workspace
+    pub(crate) fn fix(&self) -> &DetectedStacks {
+        &self.existing
+    }
+
+    /// the files to lint: the files to fix,
+    /// plus all files in the stacks of the files that the scope deletes or renames away
+    /// because those files might still refer to the removed file
+    pub(crate) fn lint(&self) -> &DetectedStacks {
+        match &self.removed {
+            Some(removed) => &removed.lint,
+            None => &self.existing,
+        }
+    }
+}
+
+/// provides the stacks for the given file scope
 ///
-/// Fixes run on these files.
 /// When the current directory is not a Git repository, every scope scans all files.
 pub(crate) fn discover_stacks(
     scope: Scope,
     repo: Option<&Repo>,
     ignores: &Ignores,
-) -> Result<DetectedStacks> {
-    match (scope, repo) {
-        (Scope::All, _) | (_, None) => Ok(stacks::discover_all(ignores)),
-        (Scope::Uncommitted, Some(repo)) => Ok(stacks::from_files(&repo.uncommitted()?, ignores)),
-        (Scope::Branch, Some(repo)) => {
-            Ok(stacks::from_files(&repo.branch_changed_files()?, ignores))
-        }
+) -> Result<ScopedStacks> {
+    let (existing, removed) = match (scope, repo) {
+        (Scope::All, _) | (_, None) => (stacks::discover_all(ignores), vec![]),
+        (Scope::Uncommitted, Some(repo)) => (
+            stacks::from_files(&repo.uncommitted()?, ignores),
+            repo.uncommitted_removed()?,
+        ),
+        (Scope::Branch, Some(repo)) => (
+            stacks::from_files(&repo.branch_changed_files()?, ignores),
+            repo.branch_removed_files()?,
+        ),
+    };
+    if removed.is_empty() {
+        return Ok(ScopedStacks::without_removed_files(existing));
     }
-}
-
-/// provides the stacks and files to lint for the given file scope
-///
-/// These are the files that [`discover_stacks`] provides.
-/// If the scope deletes or renames a file, they also include all files of that file's stack
-/// because the other files might still refer to the removed file.
-pub(crate) fn discover_lint_stacks(
-    scope: Scope,
-    repo: Option<&Repo>,
-    ignores: &Ignores,
-) -> Result<DetectedStacks> {
-    let changed = discover_stacks(scope, repo, ignores)?;
-    let removed = removed_files(scope, repo)?;
-    Ok(stacks::include_stacks_of_removed_files(
-        changed, &removed, ignores,
-    ))
-}
-
-/// provides the stacks to report to the user for the given file scope
-///
-/// These are the files that [`discover_stacks`] provides plus the files that the scope deletes
-/// or renames away, i.e. all files that the scope changes.
-pub(crate) fn discover_changed_stacks(
-    scope: Scope,
-    repo: Option<&Repo>,
-    ignores: &Ignores,
-) -> Result<DetectedStacks> {
-    let existing = discover_stacks(scope, repo, ignores)?;
-    let removed = removed_files(scope, repo)?;
-    Ok(stacks::include_removed_files(existing, &removed, ignores))
-}
-
-/// provides the files that the given scope deletes or renames away
-fn removed_files(scope: Scope, repo: Option<&Repo>) -> Result<Vec<File>> {
-    match (scope, repo) {
-        (Scope::All, _) | (_, None) => Ok(vec![]),
-        (Scope::Uncommitted, Some(repo)) => repo.uncommitted_removed(),
-        (Scope::Branch, Some(repo)) => repo.branch_removed_files(),
-    }
+    let changed = stacks::include_removed_files(&existing, &removed, ignores);
+    let lint = stacks::include_stacks_of_removed_files(&existing, &removed, ignores);
+    Ok(ScopedStacks {
+        existing,
+        removed: Some(RemovedStacks { changed, lint }),
+    })
 }
 
 #[cfg(test)]
 mod tests {
-    use super::{discover_changed_stacks, discover_stacks, infer_scope, resolve_scope};
+    use super::{discover_stacks, infer_scope, resolve_scope};
     use crate::cli::input::{Scope, ScopeArg};
     use crate::domain::{DetectedStacks, File, Ignores, Result};
     use crate::git::{GitCommandExt, Repo};
@@ -151,7 +173,7 @@ mod tests {
         repo.create_and_commit_file("committed.md")?;
         repo.create_unstaged_file("untracked.md");
         let stacks = discover_stacks(Scope::Uncommitted, Some(&repo), &Ignores::empty())?;
-        pretty::assert_eq!(filenames(&stacks), vec![File::from("untracked.md")]);
+        pretty::assert_eq!(filenames(stacks.fix()), vec![File::from("untracked.md")]);
         Ok(())
     }
 
@@ -165,7 +187,7 @@ mod tests {
         repo.create_unstaged_file("untracked.md");
         let stacks = discover_stacks(Scope::Branch, Some(&repo), &Ignores::empty())?;
         pretty::assert_eq!(
-            filenames(&stacks),
+            filenames(stacks.fix()),
             vec![File::from("on-branch.md"), File::from("untracked.md")]
         );
         Ok(())
@@ -179,9 +201,10 @@ mod tests {
         repo.create_and_commit_file("untouched.md")?;
         repo.create_unstaged_file("untracked.md");
         std::fs::remove_file(repo.file_path("deleted.md")).unwrap();
-        let stacks = discover_changed_stacks(Scope::Uncommitted, Some(&repo), &Ignores::empty())?;
+        let stacks = discover_stacks(Scope::Uncommitted, Some(&repo), &Ignores::empty())?;
+        pretty::assert_eq!(filenames(stacks.fix()), vec![File::from("untracked.md")]);
         pretty::assert_eq!(
-            filenames(&stacks),
+            filenames(stacks.changed()),
             vec![File::from("deleted.md"), File::from("untracked.md")]
         );
         Ok(())

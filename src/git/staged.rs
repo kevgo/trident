@@ -10,6 +10,16 @@ impl Repo {
         let status_output = self.status(&[])?;
         Ok(StagedFiles::from(&status_output))
     }
+
+    /// provides the files with staged changes that don't exist in the workspace anymore
+    pub(crate) fn staged_removed(&self) -> Result<Vec<File>> {
+        Ok(self
+            .status(&[])?
+            .staged_removed_paths()
+            .map(File::from)
+            .filter(|file| !self.file_exists(file))
+            .collect())
+    }
 }
 
 /// the files that are staged in the current directory
@@ -109,6 +119,27 @@ mod tests {
                 partial: vec![],
                 full: vec![File::from("file\"quote.txt")],
             };
+            pretty::assert_eq!(have, want);
+            Ok(())
+        }
+
+        #[test]
+        fn staged_removed_lists_only_staged_removals() -> Result<()> {
+            let dir = TempDir::new().unwrap();
+            let repo = Repo::init(dir.path())?;
+            repo.create_and_commit_file("staged-delete.txt")?;
+            repo.create_and_commit_file("unstaged-delete.txt")?;
+            repo.create_and_commit_file("old.txt")?;
+            repo.git_command()
+                .args(["rm", "--quiet", "staged-delete.txt"])
+                .run()?;
+            repo.git_command()
+                .args(["mv", "old.txt", "new.txt"])
+                .run()?;
+            fs::remove_file(repo.file_path("unstaged-delete.txt")).unwrap();
+            let mut have = repo.staged_removed()?;
+            have.sort();
+            let want = vec![File::from("old.txt"), File::from("staged-delete.txt")];
             pretty::assert_eq!(have, want);
             Ok(())
         }

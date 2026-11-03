@@ -30,6 +30,7 @@ Feature: "trident fix-unsafe" operates only on changed files that still exist in
     When executing "trident fix-unsafe --show=output"
     Then it prints to STDERR
       """
+      1 Python
       running 0 tasks
       """
     And it does not print
@@ -50,7 +51,7 @@ Feature: "trident fix-unsafe" operates only on changed files that still exist in
     When executing "trident fix-unsafe --show=output"
     Then it prints to STDERR
       """
-      1 Python
+      2 Python
       running 1 tasks
       """
     And it prints the lines
@@ -77,6 +78,7 @@ Feature: "trident fix-unsafe" operates only on changed files that still exist in
     When executing "trident fix-unsafe --show=output"
     Then it prints to STDERR
       """
+      1 Python
       running 0 tasks
       """
     And it does not print

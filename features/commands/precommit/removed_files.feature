@@ -11,6 +11,10 @@ Feature: "trident precommit" operates only on staged files that still exist in t
       """
       #     Unrelated
       """
+    And a committed file "also-unrelated.md" with content
+      """
+      # Also unrelated
+      """
     And a committed file "removed.md" with content
       """
       # Removed
@@ -20,7 +24,11 @@ Feature: "trident precommit" operates only on staged files that still exist in t
     Given I delete file "removed.md"
     And I ran "git add -A"
     When executing "trident precommit --show=output"
-    Then it does not print
+    Then it prints to STDERR
+      """
+      1 Markdown
+      """
+    And it does not print
       """
       fix Markdown
       """
@@ -37,7 +45,7 @@ Feature: "trident precommit" operates only on staged files that still exist in t
     When executing "trident precommit --show=output"
     Then it prints to STDERR
       """
-      1 Markdown
+      2 Markdown
       running 2 tasks
       """
     And it does not print
@@ -65,7 +73,7 @@ Feature: "trident precommit" operates only on staged files that still exist in t
     When executing "trident precommit --show=output"
     Then it prints to STDERR
       """
-      1 Markdown
+      2 Markdown
       running 2 tasks
       """
     And it does not print

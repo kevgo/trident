@@ -1,4 +1,4 @@
-use super::{discover_lint_stacks, resolve_scope};
+use super::{discover_stacks, resolve_scope};
 use crate::apps::git_diff_check;
 use crate::apps::git_diff_check::GitDiffCheck;
 use crate::cli::input::{RunArgsWithScope, ShowExt};
@@ -23,13 +23,13 @@ pub fn lint(args: &RunArgsWithScope) -> Result<ExitCode> {
 
     // step 2: discover the stacks
     let scope = resolve_scope(&args.scope, repo.as_ref());
-    let stacks = discover_lint_stacks(scope, repo.as_ref(), &ignores)?;
+    let stacks = discover_stacks(scope, repo.as_ref(), &ignores)?;
     if show.display_metadata() {
-        print_metadata(&stacks);
+        print_metadata(stacks.changed());
     }
 
     // step 3: discover the lints to run
-    let lints = determine_lints(&config, &stacks, repo.as_ref())?;
+    let lints = determine_lints(&config, stacks.lint(), repo.as_ref())?;
     if show.display_metadata() {
         eprintln!("running {} tasks", lints.len());
     }

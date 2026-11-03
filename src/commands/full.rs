@@ -1,3 +1,4 @@
+use super::ScopedStacks;
 use super::pitstop::run_tasks;
 use crate::cli::input::RunArgsWithTest;
 use crate::config::{Config, DefaultTests, to_sequences};
@@ -10,7 +11,7 @@ pub fn full(args: &RunArgsWithTest) -> Result<ExitCode> {
     let config = Config::load()?;
     let ignores = config.ignores()?;
     let repo = Repo::load();
-    let stacks = stacks::discover_all(&ignores);
+    let stacks = ScopedStacks::without_removed_files(stacks::discover_all(&ignores));
     let tests = to_sequences(
         config.tests_for(
             &args.test,
@@ -20,13 +21,5 @@ pub fn full(args: &RunArgsWithTest) -> Result<ExitCode> {
         Operation::Test,
         None,
     );
-    run_tasks(
-        &args.run,
-        &config,
-        &stacks,
-        &stacks,
-        &stacks,
-        repo.as_ref(),
-        tests,
-    )
+    run_tasks(&args.run, &config, &stacks, repo.as_ref(), tests)
 }

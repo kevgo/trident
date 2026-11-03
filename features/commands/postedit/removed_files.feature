@@ -11,6 +11,10 @@ Feature: "trident postedit" lints all files of stacks with uncommitted deletions
       """
       missing header
       """
+    And a committed file "also-unrelated.md" with content
+      """
+      # Also unrelated
+      """
     And a committed file "removed.md" with content
       """
       # Removed

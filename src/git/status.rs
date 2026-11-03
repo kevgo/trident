@@ -53,11 +53,14 @@ impl GitStatusOutput {
     /// the paths of the files that this status output reports as deleted or renamed away
     pub(crate) fn removed_paths(&self) -> impl Iterator<Item = &str> {
         self.records_with_orig_paths()
-            .flat_map(|(record, orig_path)| {
-                let deleted = record.is_deleted().then_some(record.path);
-                let renamed_away = orig_path.filter(|_| record.is_renamed());
-                deleted.into_iter().chain(renamed_away)
-            })
+            .flat_map(|(record, orig_path)| removed_paths_of(&record, orig_path))
+    }
+
+    /// the paths of the staged files that this status output reports as deleted or renamed away
+    pub(crate) fn staged_removed_paths(&self) -> impl Iterator<Item = &str> {
+        self.records_with_orig_paths()
+            .filter(|(record, _)| record.index != ' ')
+            .flat_map(|(record, orig_path)| removed_paths_of(&record, orig_path))
     }
 
     /// all records together with the original path of renames and copies
@@ -75,6 +78,16 @@ impl GitStatusOutput {
             Some((record, orig_path))
         })
     }
+}
+
+/// provides the paths that the given record reports as deleted or renamed away
+fn removed_paths_of<'a>(
+    record: &Record<'a>,
+    orig_path: Option<&'a str>,
+) -> impl Iterator<Item = &'a str> + use<'a> {
+    let deleted = record.is_deleted().then_some(record.path);
+    let renamed_away = orig_path.filter(|_| record.is_renamed());
+    deleted.into_iter().chain(renamed_away)
 }
 
 /// a record from `git status --porcelain=v1 -z`
@@ -261,6 +274,23 @@ mod tests {
                 "new2.rs",
                 "old2.rs",
             ];
+            pretty::assert_eq!(have, want);
+        }
+
+        #[test]
+        fn staged_only() {
+            let give = [
+                "D  staged-delete.rs",
+                " D unstaged-delete.rs",
+                "MD modified-then-deleted.rs",
+                "R  new.rs\0old.rs",
+                "M  modified.rs",
+                "?? untracked.rs",
+            ]
+            .join("\0");
+            let output = GitStatusOutput::from(give);
+            let have: Vec<&str> = output.staged_removed_paths().collect();
+            let want = vec!["staged-delete.rs", "modified-then-deleted.rs", "old.rs"];
             pretty::assert_eq!(have, want);
         }
 

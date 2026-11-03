@@ -1,11 +1,9 @@
 use crate::cli::input::{RunArgs, RunArgsWithTestAndScope, ShowExt};
 use crate::cli::output::print_metadata;
 use crate::commands::lint::Lints;
-use crate::commands::{
-    discover_changed_stacks, discover_lint_stacks, discover_stacks, fix, lint, resolve_scope,
-};
+use crate::commands::{ScopedStacks, discover_stacks, fix, lint, resolve_scope};
 use crate::config::{Config, DefaultTests, to_sequences};
-use crate::domain::{DetectedStacks, Operation, Result, Runnables, StackType};
+use crate::domain::{Operation, Result, Runnables, StackType};
 use crate::git::Repo;
 use crate::subshell::{self, ToolCall};
 use ahash::AHashMap;
@@ -17,9 +15,7 @@ pub fn pitstop(args: &RunArgsWithTestAndScope) -> Result<ExitCode> {
     let ignores = config.ignores()?;
     let repo = Repo::load();
     let scope = resolve_scope(&args.scope, repo.as_ref());
-    let changed_stacks = discover_changed_stacks(scope, repo.as_ref(), &ignores)?;
-    let fix_stacks = discover_stacks(scope, repo.as_ref(), &ignores)?;
-    let lint_stacks = discover_lint_stacks(scope, repo.as_ref(), &ignores)?;
+    let stacks = discover_stacks(scope, repo.as_ref(), &ignores)?;
     let tests = to_sequences(
         config.tests_for(
             &args.test,
@@ -29,27 +25,16 @@ pub fn pitstop(args: &RunArgsWithTestAndScope) -> Result<ExitCode> {
         Operation::Test,
         None,
     );
-    run_tasks(
-        &args.run,
-        &config,
-        &changed_stacks,
-        &fix_stacks,
-        &lint_stacks,
-        repo.as_ref(),
-        tests,
-    )
+    run_tasks(&args.run, &config, &stacks, repo.as_ref(), tests)
 }
 
-/// runs global fixes, then stack-specific fixes on `fix_stacks`, then lints on `lint_stacks`
+/// runs global fixes, then stack-specific fixes, then lints on the given stacks
 ///
-/// `changed_stacks` are the stacks to report to the user.
 /// `tests` run together with the global lints.
 pub(crate) fn run_tasks(
     args: &RunArgs,
     config: &Config,
-    changed_stacks: &DetectedStacks,
-    fix_stacks: &DetectedStacks,
-    lint_stacks: &DetectedStacks,
+    stacks: &ScopedStacks,
     repo: Option<&Repo>,
     tests: Vec<NonEmpty<ToolCall>>,
 ) -> Result<ExitCode> {
@@ -59,12 +44,12 @@ pub(crate) fn run_tasks(
     let stderr_to_stdout = true;
 
     if show.display_metadata() {
-        print_metadata(changed_stacks);
+        print_metadata(stacks.changed());
     }
 
     // step 1: discover the runnables
-    let fixes = fix::determine_fixes(config, fix_stacks)?;
-    let mut lints = lint::determine_lints(config, lint_stacks, repo)?;
+    let fixes = fix::determine_fixes(config, stacks.fix())?;
+    let mut lints = lint::determine_lints(config, stacks.lint(), repo)?;
     lints.global.extend(tests);
     if show.display_metadata() {
         eprintln!("running {} tasks", fixes.len() + lints.len());

@@ -100,64 +100,66 @@ pub fn from_files<'a>(
     DetectedStacks::new(result)
 }
 
-/// adds the given removed files to the given stacks
+/// provides the given stacks with the given removed files added
 #[must_use]
 pub fn include_removed_files(
-    changed: DetectedStacks,
+    existing: &DetectedStacks,
     removed: &[File],
     ignores: &Ignores,
 ) -> DetectedStacks {
-    if removed.is_empty() {
-        return changed;
-    }
     let mut files = removed.to_vec();
-    for changed_stack in &changed {
-        files.extend(changed_stack.files.into_iter().cloned());
-    }
+    files.extend(stack_files(existing));
     files.sort_unstable();
     files.dedup();
     from_files(&files, ignores)
 }
 
-/// adds all workspace files of the stacks that the given removed files belonged to
+/// provides the given stacks with all workspace files of the stacks
+/// that the given removed files belonged to added
 ///
 /// Removing a file can break other files in its stack, for example the ones importing it.
 #[must_use]
 pub fn include_stacks_of_removed_files(
-    changed: DetectedStacks,
+    existing: &DetectedStacks,
     removed: &[File],
     ignores: &Ignores,
 ) -> DetectedStacks {
-    include_stacks_of_removed_files_in(Path::new("./"), changed, removed, ignores)
+    include_stacks_of_removed_files_in(Path::new("./"), existing, removed, ignores)
 }
 
-/// adds all files under `dir` of the stacks that the given removed files belonged to
+/// provides the given stacks with all files under `dir` of the stacks
+/// that the given removed files belonged to added
 #[must_use]
 pub fn include_stacks_of_removed_files_in(
     dir: &Path,
-    changed: DetectedStacks,
+    existing: &DetectedStacks,
     removed: &[File],
     ignores: &Ignores,
 ) -> DetectedStacks {
+    let mut files = stack_files(existing);
     let removed_stacks = from_files(removed, ignores);
-    if removed_stacks.is_empty() {
-        return changed;
-    }
-    let mut files: Vec<File> = Vec::new();
-    for changed_stack in &changed {
-        files.extend(changed_stack.files.into_iter().cloned());
-    }
-    for workspace_stack in &discover_all_in(dir, ignores) {
-        if removed_stacks
-            .get_stack(workspace_stack.stack.stack_type())
-            .is_some()
-        {
-            files.extend(workspace_stack.files.into_iter().cloned());
+    if !removed_stacks.is_empty() {
+        for workspace_stack in &discover_all_in(dir, ignores) {
+            if removed_stacks
+                .get_stack(workspace_stack.stack.stack_type())
+                .is_some()
+            {
+                files.extend(workspace_stack.files.into_iter().cloned());
+            }
         }
     }
     files.sort_unstable();
     files.dedup();
     from_files(&files, ignores)
+}
+
+/// provides all files in the given stacks
+fn stack_files(stacks: &DetectedStacks) -> Vec<File> {
+    let mut files = Vec::new();
+    for stack in stacks {
+        files.extend(stack.files.into_iter().cloned());
+    }
+    files
 }
 
 /// provides all stacks and their files that exist in the workspace
@@ -249,7 +251,7 @@ mod tests {
         #[test]
         fn no_removed_files() {
             let changed = from_files(&[File::from("changed.md")], &Ignores::empty());
-            let have = include_removed_files(changed, &[], &Ignores::empty());
+            let have = include_removed_files(&changed, &[], &Ignores::empty());
             pretty::assert_eq!(stack_counts(&have), vec!["1 Markdown"]);
         }
 
@@ -257,7 +259,7 @@ mod tests {
         fn counts_removed_files_in_their_stacks() {
             let changed = from_files(&[File::from("changed.md")], &Ignores::empty());
             let removed = [File::from("removed.md"), File::from("removed.py")];
-            let have = include_removed_files(changed, &removed, &Ignores::empty());
+            let have = include_removed_files(&changed, &removed, &Ignores::empty());
             pretty::assert_eq!(stack_counts(&have), vec!["2 Markdown", "1 Python"]);
         }
 
@@ -265,7 +267,7 @@ mod tests {
         fn skips_ignored_removed_files() {
             let ignores = Ignores::new(&[S("removed.md")], Path::new("./")).unwrap();
             let changed = from_files(&[File::from("changed.md")], &ignores);
-            let have = include_removed_files(changed, &[File::from("removed.md")], &ignores);
+            let have = include_removed_files(&changed, &[File::from("removed.md")], &ignores);
             pretty::assert_eq!(stack_counts(&have), vec!["1 Markdown"]);
         }
     }
@@ -289,7 +291,7 @@ mod tests {
             fs::write(dir.path().join("other.md"), "").unwrap();
             let changed = from_files(&[File::from("changed.md")], &Ignores::empty());
             let have =
-                include_stacks_of_removed_files_in(dir.path(), changed, &[], &Ignores::empty());
+                include_stacks_of_removed_files_in(dir.path(), &changed, &[], &Ignores::empty());
             pretty::assert_eq!(file_names(&have), vec!["changed.md"]);
         }
 
@@ -302,7 +304,7 @@ mod tests {
             let changed = from_files(&[File::from("changed.toml")], &Ignores::empty());
             let have = include_stacks_of_removed_files_in(
                 dir.path(),
-                changed,
+                &changed,
                 &[File::from("removed.md")],
                 &Ignores::empty(),
             );
@@ -322,7 +324,7 @@ mod tests {
             let changed = from_files(&[File::from(".hidden/changed.md")], &Ignores::empty());
             let have = include_stacks_of_removed_files_in(
                 dir.path(),
-                changed,
+                &changed,
                 &[File::from("removed.md")],
                 &Ignores::empty(),
             );
@@ -335,7 +337,7 @@ mod tests {
             fs::write(dir.path().join("other_stack.py"), "").unwrap();
             let have = include_stacks_of_removed_files_in(
                 dir.path(),
-                from_files(&[], &Ignores::empty()),
+                &from_files(&[], &Ignores::empty()),
                 &[File::from("removed.md")],
                 &Ignores::empty(),
             );

@@ -11,6 +11,10 @@ Feature: "trident fix" operates only on changed files that still exist in the wo
       """
       #     Unrelated
       """
+    And a committed file "also-unrelated.md" with content
+      """
+      # Also unrelated
+      """
     And a committed file "removed.md" with content
       """
       # Removed
@@ -21,6 +25,7 @@ Feature: "trident fix" operates only on changed files that still exist in the wo
     When executing "trident fix --show=output"
     Then it prints to STDERR
       """
+      1 Markdown
       running 1 tasks
       """
     And it does not print
@@ -39,7 +44,7 @@ Feature: "trident fix" operates only on changed files that still exist in the wo
     When executing "trident fix --show=output"
     Then it prints to STDERR
       """
-      1 Markdown
+      2 Markdown
       running 2 tasks
       """
     And it does not print
@@ -69,7 +74,7 @@ Feature: "trident fix" operates only on changed files that still exist in the wo
     When executing "trident fix --show=output"
     Then it prints to STDERR
       """
-      1 Markdown
+      2 Markdown
       running 2 tasks
       """
     And it does not print
@@ -94,6 +99,7 @@ Feature: "trident fix" operates only on changed files that still exist in the wo
     When executing "trident fix --show=output"
     Then it prints to STDERR
       """
+      1 Markdown
       running 1 tasks
       """
     And it does not print
@@ -111,6 +117,7 @@ Feature: "trident fix" operates only on changed files that still exist in the wo
     When executing "trident fix --show=output"
     Then it prints to STDERR
       """
+      1 Markdown
       running 1 tasks
       """
     And it does not print
@@ -132,7 +139,7 @@ Feature: "trident fix" operates only on changed files that still exist in the wo
     When executing "trident fix --scope=branch --show=output"
     Then it prints to STDERR
       """
-      1 Markdown
+      2 Markdown
       running 2 tasks
       """
     And it does not print
