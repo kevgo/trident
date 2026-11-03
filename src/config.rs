@@ -44,7 +44,7 @@ pub struct Config {
     #[schemars(rename = "global-lints")]
     pub global_lints: Option<Vec<ToolDefinition>>,
 
-    /// define the functional tests
+    /// define global functional tests
     pub tests: Option<Vec<ToolDefinition>>,
 
     // stack-specific configuration
@@ -293,6 +293,9 @@ pub struct StackConfig {
 
     /// customize the fixes for this stack
     pub fix: Option<StackFixes>,
+
+    /// define functional tests for this stack
+    pub tests: Option<Vec<ToolDefinition>>,
 }
 
 #[derive(Clone, Debug, Default, Deserialize, JsonSchema, PartialEq)]
