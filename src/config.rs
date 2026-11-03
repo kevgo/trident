@@ -185,10 +185,15 @@ impl Config {
         default: DefaultTests,
     ) -> Result<Vec<&'a ToolDefinition>> {
         let requested = if cli.is_empty() {
-            self.commands
+            // add the configured tests for the command
+            let result = self
+                .commands
                 .as_ref()
                 .and_then(command)
-                .and_then(|config| config.test.as_deref())
+                .and_then(|config| config.test.as_deref());
+            // add the configured tests for the open changes
+
+            result
         } else {
             Some(cli)
         };
