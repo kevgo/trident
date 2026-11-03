@@ -34,7 +34,7 @@ pub(crate) fn resolve_scope(explicit: &ScopeArg, repo: Option<&Repo>) -> Scope {
     }
 }
 
-/// infers the file scope for `fix`, `fix-unsafe`, `lint`, and `pitstop` when `--scope` is omitted
+/// infers the file scope for `fix`, `fix-unsafe`, `lint`, `pitstop`, and `test` when `--scope` is omitted
 ///
 /// Uses uncommitted files if any exist, otherwise files changed on the current
 /// branch, otherwise all files. Without a Git repository, this is always `all`.

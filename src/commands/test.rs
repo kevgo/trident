@@ -1,16 +1,23 @@
-use crate::cli::input::{RunArgsWithTest, ShowExt};
-use crate::config::{Config, DefaultTests, to_sequences};
-use crate::domain::{Operation, Result};
+use super::{discover_stacks, resolve_scope};
+use crate::cli::input::{RunArgsWithTestAndScope, ShowExt};
+use crate::config::{Config, DefaultTests};
+use crate::domain::Result;
+use crate::git::Repo;
 use crate::subshell;
 use std::process::ExitCode;
 
-pub fn test(args: &RunArgsWithTest) -> Result<ExitCode> {
+pub fn test(args: &RunArgsWithTestAndScope) -> Result<ExitCode> {
     let config = Config::load()?;
+    let ignores = config.ignores()?;
     let show = args.run.show.unwrap_or(conc::Show::Names);
-    let tests = config.tests_for(
+    let repo = Repo::load();
+    let scope = resolve_scope(&args.scope, repo.as_ref());
+    let stacks = discover_stacks(scope, repo.as_ref(), &ignores)?;
+    let tests = config.test_sequences(
         &args.test,
         |commands| commands.test.as_ref(),
         DefaultTests::All,
+        &stacks,
     )?;
     if show.display_metadata() {
         eprintln!("running {} tasks", tests.len());
@@ -18,9 +25,8 @@ pub fn test(args: &RunArgsWithTest) -> Result<ExitCode> {
     if tests.is_empty() {
         return Ok(ExitCode::SUCCESS);
     }
-    let test_sequences = to_sequences(tests, Operation::Test, None);
     let exit_code = subshell::run(subshell::RunArgs {
-        sequences: test_sequences,
+        sequences: tests,
         error_on_output: false,
         sequential: args.run.sequential,
         show,

@@ -1,4 +1,4 @@
-use crate::domain::{Ignores, Operation, Result, StackType, Tool, UserError};
+use crate::domain::{DetectedStacks, Ignores, Operation, Result, StackType, Tool, UserError};
 use crate::subshell::ToolCall;
 use ahash::AHashMap;
 use itertools::Itertools;
@@ -185,15 +185,10 @@ impl Config {
         default: DefaultTests,
     ) -> Result<Vec<&'a ToolDefinition>> {
         let requested = if cli.is_empty() {
-            // add the configured tests for the command
-            let result = self
-                .commands
+            self.commands
                 .as_ref()
                 .and_then(command)
-                .and_then(|config| config.test.as_deref());
-            // add the configured tests for the open changes
-
-            result
+                .and_then(|config| config.test.as_deref())
         } else {
             Some(cli)
         };
@@ -205,6 +200,40 @@ impl Config {
             Some([]) => Ok(Vec::new()),
             Some(names) => self.select_tests(names),
         }
+    }
+
+    /// provides the tests defined for the given stacks
+    fn stack_tests(&self, stacks: &DetectedStacks) -> Vec<NonEmpty<ToolCall>> {
+        let mut result = Vec::new();
+        for detected_stack in stacks {
+            let stack_type = detected_stack.stack.stack_type();
+            if let Some(tests) = self
+                .stack_config(stack_type)
+                .and_then(|stack_config| stack_config.tests.as_ref())
+            {
+                result.extend(to_sequences(tests, Operation::Test, Some(stack_type)));
+            }
+        }
+        result
+    }
+
+    /// determines everything a command tests: the global tests according to [`Self::tests_for`]
+    /// and the tests of the given stacks
+    ///
+    /// The `--test` CLI flag selects exactly the named global tests, so no stack tests run with it.
+    pub(crate) fn test_sequences(
+        &self,
+        cli: &[String],
+        command: impl FnOnce(&CommandsSection) -> Option<&CommandConfig>,
+        default: DefaultTests,
+        stacks: &DetectedStacks,
+    ) -> Result<Vec<NonEmpty<ToolCall>>> {
+        let global_tests = self.tests_for(cli, command, default)?;
+        let mut result = to_sequences(global_tests, Operation::Test, None);
+        if cli.is_empty() {
+            result.extend(self.stack_tests(stacks));
+        }
+        Ok(result)
     }
 }
 
@@ -279,7 +308,7 @@ pub struct CommandConfig {
 }
 
 /// provides the configured tests with the given names as parallel sequences
-pub(crate) fn to_sequences<'a>(
+fn to_sequences<'a>(
     tools: impl IntoIterator<Item = &'a ToolDefinition>,
     operation: Operation,
     stack: Option<StackType>,
@@ -1890,6 +1919,120 @@ mod tests {
                     .unwrap(),
             );
             assert_eq!(have, Vec::<ToolDefinition>::new());
+        }
+    }
+
+    mod test_sequences {
+        use crate::config::{Config, DefaultTests, StackConfig, ToolDefinition};
+        use crate::domain::{DetectedStack, DetectedStacks, Files, Operation, StackType};
+        use crate::stacks::{Markdown, Rust};
+        use ahash::AHashMap;
+        use big_s::S;
+        use std::path::PathBuf;
+
+        fn tool(name: &str) -> ToolDefinition {
+            ToolDefinition {
+                name: Some(name.to_string()),
+                command: format!("echo {name}"),
+            }
+        }
+
+        /// config with a global test and tests for the Rust and Markdown stacks
+        fn config() -> Config {
+            let stack_config = |name: &str| StackConfig {
+                tests: Some(vec![tool(name)]),
+                ..Default::default()
+            };
+            Config {
+                tests: Some(vec![tool("global")]),
+                stacks: Some(AHashMap::from([
+                    (StackType::Rust, stack_config("rust")),
+                    (StackType::Markdown, stack_config("markdown")),
+                ])),
+                ..Default::default()
+            }
+        }
+
+        fn rust_stack() -> DetectedStacks {
+            DetectedStacks::new(vec![DetectedStack {
+                stack: Box::new(Rust {}),
+                files: Files::from(vec![PathBuf::from("main.rs")]),
+            }])
+        }
+
+        fn run(
+            config: &Config,
+            cli: &[String],
+            default: DefaultTests,
+            stacks: &DetectedStacks,
+        ) -> Vec<(Operation, Option<StackType>, String)> {
+            config
+                .test_sequences(cli, |commands| commands.test.as_ref(), default, stacks)
+                .unwrap()
+                .into_iter()
+                .map(|sequence| {
+                    let call = sequence.head;
+                    (call.operation, call.stack, call.name)
+                })
+                .collect()
+        }
+
+        #[test]
+        fn global_tests_and_tests_of_detected_stacks() {
+            let have = run(&config(), &[], DefaultTests::All, &rust_stack());
+            let want = vec![
+                (Operation::Test, None, S("global")),
+                (Operation::Test, Some(StackType::Rust), S("rust")),
+            ];
+            pretty::assert_eq!(have, want);
+        }
+
+        #[test]
+        fn multiple_detected_stacks() {
+            let stacks = DetectedStacks::new(vec![
+                DetectedStack {
+                    stack: Box::new(Markdown {}),
+                    files: Files::from(vec![PathBuf::from("README.md")]),
+                },
+                DetectedStack {
+                    stack: Box::new(Rust {}),
+                    files: Files::from(vec![PathBuf::from("main.rs")]),
+                },
+            ]);
+            let have = run(&config(), &[], DefaultTests::None, &stacks);
+            let want = vec![
+                (Operation::Test, Some(StackType::Markdown), S("markdown")),
+                (Operation::Test, Some(StackType::Rust), S("rust")),
+            ];
+            pretty::assert_eq!(have, want);
+        }
+
+        #[test]
+        fn default_none_still_runs_stack_tests() {
+            let have = run(&config(), &[], DefaultTests::None, &rust_stack());
+            let want = vec![(Operation::Test, Some(StackType::Rust), S("rust"))];
+            pretty::assert_eq!(have, want);
+        }
+
+        #[test]
+        fn no_detected_stacks() {
+            let stacks = DetectedStacks::new(vec![]);
+            let have = run(&config(), &[], DefaultTests::None, &stacks);
+            pretty::assert_eq!(have, vec![]);
+        }
+
+        #[test]
+        fn cli_flag_selects_only_named_global_tests() {
+            let have = run(&config(), &[S("global")], DefaultTests::All, &rust_stack());
+            let want = vec![(Operation::Test, None, S("global"))];
+            pretty::assert_eq!(have, want);
+        }
+
+        #[test]
+        fn detected_stack_without_tests() {
+            let config = Config::default();
+            let have = run(&config, &[], DefaultTests::All, &rust_stack());
+            pretty::assert_eq!(have, vec![]);
         }
     }
 

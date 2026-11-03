@@ -53,7 +53,7 @@ pub enum Command {
     Precommit(RunArgs),
 
     /// Run all tests in parallel
-    Test(RunArgsWithTest),
+    Test(RunArgsWithTestAndScope),
 
     /// Update third-party tools
     #[command(name = "update:tools")]
@@ -264,7 +264,7 @@ mod tests {
         })
     }
 
-    fn parse_test(args: &[&str]) -> RunArgsWithTest {
+    fn parse_test(args: &[&str]) -> RunArgsWithTestAndScope {
         match parse_command("test", args) {
             Command::Test(test) => test,
             _ => panic!("expected the test command"),
@@ -416,6 +416,7 @@ mod tests {
             pretty::assert_eq!(parse_fix_unsafe(&[&flag]).scope.scope, Some(want));
             pretty::assert_eq!(parse_lint(&[&flag]).scope.scope, Some(want));
             pretty::assert_eq!(parse_pitstop(&[&flag]).scope.scope, Some(want));
+            pretty::assert_eq!(parse_test(&[&flag]).scope.scope, Some(want));
         }
     }
 
@@ -426,6 +427,7 @@ mod tests {
         pretty::assert_eq!(parse_fix_unsafe(&[]).scope.scope, None);
         pretty::assert_eq!(parse_lint(&[]).scope.scope, None);
         pretty::assert_eq!(parse_pitstop(&[]).scope.scope, None);
+        pretty::assert_eq!(parse_test(&[]).scope.scope, None);
     }
 
     #[test]

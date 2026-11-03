@@ -2,8 +2,8 @@ use crate::cli::input::{RunArgs, RunArgsWithTestAndScope, ShowExt};
 use crate::cli::output::print_metadata;
 use crate::commands::lint::Lints;
 use crate::commands::{discover_stacks, fix, lint, resolve_scope};
-use crate::config::{Config, DefaultTests, to_sequences};
-use crate::domain::{DetectedStacks, Operation, Result, Runnables, StackType};
+use crate::config::{Config, DefaultTests};
+use crate::domain::{DetectedStacks, Result, Runnables, StackType};
 use crate::git::Repo;
 use crate::subshell::{self, ToolCall};
 use ahash::AHashMap;
@@ -16,21 +16,19 @@ pub fn pitstop(args: &RunArgsWithTestAndScope) -> Result<ExitCode> {
     let repo = Repo::load();
     let scope = resolve_scope(&args.scope, repo.as_ref());
     let stacks = discover_stacks(scope, repo.as_ref(), &ignores)?;
-    let tests = to_sequences(
-        config.tests_for(
-            &args.test,
-            |commands| commands.pitstop.as_ref(),
-            DefaultTests::None,
-        )?,
-        Operation::Test,
-        None,
-    );
+    let tests = config.test_sequences(
+        &args.test,
+        |commands| commands.pitstop.as_ref(),
+        DefaultTests::None,
+        &stacks,
+    )?;
     run_tasks(&args.run, &config, &stacks, repo.as_ref(), tests)
 }
 
 /// runs global fixes, then stack-specific fixes, then lints on the given stacks
 ///
-/// `tests` run together with the global lints.
+/// `tests` run together with the global lints, after all fixes finished,
+/// because they can read files of any stack.
 pub(crate) fn run_tasks(
     args: &RunArgs,
     config: &Config,

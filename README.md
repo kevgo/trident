@@ -107,10 +107,11 @@ It ensures everything is green, i.e. it fails if either:
 
 - some code is unformatted, i.e. a formatter or fix would modify a file
 - a check reports an unresolved issue
-- any of the global tests defined in `trident.jsonc` fails
+- any of the global or stack-specific tests defined in `trident.jsonc` fails
 
-To run only some tests, configure them in the config file
-or pass their names on the CLI, joined with `+`:
+To run only some global tests,
+configure them in the config file or pass their names on the CLI,
+joined with `+`:
 
 ```sh
 trident ci --test=unit+e2e
@@ -160,9 +161,12 @@ All linters run in parallel.
 
 ### `trident test`
 
-This command runs all tests defined in `trident.jsonc` concurrently.
+This command concurrently runs all global tests defined in `trident.jsonc`
+and the [stack-specific tests](#stack-specific-tests) of the stacks
+that have changes.
 
-To run only some tests, configure `commands.test.test` in the config file
+To run only some global tests,
+configure `commands.test.test` in the config file
 or pass their names joined with `+`:
 
 ```sh
@@ -176,16 +180,16 @@ on all files.
 
 ### `--scope`
 
-`ci`, `fix`, `fix-unsafe`, `lint`,
-and `pitstop` accept `--scope` to choose which files they process:
+`ci`, `fix`, `fix-unsafe`, `lint`, `pitstop`,
+and `test` accept `--scope` to choose which files they process:
 
 - `uncommitted`: only uncommitted files (staged, unstaged, and untracked)
 - `branch`: only files that the current branch changes
 - `all`: all files in the current directory
 
 The `ci` command defaults to `all` files.
-The `fix`, `fix-unsafe`, `lint`,
-and `pitstop` commands choose a scope matching the current situation:
+The `fix`, `fix-unsafe`, `lint`, `pitstop`,
+and `test` commands choose a scope matching the current situation:
 
 - uncommitted changes present: process only those
 - no uncommitted changes but on a feature branch:
@@ -218,6 +222,34 @@ You can also configure them to always run certain global tests:
   }
 }
 ```
+
+The `--test` flag selects exactly the named global tests.
+[Stack-specific tests](#stack-specific-tests) don't run when you provide it.
+
+## Stack-specific tests
+
+Tests that verify the code of a particular stack can be defined for that stack:
+
+```jsonc
+{
+  "stacks": {
+    "markdown": {
+      "tests": [{ "name": "text-runner", "command": "npx text-runner" }]
+    },
+    "rust": {
+      "tests": [{ "name": "backend", "command": "cargo test" }]
+    },
+    "typescript": {
+      "tests": [{ "name": "frontend", "command": "npm test" }]
+    }
+  }
+}
+```
+
+The `ci`, `full`, `pitstop`,
+and `test` commands run the tests of a stack when the [`--scope`](#--scope) of
+that command contains files of that stack.
+They run after all fixes and lints have passed, together with the global tests.
 
 ## Supported stacks
 
@@ -326,7 +358,7 @@ The linked JSON-Schema provides help for supported settings.
     }
   ],
 
-  // Define the functional tests.
+  // Define the global functional tests. Tests for a particular stack go into the "stacks" section.
   "tests": [
     {
       "name": "a functional test",
@@ -374,7 +406,14 @@ The linked JSON-Schema provides help for supported settings.
             "command": "echo final CSS fix"
           },
         ],
-      }
+      },
+      // These tests run when the command processes CSS files.
+      "tests": [
+        {
+          "name": "CSS tests",
+          "command": "echo running CSS tests"
+        }
+      ]
     },
     "cucumber": {},
     "dockerfile": {},
