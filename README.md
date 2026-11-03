@@ -51,8 +51,8 @@ Trident supports three categories of tools, running in this order:
    They don't need to worry about formatting,
    Trident runs the formatter afterwards.
 2. **Formatters** improve how code is formatted.
-3. **Checks** look for all remaining not auto-fixable code smells
-   and run unit tests.
+3. **Lints** find code smells
+4. **Tests** ensure the app works correctly
 
 Trident provides special commands
 for all relevant phases of the software development workflow:
@@ -61,7 +61,8 @@ for all relevant phases of the software development workflow:
 
 Run this command at any time during human development.
 It first applies all safe fixes, then formats everything,
-then reports any remaining code problems that require (manual or AI) attention.
+then reports any remaining code problems that require
+(manual or AI) attention by running the linters and tests.
 
 This command reviews the scope you currently work on:
 
@@ -70,19 +71,7 @@ This command reviews the scope you currently work on:
   it reviews all changes made on that branch
 - otherwise: it reviews the entire repo
 
-You can configure which changes get processed with the `--scope` CLI flag.
-
-You can also configure it to run certain global tests during a pitstop:
-
-```jsonc
-{
-  "commands": {
-    "pitstop": {
-      "test": ["unit"]
-    }
-  }
-}
-```
+You can customize which changes get processed with the `--scope` CLI flag.
 
 ### `trident postedit`
 
@@ -171,7 +160,7 @@ All linters run in parallel.
 
 ### `trident test`
 
-This command runs all tests defined in `trident.jsonc` in parallel.
+This command runs all tests defined in `trident.jsonc` concurrently.
 
 To run only some tests, configure `commands.test.test` in the config file
 or pass their names joined with `+`:
@@ -212,6 +201,22 @@ or the machine cannot handle the load of running them all at once.
 
 ```sh
 trident ci --sequential
+```
+
+### `--tests`
+
+You can tell each Trident command to also run certain global tests with the
+`--test` CLI flag.
+You can also configure them to always run certain global tests:
+
+```jsonc
+{
+  "commands": {
+    "pitstop": {
+      "test": ["unit"]
+    }
+  }
+}
 ```
 
 ## Supported stacks

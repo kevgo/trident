@@ -815,7 +815,7 @@ mod tests {
         }
 
         #[test]
-        fn stack_lints_and_fixes() {
+        fn stack_tools() {
             let give = r#"
 {
   "stacks": {
@@ -828,7 +828,8 @@ mod tests {
         "before": [{ "name": "initial CSS fix", "command": "echo initial CSS fix" }],
         "replace": [{ "name": "The one and only CSS fix", "command": "echo The one and only CSS fix" }],
         "after": [{ "name": "final CSS fix", "command": "echo final CSS fix" }]
-      }
+      },
+      "tests": [{ "name": "CSS tests", "command": "echo css-tests" }]
     }
   }
 }
@@ -867,7 +868,10 @@ mod tests {
                                 command: S("echo final CSS fix"),
                             }]),
                         }),
-                        tests: None,
+                        tests: Some(vec![ToolDefinition {
+                            name: Some(S("CSS tests")),
+                            command: S("echo css-tests"),
+                        }]),
                     },
                 )),
                 tests: None,
