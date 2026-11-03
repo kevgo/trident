@@ -21,7 +21,7 @@ Feature: "trident ci --scope" selects which files to process
       #     Untracked
       """
 
-  Scenario: --scope=uncommitted processes only uncommitted files
+  Scenario: --scope=uncommitted fixes only uncommitted files and lints all files of their stacks
     When executing "trident ci --scope=uncommitted --show=output"
     Then it prints the lines to STDERR
       """
@@ -32,15 +32,15 @@ Feature: "trident ci --scope" selects which files to process
       """
       untracked.md:1:2: [MD019] Multiple spaces (5) after # in heading [fixed]
       """
-    And it does not print
+    And it prints the block
       """
-      on-branch.md
+      committed-on-branch.md:1:2: [MD019] Multiple spaces (5) after # in heading [*]
       """
-    And it does not print
+    And it prints the block
       """
-      on-main.md
+      on-main.md:1:2: [MD019] Multiple spaces (5) after # in heading [*]
       """
-    And the exit code is 0
+    And the exit code is 1
     And file "committed-on-branch.md" is unchanged
     And file "on-main.md" is unchanged
     And file "untracked.md" now has content
@@ -48,7 +48,7 @@ Feature: "trident ci --scope" selects which files to process
       # Untracked
       """
 
-  Scenario: --scope=branch processes files changed on the current branch
+  Scenario: --scope=branch fixes only files changed on the branch and lints all files of their stacks
     When executing "trident ci --scope=branch --show=output"
     Then it prints the lines to STDERR
       """
@@ -63,9 +63,9 @@ Feature: "trident ci --scope" selects which files to process
       """
       untracked.md:1:2: [MD019] Multiple spaces (5) after # in heading [fixed]
       """
-    And it does not print
+    And it prints the block
       """
-      on-main.md
+      on-main.md:1:2: [MD019] Multiple spaces (5) after # in heading [*]
       """
     And the exit code is 1
     And file "on-main.md" is unchanged

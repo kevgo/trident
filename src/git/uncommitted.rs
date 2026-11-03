@@ -145,6 +145,18 @@ mod tests {
         }
 
         #[test]
+        fn staged_change_then_deleted_is_not_an_existing_file() -> Result<()> {
+            let dir = TempDir::new().unwrap();
+            let repo = repo_with_file(&dir, "gone.rs")?;
+            fs::write(repo.file_path("gone.rs"), "changed").unwrap();
+            repo.git_command().args(["add", "gone.rs"]).run()?;
+            fs::remove_file(repo.file_path("gone.rs")).unwrap();
+            pretty::assert_eq!(repo.uncommitted()?, Vec::<File>::new());
+            pretty::assert_eq!(repo.uncommitted_deleted()?, vec![File::from("gone.rs")]);
+            Ok(())
+        }
+
+        #[test]
         fn no_deletions() -> Result<()> {
             let dir = TempDir::new().unwrap();
             let repo = repo_with_file(&dir, "kept.rs")?;

@@ -1,4 +1,4 @@
-Feature: "trident lint --scope" selects which files to lint
+Feature: "trident lint --scope" selects which stacks to lint
 
   Background:
     Given a Git repository
@@ -21,7 +21,7 @@ Feature: "trident lint --scope" selects which files to lint
       #     Untracked
       """
 
-  Scenario: --scope=uncommitted lints only uncommitted files
+  Scenario: --scope=uncommitted lints all files of the stacks that have uncommitted changes
     When executing "trident lint --scope=uncommitted --show=output"
     Then it prints to STDERR
       """
@@ -36,18 +36,18 @@ Feature: "trident lint --scope" selects which files to lint
       """
       untracked.md:1:2: [MD019] Multiple spaces (5) after # in heading [*]
       """
-    And it does not print
+    And it prints the block
       """
-      committed-on-branch.md
+      committed-on-branch.md:1:2: [MD019] Multiple spaces (5) after # in heading [*]
       """
-    And it does not print
+    And it prints the block
       """
-      on-main.md
+      on-main.md:1:2: [MD019] Multiple spaces (5) after # in heading [*]
       """
     And the exit code is 1
     And all files are unchanged
 
-  Scenario: --scope=branch lints files changed on the current branch
+  Scenario: --scope=branch lints all files of the stacks changed on the current branch
     When executing "trident lint --scope=branch --show=output"
     Then it prints to STDERR
       """
@@ -62,9 +62,9 @@ Feature: "trident lint --scope" selects which files to lint
       """
       untracked.md:1:2: [MD019] Multiple spaces (5) after # in heading [*]
       """
-    And it does not print
+    And it prints the block
       """
-      on-main.md
+      on-main.md:1:2: [MD019] Multiple spaces (5) after # in heading [*]
       """
     And the exit code is 1
     And all files are unchanged

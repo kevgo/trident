@@ -168,3 +168,68 @@ Feature: "trident fix-unsafe" chooses the smallest "--scope" based on the worksp
       """
     And file "committed-on-branch.py" is unchanged
     And file "on-main.py" is unchanged
+
+  Scenario: on main branch, only uncommitted deletions
+    Given a committed file "deleted.py" with content
+      """
+      # Deleted
+      """
+    And I ran "git rm deleted.py"
+    When executing "trident fix-unsafe --show=output"
+    Then it prints to STDERR
+      """
+      0 Python
+      running 0 tasks
+      """
+    And it does not print
+      """
+      on-main.py
+      """
+    And the exit code is 0
+    And file "on-main.py" is unchanged
+
+  Scenario: on feature branch, branch only deletes files
+    Given a committed file "deleted.py" with content
+      """
+      # Deleted
+      """
+    And I ran "git checkout -b feature"
+    And I ran "git rm deleted.py"
+    And I ran "git commit --message=delete"
+    When executing "trident fix-unsafe --show=output"
+    Then it prints to STDERR
+      """
+      0 Python
+      running 0 tasks
+      """
+    And it does not print
+      """
+      on-main.py
+      """
+    And the exit code is 0
+    And file "on-main.py" is unchanged
+
+  Scenario: on feature branch, branch has commits, only uncommitted deletions
+    Given a committed file "deleted.py" with content
+      """
+      # Deleted
+      """
+    And I ran "git checkout -b feature"
+    And a committed file "committed-on-branch.py" with content
+      """
+      # Deleted
+      """
+    And I ran "git rm deleted.py"
+    When executing "trident fix-unsafe --show=output"
+    Then it prints to STDERR
+      """
+      0 Python
+      running 0 tasks
+      """
+    And it does not print
+      """
+      committed-on-branch.py
+      """
+    And the exit code is 0
+    And file "committed-on-branch.py" is unchanged
+    And file "on-main.py" is unchanged

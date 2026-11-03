@@ -131,3 +131,68 @@ Feature: "trident fix" chooses the smallest "--scope" based on the workspace sta
       """
     And file "committed-on-branch.md" is unchanged
     And file "on-main.md" is unchanged
+
+  Scenario: on main branch, only uncommitted deletions
+    Given a committed file "deleted.md" with content
+      """
+      #     Deleted
+      """
+    And I ran "git rm deleted.md"
+    When executing "trident fix --show=output"
+    Then it prints to STDERR
+      """
+      0 Markdown
+      running 1 tasks
+      """
+    And it does not print
+      """
+      on-main.md
+      """
+    And the exit code is 0
+    And file "on-main.md" is unchanged
+
+  Scenario: on feature branch, branch only deletes files
+    Given a committed file "deleted.md" with content
+      """
+      #     Deleted
+      """
+    And I ran "git checkout -b feature"
+    And I ran "git rm deleted.md"
+    And I ran "git commit --message=delete"
+    When executing "trident fix --show=output"
+    Then it prints to STDERR
+      """
+      0 Markdown
+      running 1 tasks
+      """
+    And it does not print
+      """
+      on-main.md
+      """
+    And the exit code is 0
+    And file "on-main.md" is unchanged
+
+  Scenario: on feature branch, branch has commits, only uncommitted deletions
+    Given a committed file "deleted.md" with content
+      """
+      #     Deleted
+      """
+    And I ran "git checkout -b feature"
+    And a committed file "committed-on-branch.md" with content
+      """
+      #     Deleted
+      """
+    And I ran "git rm deleted.md"
+    When executing "trident fix --show=output"
+    Then it prints to STDERR
+      """
+      0 Markdown
+      running 1 tasks
+      """
+    And it does not print
+      """
+      committed-on-branch.md
+      """
+    And the exit code is 0
+    And file "committed-on-branch.md" is unchanged
+    And file "on-main.md" is unchanged

@@ -5,6 +5,7 @@ use crate::cli::input::{RunArgsWithScope, ShowExt};
 use crate::cli::output::print_metadata;
 use crate::config::{Config, ToolDefinition};
 use crate::domain::{DetectedStacks, Operation, Result, StackType};
+use crate::stacks;
 use crate::subshell::ToolCall;
 use crate::{git, subshell};
 use ahash::AHashMap;
@@ -48,6 +49,10 @@ pub fn lint(args: &RunArgsWithScope) -> Result<ExitCode> {
     Ok(exit_code)
 }
 
+/// Determines the lints for the given stacks.
+///
+/// Lints check all files of these stacks, not only the changed ones,
+/// because a change can break unchanged files of the same stack.
 pub fn determine_lints(
     config: &Config,
     detected_stacks: &DetectedStacks,
@@ -55,7 +60,8 @@ pub fn determine_lints(
 ) -> Result<Lints> {
     // determine the lints for the stacks
     let mut stack_specific: AHashMap<StackType, Vec<ToolCall>> = AHashMap::new();
-    for detected_stack in detected_stacks {
+    let whole_stacks = stacks::with_all_files(detected_stacks, &config.ignores()?);
+    for detected_stack in &whole_stacks {
         let stack_type = detected_stack.stack.stack_type();
         let stack_config = config.stack_config(stack_type);
         let stack_executables = stack_specific.entry(stack_type).or_default();

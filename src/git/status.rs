@@ -128,6 +128,10 @@ impl Record<'_> {
         if self.index == '!' || self.worktree == '!' {
             return false;
         }
+        if self.worktree == 'D' {
+            // the file doesn't exist anymore, so there is no content to process
+            return false;
+        }
         is_present_change(self.index) || is_present_change(self.worktree)
     }
 }

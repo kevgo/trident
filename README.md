@@ -76,7 +76,9 @@ You can customize which changes get processed with the `--scope` CLI flag.
 ### `trident postedit`
 
 This command is the equivalent of `trident pitstop` for AI agents.
-Each time your agent generates code, this command checks it for code smells.
+Each time your agent generates code,
+this command checks all files of the stacks that have uncommitted changes
+for code smells.
 It does not format files because coding agents cache file contents
 and can get tripped up by unexpected file changes.
 In the AI workflow, the changes get formatted when being committed.
@@ -156,7 +158,8 @@ These might change program behavior, please verify the results.
 
 ### `trident lint`
 
-This command runs all linters that apply to your current work.
+This command runs all linters for the stacks that you have changed,
+on all files of those stacks.
 All linters run in parallel.
 
 ### `trident test`
@@ -195,6 +198,18 @@ and `test` commands choose a scope matching the current situation:
 - no uncommitted changes but on a feature branch:
   process all files on the current branch
 - otherwise process all files
+
+A stack is in scope when one of its files is changed or deleted.
+This activates the lints, fixes,
+and [tests](#stack-specific-tests) of that stack.
+
+- Lints check all files of the stack, not only the changed ones,
+  because a change can break other files of the same stack.
+  This means they can report issues in files that you haven't changed.
+- Fixes change only the files in the scope,
+  so that they don't rewrite files you haven't changed.
+  If a stack has only deleted files, there is nothing for them to change.
+- Custom commands and tools that check the whole project run as usual.
 
 ### `--sequential`
 
@@ -249,8 +264,7 @@ Tests that verify the code of a particular stack can be defined for that stack:
 The `ci`, `full`, `pitstop`,
 and `test` commands run the tests of a stack when the [`--scope`](#--scope) of
 that command contains files of that stack.
-Deleted files count as well, since deleting a file can break the remaining code.
-This includes the old name of a renamed file.
+This includes deleted files and the old names of renamed files.
 They run after all fixes and lints have passed, together with the global tests.
 
 ## Supported stacks

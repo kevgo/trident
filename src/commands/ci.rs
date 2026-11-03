@@ -1,5 +1,5 @@
+use super::discover_stacks;
 use super::pitstop::run_tasks;
-use super::{discover_stacks, stacks_to_test};
 use crate::cli::input::{RunArgsWithTestAndScope, Scope};
 use crate::config::{Config, DefaultTests};
 use crate::domain::{Result, UserError};
@@ -19,7 +19,7 @@ pub fn ci(args: RunArgsWithTestAndScope) -> Result<ExitCode> {
         &args.test,
         |commands| commands.ci.as_ref(),
         DefaultTests::All,
-        &stacks_to_test(&config, Some(scope), repo.as_ref(), &ignores)?,
+        &stacks,
     )?;
     let exit_code = run_tasks(&args_show, &config, &stacks, repo.as_ref(), tests)?;
     if exit_code != ExitCode::SUCCESS {

@@ -107,13 +107,23 @@ Feature: "trident pitstop" runs the tests of the stacks that have changes
       """
     And the exit code is 0
 
-  Scenario: uncommitted deletion runs only the tests of the stack of the deleted file
+  Scenario: uncommitted deletion runs the global tools and the tests of the stack of the deleted file
     Given I ran "git rm main.rs"
     When executing "trident pitstop --show=output"
-    Then it prints the block
+    Then it prints the lines
+      """
+      fix all (delete empty folders)
+      lint all (git diff HEAD --check)
+      """
+    And it prints the block
       """
       test Rust (backend)
       running Rust tests
+      """
+    And it prints to STDERR
+      """
+      0 Rust
+      running 3 tasks
       """
     And it does not print
       """
@@ -122,6 +132,189 @@ Feature: "trident pitstop" runs the tests of the stacks that have changes
     And it does not print
       """
       running TypeScript tests
+      """
+    And the exit code is 0
+
+  Scenario: branch only deletes a file
+    Given I ran "git checkout -b feature"
+    And I ran "git rm main.rs"
+    And I ran "git commit --message=delete"
+    When executing "trident pitstop --show=output"
+    Then it prints the lines
+      """
+      fix all (delete empty folders)
+      lint all (git diff HEAD --check)
+      """
+    And it prints the block
+      """
+      test Rust (backend)
+      running Rust tests
+      """
+    And it prints to STDERR
+      """
+      0 Rust
+      running 3 tasks
+      """
+    And it does not print
+      """
+      running Markdown tests
+      """
+    And the exit code is 0
+
+  Scenario: deletion-only changes run the fixes, lints, and tests of that stack and all global tools
+    Given I change file "trident.json" to
+      """
+      {
+        "applications": {
+          "biome": { "enabled": false }
+        },
+        "global-fixes": [
+          { "name": "global fix", "command": "echo running global fix" }
+        ],
+        "global-lints": [
+          { "name": "global lint", "command": "echo running global lint" }
+        ],
+        "tests": [
+          { "name": "unit", "command": "echo running global tests" }
+        ],
+        "stacks": {
+          "markdown": {
+            "fix": {
+              "after": [
+                { "name": "md fix", "command": "echo running Markdown fix" }
+              ]
+            }
+          },
+          "rust": {
+            "fix": {
+              "after": [
+                { "name": "my fix", "command": "echo running Rust fix" }
+              ]
+            },
+            "lint": {
+              "add": [
+                { "name": "my lint", "command": "echo running Rust lint" }
+              ]
+            },
+            "tests": [
+              { "name": "backend", "command": "echo running Rust tests" }
+            ]
+          }
+        },
+        "commands": {
+          "pitstop": {
+            "test": ["unit"]
+          }
+        }
+      }
+      """
+    And I ran "git add trident.json"
+    And I ran "git commit --message=config"
+    And I ran "git rm main.rs"
+    When executing "trident pitstop --show=output"
+    Then it prints to STDERR
+      """
+      0 Rust
+      running 8 tasks
+      """
+    And it prints the lines
+      """
+      fix all (delete empty folders)
+      lint all (git diff HEAD --check)
+      """
+    And it prints the block
+      """
+      fix all (global fix)
+      running global fix
+      """
+    And it prints the block
+      """
+      lint all (global lint)
+      running global lint
+      """
+    And it prints the block
+      """
+      fix Rust (my fix)
+      running Rust fix
+      """
+    And it prints the block
+      """
+      lint Rust (my lint)
+      running Rust lint
+      """
+    And it prints the block
+      """
+      test all (unit)
+      running global tests
+      """
+    And it prints the block
+      """
+      test Rust (backend)
+      running Rust tests
+      """
+    And it does not print
+      """
+      running Markdown fix
+      """
+    And the exit code is 0
+
+  Scenario: deletion together with another change runs fixes and lints
+    Given I ran "git rm main.rs"
+    And a file "uncommitted.ts" with content
+      """
+      // TypeScript code
+      """
+    When executing "trident pitstop --show=output"
+    Then it prints the lines
+      """
+      fix all (delete empty folders)
+      """
+    And it prints the block
+      """
+      test Rust (backend)
+      running Rust tests
+      """
+    And it prints the block
+      """
+      test TypeScript (frontend)
+      running TypeScript tests
+      """
+    And it does not print
+      """
+      running Markdown tests
+      """
+    And the exit code is 0
+
+  Scenario: --scope=all runs fixes and lints despite deletion-only changes
+    Given I ran "git rm main.rs"
+    When executing "trident pitstop --scope=all --show=output"
+    Then it prints the lines
+      """
+      fix all (delete empty folders)
+      """
+    And it prints the block
+      """
+      test Rust (backend)
+      running Rust tests
+      """
+    And it prints the block
+      """
+      running Markdown tests
+      """
+    And the exit code is 0
+
+  Scenario: --scope=uncommitted with deletion-only changes
+    Given I ran "git rm main.rs"
+    When executing "trident pitstop --scope=uncommitted --show=output"
+    Then it prints the lines
+      """
+      fix all (delete empty folders)
+      lint all (git diff HEAD --check)
+      """
+    And it prints the block
+      """
+      test Rust (backend)
+      running Rust tests
       """
     And the exit code is 0
 

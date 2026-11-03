@@ -1,4 +1,4 @@
-Feature: "trident postedit" lints only uncommitted files
+Feature: "trident postedit" lints the stacks that have uncommitted files
 
   Background:
     Given a Git repository
@@ -63,9 +63,9 @@ Feature: "trident postedit" lints only uncommitted files
       """
       untracked.md:1:1: [MD041] First line in file should be a level 1 heading
       """
-    And it does not print
+    And it prints the lines
       """
-      already_committed.md
+      already_committed.md:1:1: [MD041] First line in file should be a level 1 heading
       """
     And the exit code is 1
 

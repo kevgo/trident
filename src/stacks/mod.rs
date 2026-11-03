@@ -100,6 +100,66 @@ pub fn from_files<'a>(
     DetectedStacks::new(result)
 }
 
+/// adds the stacks of the given deleted files to the given stacks
+///
+/// The deleted files don't become part of the stacks because tools cannot process them.
+/// A stack that has only deleted files therefore has no files.
+/// Tools that process individual files skip such a stack, all other tools run.
+#[must_use]
+pub fn with_deleted(
+    stacks: DetectedStacks,
+    deleted_files: &[File],
+    ignores: &Ignores,
+) -> DetectedStacks {
+    let deleted = from_files(deleted_files, ignores);
+    let mut existing: Vec<DetectedStack> = stacks.into_iter().collect();
+    let mut result = Vec::with_capacity(existing.len());
+    for stack in all() {
+        let stack_type = stack.stack_type();
+        if let Some(pos) = existing
+            .iter()
+            .position(|detected| detected.stack.stack_type() == stack_type)
+        {
+            result.push(existing.swap_remove(pos));
+        } else if deleted.get_stack(stack_type).is_some() {
+            result.push(DetectedStack {
+                stack,
+                files: Files::empty(),
+            });
+        }
+    }
+    DetectedStacks::new(result)
+}
+
+/// provides the given stacks with all the workspace files that belong to them
+///
+/// The given files stay part of the result even if a walk of the workspace doesn't find them,
+/// for example changed hidden files.
+#[must_use]
+pub fn with_all_files(stacks: &DetectedStacks, ignores: &Ignores) -> DetectedStacks {
+    with_all_files_in(Path::new("./"), stacks, ignores)
+}
+
+fn with_all_files_in(dir: &Path, stacks: &DetectedStacks, ignores: &Ignores) -> DetectedStacks {
+    if stacks.is_empty() {
+        return DetectedStacks::new(vec![]);
+    }
+    let workspace = discover_all_in(dir, ignores);
+    let mut result = Vec::with_capacity(stacks.len());
+    for stack in all() {
+        let stack_type = stack.stack_type();
+        let Some(given) = stacks.get_stack(stack_type) else {
+            continue;
+        };
+        let mut files = given.files.clone();
+        if let Some(workspace_stack) = workspace.get_stack(stack_type) {
+            files.merge(&workspace_stack.files);
+        }
+        result.push(DetectedStack { stack, files });
+    }
+    DetectedStacks::new(result)
+}
+
 /// provides all stacks and their files that exist in the workspace
 #[must_use]
 pub fn discover_all(ignores: &Ignores) -> DetectedStacks {
@@ -172,6 +232,178 @@ pub fn discover_all_in(dir: &Path, ignores: &Ignores) -> DetectedStacks {
 
 #[cfg(test)]
 mod tests {
+
+    mod with_all_files {
+        use crate::domain::{DetectedStack, DetectedStacks, Files, Ignores};
+        use crate::stacks::{Markdown, Rust, with_all_files_in};
+        use std::fs;
+        use std::path::{Path, PathBuf};
+        use tempfile::TempDir;
+
+        fn make_files(dir: &TempDir, paths: &[&str]) {
+            for path in paths {
+                fs::write(dir.path().join(path), "").unwrap();
+            }
+        }
+
+        fn rust_stack(files: Vec<PathBuf>) -> DetectedStack {
+            DetectedStack {
+                stack: Box::new(Rust {}),
+                files: Files::from(files),
+            }
+        }
+
+        #[test]
+        fn adds_the_other_files_of_the_stack() {
+            let dir = TempDir::new().unwrap();
+            make_files(&dir, &["changed.rs", "untouched.rs", "README.md"]);
+            let root = dir.path();
+            let given = DetectedStacks::new(vec![rust_stack(vec![root.join("changed.rs")])]);
+            let have = with_all_files_in(root, &given, &Ignores::empty());
+            let want = DetectedStacks::new(vec![rust_stack(vec![
+                root.join("changed.rs"),
+                root.join("untouched.rs"),
+            ])]);
+            pretty::assert_eq!(have, want);
+        }
+
+        #[test]
+        fn stack_with_only_deleted_files() {
+            let dir = TempDir::new().unwrap();
+            make_files(&dir, &["untouched.rs", "README.md"]);
+            let root = dir.path();
+            let given = DetectedStacks::new(vec![rust_stack(vec![])]);
+            let have = with_all_files_in(root, &given, &Ignores::empty());
+            let want = DetectedStacks::new(vec![rust_stack(vec![root.join("untouched.rs")])]);
+            pretty::assert_eq!(have, want);
+        }
+
+        #[test]
+        fn stack_without_any_remaining_files() {
+            let dir = TempDir::new().unwrap();
+            make_files(&dir, &["README.md"]);
+            let given = DetectedStacks::new(vec![rust_stack(vec![])]);
+            let have = with_all_files_in(dir.path(), &given, &Ignores::empty());
+            let want = DetectedStacks::new(vec![rust_stack(vec![])]);
+            pretty::assert_eq!(have, want);
+        }
+
+        #[test]
+        fn keeps_given_files_that_the_walk_does_not_find() {
+            let dir = TempDir::new().unwrap();
+            make_files(&dir, &[".hidden.rs", "untouched.rs"]);
+            let root = dir.path();
+            let given = DetectedStacks::new(vec![rust_stack(vec![root.join(".hidden.rs")])]);
+            let have = with_all_files_in(root, &given, &Ignores::empty());
+            let want = DetectedStacks::new(vec![rust_stack(vec![
+                root.join(".hidden.rs"),
+                root.join("untouched.rs"),
+            ])]);
+            pretty::assert_eq!(have, want);
+        }
+
+        #[test]
+        fn skips_ignored_files() {
+            let dir = TempDir::new().unwrap();
+            make_files(&dir, &["changed.rs", "ignored.rs"]);
+            let root = dir.path();
+            let given = DetectedStacks::new(vec![rust_stack(vec![root.join("changed.rs")])]);
+            let ignores = Ignores::new(&["ignored.rs".to_string()], Path::new("./")).unwrap();
+            let have = with_all_files_in(root, &given, &ignores);
+            let want = DetectedStacks::new(vec![rust_stack(vec![root.join("changed.rs")])]);
+            pretty::assert_eq!(have, want);
+        }
+
+        #[test]
+        fn does_not_add_other_stacks() {
+            let dir = TempDir::new().unwrap();
+            make_files(&dir, &["README.md"]);
+            let root = dir.path();
+            let given = DetectedStacks::new(vec![DetectedStack {
+                stack: Box::new(Markdown {}),
+                files: Files::empty(),
+            }]);
+            let have = with_all_files_in(root, &given, &Ignores::empty());
+            let want = DetectedStacks::new(vec![DetectedStack {
+                stack: Box::new(Markdown {}),
+                files: Files::from(vec![root.join("README.md")]),
+            }]);
+            pretty::assert_eq!(have, want);
+        }
+
+        #[test]
+        fn no_stacks() {
+            let dir = TempDir::new().unwrap();
+            make_files(&dir, &["README.md"]);
+            let given = DetectedStacks::new(vec![]);
+            let have = with_all_files_in(dir.path(), &given, &Ignores::empty());
+            pretty::assert_eq!(have, DetectedStacks::new(vec![]));
+        }
+    }
+
+    mod with_deleted {
+        use crate::domain::{DetectedStack, DetectedStacks, File, Files, Ignores};
+        use crate::stacks::{Markdown, Rust, Toml, from_files, with_deleted};
+        use std::path::{Path, PathBuf};
+
+        #[test]
+        fn adds_stack_of_deleted_file_without_files() {
+            let stacks = from_files(&[File::from("README.md")], &Ignores::empty());
+            let have = with_deleted(stacks, &[File::from("gone.rs")], &Ignores::empty());
+            let want = DetectedStacks::new(vec![
+                DetectedStack {
+                    stack: Box::new(Markdown {}),
+                    files: Files::from(vec![PathBuf::from("README.md")]),
+                },
+                DetectedStack {
+                    stack: Box::new(Rust {}),
+                    files: Files::empty(),
+                },
+            ]);
+            pretty::assert_eq!(have, want);
+        }
+
+        #[test]
+        fn keeps_the_order_of_the_stacks() {
+            let stacks = from_files(&[File::from("Cargo.toml")], &Ignores::empty());
+            let deleted = [File::from("gone.rs"), File::from("gone.md")];
+            let have = with_deleted(stacks, &deleted, &Ignores::empty());
+            let want = DetectedStacks::new(vec![
+                DetectedStack {
+                    stack: Box::new(Markdown {}),
+                    files: Files::empty(),
+                },
+                DetectedStack {
+                    stack: Box::new(Rust {}),
+                    files: Files::empty(),
+                },
+                DetectedStack {
+                    stack: Box::new(Toml {}),
+                    files: Files::from(vec![PathBuf::from("Cargo.toml")]),
+                },
+            ]);
+            pretty::assert_eq!(have, want);
+        }
+
+        #[test]
+        fn does_not_add_deleted_files_to_existing_stacks() {
+            let stacks = from_files(&[File::from("kept.rs")], &Ignores::empty());
+            let have = with_deleted(stacks, &[File::from("gone.rs")], &Ignores::empty());
+            let want = DetectedStacks::new(vec![DetectedStack {
+                stack: Box::new(Rust {}),
+                files: Files::from(vec![PathBuf::from("kept.rs")]),
+            }]);
+            pretty::assert_eq!(have, want);
+        }
+
+        #[test]
+        fn skips_ignored_deleted_files() {
+            let stacks = DetectedStacks::new(vec![]);
+            let ignores = Ignores::new(&["gone.rs".to_string()], Path::new("./")).unwrap();
+            let have = with_deleted(stacks, &[File::from("gone.rs")], &ignores);
+            pretty::assert_eq!(have, DetectedStacks::new(vec![]));
+        }
+    }
 
     mod discover {
         use crate::domain::{DetectedStack, DetectedStacks, Files, Ignores};

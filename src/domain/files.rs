@@ -42,6 +42,13 @@ impl Files {
         self.0.push(file);
     }
 
+    /// adds the given files that this collection doesn't contain yet and sorts the result
+    pub fn merge(&mut self, other: &Files) {
+        self.0.extend_from_slice(&other.0);
+        self.0.sort_unstable();
+        self.0.dedup();
+    }
+
     /// provides a Files collection containing the files in this collection without the given files
     #[must_use]
     pub fn remove(&self, ignores: &Ignores) -> Files {
@@ -89,6 +96,25 @@ impl From<Vec<&str>> for Files {
 
 #[cfg(test)]
 mod tests {
+
+    mod merge {
+        use super::super::Files;
+
+        #[test]
+        fn adds_missing_files_without_duplicates() {
+            let mut files = Files::from(vec!["b.rs", "c.rs"]);
+            files.merge(&Files::from(vec!["c.rs", "a.rs"]));
+            let want = Files::from(vec!["a.rs", "b.rs", "c.rs"]);
+            assert_eq!(files, want);
+        }
+
+        #[test]
+        fn empty_other() {
+            let mut files = Files::from(vec!["a.rs"]);
+            files.merge(&Files::empty());
+            assert_eq!(files, Files::from(vec!["a.rs"]));
+        }
+    }
 
     mod remove {
         use super::super::Files;

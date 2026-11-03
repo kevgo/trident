@@ -350,6 +350,30 @@ Feature: stack-specific tests
       """
     And the exit code is 0
 
+  Scenario: deleting an ignored file runs the global tools like any other ignored change
+    Given a Git repository
+    And a committed file "run-that-app" with content
+      """
+      delete-empty-folders 0.0.2
+      """
+    And a committed file "trident.json" with content
+      """
+      {
+        "ignore-files": ["vendor/"]
+      }
+      """
+    And a committed file "vendor/main.rs" with content
+      """
+      // Rust code
+      """
+    And I ran "git rm vendor/main.rs"
+    When executing "trident pitstop --show=output"
+    Then it prints the lines
+      """
+      fix all (delete empty folders)
+      """
+    And the exit code is 0
+
   Scenario Outline: commands that only fix or only lint do not run stack tests
     Given a Git repository
     And a committed file "run-that-app" with content
@@ -416,7 +440,7 @@ Feature: stack-specific tests
       """
     And the exit code is 0
 
-  Scenario Outline: fixes and lints do not treat deleted files as changes
+  Scenario Outline: deleting a file runs the custom fixes and lints of its stack
     Given a Git repository
     And a committed file "run-that-app" with content
       """
@@ -448,17 +472,22 @@ Feature: stack-specific tests
       """
       // Rust code
       """
+    And a committed file "other.rs" with content
+      """
+      // Rust code
+      """
     And I ran "git rm main.rs"
     When executing "trident <COMMAND> --show=output"
-    Then it does not print
+    Then it prints the lines
       """
-      running Rust
+      <OUTPUT>
       """
     And the exit code is 0
 
     Examples:
-      | COMMAND  |
-      | fix      |
-      | lint     |
-      | pitstop  |
-      | postedit |
+      | COMMAND  | OUTPUT            |
+      | fix      | running Rust fix  |
+      | lint     | running Rust lint |
+      | pitstop  | running Rust fix  |
+      | pitstop  | running Rust lint |
+      | postedit | running Rust lint |

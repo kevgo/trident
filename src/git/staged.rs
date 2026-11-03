@@ -10,6 +10,16 @@ impl Repo {
         let status_output = self.status(&[])?;
         Ok(StagedFiles::from(&status_output))
     }
+
+    /// provides the files whose deletion is staged, including the old names of renamed files
+    pub(crate) fn staged_deleted(&self) -> Result<Vec<File>> {
+        Ok(self
+            .status(&["--no-renames"])?
+            .records()
+            .filter(|record| record.index == 'D')
+            .map(|record| File::from(record.path))
+            .collect())
+    }
 }
 
 /// the files that are staged in the current directory
@@ -68,6 +78,48 @@ fn is_index_change(status: char) -> bool {
 
 #[cfg(test)]
 mod tests {
+
+    mod staged_deleted {
+        use crate::domain::{File, Result};
+        use crate::git::{GitCommandExt, Repo};
+        use std::fs;
+        use tempfile::TempDir;
+
+        fn repo_with_file(dir: &TempDir, file: &str) -> Result<Repo> {
+            let repo = Repo::init(dir.path())?;
+            repo.create_and_commit_file(file)?;
+            Ok(repo)
+        }
+
+        #[test]
+        fn staged_deletion() -> Result<()> {
+            let dir = TempDir::new().unwrap();
+            let repo = repo_with_file(&dir, "gone.rs")?;
+            repo.git_command()
+                .args(["rm", "--quiet", "gone.rs"])
+                .run()?;
+            pretty::assert_eq!(repo.staged_deleted()?, vec![File::from("gone.rs")]);
+            Ok(())
+        }
+
+        #[test]
+        fn staged_rename_deletes_the_old_name() -> Result<()> {
+            let dir = TempDir::new().unwrap();
+            let repo = repo_with_file(&dir, "old.rs")?;
+            repo.git_command().args(["mv", "old.rs", "new.md"]).run()?;
+            pretty::assert_eq!(repo.staged_deleted()?, vec![File::from("old.rs")]);
+            Ok(())
+        }
+
+        #[test]
+        fn unstaged_deletion_does_not_count() -> Result<()> {
+            let dir = TempDir::new().unwrap();
+            let repo = repo_with_file(&dir, "gone.rs")?;
+            fs::remove_file(repo.file_path("gone.rs")).unwrap();
+            pretty::assert_eq!(repo.staged_deleted()?, Vec::<File>::new());
+            Ok(())
+        }
+    }
 
     mod staged {
         use super::super::StagedFiles;

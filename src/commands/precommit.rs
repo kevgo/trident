@@ -33,10 +33,15 @@ fn run(args: &RunArgs) -> Result<()> {
 
     // step 2: discover the staged files and their stacks
     let staged = repo.staged()?;
-    if staged.is_empty() {
+    let staged_deleted = repo.staged_deleted()?;
+    if staged.is_empty() && staged_deleted.is_empty() {
         return Ok(());
     }
-    let stacks = stacks::from_staged(&staged, &ignores);
+    let stacks = stacks::with_deleted(
+        stacks::from_staged(&staged, &ignores),
+        &staged_deleted,
+        &ignores,
+    );
     if show.display_metadata() {
         print_metadata(&stacks);
     }

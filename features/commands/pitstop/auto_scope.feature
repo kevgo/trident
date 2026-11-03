@@ -44,11 +44,11 @@ Feature: "trident pitstop" chooses the smallest "--scope" based on the workspace
       """
       untracked.md:1:2: [MD019] Multiple spaces (5) after # in heading [fixed]
       """
-    And it does not print
+    And it prints the block
       """
-      on-main.md
+      on-main.md:1:2: [MD019] Multiple spaces (5) after # in heading [*]
       """
-    And the exit code is 0
+    And the exit code is 1
     And file "untracked.md" now has content
       """
       # Untracked
@@ -89,11 +89,11 @@ Feature: "trident pitstop" chooses the smallest "--scope" based on the workspace
       """
       committed-on-branch.md:1:2: [MD019] Multiple spaces (5) after # in heading [fixed]
       """
-    And it does not print
+    And it prints the block
       """
-      on-main.md
+      on-main.md:1:2: [MD019] Multiple spaces (5) after # in heading [*]
       """
-    And the exit code is 0
+    And the exit code is 1
     And file "committed-on-branch.md" now has content
       """
       # Branch
@@ -120,18 +120,83 @@ Feature: "trident pitstop" chooses the smallest "--scope" based on the workspace
       """
       untracked.md:1:2: [MD019] Multiple spaces (5) after # in heading [fixed]
       """
-    And it does not print
+    And it prints the block
       """
-      committed-on-branch.md
+      committed-on-branch.md:1:2: [MD019] Multiple spaces (5) after # in heading [*]
       """
-    And it does not print
+    And it prints the block
       """
-      on-main.md
+      on-main.md:1:2: [MD019] Multiple spaces (5) after # in heading [*]
       """
-    And the exit code is 0
+    And the exit code is 1
     And file "untracked.md" now has content
       """
       # Untracked
       """
+    And file "committed-on-branch.md" is unchanged
+    And file "on-main.md" is unchanged
+
+  Scenario: on main branch, only uncommitted deletions
+    Given a committed file "deleted.md" with content
+      """
+      #     Deleted
+      """
+    And I ran "git rm deleted.md"
+    When executing "trident pitstop --show=output"
+    Then it prints to STDERR
+      """
+      0 Markdown
+      running 3 tasks
+      """
+    And it prints the block
+      """
+      on-main.md:1:2: [MD019] Multiple spaces (5) after # in heading [*]
+      """
+    And the exit code is 1
+    And file "on-main.md" is unchanged
+
+  Scenario: on feature branch, branch only deletes files
+    Given a committed file "deleted.md" with content
+      """
+      #     Deleted
+      """
+    And I ran "git checkout -b feature"
+    And I ran "git rm deleted.md"
+    And I ran "git commit --message=delete"
+    When executing "trident pitstop --show=output"
+    Then it prints to STDERR
+      """
+      0 Markdown
+      running 3 tasks
+      """
+    And it prints the block
+      """
+      on-main.md:1:2: [MD019] Multiple spaces (5) after # in heading [*]
+      """
+    And the exit code is 1
+    And file "on-main.md" is unchanged
+
+  Scenario: on feature branch, branch has commits, only uncommitted deletions
+    Given a committed file "deleted.md" with content
+      """
+      #     Deleted
+      """
+    And I ran "git checkout -b feature"
+    And a committed file "committed-on-branch.md" with content
+      """
+      #     Deleted
+      """
+    And I ran "git rm deleted.md"
+    When executing "trident pitstop --show=output"
+    Then it prints to STDERR
+      """
+      0 Markdown
+      running 3 tasks
+      """
+    And it prints the block
+      """
+      committed-on-branch.md:1:2: [MD019] Multiple spaces (5) after # in heading [*]
+      """
+    And the exit code is 1
     And file "committed-on-branch.md" is unchanged
     And file "on-main.md" is unchanged
