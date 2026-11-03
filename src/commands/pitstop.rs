@@ -51,9 +51,8 @@ pub(crate) fn run_tasks(
     let fixes = fix::determine_fixes(config, stacks)?;
     let mut lints = lint::determine_lints(config, stacks, repo)?;
     lints.global.extend(tests);
-    let tool_count = fixes.len() + lints.len();
     if show.display_metadata() {
-        eprintln!("running {tool_count} tasks");
+        eprintln!("running {} tasks", fixes.len() + lints.len());
     }
     let Runnables {
         global: global_fixes,
