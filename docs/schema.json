@@ -26,7 +26,7 @@
       }
     },
     "tests": {
-      "description": "define the functional tests",
+      "description": "define global functional tests",
       "type": ["array", "null"],
       "items": {
         "$ref": "#/$defs/ToolDefinition"
@@ -149,6 +149,13 @@
               "type": "null"
             }
           ]
+        },
+        "tests": {
+          "description": "define functional tests for this stack",
+          "type": ["array", "null"],
+          "items": {
+            "$ref": "#/$defs/ToolDefinition"
+          }
         }
       },
       "additionalProperties": false
