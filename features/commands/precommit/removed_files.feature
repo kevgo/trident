@@ -11,10 +11,6 @@ Feature: "trident precommit" operates only on staged files that still exist in t
       """
       #     Unrelated
       """
-    And a committed file "also-unrelated.md" with content
-      """
-      # Also unrelated
-      """
     And a committed file "removed.md" with content
       """
       # Removed

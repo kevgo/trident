@@ -11,10 +11,6 @@ Feature: "trident postedit" lints all files of stacks with uncommitted deletions
       """
       missing header
       """
-    And a committed file "also-unrelated.md" with content
-      """
-      # Also unrelated
-      """
     And a committed file "removed.md" with content
       """
       # Removed
@@ -65,4 +61,23 @@ Feature: "trident postedit" lints all files of stacks with uncommitted deletions
       unrelated.md
       """
     And the exit code is 0
+    And all files are unchanged
+
+  Scenario: the file count shows changed files, not linted files
+    Given a committed file "also-unrelated.md" with content
+      """
+      # Also unrelated
+      """
+    And I delete file "removed.md"
+    When executing "trident postedit --show=output"
+    Then it prints to STDERR
+      """
+      1 Markdown
+      running 2 tasks
+      """
+    And it prints the lines
+      """
+      unrelated.md:1:1: [MD041] First line in file should be a level 1 heading
+      """
+    And the exit code is 1
     And all files are unchanged

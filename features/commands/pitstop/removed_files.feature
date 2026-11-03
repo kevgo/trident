@@ -11,10 +11,6 @@ Feature: "trident pitstop" fixes only existing changed files and lints all files
       """
       #     Unrelated
       """
-    And a committed file "also-unrelated.md" with content
-      """
-      # Also unrelated
-      """
     And a committed file "removed.md" with content
       """
       # Removed

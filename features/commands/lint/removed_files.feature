@@ -11,10 +11,6 @@ Feature: "trident lint" lints all files of a stack in which files were deleted o
       """
       #     Unrelated
       """
-    And a committed file "also-unrelated.md" with content
-      """
-      # Also unrelated
-      """
     And a committed file "removed.md" with content
       """
       # Removed
@@ -236,4 +232,23 @@ Feature: "trident lint" lints all files of a stack in which files were deleted o
       unrelated.md
       """
     And the exit code is 0
+    And all files are unchanged
+
+  Scenario: the file count shows changed files, not linted files
+    Given a committed file "also-unrelated.md" with content
+      """
+      # Also unrelated
+      """
+    And I delete file "removed.md"
+    When executing "trident lint --show=output"
+    Then it prints to STDERR
+      """
+      1 Markdown
+      running 2 tasks
+      """
+    And it prints the block
+      """
+      unrelated.md:1:2: [MD019] Multiple spaces (5) after # in heading [*]
+      """
+    And the exit code is 1
     And all files are unchanged

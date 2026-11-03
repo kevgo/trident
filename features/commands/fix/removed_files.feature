@@ -11,10 +11,6 @@ Feature: "trident fix" operates only on changed files that still exist in the wo
       """
       #     Unrelated
       """
-    And a committed file "also-unrelated.md" with content
-      """
-      # Also unrelated
-      """
     And a committed file "removed.md" with content
       """
       # Removed
