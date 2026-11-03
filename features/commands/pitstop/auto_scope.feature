@@ -17,7 +17,7 @@ Feature: "trident pitstop" chooses the smallest "--scope" based on the workspace
     Then it prints to STDERR
       """
       1 Markdown, 1 other
-      running 4 tools
+      running 4 tasks
       """
     And it prints the block
       """
@@ -38,7 +38,7 @@ Feature: "trident pitstop" chooses the smallest "--scope" based on the workspace
     Then it prints to STDERR
       """
       1 Markdown
-      running 4 tools
+      running 4 tasks
       """
     And it prints the block
       """
@@ -61,7 +61,7 @@ Feature: "trident pitstop" chooses the smallest "--scope" based on the workspace
     Then it prints to STDERR
       """
       1 Markdown, 1 other
-      running 4 tools
+      running 4 tasks
       """
     And it prints the block
       """
@@ -83,7 +83,7 @@ Feature: "trident pitstop" chooses the smallest "--scope" based on the workspace
     Then it prints to STDERR
       """
       1 Markdown
-      running 4 tools
+      running 4 tasks
       """
     And it prints the block
       """
@@ -114,7 +114,7 @@ Feature: "trident pitstop" chooses the smallest "--scope" based on the workspace
     Then it prints to STDERR
       """
       1 Markdown
-      running 4 tools
+      running 4 tasks
       """
     And it prints the block
       """

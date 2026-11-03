@@ -28,7 +28,7 @@ Feature: CI runs all fixes, formatters, lints, and tests
     Then it prints the lines to STDERR
       """
       1 JSON, 1 Python, 1 other
-      running 8 tools
+      running 8 tasks
       """
     And it prints the block
       """
@@ -85,7 +85,7 @@ Feature: CI runs all fixes, formatters, lints, and tests
     Then it prints the lines to STDERR
       """
       1 JSON, 1 other
-      running 5 tools
+      running 5 tasks
       """
     And it prints the block
       """
@@ -122,7 +122,7 @@ Feature: CI runs all fixes, formatters, lints, and tests
     Then it prints the lines to STDERR
       """
       1 JSON, 1 other
-      running 4 tools
+      running 4 tasks
       """
     And it prints the block
       """

@@ -26,7 +26,7 @@ Feature: pitstop --test runs selected tests
     Then it prints the lines to STDERR
       """
       1 JSON, 1 other
-      running 1 tools
+      running 1 tasks
       """
     And it does not print
       """
@@ -60,7 +60,7 @@ Feature: pitstop --test runs selected tests
     Then it prints the lines to STDERR
       """
       1 JSON, 1 other
-      running 2 tools
+      running 2 tasks
       """
     And it prints the block
       """
@@ -95,7 +95,7 @@ Feature: pitstop --test runs selected tests
     Then it prints the lines to STDERR
       """
       1 JSON, 1 other
-      running 2 tools
+      running 2 tasks
       """
     And it prints the block
       """
@@ -126,7 +126,7 @@ Feature: pitstop --test runs selected tests
     Then it prints the lines to STDERR
       """
       1 JSON, 1 other
-      running 3 tools
+      running 3 tasks
       """
     And it prints the block
       """

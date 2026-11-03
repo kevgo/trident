@@ -14,7 +14,7 @@ Feature: "trident postedit" lints all files outside a Git repository
     Then it prints the lines to STDERR
       """
       1 Markdown, 1 other
-      running 1 tools
+      running 1 tasks
       """
     And it prints the lines
       """

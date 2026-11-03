@@ -53,9 +53,7 @@ pub(crate) fn run_tasks(
     lints.global.extend(tests);
     let tool_count = fixes.len() + lints.len();
     if show.display_metadata() {
-        // TODO: print "running XXX tasks" instead of "running XXX tools"
-        // we might run the same tool multiple times
-        eprintln!("running {tool_count} tools");
+        eprintln!("running {tool_count} tasks");
     }
     let Runnables {
         global: global_fixes,

@@ -16,7 +16,7 @@ it finishes in about 0.2 seconds (!) and prints:
 
 ```sh
 163 Cucumber, 4 JSON, 1 JSONC, 4 Markdown, 127 Rust, 4 TOML, 4 YML, 8 other
-running 7 tools
+running 7 tasks
 
 lint Markdown (rumdl)
 lint TOML (Taplo)

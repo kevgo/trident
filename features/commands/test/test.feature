@@ -75,7 +75,7 @@ Feature: custom tests
     When executing "trident test --show=output"
     Then it prints to STDERR
       """
-      running 0 tools
+      running 0 tasks
       """
     And it prints nothing to STDOUT
     And the exit code is 0
@@ -94,7 +94,7 @@ Feature: custom tests
     When executing "trident test --test=unit+cuke --show=output"
     Then it prints to STDERR
       """
-      running 2 tools
+      running 2 tasks
       """
     And it prints the block
       """
@@ -130,7 +130,7 @@ Feature: custom tests
     When executing "trident test --show=output"
     Then it prints to STDERR
       """
-      running 1 tools
+      running 1 tasks
       """
     And it prints the block
       """

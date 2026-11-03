@@ -20,7 +20,7 @@ Feature: fix Rust
     And it prints to STDERR
       """
       1 Rust, 1 other
-      running 1 tools
+      running 1 tasks
       """
     And the exit code is 0
     And file "main.rs" is unchanged
@@ -60,7 +60,7 @@ Feature: fix Rust
     And it prints to STDERR
       """
       1 JSON, 1 Rust, 1 other
-      running 3 tools
+      running 3 tasks
       """
     And the exit code is 0
     And file "main.rs" is unchanged

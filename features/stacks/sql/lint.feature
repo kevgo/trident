@@ -80,7 +80,7 @@ Feature: lint SQL
     Then it prints to STDERR
       """
       1 JSON, 2 other
-      running 0 tools
+      running 0 tasks
       """
     And the exit code is 0
     And file "migration.<FILE EXTENSION>" is unchanged

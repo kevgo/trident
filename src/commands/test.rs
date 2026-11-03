@@ -13,7 +13,7 @@ pub fn test(args: &RunArgsWithTest) -> Result<ExitCode> {
         DefaultTests::All,
     )?;
     if show.display_metadata() {
-        eprintln!("running {} tools", tests.len());
+        eprintln!("running {} tasks", tests.len());
     }
     if tests.is_empty() {
         return Ok(ExitCode::SUCCESS);

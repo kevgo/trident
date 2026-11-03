@@ -48,7 +48,7 @@ fn run(args: &RunArgs) -> Result<()> {
     // step 4: discover the fixes to run
     let fixes = determine_precommit_fixes(&config, &stacks)?;
     if show.display_metadata() {
-        eprintln!("running {} tools", fixes.len());
+        eprintln!("running {} tasks", fixes.len());
     }
     let Runnables {
         global,
