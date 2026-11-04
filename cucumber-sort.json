@@ -15,7 +15,9 @@
     "^executing \".*\"$",
     ["^it prints", "^it does not print"],
     "^the exit code is",
-    ["^all files are unchanged$", "^file \".*\""],
+    "^file \".*\" now has content",
+    "^file \".*\" is unchanged",
+    "^all files are unchanged$",
     [
       "^the staged changes are$",
       "^the unstaged changes are$",
