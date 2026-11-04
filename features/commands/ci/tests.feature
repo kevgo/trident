@@ -1,5 +1,9 @@
 Feature: CI runs all fixes, formatters, lints, and tests
 
+
+
+
+
   Background:
     Given a file "run-that-app" with content
       """
