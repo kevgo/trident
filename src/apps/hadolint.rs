@@ -6,6 +6,12 @@ use std::fmt::Display;
 
 pub struct Hadolint;
 
+impl Display for Hadolint {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str("hadolint")
+    }
+}
+
 impl Tool for Hadolint {
     fn enabled_when(&self) -> EnabledWhen {
         EnabledWhen::Always
@@ -13,12 +19,6 @@ impl Tool for Hadolint {
 
     fn config_section<'a>(&self, apps: &'a ApplicationSection) -> Option<&'a dyn Application> {
         Some(apps.hadolint.as_ref()?)
-    }
-}
-
-impl Display for Hadolint {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.write_str("hadolint")
     }
 }
 

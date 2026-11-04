@@ -6,6 +6,12 @@ use std::fmt::Display;
 
 pub struct Actionlint;
 
+impl Display for Actionlint {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str("Actionlint")
+    }
+}
+
 impl Tool for Actionlint {
     fn enabled_when(&self) -> EnabledWhen {
         EnabledWhen::FolderContainingFileOfType {
@@ -16,12 +22,6 @@ impl Tool for Actionlint {
 
     fn config_section<'a>(&self, apps: &'a ApplicationSection) -> Option<&'a dyn Application> {
         Some(apps.actionlint.as_ref()?)
-    }
-}
-
-impl Display for Actionlint {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.write_str("Actionlint")
     }
 }
 

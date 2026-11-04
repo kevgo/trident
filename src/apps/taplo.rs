@@ -7,6 +7,12 @@ use std::fmt::Display;
 
 pub struct Taplo;
 
+impl Display for Taplo {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str("Taplo")
+    }
+}
+
 impl Tool for Taplo {
     fn enabled_when(&self) -> EnabledWhen {
         EnabledWhen::Always
@@ -14,12 +20,6 @@ impl Tool for Taplo {
 
     fn config_section<'a>(&self, apps: &'a ApplicationSection) -> Option<&'a dyn Application> {
         Some(apps.taplo.as_ref()?)
-    }
-}
-
-impl Display for Taplo {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.write_str("Taplo")
     }
 }
 

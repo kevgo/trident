@@ -7,6 +7,12 @@ use std::fmt::Display;
 
 pub struct GitDiffCheck;
 
+impl Display for GitDiffCheck {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str("git diff check")
+    }
+}
+
 impl Tool for GitDiffCheck {
     fn enabled_when(&self) -> EnabledWhen {
         EnabledWhen::Always
@@ -14,12 +20,6 @@ impl Tool for GitDiffCheck {
 
     fn config_section<'a>(&self, apps: &'a ApplicationSection) -> Option<&'a dyn Application> {
         Some(apps.git_diff_check.as_ref()?)
-    }
-}
-
-impl Display for GitDiffCheck {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.write_str("git diff check")
     }
 }
 
