@@ -24,6 +24,10 @@ Feature: "trident fix" operates only on changed files that still exist in the wo
       1 Markdown
       running 1 tasks
       """
+    And it prints
+      """
+      fix all (delete empty folders)
+      """
     And it does not print
       """
       fix Markdown
