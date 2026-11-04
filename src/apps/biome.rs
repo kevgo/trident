@@ -7,6 +7,12 @@ use std::fmt::Display;
 
 pub struct Biome;
 
+impl Display for Biome {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str("Biome")
+    }
+}
+
 impl Tool for Biome {
     fn enabled_when(&self) -> EnabledWhen {
         EnabledWhen::Always
@@ -16,12 +22,6 @@ impl Tool for Biome {
 
     fn config_section<'a>(&self, apps: &'a ApplicationSection) -> Option<&'a dyn Application> {
         Some(apps.biome.as_ref()?)
-    }
-}
-
-impl Display for Biome {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.write_str("Biome")
     }
 }
 

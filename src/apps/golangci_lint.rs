@@ -7,6 +7,12 @@ use std::fmt::Display;
 
 pub struct GolangciLint;
 
+impl Display for GolangciLint {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str("golangci-lint")
+    }
+}
+
 impl Tool for GolangciLint {
     fn enabled_when(&self) -> EnabledWhen {
         EnabledWhen::Always
@@ -32,12 +38,6 @@ impl Tool for GolangciLint {
 
     fn config_section<'a>(&self, apps: &'a ApplicationSection) -> Option<&'a dyn Application> {
         Some(apps.golangci_lint.as_ref()?)
-    }
-}
-
-impl Display for GolangciLint {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.write_str("golangci-lint")
     }
 }
 

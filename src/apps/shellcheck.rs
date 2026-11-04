@@ -6,6 +6,12 @@ use std::fmt::Display;
 
 pub struct ShellCheck;
 
+impl Display for ShellCheck {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str("ShellCheck")
+    }
+}
+
 impl Tool for ShellCheck {
     fn enabled_when(&self) -> EnabledWhen {
         EnabledWhen::Always
@@ -13,12 +19,6 @@ impl Tool for ShellCheck {
 
     fn config_section<'a>(&self, apps: &'a ApplicationSection) -> Option<&'a dyn Application> {
         Some(apps.shellcheck.as_ref()?)
-    }
-}
-
-impl Display for ShellCheck {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.write_str("ShellCheck")
     }
 }
 
