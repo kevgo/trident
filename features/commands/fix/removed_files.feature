@@ -7,6 +7,16 @@ Feature: "trident fix" operates only on changed files that still exist in the wo
       delete-empty-folders 0.0.2
       rumdl 0.2.14
       """
+    And a committed file "trident.json" with content
+      """
+      {
+        "applications": {
+          "delete-empty-folders": {
+            "enabled": false
+          }
+        }
+      }
+      """
     And a committed file "unrelated.md" with content
       """
       #     Unrelated
@@ -22,11 +32,7 @@ Feature: "trident fix" operates only on changed files that still exist in the wo
     Then it prints to STDERR
       """
       1 Markdown
-      running 1 tasks
-      """
-    And it prints
-      """
-      fix all (delete empty folders)
+      running 0 tasks
       """
     And it does not print
       """
@@ -45,7 +51,7 @@ Feature: "trident fix" operates only on changed files that still exist in the wo
     Then it prints to STDERR
       """
       2 Markdown
-      running 2 tasks
+      running 1 tasks
       """
     And it prints the block
       """
@@ -79,7 +85,7 @@ Feature: "trident fix" operates only on changed files that still exist in the wo
     Then it prints to STDERR
       """
       2 Markdown
-      running 2 tasks
+      running 1 tasks
       """
     And it does not print
       """
@@ -104,7 +110,7 @@ Feature: "trident fix" operates only on changed files that still exist in the wo
     Then it prints to STDERR
       """
       1 Markdown
-      running 1 tasks
+      running 0 tasks
       """
     And it does not print
       """
@@ -122,7 +128,7 @@ Feature: "trident fix" operates only on changed files that still exist in the wo
     Then it prints to STDERR
       """
       1 Markdown
-      running 1 tasks
+      running 0 tasks
       """
     And it does not print
       """
@@ -144,7 +150,7 @@ Feature: "trident fix" operates only on changed files that still exist in the wo
     Then it prints to STDERR
       """
       2 Markdown
-      running 2 tasks
+      running 1 tasks
       """
     And it does not print
       """
