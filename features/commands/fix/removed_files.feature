@@ -47,11 +47,15 @@ Feature: "trident fix" operates only on changed files that still exist in the wo
       #     Untracked
       """
     And I delete file "removed.md"
-    When executing "trident fix --show=output"
+    When executing "trident fix --show=verbose"
     Then it prints to STDERR
       """
       2 Markdown
       running 1 tasks
+      """
+    And it prints the lines matching
+      """
+      rumdl fmt untracked.md$
       """
     And it prints the block
       """
