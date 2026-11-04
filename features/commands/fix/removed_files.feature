@@ -60,11 +60,11 @@ Feature: "trident fix" operates only on changed files that still exist in the wo
       unrelated.md
       """
     And the exit code is 0
-    And file "unrelated.md" is unchanged
     And file "untracked.md" now has content
       """
       # Untracked
       """
+    And file "unrelated.md" is unchanged
 
   Scenario: staged rename
     Given I change file "removed.md" to
