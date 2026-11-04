@@ -60,7 +60,6 @@ Feature: "trident fix-unsafe" operates only on changed files that still exist in
       Found 1 error (1 fixed, 0 remaining).
       """
     And the exit code is 0
-    And file "unrelated.py" is unchanged
     And file "untracked.py" now has content
       """
       def add_to_list(item, items=None):
@@ -69,6 +68,7 @@ Feature: "trident fix-unsafe" operates only on changed files that still exist in
           items.append(item)
           return items
       """
+    And file "unrelated.py" is unchanged
 
   Scenario: deletion committed on the feature branch
     Given I ran "git checkout -b feature"

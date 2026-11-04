@@ -49,11 +49,11 @@ Feature: "trident precommit" operates only on staged files that still exist in t
       unrelated.md
       """
     And the exit code is 0
-    And file "unrelated.md" is unchanged
     And file "added.md" now has content
       """
       # Added
       """
+    And file "unrelated.md" is unchanged
 
   Scenario: staged change to a file that was then deleted
     Given a file "added.md" with content

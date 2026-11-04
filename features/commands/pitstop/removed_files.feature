@@ -63,12 +63,12 @@ Feature: "trident pitstop" fixes only existing changed files and lints all files
       unrelated.md:1:2: [MD019] Multiple spaces (5) after # in heading [*]
       """
     And the exit code is 1
-    And file "unrelated.md" is unchanged
-    And file "removed.md" does not exist
     And file "renamed.md" now has content
       """
       # Removed
       """
+    And file "unrelated.md" is unchanged
+    And file "removed.md" does not exist
 
   Scenario: deletion committed on the feature branch
     Given I ran "git checkout -b feature"

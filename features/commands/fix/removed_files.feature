@@ -86,12 +86,12 @@ Feature: "trident fix" operates only on changed files that still exist in the wo
       unrelated.md
       """
     And the exit code is 0
-    And file "unrelated.md" is unchanged
-    And file "removed.md" does not exist
     And file "renamed.md" now has content
       """
       # Removed
       """
+    And file "unrelated.md" is unchanged
+    And file "removed.md" does not exist
 
   Scenario: staged change to a file that was then deleted
     Given I change file "removed.md" to
@@ -151,8 +151,8 @@ Feature: "trident fix" operates only on changed files that still exist in the wo
       unrelated.md
       """
     And the exit code is 0
-    And file "unrelated.md" is unchanged
     And file "on-branch.md" now has content
       """
       # Branch
       """
+    And file "unrelated.md" is unchanged

@@ -106,11 +106,11 @@ Feature: "trident pitstop --scope" selects which files to process
       """
       # Branch
       """
-    And file "untracked.md" now has content
-      """
-      # Untracked
-      """
     And file "on-main.md" now has content
       """
       # Main
+      """
+    And file "untracked.md" now has content
+      """
+      # Untracked
       """
