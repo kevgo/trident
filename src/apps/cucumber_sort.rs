@@ -7,6 +7,12 @@ use std::fmt::Display;
 
 pub struct CucumberSort;
 
+impl Display for CucumberSort {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str("cucumber-sort")
+    }
+}
+
 impl Tool for CucumberSort {
     fn enabled_when(&self) -> EnabledWhen {
         EnabledWhen::FilePresent {
@@ -17,12 +23,6 @@ impl Tool for CucumberSort {
 
     fn config_section<'a>(&self, apps: &'a ApplicationSection) -> Option<&'a dyn Application> {
         Some(apps.cucumber_sort.as_ref()?)
-    }
-}
-
-impl Display for CucumberSort {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.write_str("cucumber-sort")
     }
 }
 

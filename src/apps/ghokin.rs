@@ -7,6 +7,12 @@ use std::fmt::Display;
 
 pub struct Ghokin;
 
+impl Display for Ghokin {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str("Ghokin")
+    }
+}
+
 impl Tool for Ghokin {
     fn enabled_when(&self) -> EnabledWhen {
         EnabledWhen::Always
@@ -14,12 +20,6 @@ impl Tool for Ghokin {
 
     fn config_section<'a>(&self, apps: &'a ApplicationSection) -> Option<&'a dyn Application> {
         Some(apps.ghokin.as_ref()?)
-    }
-}
-
-impl Display for Ghokin {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.write_str("Ghokin")
     }
 }
 

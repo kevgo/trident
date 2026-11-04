@@ -7,6 +7,12 @@ use std::fmt::Display;
 
 pub struct Ruff;
 
+impl Display for Ruff {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str("Ruff")
+    }
+}
+
 impl Tool for Ruff {
     fn enabled_when(&self) -> EnabledWhen {
         EnabledWhen::Always
@@ -15,12 +21,6 @@ impl Tool for Ruff {
 
     fn config_section<'a>(&self, apps: &'a ApplicationSection) -> Option<&'a dyn Application> {
         Some(apps.ruff.as_ref()?)
-    }
-}
-
-impl Display for Ruff {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.write_str("Ruff")
     }
 }
 
