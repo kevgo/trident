@@ -47,6 +47,10 @@ Feature: "trident fix" operates only on changed files that still exist in the wo
       2 Markdown
       running 2 tasks
       """
+    And it prints the block
+      """
+      untracked.md:1:2: [MD019] Multiple spaces (5) after # in heading [fixed]
+      """
     And it does not print
       """
       removed.md
