@@ -106,7 +106,7 @@ Feature: "trident fix-unsafe --scope" selects which files to fix
           items.append(item)
           return items
       """
-    And file "untracked.py" now has content
+    And file "on-main.py" now has content
       """
       def add_to_list(item, items=None):
           if items is None:
@@ -114,7 +114,7 @@ Feature: "trident fix-unsafe --scope" selects which files to fix
           items.append(item)
           return items
       """
-    And file "on-main.py" now has content
+    And file "untracked.py" now has content
       """
       def add_to_list(item, items=None):
           if items is None:

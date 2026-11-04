@@ -60,8 +60,8 @@ Feature: "trident init:claude" installs Claude-compatible agent hooks
       """
     And it prints nothing to STDERR
     And the exit code is 1
-    And file ".claude/settings.json" is unchanged
     And file ".claude/trident-hooks/post_write.sh" does not exist
+    And file ".claude/settings.json" is unchanged
 
   Scenario: claude hook exists already
     And a file ".claude/trident-hooks/post_write.sh" with content

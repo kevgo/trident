@@ -60,7 +60,6 @@ Feature: fix Markdown with Tikibase
       fix Markdown (rumdl)
       """
     And the exit code is 0
-    And file "one.md" is unchanged
     And file "two.md" now has content
       """
       # Two
@@ -69,6 +68,7 @@ Feature: fix Markdown with Tikibase
 
       - [One](one.md)
       """
+    And file "one.md" is unchanged
 
   Scenario: invalid Markdown
     Given a file "main.md" with content

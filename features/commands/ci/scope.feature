@@ -41,12 +41,14 @@ Feature: "trident ci --scope" selects which files to process
       on-main.md:1:2: [MD019] Multiple spaces (5) after # in heading [*]
       """
     And the exit code is 1
-    And file "committed-on-branch.md" is unchanged
-    And file "on-main.md" is unchanged
     And file "untracked.md" now has content
       """
       # Untracked
       """
+    And file "committed-on-branch.md" is unchanged
+    And file "committed-on-branch.md" is unchanged
+    And file "on-main.md" is unchanged
+    And file "on-main.md" is unchanged
 
   Scenario: --scope=branch fixes only files changed on the branch and lints all files of their stacks
     When executing "trident ci --scope=branch --show=output"
@@ -68,7 +70,6 @@ Feature: "trident ci --scope" selects which files to process
       on-main.md:1:2: [MD019] Multiple spaces (5) after # in heading [*]
       """
     And the exit code is 1
-    And file "on-main.md" is unchanged
     And file "committed-on-branch.md" now has content
       """
       # Branch
@@ -77,6 +78,7 @@ Feature: "trident ci --scope" selects which files to process
       """
       # Untracked
       """
+    And file "on-main.md" is unchanged
 
   Scenario: --scope=all processes all files
     When executing "trident ci --scope=all --show=output"
@@ -98,13 +100,13 @@ Feature: "trident ci --scope" selects which files to process
       untracked.md:1:2: [MD019] Multiple spaces (5) after # in heading [fixed]
       """
     And the exit code is 1
-    And file "on-main.md" now has content
-      """
-      # Main
-      """
     And file "committed-on-branch.md" now has content
       """
       # Branch
+      """
+    And file "on-main.md" now has content
+      """
+      # Main
       """
     And file "untracked.md" now has content
       """

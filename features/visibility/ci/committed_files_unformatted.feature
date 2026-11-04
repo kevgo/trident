@@ -83,13 +83,13 @@ Feature: CI if committed files are unformatted
       \tcolor: red;
       }
       """
-    And file "main.ts" now has content
-      """
-      console.log("hello");
-      """
     And file "main.py" now has content
       """
       print("hello")
+      """
+    And file "main.ts" now has content
+      """
+      console.log("hello");
       """
 
   Scenario: --show=verbose
@@ -160,13 +160,13 @@ Feature: CI if committed files are unformatted
       \tcolor: red;
       }
       """
-    And file "main.ts" now has content
-      """
-      console.log("hello");
-      """
     And file "main.py" now has content
       """
       print("hello")
+      """
+    And file "main.ts" now has content
+      """
+      console.log("hello");
       """
 
   Scenario: --show=names
@@ -227,13 +227,13 @@ Feature: CI if committed files are unformatted
       \tcolor: red;
       }
       """
-    And file "main.ts" now has content
-      """
-      console.log("hello");
-      """
     And file "main.py" now has content
       """
       print("hello")
+      """
+    And file "main.ts" now has content
+      """
+      console.log("hello");
       """
 
   Scenario: --show=failed
@@ -261,11 +261,11 @@ Feature: CI if committed files are unformatted
       \tcolor: red;
       }
       """
-    And file "main.ts" now has content
-      """
-      console.log("hello");
-      """
     And file "main.py" now has content
       """
       print("hello")
+      """
+    And file "main.ts" now has content
+      """
+      console.log("hello");
       """

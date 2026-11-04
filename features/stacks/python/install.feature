@@ -33,9 +33,9 @@ Feature: install all Python tools
       0 errors, 0 warnings, 0 informations
       """
     And the exit code is 0
-    And file "main.py" is unchanged
     And file "run-that-app" now has an additional line matching
       """
       pyright \d+\.\d+\.\d+
       ruff \d+\.\d+\.\d+
       """
+    And file "main.py" is unchanged
