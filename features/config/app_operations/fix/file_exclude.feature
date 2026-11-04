@@ -69,10 +69,6 @@ Feature: exclude a file from being fixed by a specific app only
       taplo(.exe)? format --force Cargo.toml other.toml
       """
     And the exit code is 0
-    And file "other.toml" now has content
-      """
-      key = "value"
-      """
     And file "Cargo.toml" now has content
       """
       [package]
@@ -80,4 +76,8 @@ Feature: exclude a file from being fixed by a specific app only
 
       [lints.clippy]
       pedantic = { level = "warn" }
+      """
+    And file "other.toml" now has content
+      """
+      key = "value"
       """

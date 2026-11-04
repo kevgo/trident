@@ -69,13 +69,13 @@ Feature: pitstop multiple unformatted stacks
       \tcolor: red;
       }
       """
-    And file "main.ts" now has content
-      """
-      console.log("hello");
-      """
     And file "main.py" now has content
       """
       print("hello")
+      """
+    And file "main.ts" now has content
+      """
+      console.log("hello");
       """
 
   Scenario: --show=verbose
@@ -133,13 +133,13 @@ Feature: pitstop multiple unformatted stacks
       \tcolor: red;
       }
       """
-    And file "main.ts" now has content
-      """
-      console.log("hello");
-      """
     And file "main.py" now has content
       """
       print("hello")
+      """
+    And file "main.ts" now has content
+      """
+      console.log("hello");
       """
 
   Scenario: --show=names
@@ -166,13 +166,13 @@ Feature: pitstop multiple unformatted stacks
       \tcolor: red;
       }
       """
-    And file "main.ts" now has content
-      """
-      console.log("hello");
-      """
     And file "main.py" now has content
       """
       print("hello")
+      """
+    And file "main.ts" now has content
+      """
+      console.log("hello");
       """
 
   Scenario: --show=failed
@@ -184,11 +184,11 @@ Feature: pitstop multiple unformatted stacks
       \tcolor: red;
       }
       """
-    And file "main.ts" now has content
-      """
-      console.log("hello");
-      """
     And file "main.py" now has content
       """
       print("hello")
+      """
+    And file "main.ts" now has content
+      """
+      console.log("hello");
       """

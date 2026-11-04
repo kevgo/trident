@@ -78,8 +78,8 @@ Feature: "trident init:claude" installs Claude-compatible agent hooks
       """
     And it prints nothing to STDERR
     And the exit code is 1
-    And file ".claude/settings.json" does not exist
     And file ".claude/trident-hooks/post_write.sh" is unchanged
+    And file ".claude/settings.json" does not exist
 
   Scenario: --force overwrites existing files
     Given a file ".claude/settings.json" with content

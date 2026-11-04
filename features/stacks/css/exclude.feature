@@ -32,8 +32,8 @@ Feature: ignore a CSS file
       lint CSS (Biome)
       """
     And the exit code is 0
-    And file "good.css" is unchanged
     And file "bad.css" is unchanged
+    And file "good.css" is unchanged
 
   Scenario: fixing
     Given a file "good.css" with content
