@@ -7,6 +7,12 @@ use std::fmt::Display;
 
 pub struct Gofumpt;
 
+impl Display for Gofumpt {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str("gofumpt")
+    }
+}
+
 impl Tool for Gofumpt {
     fn enabled_when(&self) -> EnabledWhen {
         EnabledWhen::Always
@@ -14,12 +20,6 @@ impl Tool for Gofumpt {
 
     fn config_section<'a>(&self, apps: &'a ApplicationSection) -> Option<&'a dyn Application> {
         Some(apps.gofumpt.as_ref()?)
-    }
-}
-
-impl Display for Gofumpt {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.write_str("gofumpt")
     }
 }
 
