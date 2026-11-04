@@ -6,6 +6,12 @@ use std::fmt::Display;
 
 pub struct Shfmt;
 
+impl Display for Shfmt {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str("shfmt")
+    }
+}
+
 impl Tool for Shfmt {
     fn enabled_when(&self) -> EnabledWhen {
         EnabledWhen::Always
@@ -13,12 +19,6 @@ impl Tool for Shfmt {
 
     fn config_section<'a>(&self, apps: &'a ApplicationSection) -> Option<&'a dyn Application> {
         Some(apps.shfmt.as_ref()?)
-    }
-}
-
-impl Display for Shfmt {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.write_str("shfmt")
     }
 }
 
