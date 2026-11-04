@@ -82,7 +82,6 @@ Feature: keep-sorted support
       """
       keep-sorted
       """
-    And file "unsorted_1.toml" is unchanged
     And file "unsorted_2.toml" now has content
       """
       # keep-sorted start
@@ -90,6 +89,7 @@ Feature: keep-sorted support
       d = 1
       # keep-sorted end
       """
+    And file "unsorted_1.toml" is unchanged
 
   Scenario: does not sort files that should not be sorted
     Given a file "trident.json" with content
@@ -108,7 +108,6 @@ Feature: keep-sorted support
       """
       keep-sorted
       """
-    And file "unsorted_1.toml" is unchanged
     And file "unsorted_2.toml" now has content
       """
       # keep-sorted start
@@ -116,3 +115,4 @@ Feature: keep-sorted support
       d = 1
       # keep-sorted end
       """
+    And file "unsorted_1.toml" is unchanged

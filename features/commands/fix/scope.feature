@@ -102,11 +102,11 @@ Feature: "trident fix --scope" selects which files to format
       """
       # Branch
       """
-    And file "untracked.md" now has content
-      """
-      # Untracked
-      """
     And file "on-main.md" now has content
       """
       # Main
+      """
+    And file "untracked.md" now has content
+      """
+      # Untracked
       """
