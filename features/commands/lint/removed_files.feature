@@ -18,11 +18,15 @@ Feature: "trident lint" lints all files of a stack in which files were deleted o
 
   Scenario: unstaged deletion
     Given I delete file "removed.md"
-    When executing "trident lint --show=output"
+    When executing "trident lint --show=verbose"
     Then it prints to STDERR
       """
       1 Markdown
       running 2 tasks
+      """
+    And it prints the lines matching
+      """
+      rumdl check unrelated.md$
       """
     And it prints the block
       """
@@ -38,11 +42,15 @@ Feature: "trident lint" lints all files of a stack in which files were deleted o
   Scenario: staged deletion
     Given I delete file "removed.md"
     And I ran "git add -A"
-    When executing "trident lint --show=output"
+    When executing "trident lint --show=verbose"
     Then it prints to STDERR
       """
       1 Markdown
       running 2 tasks
+      """
+    And it prints the lines matching
+      """
+      rumdl check unrelated.md$
       """
     And it prints the block
       """
@@ -57,11 +65,15 @@ Feature: "trident lint" lints all files of a stack in which files were deleted o
 
   Scenario: unstaged rename
     Given I rename file "removed.md" to "renamed.md"
-    When executing "trident lint --show=output"
+    When executing "trident lint --show=verbose"
     Then it prints to STDERR
       """
       2 Markdown
       running 2 tasks
+      """
+    And it prints the lines matching
+      """
+      rumdl check renamed.md unrelated.md$
       """
     And it prints the block
       """
@@ -77,11 +89,15 @@ Feature: "trident lint" lints all files of a stack in which files were deleted o
   Scenario: staged rename
     Given I rename file "removed.md" to "renamed.md"
     And I ran "git add -A"
-    When executing "trident lint --show=output"
+    When executing "trident lint --show=verbose"
     Then it prints to STDERR
       """
       2 Markdown
       running 2 tasks
+      """
+    And it prints the lines matching
+      """
+      rumdl check renamed.md unrelated.md$
       """
     And it prints the block
       """
@@ -101,11 +117,15 @@ Feature: "trident lint" lints all files of a stack in which files were deleted o
       """
     And I ran "git add -A"
     And I delete file "removed.md"
-    When executing "trident lint --show=output"
+    When executing "trident lint --show=verbose"
     Then it prints to STDERR
       """
       1 Markdown
       running 2 tasks
+      """
+    And it prints the lines matching
+      """
+      rumdl check unrelated.md$
       """
     And it prints the block
       """
@@ -123,11 +143,15 @@ Feature: "trident lint" lints all files of a stack in which files were deleted o
     And I delete file "removed.md"
     And I ran "git add -A"
     And I ran "git commit -m delete"
-    When executing "trident lint --show=output"
+    When executing "trident lint --show=verbose"
     Then it prints to STDERR
       """
       1 Markdown
       running 2 tasks
+      """
+    And it prints the lines matching
+      """
+      rumdl check unrelated.md$
       """
     And it prints the block
       """
@@ -145,11 +169,15 @@ Feature: "trident lint" lints all files of a stack in which files were deleted o
     And I rename file "removed.md" to "renamed.md"
     And I ran "git add -A"
     And I ran "git commit -m rename"
-    When executing "trident lint --show=output"
+    When executing "trident lint --show=verbose"
     Then it prints to STDERR
       """
       2 Markdown
       running 2 tasks
+      """
+    And it prints the lines matching
+      """
+      rumdl check renamed.md unrelated.md$
       """
     And it prints the block
       """
@@ -165,11 +193,15 @@ Feature: "trident lint" lints all files of a stack in which files were deleted o
   Scenario: --scope=branch sees uncommitted deletions
     Given I ran "git checkout -b feature"
     And I delete file "removed.md"
-    When executing "trident lint --scope=branch --show=output"
+    When executing "trident lint --scope=branch --show=verbose"
     Then it prints to STDERR
       """
       1 Markdown
       running 2 tasks
+      """
+    And it prints the lines matching
+      """
+      rumdl check unrelated.md$
       """
     And it prints the block
       """
@@ -188,9 +220,13 @@ Feature: "trident lint" lints all files of a stack in which files were deleted o
       """
       running 1 tasks
       """
+    And it prints
+      """
+      lint all (git diff HEAD --check)
+      """
     And it does not print
       """
-      unrelated.md
+      rumdl check
       """
     And the exit code is 0
     And all files are unchanged
@@ -206,6 +242,10 @@ Feature: "trident lint" lints all files of a stack in which files were deleted o
       """
       1 other
       running 1 tasks
+      """
+    And it prints
+      """
+      lint all (git diff HEAD --check)
       """
     And it does not print
       """
@@ -227,6 +267,10 @@ Feature: "trident lint" lints all files of a stack in which files were deleted o
       """
       running 1 tasks
       """
+    And it prints
+      """
+      lint all (git diff HEAD --check)
+      """
     And it does not print
       """
       unrelated.md
@@ -240,11 +284,19 @@ Feature: "trident lint" lints all files of a stack in which files were deleted o
       # Also unrelated
       """
     And I delete file "removed.md"
-    When executing "trident lint --show=output"
+    When executing "trident lint --show=verbose"
     Then it prints to STDERR
       """
       1 Markdown
       running 2 tasks
+      """
+    And it prints the lines matching
+      """
+      rumdl check also-unrelated.md unrelated.md$
+      """
+    And it prints the block
+      """
+      lint all (git diff HEAD --check)
       """
     And it prints the block
       """
