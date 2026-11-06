@@ -21,7 +21,7 @@ Feature: "trident pitstop" fixes only existing changed files and lints all files
         "applications": {
           "biome": { "enabled": false },
           "delete-empty-folders": { "enabled": false },
-          "git-diff-check": { "enabled": false },
+          "git-diff-check": { "enabled": false }
         }
       }
       """

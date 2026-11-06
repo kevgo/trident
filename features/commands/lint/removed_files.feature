@@ -21,7 +21,7 @@ Feature: "trident lint" lints all files of a stack in which files were deleted o
         "applications": {
           "biome": { "enabled": false },
           "delete-empty-folders": { "enabled": false },
-          "git-diff-check": { "enabled": false },
+          "git-diff-check": { "enabled": false }
         },
         "ignore-files": ["ignored.md"]
       }
