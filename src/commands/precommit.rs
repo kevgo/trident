@@ -43,7 +43,11 @@ fn run(args: &RunArgs) -> Result<()> {
         &ignores,
     );
     if show.display_metadata() {
-        print_metadata(&stacks);
+        let removed = repo.staged_removed()?;
+        print_metadata(&stacks::include_removed_files(&stacks, &removed, &ignores));
+    }
+    if staged.is_empty() {
+        return Ok(());
     }
 
     // step 3: fingerprint the staged files before running the fixes

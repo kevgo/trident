@@ -20,8 +20,8 @@ impl Repo {
             .collect())
     }
 
-    /// provides the files that the current branch's commits delete, including the old names of renamed files
-    pub(crate) fn branch_committed_deleted_files(&self, merge_base: &str) -> Result<Vec<File>> {
+    /// provides the files that the commits since the given merge base delete or rename away
+    pub(crate) fn branch_committed_removed_files(&self, merge_base: &str) -> Result<Vec<File>> {
         Ok(self
             .git_command()
             .args([

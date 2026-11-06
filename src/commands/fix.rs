@@ -26,11 +26,11 @@ pub fn fix(args: &RunArgsWithScope) -> Result<ExitCode> {
     let scope = resolve_scope(&args.scope, repo.as_ref());
     let stacks = discover_stacks(scope, repo.as_ref(), &ignores)?;
     if show.display_metadata() {
-        print_metadata(&stacks);
+        print_metadata(stacks.changed());
     }
 
     // step 3: discover the fixes to run
-    let fixes = determine_fixes(&config, &stacks)?;
+    let fixes = determine_fixes(&config, stacks.fix())?;
     if show.display_metadata() {
         eprintln!("running {} tasks", fixes.len());
     }

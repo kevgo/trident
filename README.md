@@ -209,7 +209,6 @@ and [tests](#stack-specific-tests) of that stack.
 - Fixes change only the files in the scope,
   so that they don't rewrite files you haven't changed.
   If a stack has only deleted files, there is nothing for them to change.
-- Custom commands and tools that check the whole project run as usual.
 
 ### `--sequential`
 

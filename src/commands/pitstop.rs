@@ -32,7 +32,7 @@ pub fn pitstop(args: &RunArgsWithTestAndScope) -> Result<ExitCode> {
 pub(crate) fn run_tasks(
     args: &RunArgs,
     config: &Config,
-    stacks: &DetectedStacks,
+    stacks: &ScopedStacks,
     repo: Option<&Repo>,
     tests: Vec<NonEmpty<ToolCall>>,
 ) -> Result<ExitCode> {
@@ -42,12 +42,12 @@ pub(crate) fn run_tasks(
     let stderr_to_stdout = true;
 
     if show.display_metadata() {
-        print_metadata(stacks);
+        print_metadata(stacks.changed());
     }
 
     // step 1: discover the runnables
-    let fixes = fix::determine_fixes(config, stacks)?;
-    let mut lints = lint::determine_lints(config, stacks, repo)?;
+    let fixes = fix::determine_fixes(config, stacks.fix())?;
+    let mut lints = lint::determine_lints(config, stacks.lint(), repo)?;
     lints.global.extend(tests);
     if show.display_metadata() {
         eprintln!("running {} tasks", fixes.len() + lints.len());

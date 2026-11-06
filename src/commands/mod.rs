@@ -47,11 +47,11 @@ pub(crate) fn infer_scope(repo: Option<&Repo>) -> Scope {
         // error running Git --> check all files
         return Scope::All;
     };
-    let Ok(uncommitted_deleted) = repo.uncommitted_deleted() else {
+    let Ok(uncommitted_removed) = repo.uncommitted_removed() else {
         // error running Git --> check all files
         return Scope::All;
     };
-    if !uncommitted.is_empty() || !uncommitted_deleted.is_empty() {
+    if !uncommitted.is_empty() || !uncommitted_removed.is_empty() {
         // uncommitted changes exist --> check only those
         return Scope::Uncommitted;
     }
@@ -106,6 +106,12 @@ pub(crate) fn discover_stacks(
             ignores,
         )),
     }
+    let changed = stacks::include_removed_files(&existing, &removed, ignores);
+    let lint = stacks::include_stacks_of_removed_files(&existing, &removed, ignores);
+    Ok(ScopedStacks {
+        existing,
+        removed: Some(RemovedStacks { changed, lint }),
+    })
 }
 
 #[cfg(test)]
@@ -133,7 +139,7 @@ mod tests {
         repo.create_and_commit_file("committed.md")?;
         repo.create_unstaged_file("untracked.md");
         let stacks = discover_stacks(Scope::Uncommitted, Some(&repo), &Ignores::empty())?;
-        pretty::assert_eq!(filenames(&stacks), vec![File::from("untracked.md")]);
+        pretty::assert_eq!(filenames(stacks.fix()), vec![File::from("untracked.md")]);
         Ok(())
     }
 
@@ -147,8 +153,25 @@ mod tests {
         repo.create_unstaged_file("untracked.md");
         let stacks = discover_stacks(Scope::Branch, Some(&repo), &Ignores::empty())?;
         pretty::assert_eq!(
-            filenames(&stacks),
+            filenames(stacks.fix()),
             vec![File::from("on-branch.md"), File::from("untracked.md")]
+        );
+        Ok(())
+    }
+
+    #[test]
+    fn changed_stacks_include_removed_files() -> Result<()> {
+        let dir = TempDir::new().unwrap();
+        let repo = Repo::init(dir.path())?;
+        repo.create_and_commit_file("deleted.md")?;
+        repo.create_and_commit_file("untouched.md")?;
+        repo.create_unstaged_file("untracked.md");
+        std::fs::remove_file(repo.file_path("deleted.md")).unwrap();
+        let stacks = discover_stacks(Scope::Uncommitted, Some(&repo), &Ignores::empty())?;
+        pretty::assert_eq!(filenames(stacks.fix()), vec![File::from("untracked.md")]);
+        pretty::assert_eq!(
+            filenames(stacks.changed()),
+            vec![File::from("deleted.md"), File::from("untracked.md")]
         );
         Ok(())
     }
@@ -178,6 +201,36 @@ mod tests {
         repo.create_and_commit_file("on-main.md").unwrap();
         repo.create_and_switch_to_branch("feature").unwrap();
         repo.create_and_commit_file("on-branch.md").unwrap();
+        let have = infer_scope(Some(&repo));
+        let want = Scope::Branch;
+        pretty::assert_eq!(have, want);
+    }
+
+    #[test]
+    fn infer_uncommitted_when_only_uncommitted_deletions_exist() {
+        let dir = TempDir::new().unwrap();
+        let repo = Repo::init(dir.path()).unwrap();
+        repo.create_and_commit_file("on-main.md").unwrap();
+        std::fs::remove_file(repo.file_path("on-main.md")).unwrap();
+        let have = infer_scope(Some(&repo));
+        let want = Scope::Uncommitted;
+        pretty::assert_eq!(have, want);
+    }
+
+    #[test]
+    fn infer_branch_when_branch_only_deletes_files() {
+        let dir = TempDir::new().unwrap();
+        let repo = Repo::init(dir.path()).unwrap();
+        repo.create_and_commit_file("on-main.md").unwrap();
+        repo.create_and_switch_to_branch("feature").unwrap();
+        repo.git_command()
+            .args(["rm", "--quiet", "on-main.md"])
+            .run()
+            .unwrap();
+        repo.git_command()
+            .args(["commit", "--quiet", "--message=Delete"])
+            .run()
+            .unwrap();
         let have = infer_scope(Some(&repo));
         let want = Scope::Branch;
         pretty::assert_eq!(have, want);

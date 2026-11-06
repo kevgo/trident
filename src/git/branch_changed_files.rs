@@ -56,6 +56,15 @@ fn unique_existing(repo: &Repo, mut files: Vec<File>, extra: Vec<File>) -> Vec<F
     files
 }
 
+/// provides the files from both lists that don't exist in the workspace
+fn unique_missing(repo: &Repo, mut files: Vec<File>, extra: Vec<File>) -> Vec<File> {
+    files.extend(extra);
+    files.sort();
+    files.dedup();
+    files.retain(|file| !repo.file_exists(file));
+    files
+}
+
 #[cfg(test)]
 mod tests {
     mod branch_changed_files {
