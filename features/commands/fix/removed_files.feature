@@ -85,11 +85,15 @@ Feature: "trident fix" operates only on changed files that still exist in the wo
     And I ran "git commit -m change"
     And I rename file "removed.md" to "renamed.md"
     And I ran "git add -A"
-    When executing "trident fix --show=output"
+    When executing "trident fix --show=verbose"
     Then it prints to STDERR
       """
       2 Markdown
       running 1 tasks
+      """
+    And it prints the lines matching
+      """
+      rumdl fmt renamed.md$
       """
     And it does not print
       """
