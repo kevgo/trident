@@ -4,16 +4,7 @@ Feature: "trident ci" with a limited scope lints all files of stacks with delete
     Given a Git repository
     And a committed file "run-that-app" with content
       """
-      delete-empty-folders 0.0.2
       rumdl 0.2.14
-      """
-    And a committed file "unrelated.md" with content
-      """
-      #     Unrelated
-      """
-    And a committed file "removed.md" with content
-      """
-      # Removed
       """
     And a committed file "trident.json" with content
       """
@@ -24,6 +15,14 @@ Feature: "trident ci" with a limited scope lints all files of stacks with delete
           "git-diff-check": { "enabled": false }
         }
       }
+      """
+    And a committed file "unrelated.md" with content
+      """
+      #     Unrelated
+      """
+    And a committed file "removed.md" with content
+      """
+      # Removed
       """
 
   Scenario: --scope=uncommitted with an uncommitted deletion
