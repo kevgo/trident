@@ -11,9 +11,9 @@ Feature: "trident fix" operates only on changed files that still exist in the wo
       """
       {
         "applications": {
-          "delete-empty-folders": {
-            "enabled": false
-          }
+          "biome": { "enabled": false },
+          "delete-empty-folders": { "enabled": false },
+          "git-diff-check": { "enabled": false }
         }
       }
       """

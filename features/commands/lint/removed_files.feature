@@ -15,6 +15,17 @@ Feature: "trident lint" lints all files of a stack in which files were deleted o
       """
       # Removed
       """
+    And a committed file "trident.json" with content
+      """
+      {
+        "applications": {
+          "biome": { "enabled": false },
+          "delete-empty-folders": { "enabled": false },
+          "git-diff-check": { "enabled": false }
+        },
+        "ignore-files": ["ignored.md"]
+      }
+      """
 
   Scenario: unstaged deletion
     Given I delete file "removed.md"
@@ -22,7 +33,7 @@ Feature: "trident lint" lints all files of a stack in which files were deleted o
     Then it prints to STDERR
       """
       1 Markdown
-      running 2 tasks
+      running 1 tasks
       """
     And it prints the lines matching
       """
@@ -46,7 +57,7 @@ Feature: "trident lint" lints all files of a stack in which files were deleted o
     Then it prints to STDERR
       """
       1 Markdown
-      running 2 tasks
+      running 1 tasks
       """
     And it prints the lines matching
       """
@@ -69,7 +80,7 @@ Feature: "trident lint" lints all files of a stack in which files were deleted o
     Then it prints to STDERR
       """
       2 Markdown
-      running 2 tasks
+      running 1 tasks
       """
     And it prints the lines matching
       """
@@ -93,7 +104,7 @@ Feature: "trident lint" lints all files of a stack in which files were deleted o
     Then it prints to STDERR
       """
       2 Markdown
-      running 2 tasks
+      running 1 tasks
       """
     And it prints the lines matching
       """
@@ -121,7 +132,7 @@ Feature: "trident lint" lints all files of a stack in which files were deleted o
     Then it prints to STDERR
       """
       1 Markdown
-      running 2 tasks
+      running 1 tasks
       """
     And it prints the lines matching
       """
@@ -147,7 +158,7 @@ Feature: "trident lint" lints all files of a stack in which files were deleted o
     Then it prints to STDERR
       """
       1 Markdown
-      running 2 tasks
+      running 1 tasks
       """
     And it prints the lines matching
       """
@@ -173,7 +184,7 @@ Feature: "trident lint" lints all files of a stack in which files were deleted o
     Then it prints to STDERR
       """
       2 Markdown
-      running 2 tasks
+      running 1 tasks
       """
     And it prints the lines matching
       """
@@ -197,7 +208,7 @@ Feature: "trident lint" lints all files of a stack in which files were deleted o
     Then it prints to STDERR
       """
       1 Markdown
-      running 2 tasks
+      running 1 tasks
       """
     And it prints the lines matching
       """
@@ -218,15 +229,7 @@ Feature: "trident lint" lints all files of a stack in which files were deleted o
     When executing "trident lint --scope=uncommitted --show=output"
     Then it prints to STDERR
       """
-      running 1 tasks
-      """
-    And it prints
-      """
-      lint all (git diff HEAD --check)
-      """
-    And it does not print
-      """
-      rumdl check
+      running 0 tasks
       """
     And the exit code is 0
     And all files are unchanged
@@ -241,39 +244,21 @@ Feature: "trident lint" lints all files of a stack in which files were deleted o
     Then it prints to STDERR
       """
       1 other
-      running 1 tasks
-      """
-    And it prints
-      """
-      lint all (git diff HEAD --check)
-      """
-    And it does not print
-      """
-      unrelated.md
+      running 0 tasks
       """
     And the exit code is 0
     And all files are unchanged
 
   Scenario: deleting an ignored file does not lint its stack
-    Given a committed file "trident.jsonc" with content
+    Given a committed file "ignored.md" with content
       """
-      {
-        "ignore-files": ["removed.md"]
-      }
+      # Ignored
       """
-    And I delete file "removed.md"
-    When executing "trident lint --show=output"
+    And I delete file "ignored.md"
+    When executing "trident lint --show=verbose"
     Then it prints to STDERR
       """
-      running 1 tasks
-      """
-    And it prints
-      """
-      lint all (git diff HEAD --check)
-      """
-    And it does not print
-      """
-      unrelated.md
+      running 0 tasks
       """
     And the exit code is 0
     And all files are unchanged
@@ -288,15 +273,11 @@ Feature: "trident lint" lints all files of a stack in which files were deleted o
     Then it prints to STDERR
       """
       1 Markdown
-      running 2 tasks
+      running 1 tasks
       """
     And it prints the lines matching
       """
       rumdl check also-unrelated.md unrelated.md$
-      """
-    And it prints the block
-      """
-      lint all (git diff HEAD --check)
       """
     And it prints the block
       """
