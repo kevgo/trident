@@ -114,12 +114,13 @@ Feature: "trident fix" operates only on changed files that still exist in the wo
       """
     And I ran "git add -A"
     And I delete file "removed.md"
-    When executing "trident fix --show=output"
+    When executing "trident fix --show=verbose"
     Then it prints to STDERR
       """
       1 Markdown
       running 0 tasks
       """
+    And it prints nothing to STDOUT
     And it does not print
       """
       fix Markdown
