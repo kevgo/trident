@@ -15,6 +15,16 @@ Feature: "trident ci" with a limited scope lints all files of stacks with delete
       """
       # Removed
       """
+    And a committed file "trident.json" with content
+      """
+      {
+        "applications": {
+          "biome": { "enabled": false },
+          "delete-empty-folders": { "enabled": false },
+          "git-diff-check": { "enabled": false }
+        }
+      }
+      """
 
   Scenario: --scope=uncommitted with an uncommitted deletion
     Given I delete file "removed.md"
@@ -22,7 +32,7 @@ Feature: "trident ci" with a limited scope lints all files of stacks with delete
     Then it prints the lines to STDERR
       """
       1 Markdown
-      running 3 tasks
+      running 1 tasks
       """
     And it does not print
       """
@@ -44,7 +54,7 @@ Feature: "trident ci" with a limited scope lints all files of stacks with delete
     Then it prints the lines to STDERR
       """
       1 Markdown
-      running 3 tasks
+      running 1 tasks
       """
     And it does not print
       """
@@ -63,7 +73,7 @@ Feature: "trident ci" with a limited scope lints all files of stacks with delete
     Then it prints the lines to STDERR
       """
       2 Markdown
-      running 4 tasks
+      running 2 tasks
       """
     And it prints the block
       """
