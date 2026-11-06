@@ -120,7 +120,6 @@ Feature: "trident fix" operates only on changed files that still exist in the wo
       1 Markdown
       running 0 tasks
       """
-    And it prints nothing to STDOUT
     And it does not print
       """
       fix Markdown
@@ -155,11 +154,15 @@ Feature: "trident fix" operates only on changed files that still exist in the wo
     And I delete file "removed.md"
     And I ran "git add -A"
     And I ran "git commit -m delete"
-    When executing "trident fix --scope=branch --show=output"
+    When executing "trident fix --scope=branch --show=verbose"
     Then it prints to STDERR
       """
       2 Markdown
       running 1 tasks
+      """
+    And it prints the lines matching
+      """
+      rumdl fmt on-branch.md$
       """
     And it does not print
       """
