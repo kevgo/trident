@@ -27,7 +27,7 @@ Feature: "trident fix-unsafe" operates only on changed files that still exist in
 
   Scenario: uncommitted deletion
     Given I delete file "removed.py"
-    When executing "trident fix-unsafe --show=output"
+    When executing "trident fix-unsafe --show=verbose"
     Then it prints to STDERR
       """
       1 Python
@@ -48,11 +48,15 @@ Feature: "trident fix-unsafe" operates only on changed files that still exist in
           return items
       """
     And I delete file "removed.py"
-    When executing "trident fix-unsafe --show=output"
+    When executing "trident fix-unsafe --show=verbose"
     Then it prints to STDERR
       """
       2 Python
       running 1 tasks
+      """
+    And it prints the lines matching
+      """
+      ruff check --fix --unsafe-fixes untracked.py$
       """
     And it prints the lines
       """
