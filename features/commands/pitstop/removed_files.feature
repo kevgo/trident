@@ -15,26 +15,40 @@ Feature: "trident pitstop" fixes only existing changed files and lints all files
       """
       # Removed
       """
+    And a committed file "trident.json" with content
+      """
+      {
+        "applications": {
+          "biome": { "enabled": false },
+          "delete-empty-folders": { "enabled": false },
+          "git-diff-check": { "enabled": false },
+        }
+      }
+      """
 
   Scenario: uncommitted deletion
     Given I delete file "removed.md"
-    When executing "trident pitstop --show=output"
+    When executing "trident pitstop --show=verbose"
     Then it prints to STDERR
       """
       1 Markdown
-      running 3 tasks
+      running 1 tasks
+      """
+    And it prints the lines matching
+      """
+      rumdl check unrelated.md$
       """
     And it prints the lines
       """
       lint Markdown (rumdl)
       """
-    And it does not print
-      """
-      fix Markdown
-      """
     And it prints the block
       """
       unrelated.md:1:2: [MD019] Multiple spaces (5) after # in heading [*]
+      """
+    And it does not print
+      """
+      fix Markdown
       """
     And the exit code is 1
     And all files are unchanged
@@ -48,11 +62,19 @@ Feature: "trident pitstop" fixes only existing changed files and lints all files
     And I ran "git commit -m change"
     And I rename file "removed.md" to "renamed.md"
     And I ran "git add -A"
-    When executing "trident pitstop --show=output"
+    When executing "trident pitstop --show=verbose"
     Then it prints to STDERR
       """
       2 Markdown
-      running 4 tasks
+      running 2 tasks
+      """
+    And it prints the lines matching
+      """
+      rumdl fmt renamed.md$
+      """
+    And it prints the lines matching
+      """
+      rumdl check renamed.md unrelated.md$
       """
     And it prints the block
       """
@@ -75,19 +97,27 @@ Feature: "trident pitstop" fixes only existing changed files and lints all files
     And I delete file "removed.md"
     And I ran "git add -A"
     And I ran "git commit -m delete"
-    When executing "trident pitstop --show=output"
+    When executing "trident pitstop --show=verbose"
     Then it prints to STDERR
       """
       1 Markdown
-      running 3 tasks
+      running 1 tasks
       """
-    And it does not print
+    And it prints the block
       """
-      fix Markdown
+      lint Markdown (rumdl)
+      """
+    And it prints the lines matching
+      """
+      rumdl check unrelated.md$
       """
     And it prints the block
       """
       unrelated.md:1:2: [MD019] Multiple spaces (5) after # in heading [*]
+      """
+    And it does not print
+      """
+      fix Markdown
       """
     And the exit code is 1
     And all files are unchanged
@@ -98,11 +128,19 @@ Feature: "trident pitstop" fixes only existing changed files and lints all files
       # Untracked
       """
     And I delete file "removed.md"
-    When executing "trident pitstop --show=output"
+    When executing "trident pitstop --show=verbose"
     Then it prints to STDERR
       """
       2 Markdown
-      running 4 tasks
+      running 2 tasks
+      """
+    And it prints the block
+      """
+      lint Markdown (rumdl)
+      """
+    And it prints the lines matching
+      """
+      rumdl fmt untracked.md$
       """
     And it prints the block
       """
@@ -121,7 +159,7 @@ Feature: "trident pitstop" fixes only existing changed files and lints all files
     Then it prints to STDERR
       """
       1 Python
-      running 2 tasks
+      running 0 tasks
       """
     And the exit code is 0
     And all files are unchanged
@@ -134,10 +172,23 @@ Feature: "trident pitstop" fixes only existing changed files and lints all files
       }
       """
     And I delete file "removed.md"
-    When executing "trident pitstop --show=output"
+    When executing "trident pitstop --show=verbose"
     Then it prints to STDERR
       """
-      running 2 tasks
+      1 Markdown
+      running 1 tasks
       """
-    And the exit code is 0
+    And it prints the block
+      """
+      lint Markdown (rumdl)
+      """
+    And it prints the lines matching
+      """
+      rumdl check unrelated.md$
+      """
+    And it prints the block
+      """
+      unrelated.md:1:2: [MD019] Multiple spaces (5) after # in heading [*]
+      """
+    And the exit code is 1
     And all files are unchanged
