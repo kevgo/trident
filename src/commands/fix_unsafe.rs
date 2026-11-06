@@ -23,11 +23,11 @@ pub fn fix_unsafe(args: &RunArgsWithScope) -> Result<ExitCode> {
     let scope = resolve_scope(&args.scope, repo.as_ref());
     let stacks = discover_stacks(scope, repo.as_ref(), &ignores)?;
     if show.display_metadata() {
-        print_metadata(&stacks);
+        print_metadata(stacks.changed());
     }
 
     // step 3: discover the unsafe fixes to run
-    let unsafe_fixes = determine_unsafe_fixes(&stacks, &config)?;
+    let unsafe_fixes = determine_unsafe_fixes(stacks.fix(), &config)?;
     if show.display_metadata() {
         eprintln!("running {} tasks", unsafe_fixes.len());
     }

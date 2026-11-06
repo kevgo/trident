@@ -47,18 +47,47 @@ impl GitStatusOutput {
 
     /// destination records, skipping rename/copy original paths
     pub(crate) fn records(&self) -> impl Iterator<Item = Record<'_>> {
+        self.records_with_orig_paths().map(|(record, _)| record)
+    }
+
+    /// the paths of the files that this status output reports as deleted or renamed away
+    pub(crate) fn removed_paths(&self) -> impl Iterator<Item = &str> {
+        self.records_with_orig_paths()
+            .flat_map(|(record, orig_path)| removed_paths_of(&record, orig_path))
+    }
+
+    /// the paths of the staged files that this status output reports as deleted or renamed away
+    pub(crate) fn staged_removed_paths(&self) -> impl Iterator<Item = &str> {
+        self.records_with_orig_paths()
+            .filter(|(record, _)| record.index != ' ')
+            .flat_map(|(record, orig_path)| removed_paths_of(&record, orig_path))
+    }
+
+    /// all records together with the original path of renames and copies
+    fn records_with_orig_paths(&self) -> impl Iterator<Item = (Record<'_>, Option<&str>)> {
         let mut lines = self.0.lines();
         std::iter::from_fn(move || {
             let line = lines.next()?;
             let record = Record::parse(line)?;
-            if record.has_orig_path() {
-                // Rename/copy entries are `XY dest\0orig\0`.
-                // We don't care about the orig filename, so we skip the next zero-delimited line.
-                lines.next();
-            }
-            Some(record)
+            // Rename/copy entries are `XY dest\0orig\0`.
+            let orig_path = if record.has_orig_path() {
+                lines.next()
+            } else {
+                None
+            };
+            Some((record, orig_path))
         })
     }
+}
+
+/// provides the paths that the given record reports as deleted or renamed away
+fn removed_paths_of<'a>(
+    record: &Record<'a>,
+    orig_path: Option<&'a str>,
+) -> impl Iterator<Item = &'a str> + use<'a> {
+    let deleted = record.is_deleted().then_some(record.path);
+    let renamed_away = orig_path.filter(|_| record.is_renamed());
+    deleted.into_iter().chain(renamed_away)
 }
 
 /// a record from `git status --porcelain=v1 -z`
@@ -119,11 +148,22 @@ impl Record<'_> {
         )
     }
 
+    /// provides whether this record describes a changed file that still exists in the workspace
     pub fn is_uncommitted(&self) -> bool {
-        if self.index == '!' || self.worktree == '!' {
+        if self.index == '!' || self.worktree == '!' || self.worktree == 'D' {
             return false;
         }
         is_present_change(self.index) || is_present_change(self.worktree)
+    }
+
+    /// provides whether the file at this record's path was deleted
+    fn is_deleted(&self) -> bool {
+        self.index == 'D' || self.worktree == 'D'
+    }
+
+    /// provides whether the file at this record's original path was renamed
+    fn is_renamed(&self) -> bool {
+        self.index == 'R' || self.worktree == 'R'
     }
 }
 
@@ -178,6 +218,86 @@ mod tests {
                 let have = Record::parse(give);
                 assert_eq!(have, want, "{give}");
             }
+        }
+    }
+
+    mod is_uncommitted {
+        use super::super::Record;
+        use maplit::hashmap;
+
+        #[test]
+        fn is_uncommitted() {
+            let tests = hashmap! {
+                "M  file.rs" => true,
+                " M file.rs" => true,
+                "MM file.rs" => true,
+                "A  file.rs" => true,
+                "R  file.rs" => true,
+                "?? file.rs" => true,
+                "D  file.rs" => false,
+                " D file.rs" => false,
+                "MD file.rs" => false,
+                "AD file.rs" => false,
+                "RD file.rs" => false,
+                "!! file.rs" => false,
+            };
+            for (give, want) in tests {
+                let record = Record::parse(give).expect(give);
+                assert_eq!(record.is_uncommitted(), want, "{give}");
+            }
+        }
+    }
+
+    mod removed_paths {
+        use super::super::GitStatusOutput;
+
+        #[test]
+        fn deleted_and_renamed_files() {
+            let give = [
+                "D  staged-delete.rs",
+                " D unstaged-delete.rs",
+                "MD modified-then-deleted.rs",
+                "R  new.rs\0old.rs",
+                "RD new2.rs\0old2.rs",
+                "C  copy.rs\0original.rs",
+                "M  modified.rs",
+                "?? untracked.rs",
+            ]
+            .join("\0");
+            let output = GitStatusOutput::from(give);
+            let have: Vec<&str> = output.removed_paths().collect();
+            let want = vec![
+                "staged-delete.rs",
+                "unstaged-delete.rs",
+                "modified-then-deleted.rs",
+                "old.rs",
+                "new2.rs",
+                "old2.rs",
+            ];
+            pretty::assert_eq!(have, want);
+        }
+
+        #[test]
+        fn staged_only() {
+            let give = [
+                "D  staged-delete.rs",
+                " D unstaged-delete.rs",
+                "MD modified-then-deleted.rs",
+                "R  new.rs\0old.rs",
+                "M  modified.rs",
+                "?? untracked.rs",
+            ]
+            .join("\0");
+            let output = GitStatusOutput::from(give);
+            let have: Vec<&str> = output.staged_removed_paths().collect();
+            let want = vec!["staged-delete.rs", "modified-then-deleted.rs", "old.rs"];
+            pretty::assert_eq!(have, want);
+        }
+
+        #[test]
+        fn no_removed_files() {
+            let output = GitStatusOutput::from("M  file.rs");
+            assert_eq!(output.removed_paths().count(), 0);
         }
     }
 

@@ -9,6 +9,8 @@
       "^a committed file",
       "^a file",
       "^I change file",
+      "^I delete file",
+      "^I rename file",
       "^an executable file",
       "^I ran"
     ],
@@ -19,8 +21,8 @@
     "^file \".*\" now matches these lines$",
     "^file \".*\" now has an additional line matching$",
     "^file \".*\" is executable$",
-    "^file \".*\" does not exist$",
     "^file \".*\" is unchanged$",
+    "^file \".*\" does not exist$",
     "^all files are unchanged$$",
     [
       "^the staged changes are$",

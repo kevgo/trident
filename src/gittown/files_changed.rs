@@ -16,6 +16,29 @@ pub(crate) fn files_changed_on_current_branch(repo: &Repo) -> Option<Vec<File>> 
     Some(parse_output(&output))
 }
 
+/// provides the files that the current branch deletes or renames away compared to its parent branch
+///
+/// does not include uncommitted files
+pub(crate) fn files_removed_on_current_branch(repo: &Repo) -> Option<Vec<File>> {
+    let Ok(output) = repo
+        .git_command()
+        // Without rename detection, Git reports the old name of a renamed file as deleted.
+        // Git Town's Git calls inherit this setting.
+        .args(["-c", "diff.renames=false"])
+        .args([
+            "town",
+            "diff-parent",
+            "--name-only",
+            "--diff-filter=D",
+            "--non-interactive",
+        ])
+        .run_stdout_trimmed()
+    else {
+        return None;
+    };
+    Some(parse_output(&output))
+}
+
 fn parse_output(output: &str) -> Vec<File> {
     output
         .lines()
@@ -69,6 +92,57 @@ mod tests {
             let have = parse_output(give);
             let want = vec![File::from("my file.txt")];
             pretty::assert_eq!(have, want);
+        }
+    }
+
+    mod files_removed_on_current_branch {
+        use super::super::files_removed_on_current_branch;
+        use crate::domain::File;
+        use crate::domain::Result;
+        use crate::git::GitCommandExt;
+        use crate::git::Repo;
+        use std::process::Stdio;
+        use tempfile::TempDir;
+
+        #[test]
+        fn none_when_unconfigured() -> Result<()> {
+            let dir = TempDir::new().unwrap();
+            let repo = Repo::init(dir.path())?;
+            pretty::assert_eq!(files_removed_on_current_branch(&repo), None);
+            Ok(())
+        }
+
+        #[test]
+        fn lists_deleted_and_renamed_files() -> Result<()> {
+            if which::which("git-town").is_err() {
+                return Ok(());
+            }
+            let dir = TempDir::new().unwrap();
+            let repo = Repo::init(dir.path())?;
+            repo.git_command()
+                .args(["config", "git-town.main-branch", "main"])
+                .run()?;
+            repo.create_and_commit_file("deleted.txt")?;
+            repo.create_and_commit_file("old.txt")?;
+            repo.create_and_commit_file("changed.txt")?;
+            repo.git_command()
+                .args(["town", "append", "feature"])
+                .stdout(Stdio::null())
+                .stderr(Stdio::null())
+                .run()?;
+            repo.git_command().args(["rm", "deleted.txt"]).run()?;
+            repo.git_command()
+                .args(["mv", "old.txt", "new.txt"])
+                .run()?;
+            std::fs::write(repo.file_path("changed.txt"), "changed").unwrap();
+            repo.git_command().args(["add", "changed.txt"]).run()?;
+            repo.git_command()
+                .args(["commit", "--quiet", "--message=Remove"])
+                .run()?;
+            let have = files_removed_on_current_branch(&repo);
+            let want = Some(vec![File::from("deleted.txt"), File::from("old.txt")]);
+            pretty::assert_eq!(have, want);
+            Ok(())
         }
     }
 

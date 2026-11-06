@@ -59,6 +59,26 @@ async fn i_change_file_to(world: &mut TridentWorld, step: &Step, filename: Strin
     a_file_with_content(world, step, filename).await;
 }
 
+#[given(expr = "I delete file {string}")]
+async fn i_delete_file(world: &mut TridentWorld, filename: String) {
+    fs::remove_file(world.dir.join(&filename))
+        .await
+        .unwrap_or_else(|_| panic!("cannot delete file '{filename}'"));
+    world.original_files.retain(|file| file.name != filename);
+}
+
+#[given(expr = "I rename file {string} to {string}")]
+async fn i_rename_file(world: &mut TridentWorld, old_name: String, new_name: String) {
+    fs::rename(world.dir.join(&old_name), world.dir.join(&new_name))
+        .await
+        .unwrap_or_else(|_| panic!("cannot rename file '{old_name}' to '{new_name}'"));
+    for file in &mut world.original_files {
+        if file.name == old_name {
+            file.name.clone_from(&new_name);
+        }
+    }
+}
+
 #[given(expr = "a Git repository")]
 async fn a_git_repository(world: &mut TridentWorld) {
     jitter().await;

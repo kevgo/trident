@@ -10,6 +10,16 @@ impl Repo {
         let status_output = self.status(&[])?;
         Ok(StagedFiles::from(&status_output))
     }
+
+    /// provides the files with staged changes that don't exist in the workspace anymore
+    pub(crate) fn staged_removed(&self) -> Result<Vec<File>> {
+        Ok(self
+            .status(&[])?
+            .staged_removed_paths()
+            .map(File::from)
+            .filter(|file| !self.file_exists(file))
+            .collect())
+    }
 }
 
 /// the files that are staged in the current directory
@@ -36,6 +46,10 @@ impl From<&GitStatusOutput> for StagedFiles {
 impl StagedFiles {
     /// parses a line from the output of "git status --porcelain=v1 -z" and adds it to this instance
     fn add_record(&mut self, record: &Record<'_>) {
+        if record.worktree == 'D' {
+            // the file doesn't exist in the workspace anymore --> nothing to fix here
+            return;
+        }
         let is_staged = is_index_change(record.index);
         let is_working = is_index_change(record.worktree);
         if is_staged && is_working {
@@ -106,6 +120,38 @@ mod tests {
                 full: vec![File::from("file\"quote.txt")],
             };
             pretty::assert_eq!(have, want);
+            Ok(())
+        }
+
+        #[test]
+        fn staged_removed_lists_only_staged_removals() -> Result<()> {
+            let dir = TempDir::new().unwrap();
+            let repo = Repo::init(dir.path())?;
+            repo.create_and_commit_file("staged-delete.txt")?;
+            repo.create_and_commit_file("unstaged-delete.txt")?;
+            repo.create_and_commit_file("old.txt")?;
+            repo.git_command()
+                .args(["rm", "--quiet", "staged-delete.txt"])
+                .run()?;
+            repo.git_command()
+                .args(["mv", "old.txt", "new.txt"])
+                .run()?;
+            fs::remove_file(repo.file_path("unstaged-delete.txt")).unwrap();
+            let mut have = repo.staged_removed()?;
+            have.sort();
+            let want = vec![File::from("old.txt"), File::from("staged-delete.txt")];
+            pretty::assert_eq!(have, want);
+            Ok(())
+        }
+
+        #[test]
+        fn skips_staged_file_deleted_from_workspace() -> Result<()> {
+            let dir = TempDir::new().unwrap();
+            let repo = Repo::init(dir.path())?;
+            fs::write(repo.file_path("file.txt"), "content").unwrap();
+            repo.git_command().args(["add", "file.txt"]).run()?;
+            fs::remove_file(repo.file_path("file.txt")).unwrap();
+            pretty::assert_eq!(repo.staged()?, StagedFiles::default());
             Ok(())
         }
 
