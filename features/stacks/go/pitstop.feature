@@ -60,13 +60,16 @@ Feature: pitstop Go
       }
       """
     When executing "trident pitstop --show=output"
-    Then it prints the lines
+    Then it prints the block
+      """
+      found packages main (main.go) and other (other.go)
+      """
+    And it prints the lines
       """
       fix Go (gofumpt)
       main.go
       other.go
       lint Go (golangci-lint)
-      main.go:1: : found packages main (main.go) and other (other.go) in (typecheck)
       """
     And the exit code is failure
     And file "main.go" now has content
