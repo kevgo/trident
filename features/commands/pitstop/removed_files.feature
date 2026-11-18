@@ -34,17 +34,17 @@ Feature: "trident pitstop" fixes only existing changed files and lints all files
       1 Markdown
       running 1 tasks
       """
-    And it prints the lines matching
+    And it prints the block
       """
-      rumdl check unrelated.md$
+      unrelated.md:1:2: [MD019] Multiple spaces (5) after # in heading [*]
       """
     And it prints the lines
       """
       lint Markdown (rumdl)
       """
-    And it prints the block
+    And it prints the lines matching
       """
-      unrelated.md:1:2: [MD019] Multiple spaces (5) after # in heading [*]
+      rumdl check unrelated.md$
       """
     And it does not print
       """
@@ -68,14 +68,6 @@ Feature: "trident pitstop" fixes only existing changed files and lints all files
       2 Markdown
       running 2 tasks
       """
-    And it prints the lines matching
-      """
-      rumdl fmt renamed.md$
-      """
-    And it prints the lines matching
-      """
-      rumdl check renamed.md unrelated.md$
-      """
     And it prints the block
       """
       renamed.md:1:2: [MD019] Multiple spaces (5) after # in heading [fixed]
@@ -83,6 +75,14 @@ Feature: "trident pitstop" fixes only existing changed files and lints all files
     And it prints the block
       """
       unrelated.md:1:2: [MD019] Multiple spaces (5) after # in heading [*]
+      """
+    And it prints the lines matching
+      """
+      rumdl fmt renamed.md$
+      """
+    And it prints the lines matching
+      """
+      rumdl check renamed.md unrelated.md$
       """
     And the exit code is 1
     And file "renamed.md" now has content
@@ -107,13 +107,13 @@ Feature: "trident pitstop" fixes only existing changed files and lints all files
       """
       lint Markdown (rumdl)
       """
-    And it prints the lines matching
-      """
-      rumdl check unrelated.md$
-      """
     And it prints the block
       """
       unrelated.md:1:2: [MD019] Multiple spaces (5) after # in heading [*]
+      """
+    And it prints the lines matching
+      """
+      rumdl check unrelated.md$
       """
     And it does not print
       """
@@ -138,13 +138,13 @@ Feature: "trident pitstop" fixes only existing changed files and lints all files
       """
       lint Markdown (rumdl)
       """
-    And it prints the lines matching
-      """
-      rumdl fmt untracked.md$
-      """
     And it prints the block
       """
       unrelated.md:1:2: [MD019] Multiple spaces (5) after # in heading [*]
+      """
+    And it prints the lines matching
+      """
+      rumdl fmt untracked.md$
       """
     And the exit code is 1
     And all files are unchanged
@@ -182,13 +182,13 @@ Feature: "trident pitstop" fixes only existing changed files and lints all files
       """
       lint Markdown (rumdl)
       """
-    And it prints the lines matching
-      """
-      rumdl check unrelated.md$
-      """
     And it prints the block
       """
       unrelated.md:1:2: [MD019] Multiple spaces (5) after # in heading [*]
+      """
+    And it prints the lines matching
+      """
+      rumdl check unrelated.md$
       """
     And the exit code is 1
     And all files are unchanged

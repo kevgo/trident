@@ -35,13 +35,13 @@ Feature: "trident lint" lints all files of a stack in which files were deleted o
       1 Markdown
       running 1 tasks
       """
-    And it prints the lines matching
-      """
-      rumdl check unrelated.md$
-      """
     And it prints the block
       """
       unrelated.md:1:2: [MD019] Multiple spaces (5) after # in heading [*]
+      """
+    And it prints the lines matching
+      """
+      rumdl check unrelated.md$
       """
     And it does not print
       """
@@ -59,13 +59,13 @@ Feature: "trident lint" lints all files of a stack in which files were deleted o
       1 Markdown
       running 1 tasks
       """
-    And it prints the lines matching
-      """
-      rumdl check unrelated.md$
-      """
     And it prints the block
       """
       unrelated.md:1:2: [MD019] Multiple spaces (5) after # in heading [*]
+      """
+    And it prints the lines matching
+      """
+      rumdl check unrelated.md$
       """
     And it does not print
       """
@@ -82,13 +82,13 @@ Feature: "trident lint" lints all files of a stack in which files were deleted o
       2 Markdown
       running 1 tasks
       """
-    And it prints the lines matching
-      """
-      rumdl check renamed.md unrelated.md$
-      """
     And it prints the block
       """
       unrelated.md:1:2: [MD019] Multiple spaces (5) after # in heading [*]
+      """
+    And it prints the lines matching
+      """
+      rumdl check renamed.md unrelated.md$
       """
     And it does not print
       """
@@ -106,13 +106,13 @@ Feature: "trident lint" lints all files of a stack in which files were deleted o
       2 Markdown
       running 1 tasks
       """
-    And it prints the lines matching
-      """
-      rumdl check renamed.md unrelated.md$
-      """
     And it prints the block
       """
       unrelated.md:1:2: [MD019] Multiple spaces (5) after # in heading [*]
+      """
+    And it prints the lines matching
+      """
+      rumdl check renamed.md unrelated.md$
       """
     And it does not print
       """
@@ -134,13 +134,13 @@ Feature: "trident lint" lints all files of a stack in which files were deleted o
       1 Markdown
       running 1 tasks
       """
-    And it prints the lines matching
-      """
-      rumdl check unrelated.md$
-      """
     And it prints the block
       """
       unrelated.md:1:2: [MD019] Multiple spaces (5) after # in heading [*]
+      """
+    And it prints the lines matching
+      """
+      rumdl check unrelated.md$
       """
     And it does not print
       """
@@ -160,13 +160,13 @@ Feature: "trident lint" lints all files of a stack in which files were deleted o
       1 Markdown
       running 1 tasks
       """
-    And it prints the lines matching
-      """
-      rumdl check unrelated.md$
-      """
     And it prints the block
       """
       unrelated.md:1:2: [MD019] Multiple spaces (5) after # in heading [*]
+      """
+    And it prints the lines matching
+      """
+      rumdl check unrelated.md$
       """
     And it does not print
       """
@@ -186,13 +186,13 @@ Feature: "trident lint" lints all files of a stack in which files were deleted o
       2 Markdown
       running 1 tasks
       """
-    And it prints the lines matching
-      """
-      rumdl check renamed.md unrelated.md$
-      """
     And it prints the block
       """
       unrelated.md:1:2: [MD019] Multiple spaces (5) after # in heading [*]
+      """
+    And it prints the lines matching
+      """
+      rumdl check renamed.md unrelated.md$
       """
     And it does not print
       """
@@ -210,13 +210,13 @@ Feature: "trident lint" lints all files of a stack in which files were deleted o
       1 Markdown
       running 1 tasks
       """
-    And it prints the lines matching
-      """
-      rumdl check unrelated.md$
-      """
     And it prints the block
       """
       unrelated.md:1:2: [MD019] Multiple spaces (5) after # in heading [*]
+      """
+    And it prints the lines matching
+      """
+      rumdl check unrelated.md$
       """
     And the exit code is 1
     And all files are unchanged
@@ -275,13 +275,13 @@ Feature: "trident lint" lints all files of a stack in which files were deleted o
       1 Markdown
       running 1 tasks
       """
-    And it prints the lines matching
-      """
-      rumdl check also-unrelated.md unrelated.md$
-      """
     And it prints the block
       """
       unrelated.md:1:2: [MD019] Multiple spaces (5) after # in heading [*]
+      """
+    And it prints the lines matching
+      """
+      rumdl check also-unrelated.md unrelated.md$
       """
     And the exit code is 1
     And all files are unchanged
