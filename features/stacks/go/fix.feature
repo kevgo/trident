@@ -10,7 +10,7 @@ Feature: fix Go
       """
       delete-empty-folders 0.0.2
       gofumpt 0.10.0
-      golangci-lint 2.12.2
+      golangci-lint 2.15.0
       """
 
   Scenario: valid Go
