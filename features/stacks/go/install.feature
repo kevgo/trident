@@ -16,14 +16,14 @@ Feature: install all Go tools
       }
       """
     When executing "trident fix --show=output"
-    Then it prints the block
+    Then it prints the lines to STDERR
+      """
+      Talking to GitHub API (https://api.github.com/repos/mvdan/gofumpt/releases/latest) ... ok
+      """
+    And it prints the block
       """
       fix Go (gofumpt)
       main.go
-      """
-    And it prints the lines to STDERR
-      """
-      Talking to GitHub API (https://api.github.com/repos/mvdan/gofumpt/releases/latest) ... ok
       """
     And the exit code is 0
     And file "main.go" now has content

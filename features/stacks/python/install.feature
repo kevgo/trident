@@ -17,7 +17,12 @@ Feature: install all Python tools
       }
       """
     When executing "trident lint --show=output"
-    Then it prints the block
+    Then it prints the lines to STDERR
+      """
+      Talking to GitHub API (https://api.github.com/repos/microsoft/pyright/releases/latest) ... ok
+      Talking to GitHub API (https://api.github.com/repos/astral-sh/ruff/releases/latest) ... ok
+      """
+    And it prints the block
       """
       lint Python (Ruff)
       All checks passed!
@@ -26,11 +31,6 @@ Feature: install all Python tools
       """
       type-check Python (Pyright)
       0 errors, 0 warnings, 0 informations
-      """
-    And it prints the lines to STDERR
-      """
-      Talking to GitHub API (https://api.github.com/repos/microsoft/pyright/releases/latest) ... ok
-      Talking to GitHub API (https://api.github.com/repos/astral-sh/ruff/releases/latest) ... ok
       """
     And the exit code is 0
     And file "run-that-app" now has an additional line matching

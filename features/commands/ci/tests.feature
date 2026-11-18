@@ -25,7 +25,12 @@ Feature: CI runs all fixes, formatters, lints, and tests
       print("hello")
       """
     When executing "trident ci --show=output"
-    Then it prints the block
+    Then it prints the lines to STDERR
+      """
+      1 JSON, 1 Python, 1 other
+      running 8 tasks
+      """
+    And it prints the block
       """
       test all (echo test one)
       test one
@@ -39,11 +44,6 @@ Feature: CI runs all fixes, formatters, lints, and tests
       """
       lint Python (Ruff)
       All checks passed!
-      """
-    And it prints the lines to STDERR
-      """
-      1 JSON, 1 Python, 1 other
-      running 8 tasks
       """
     And the exit code is 0
 
@@ -82,7 +82,12 @@ Feature: CI runs all fixes, formatters, lints, and tests
       }
       """
     When executing "trident ci --test=unit+cuke --show=output"
-    Then it prints the block
+    Then it prints the lines to STDERR
+      """
+      1 JSON, 1 other
+      running 5 tasks
+      """
+    And it prints the block
       """
       test all (unit)
       running unit tests
@@ -91,11 +96,6 @@ Feature: CI runs all fixes, formatters, lints, and tests
       """
       test all (cuke)
       running cuke tests
-      """
-    And it prints the lines to STDERR
-      """
-      1 JSON, 1 other
-      running 5 tasks
       """
     And it does not print
       """
@@ -119,15 +119,15 @@ Feature: CI runs all fixes, formatters, lints, and tests
       }
       """
     When executing "trident ci --show=output"
-    Then it prints the block
-      """
-      test all (unit)
-      running unit tests
-      """
-    And it prints the lines to STDERR
+    Then it prints the lines to STDERR
       """
       1 JSON, 1 other
       running 4 tasks
+      """
+    And it prints the block
+      """
+      test all (unit)
+      running unit tests
       """
     And it does not print
       """

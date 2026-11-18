@@ -21,11 +21,11 @@ Feature: pitstop for a codebase without any code
 
   Scenario: --show=names
     When executing "trident pitstop --show=names"
-    Then it prints
+    Then it prints nothing to STDERR
+    And it prints
       """
       fix all (delete empty folders)
       """
-    And it prints nothing to STDERR
     And the exit code is 0
 
   Scenario: --show=failed

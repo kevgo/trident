@@ -24,7 +24,12 @@ Feature: full runs all fixes, lints, and tests
       print(  "hello"  )
       """
     When executing "trident full --show=output"
-    Then it prints the block
+    Then it prints the lines to STDERR
+      """
+      2 JSON, 1 Python, 1 other
+      running 7 tasks
+      """
+    And it prints the block
       """
       format Python (Ruff)
       1 file reformatted
@@ -42,11 +47,6 @@ Feature: full runs all fixes, lints, and tests
     And it prints the lines
       """
       fix JSON (Biome)
-      """
-    And it prints the lines to STDERR
-      """
-      2 JSON, 1 Python, 1 other
-      running 7 tasks
       """
     And the exit code is 0
     And file "main.json" now has content
@@ -83,15 +83,15 @@ Feature: full runs all fixes, lints, and tests
       }
       """
     When executing "trident full --show=output"
-    Then it prints the block
-      """
-      test all (unit)
-      running unit tests
-      """
-    And it prints the lines to STDERR
+    Then it prints the lines to STDERR
       """
       1 JSON, 1 other
       running 2 tasks
+      """
+    And it prints the block
+      """
+      test all (unit)
+      running unit tests
       """
     And it does not print
       """

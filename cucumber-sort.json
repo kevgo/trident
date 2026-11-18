@@ -13,6 +13,7 @@
       "^I ran"
     ],
     "^executing \".*\"$",
+    "^it prints .* to STDERR$",
     "^it prints",
     "^it does not print",
     "^the exit code is",

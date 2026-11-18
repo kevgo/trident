@@ -15,18 +15,18 @@ Feature: install all Shell tools
       foo
       """
     When executing "trident pitstop --show=output"
-    Then it prints the lines
-      """
-      fix Shell (shfmt)
-      lint Shell (ShellCheck)
-      """
-    And it prints the lines to STDERR
+    Then it prints the lines to STDERR
       """
       Talking to GitHub API (https://api.github.com/repos/mvdan/sh/releases/latest) ... ok
       """
     And it prints the lines to STDERR
       """
       Talking to GitHub API (https://api.github.com/repos/koalaman/shellcheck/releases/latest) ... ok
+      """
+    And it prints the lines
+      """
+      fix Shell (shfmt)
+      lint Shell (ShellCheck)
       """
     And the exit code is 0
     And file "one.sh" now has content

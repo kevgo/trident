@@ -36,13 +36,13 @@ Feature: install Tikibase
       [one](one.md)
       """
     When executing "trident lint --show=output"
-    Then it prints the lines
-      """
-      lint Markdown (tikibase)
-      """
-    And it prints the lines to STDERR
+    Then it prints the lines to STDERR
       """
       Talking to GitHub API (https://api.github.com/repos/kevgo/tikibase/releases/latest) ... ok
+      """
+    And it prints the lines
+      """
+      lint Markdown (tikibase)
       """
     And the exit code is 0
     And file "run-that-app" now has an additional line matching
