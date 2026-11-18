@@ -4,12 +4,12 @@ Feature: lint Go
     Given a file "go.mod" with content
       """
       module example.com/demo
-      go 1.21
+      go 1.27
       """
     And a file "run-that-app" with content
       """
       delete-empty-folders 0.0.2
-      golangci-lint 2.12.2
+      golangci-lint 2.15.0
       """
 
   Scenario: valid Go
