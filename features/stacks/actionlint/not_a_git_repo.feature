@@ -19,15 +19,15 @@ Feature: GitHub Actions workflow files not in a Git repository
             - uses: actions/checkout@v6
       """
     When executing "trident lint --show=output"
-    Then it prints the block matching
-      """
-      lint YML \(Actionlint\)
-      no project was found in any parent directories of ".*". check workflows directory is put correctly in your Git repository
-      """
-    And it prints the lines to STDERR
+    Then it prints the lines to STDERR
       """
       1 YML, 1 other
       running 1 tasks
+      """
+    And it prints the block matching
+      """
+      lint YML \(Actionlint\)
+      no project was found in any parent directories of ".*". check workflows directory is put correctly in your Git repository
       """
     And the exit code is 3
     And all files are unchanged

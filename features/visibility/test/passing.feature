@@ -51,16 +51,16 @@ Feature: test command with passing tests
 
   Scenario: --show=names
     When executing "trident test --show=names"
-    Then it prints only these lines in any order
+    Then it prints nothing to STDERR
+    And it prints only these lines in any order
       """
       test all (unit)
       test all (E2E)
       """
-    And it prints nothing to STDERR
     And the exit code is 0
 
   Scenario: --show=failed
     When executing "trident test --show=failed"
-    Then it prints nothing to STDOUT
-    And it prints nothing to STDERR
+    Then it prints nothing to STDERR
+    And it prints nothing to STDOUT
     And the exit code is 0

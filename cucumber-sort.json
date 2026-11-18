@@ -15,7 +15,9 @@
       "^I ran"
     ],
     "^executing \".*\"$",
-    ["^it prints", "^it does not print"],
+    "^it prints.*to STDERR$",
+    "^it prints",
+    "^it does not print",
     "^the exit code is",
     "^file \".*\" now has content$",
     "^file \".*\" now matches these lines$",

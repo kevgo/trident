@@ -22,15 +22,15 @@ Feature: lint GitHub Actions workflow files
             - uses: actions/checkout@v6
       """
     When executing "trident lint --show=output"
-    Then it prints only these lines in any order
-      """
-      lint all (git diff HEAD --check)
-      lint YML (Actionlint)
-      """
-    And it prints the lines to STDERR
+    Then it prints the lines to STDERR
       """
       1 YML, 1 other
       running 2 tasks
+      """
+    And it prints only these lines in any order
+      """
+      lint all (git diff HEAD --check)
+      lint YML (Actionlint)
       """
     And the exit code is 0
     And all files are unchanged

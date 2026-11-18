@@ -149,6 +149,18 @@ fn it_does_not_print_the_lines(world: &mut TridentWorld, step: &Step) {
     }
 }
 
+#[then("it does not print a block matching")]
+fn it_does_not_print_a_block_matching(world: &mut TridentWorld, step: &Step) {
+    let want = step.docstring.as_ref().unwrap().trim();
+    let output = world.output.as_ref().expect("no command run");
+    let stripped = strip_ansi_escapes::strip(&output.stdout);
+    let stdout = str::from_utf8(&stripped).expect("non-UTF-8 output");
+    assert!(
+        !Regex::new(want).unwrap().is_match(stdout),
+        "output does match the block\n\nHAVE:\n{stdout}\n\nWANT (regex):\n{want}\n\n"
+    );
+}
+
 #[then("it prints")]
 fn it_prints(world: &mut TridentWorld, step: &Step) {
     let want = step.docstring.as_ref().unwrap().trim();

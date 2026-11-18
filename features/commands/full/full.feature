@@ -29,10 +29,6 @@ Feature: full runs all fixes, lints, and tests
       2 JSON, 1 Python, 1 other
       running 7 tasks
       """
-    And it prints the lines
-      """
-      fix JSON (Biome)
-      """
     And it prints the block
       """
       format Python (Ruff)
@@ -47,6 +43,10 @@ Feature: full runs all fixes, lints, and tests
       """
       test all (unit)
       running unit tests
+      """
+    And it prints the lines
+      """
+      fix JSON (Biome)
       """
     And the exit code is 0
     And file "main.json" now has content

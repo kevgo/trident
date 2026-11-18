@@ -108,18 +108,18 @@ Feature: fix multiple stacks
 
   Scenario: --show=names
     When executing "trident fix --show=names"
-    Then it does not print
-      """
-      1 CSS, 1 Python, 1 TypeScript, 1 other
-      running 4 tasks
-      """
-    And it prints only these lines in any order
+    Then it prints only these lines in any order
       """
       fix all (delete empty folders)
       fix Python (Ruff)
       format Python (Ruff)
       fix TypeScript (Biome)
       fix CSS (Biome)
+      """
+    And it does not print
+      """
+      1 CSS, 1 Python, 1 TypeScript, 1 other
+      running 4 tasks
       """
     And file "main.css" now has content
       """

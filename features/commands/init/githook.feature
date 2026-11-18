@@ -3,13 +3,13 @@ Feature: "trident init:githook" installs the Git pre-commit hook
   Scenario: install the pre-commit hook into an empty Git repository
     Given a Git repository
     When executing "trident init:githook"
-    Then it prints
+    Then it prints nothing to STDERR
+    And it prints
       """
       created .git/hooks/pre-commit
 
       From now on, Trident automatically formats all code that gets committed.
       """
-    And it prints nothing to STDERR
     And the exit code is 0
     And file ".git/hooks/pre-commit" now matches these lines
       """
@@ -52,14 +52,14 @@ Feature: "trident init:githook" installs the Git pre-commit hook
       existing hook
       """
     When executing "trident init:githook"
-    Then it prints
+    Then it prints nothing to STDERR
+    And it prints
       """
       I did not install the Git pre-commit hook because these files already exist:
         .git/hooks/pre-commit
 
       To install anyway, please re-run with the "--force" flag.
       """
-    And it prints nothing to STDERR
     And the exit code is 1
     And file ".git/hooks/pre-commit" is unchanged
 
@@ -70,13 +70,13 @@ Feature: "trident init:githook" installs the Git pre-commit hook
       existing hook
       """
     When executing "trident init:githook --force"
-    Then it prints
+    Then it prints nothing to STDERR
+    And it prints
       """
       created .git/hooks/pre-commit
 
       From now on, Trident automatically formats all code that gets committed.
       """
-    And it prints nothing to STDERR
     And the exit code is 0
     And file ".git/hooks/pre-commit" now matches these lines
       """

@@ -29,6 +29,21 @@ Feature: pitstop multiple good stacks
       1 CSS, 1 Python, 1 TypeScript, 1 other
       running 8 tasks
       """
+    And it prints the block
+      """
+      fix Python (Ruff)
+      All checks passed!
+      """
+    And it prints the block
+      """
+      format Python (Ruff)
+      1 file left unchanged
+      """
+    And it prints the block
+      """
+      lint Python (Ruff)
+      All checks passed!
+      """
     And it prints the lines
       """
       fix CSS (Biome)
@@ -44,21 +59,6 @@ Feature: pitstop multiple good stacks
     And it prints the lines
       """
       lint TypeScript (Biome)
-      """
-    And it prints the block
-      """
-      fix Python (Ruff)
-      All checks passed!
-      """
-    And it prints the block
-      """
-      format Python (Ruff)
-      1 file left unchanged
-      """
-    And it prints the block
-      """
-      lint Python (Ruff)
-      All checks passed!
       """
     And all files are unchanged
 

@@ -13,14 +13,14 @@ Feature: fix Rust
 
   Scenario: no custom fixes defined
     When executing "trident fix --show=output"
-    Then it prints
-      """
-      fix all (delete empty folders)
-      """
-    And it prints to STDERR
+    Then it prints to STDERR
       """
       1 Rust, 1 other
       running 1 tasks
+      """
+    And it prints
+      """
+      fix all (delete empty folders)
       """
     And the exit code is 0
     And file "main.rs" is unchanged
@@ -44,7 +44,12 @@ Feature: fix Rust
       }
       """
     When executing "trident fix --show=output"
-    Then it prints the block
+    Then it prints to STDERR
+      """
+      1 JSON, 1 Rust, 1 other
+      running 3 tasks
+      """
+    And it prints the block
       """
       fix all (delete empty folders)
       """
@@ -56,11 +61,6 @@ Feature: fix Rust
       """
       fix Rust (my custom fix)
       custom fix running
-      """
-    And it prints to STDERR
-      """
-      1 JSON, 1 Rust, 1 other
-      running 3 tasks
       """
     And the exit code is 0
     And file "main.rs" is unchanged

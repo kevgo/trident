@@ -8,28 +8,28 @@ Feature: pitstop for a codebase without any code
 
   Scenario: --show=output
     When executing "trident pitstop --show=output"
-    Then it prints
-      """
-      fix all (delete empty folders)
-      """
-    And it prints to STDERR
+    Then it prints to STDERR
       """
       1 other
       running 1 tasks
+      """
+    And it prints
+      """
+      fix all (delete empty folders)
       """
     And the exit code is 0
 
   Scenario: --show=names
     When executing "trident pitstop --show=names"
-    Then it prints
+    Then it prints nothing to STDERR
+    And it prints
       """
       fix all (delete empty folders)
       """
-    And it prints nothing to STDERR
     And the exit code is 0
 
   Scenario: --show=failed
     When executing "trident pitstop --show=failed"
-    Then it prints nothing to STDOUT
-    And it prints nothing to STDERR
+    Then it prints nothing to STDERR
+    And it prints nothing to STDOUT
     And the exit code is 0

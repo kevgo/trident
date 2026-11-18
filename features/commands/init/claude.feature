@@ -2,14 +2,14 @@ Feature: "trident init:claude" installs Claude-compatible agent hooks
 
   Scenario: install hooks into an empty project
     When executing "trident init:claude"
-    Then it prints
+    Then it prints nothing to STDERR
+    And it prints
       """
       created .claude/settings.json
       created .claude/trident-hooks/post_write.sh
 
       Your Claude-compatible coding agent now runs all linters after every Write/Edit.
       """
-    And it prints nothing to STDERR
     And the exit code is 0
     And file ".claude/settings.json" now has content
       """
@@ -51,14 +51,14 @@ Feature: "trident init:claude" installs Claude-compatible agent hooks
       existing settings
       """
     When executing "trident init:claude"
-    Then it prints
+    Then it prints nothing to STDERR
+    And it prints
       """
       I did not install the Claude hooks because these files already exist:
         .claude/settings.json
 
       To install anyway, please re-run with the "--force" flag.
       """
-    And it prints nothing to STDERR
     And the exit code is 1
     And file ".claude/settings.json" is unchanged
     And file ".claude/trident-hooks/post_write.sh" does not exist
@@ -69,14 +69,14 @@ Feature: "trident init:claude" installs Claude-compatible agent hooks
       existing hook
       """
     When executing "trident init:claude"
-    Then it prints
+    Then it prints nothing to STDERR
+    And it prints
       """
       I did not install the Claude hooks because these files already exist:
         .claude/trident-hooks/post_write.sh
 
       To install anyway, please re-run with the "--force" flag.
       """
-    And it prints nothing to STDERR
     And the exit code is 1
     And file ".claude/trident-hooks/post_write.sh" is unchanged
     And file ".claude/settings.json" does not exist
@@ -91,14 +91,14 @@ Feature: "trident init:claude" installs Claude-compatible agent hooks
       existing hook
       """
     When executing "trident init:claude --force"
-    Then it prints
+    Then it prints nothing to STDERR
+    And it prints
       """
       created .claude/settings.json
       created .claude/trident-hooks/post_write.sh
 
       Your Claude-compatible coding agent now runs all linters after every Write/Edit.
       """
-    And it prints nothing to STDERR
     And the exit code is 0
     And file ".claude/settings.json" now has content
       """

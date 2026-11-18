@@ -147,12 +147,7 @@ Feature: CI doesn't care about uncommitted files that are unformatted
 
   Scenario: --show=names
     When executing "trident ci --show=names"
-    Then it does not print
-      """
-      1 CSS, 1 Python, 1 TypeScript, 1 other
-      running 4 tasks
-      """
-    And it prints only these lines in any order
+    Then it prints only these lines in any order
       """
       fix all (delete empty folders)
       fix Python (Ruff)
@@ -163,6 +158,10 @@ Feature: CI doesn't care about uncommitted files that are unformatted
       lint TypeScript (Biome)
       lint CSS (Biome)
       lint all (git diff HEAD --check)
+      """
+    And it does not print a block matching
+      """
+      running .* task
       """
     And the exit code is 0
     And file "main.css" now has content

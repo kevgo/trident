@@ -13,8 +13,8 @@ Feature: "trident fix" does not run "git diff --check"
 
   Scenario: clean repository
     When executing "trident fix --show=failed"
-    Then it prints nothing to STDOUT
-    And it prints nothing to STDERR
+    Then it prints nothing to STDERR
+    And it prints nothing to STDOUT
     And the exit code is 0
 
   Scenario: whitespace error in a changed file
@@ -24,8 +24,8 @@ Feature: "trident fix" does not run "git diff --check"
        \tindented
       """
     When executing "trident fix --show=failed"
-    Then it prints nothing to STDOUT
-    And it prints nothing to STDERR
+    Then it prints nothing to STDERR
+    And it prints nothing to STDOUT
     And the exit code is 0
 
   Scenario: conflict markers in a changed file
@@ -39,6 +39,6 @@ Feature: "trident fix" does not run "git diff --check"
       >>>>>>> 77976da35a11db4580b80ae27e8d65caf5208086:main.txt
       """
     When executing "trident fix --show=failed"
-    Then it prints nothing to STDOUT
-    And it prints nothing to STDERR
+    Then it prints nothing to STDERR
+    And it prints nothing to STDOUT
     And the exit code is 0
