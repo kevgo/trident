@@ -159,10 +159,9 @@ Feature: CI doesn't care about uncommitted files that are unformatted
       lint CSS (Biome)
       lint all (git diff HEAD --check)
       """
-    And it does not print
+    And it does not print a block matching
       """
-      1 CSS, 1 Python, 1 TypeScript, 1 other
-      running 4 tasks
+      running .* tasks
       """
     And the exit code is 0
     And file "main.css" now has content
