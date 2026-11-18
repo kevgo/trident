@@ -1,19 +1,10 @@
-Feature: "trident ci" with a limited scope lints all files of stacks with deleted or renamed files
+Feature: "trident ci" processes deleted or renamed files
 
   Background:
     Given a Git repository
     And a committed file "run-that-app" with content
       """
-      delete-empty-folders 0.0.2
       rumdl 0.2.14
-      """
-    And a committed file "unrelated.md" with content
-      """
-      #     Unrelated
-      """
-    And a committed file "removed.md" with content
-      """
-      # Removed
       """
     And a committed file "trident.json" with content
       """
@@ -25,8 +16,16 @@ Feature: "trident ci" with a limited scope lints all files of stacks with delete
         }
       }
       """
+    And a committed file "unrelated.md" with content
+      """
+      #     Unrelated
+      """
+    And a committed file "removed.md" with content
+      """
+      # Removed
+      """
 
-  Scenario: --scope=uncommitted with an uncommitted deletion
+  Scenario: --scope=uncommitted, uncommitted deletion
     Given I delete file "removed.md"
     When executing "trident ci --scope=uncommitted --show=output"
     Then it prints the lines to STDERR
@@ -34,18 +33,20 @@ Feature: "trident ci" with a limited scope lints all files of stacks with delete
       1 Markdown
       running 1 tasks
       """
+    And it prints the block
+      """
+      lint Markdown (rumdl)
+      unrelated.md:1:2: [MD019] Multiple spaces (5) after # in heading [*]
+      """
     And it does not print
       """
       fix Markdown
       """
-    And it prints the block
-      """
-      unrelated.md:1:2: [MD019] Multiple spaces (5) after # in heading [*]
-      """
     And the exit code is 1
     And all files are unchanged
 
-  Scenario: --scope=branch with a committed deletion
+  @this
+  Scenario: --scope=branch, committed deletion
     Given I ran "git checkout -b feature"
     And I delete file "removed.md"
     And I ran "git add -A"
