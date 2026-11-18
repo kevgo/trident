@@ -57,19 +57,13 @@ Feature: lint Shell on Unix
       lint Shell (ShellCheck)
       In one.sh line 2:
       echo $1
-      """
-    And it prints the block
-      """
-      SC2086 (info): Double quote to prevent globbing and word splitting.
+           ^-- SC2086 (info): Double quote to prevent globbing and word splitting.
       """
     And it prints the lines
       """
       In two.sh line 2:
       cd /tmp
-      """
-    And it prints the block
-      """
-      SC2164 (warning): Use 'cd ... || exit' or 'cd ... || return' in case cd fails.
+      ^-----^ SC2164 (warning): Use 'cd ... || exit' or 'cd ... || return' in case cd fails.
       """
     And the exit code is 1
     And file "one.sh" is unchanged

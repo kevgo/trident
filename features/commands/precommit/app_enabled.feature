@@ -26,13 +26,13 @@ Feature: "trident precommit" skips disabled applications
       """
     And I ran "git add config.toml"
     When executing "trident precommit --show=output"
-    Then it does not print
-      """
-      Taplo
-      """
-    And it prints the block
+    Then it prints the block
       """
       delete empty folders
+      """
+    And it does not print
+      """
+      Taplo
       """
     And the exit code is 0
     And file "config.toml" is unchanged
@@ -50,13 +50,13 @@ Feature: "trident precommit" skips disabled applications
       """
     And I ran "git add config.toml"
     When executing "trident precommit --show=output"
-    Then it does not print
-      """
-      delete empty folders
-      """
-    And it prints the block
+    Then it prints the block
       """
       Taplo
+      """
+    And it does not print
+      """
+      delete empty folders
       """
     And the exit code is 0
     And file "config.toml" now has content

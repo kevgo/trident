@@ -15,6 +15,6 @@ Feature: "trident lint" does not run "git diff --check" if not a Git repository
       >>>>>>> 77976da35a11db4580b80ae27e8d65caf5208086:main.txt
       """
     When executing "trident lint"
-    Then it prints nothing to STDOUT
-    And it prints nothing to STDERR
+    Then it prints nothing to STDERR
+    And it prints nothing to STDOUT
     And the exit code is 0

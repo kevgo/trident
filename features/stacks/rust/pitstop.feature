@@ -13,14 +13,14 @@ Feature: pitstop Rust
 
   Scenario: no custom tools defined
     When executing "trident pitstop --show=output"
-    Then it prints
-      """
-      fix all (delete empty folders)
-      """
-    And it prints to STDERR
+    Then it prints to STDERR
       """
       1 Rust, 1 other
       running 1 tasks
+      """
+    And it prints
+      """
+      fix all (delete empty folders)
       """
     And the exit code is 0
     And file "main.rs" is unchanged
@@ -52,7 +52,12 @@ Feature: pitstop Rust
       }
       """
     When executing "trident pitstop --show=output"
-    Then it prints the block
+    Then it prints to STDERR
+      """
+      1 JSON, 1 Rust, 1 other
+      running 5 tasks
+      """
+    And it prints the block
       """
       fix Rust (my custom fix)
       custom fix running
@@ -61,11 +66,6 @@ Feature: pitstop Rust
       """
       lint Rust (my custom linter)
       custom linter running
-      """
-    And it prints to STDERR
-      """
-      1 JSON, 1 Rust, 1 other
-      running 5 tasks
       """
     And the exit code is 0
     And file "main.rs" is unchanged
