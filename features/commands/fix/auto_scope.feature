@@ -14,14 +14,14 @@ Feature: "trident fix" chooses the smallest "--scope" based on the workspace sta
 
   Scenario: on main branch, no uncommitted files
     When executing "trident fix --show=output"
-    Then it prints the block
-      """
-      on-main.md:1:2: [MD019] Multiple spaces (5) after # in heading [fixed]
-      """
-    And it prints to STDERR
+    Then it prints to STDERR
       """
       1 Markdown, 1 other
       running 2 tasks
+      """
+    And it prints the block
+      """
+      on-main.md:1:2: [MD019] Multiple spaces (5) after # in heading [fixed]
       """
     And the exit code is 0
     And file "on-main.md" now has content
@@ -35,14 +35,14 @@ Feature: "trident fix" chooses the smallest "--scope" based on the workspace sta
       #     Untracked
       """
     When executing "trident fix --show=output"
-    Then it prints the block
-      """
-      untracked.md:1:2: [MD019] Multiple spaces (5) after # in heading [fixed]
-      """
-    And it prints to STDERR
+    Then it prints to STDERR
       """
       1 Markdown
       running 2 tasks
+      """
+    And it prints the block
+      """
+      untracked.md:1:2: [MD019] Multiple spaces (5) after # in heading [fixed]
       """
     And the exit code is 0
     And file "untracked.md" now has content
@@ -54,14 +54,14 @@ Feature: "trident fix" chooses the smallest "--scope" based on the workspace sta
   Scenario: on feature branch, branch has no commits, no uncommitted files,
     Given I ran "git checkout -b feature"
     When executing "trident fix --show=output"
-    Then it prints the block
-      """
-      on-main.md:1:2: [MD019] Multiple spaces (5) after # in heading [fixed]
-      """
-    And it prints to STDERR
+    Then it prints to STDERR
       """
       1 Markdown, 1 other
       running 2 tasks
+      """
+    And it prints the block
+      """
+      on-main.md:1:2: [MD019] Multiple spaces (5) after # in heading [fixed]
       """
     And the exit code is 0
     And file "on-main.md" now has content
@@ -76,14 +76,14 @@ Feature: "trident fix" chooses the smallest "--scope" based on the workspace sta
       #     Branch
       """
     When executing "trident fix --show=output"
-    Then it prints the block
-      """
-      committed-on-branch.md:1:2: [MD019] Multiple spaces (5) after # in heading [fixed]
-      """
-    And it prints to STDERR
+    Then it prints to STDERR
       """
       1 Markdown
       running 2 tasks
+      """
+    And it prints the block
+      """
+      committed-on-branch.md:1:2: [MD019] Multiple spaces (5) after # in heading [fixed]
       """
     And it does not print
       """
@@ -107,14 +107,14 @@ Feature: "trident fix" chooses the smallest "--scope" based on the workspace sta
       #     Untracked
       """
     When executing "trident fix --show=output"
-    Then it prints the block
-      """
-      untracked.md:1:2: [MD019] Multiple spaces (5) after # in heading [fixed]
-      """
-    And it prints to STDERR
+    Then it prints to STDERR
       """
       1 Markdown
       running 2 tasks
+      """
+    And it prints the block
+      """
+      untracked.md:1:2: [MD019] Multiple spaces (5) after # in heading [fixed]
       """
     And it does not print
       """

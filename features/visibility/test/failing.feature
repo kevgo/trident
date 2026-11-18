@@ -19,7 +19,11 @@ Feature: test command with a failing test
 
   Scenario: --show=output
     When executing "trident test --show=output"
-    Then it prints the block
+    Then it prints to STDERR
+      """
+      running 2 tasks
+      """
+    And it prints the block
       """
       test all (unit)
       running unit tests
@@ -29,15 +33,15 @@ Feature: test command with a failing test
       test all (E2E)
       failed
       """
-    And it prints to STDERR
-      """
-      running 2 tasks
-      """
     And the exit code is 4
 
   Scenario: --show=verbose
     When executing "trident test --show=verbose"
-    Then it prints the lines matching
+    Then it prints to STDERR
+      """
+      running 2 tasks
+      """
+    And it prints the lines matching
       """
       test all \(unit\)
       (sh|bash.exe) -c 'echo running unit tests'
@@ -48,10 +52,6 @@ Feature: test command with a failing test
       test all \(E2E\)
       (sh|bash.exe) -c tests/fail.sh
       failed
-      """
-    And it prints to STDERR
-      """
-      running 2 tasks
       """
     And the exit code is 4
 

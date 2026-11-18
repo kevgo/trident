@@ -23,18 +23,18 @@ Feature: "trident fix --scope" selects which files to format
 
   Scenario: --scope=uncommitted formats only uncommitted files
     When executing "trident fix --scope=uncommitted --show=output"
-    Then it prints the block
+    Then it prints to STDERR
+      """
+      1 Markdown
+      running 2 tasks
+      """
+    And it prints the block
       """
       untracked.md:1:2: [MD019] Multiple spaces (5) after # in heading [fixed]
       """
     And it prints the lines
       """
       fix Markdown (rumdl)
-      """
-    And it prints to STDERR
-      """
-      1 Markdown
-      running 2 tasks
       """
     And it does not print
       """
@@ -50,18 +50,18 @@ Feature: "trident fix --scope" selects which files to format
 
   Scenario: --scope=branch formats files changed on the current branch
     When executing "trident fix --scope=branch --show=output"
-    Then it prints the block
+    Then it prints to STDERR
+      """
+      2 Markdown
+      running 2 tasks
+      """
+    And it prints the block
       """
       committed-on-branch.md:1:2: [MD019] Multiple spaces (5) after # in heading [fixed]
       """
     And it prints the block
       """
       untracked.md:1:2: [MD019] Multiple spaces (5) after # in heading [fixed]
-      """
-    And it prints to STDERR
-      """
-      2 Markdown
-      running 2 tasks
       """
     And it does not print
       """
@@ -80,7 +80,12 @@ Feature: "trident fix --scope" selects which files to format
 
   Scenario: --scope=all formats all files
     When executing "trident fix --scope=all --show=output"
-    Then it prints the block
+    Then it prints to STDERR
+      """
+      3 Markdown, 1 other
+      running 2 tasks
+      """
+    And it prints the block
       """
       committed-on-branch.md:1:2: [MD019] Multiple spaces (5) after # in heading [fixed]
       """
@@ -91,11 +96,6 @@ Feature: "trident fix --scope" selects which files to format
     And it prints the block
       """
       on-main.md:1:2: [MD019] Multiple spaces (5) after # in heading [fixed]
-      """
-    And it prints to STDERR
-      """
-      3 Markdown, 1 other
-      running 2 tasks
       """
     And the exit code is 0
     And file "committed-on-branch.md" now has content

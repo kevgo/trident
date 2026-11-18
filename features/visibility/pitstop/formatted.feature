@@ -24,7 +24,12 @@ Feature: pitstop multiple good stacks
 
   Scenario: --show=output
     When executing "trident pitstop --show=output"
-    Then it prints the block
+    Then it prints to STDERR
+      """
+      1 CSS, 1 Python, 1 TypeScript, 1 other
+      running 8 tasks
+      """
+    And it prints the block
       """
       fix Python (Ruff)
       All checks passed!
@@ -55,16 +60,16 @@ Feature: pitstop multiple good stacks
       """
       lint TypeScript (Biome)
       """
-    And it prints to STDERR
-      """
-      1 CSS, 1 Python, 1 TypeScript, 1 other
-      running 8 tasks
-      """
     And all files are unchanged
 
   Scenario: --show=verbose
     When executing "trident pitstop --show=verbose"
-    Then it prints the lines
+    Then it prints to STDERR
+      """
+      1 CSS, 1 Python, 1 TypeScript, 1 other
+      running 8 tasks
+      """
+    And it prints the lines
       """
       fix CSS (Biome)
       """
@@ -97,11 +102,6 @@ Feature: pitstop multiple good stacks
       lint Python \(Ruff\)
       ruff(.exe)? check main.py
       All checks passed!
-      """
-    And it prints to STDERR
-      """
-      1 CSS, 1 Python, 1 TypeScript, 1 other
-      running 8 tasks
       """
     And all files are unchanged
 

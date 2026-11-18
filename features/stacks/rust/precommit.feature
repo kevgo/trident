@@ -14,14 +14,14 @@ Feature: precommit Rust
 
   Scenario: no custom fixes defined
     When executing "trident precommit --show=output"
-    Then it prints
-      """
-      fix all (delete empty folders)
-      """
-    And it prints to STDERR
+    Then it prints to STDERR
       """
       1 Rust
       running 1 tasks
+      """
+    And it prints
+      """
+      fix all (delete empty folders)
       """
     And the exit code is 0
 
@@ -44,14 +44,14 @@ Feature: precommit Rust
       }
       """
     When executing "trident precommit --show=output"
-    Then it prints the block
-      """
-      fix Rust (my custom fix)
-      custom fix running
-      """
-    And it prints to STDERR
+    Then it prints to STDERR
       """
       1 Rust
       running 2 tasks
+      """
+    And it prints the block
+      """
+      fix Rust (my custom fix)
+      custom fix running
       """
     And the exit code is 0

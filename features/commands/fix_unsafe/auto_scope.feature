@@ -21,14 +21,14 @@ Feature: "trident fix-unsafe" chooses the smallest "--scope" based on the worksp
 
   Scenario: on main branch, no uncommitted files
     When executing "trident fix-unsafe --show=output"
-    Then it prints the lines
-      """
-      Found 1 error (1 fixed, 0 remaining).
-      """
-    And it prints to STDERR
+    Then it prints to STDERR
       """
       1 Python, 1 other
       running 1 tasks
+      """
+    And it prints the lines
+      """
+      Found 1 error (1 fixed, 0 remaining).
       """
     And the exit code is 0
     And file "on-main.py" now has content
@@ -48,15 +48,15 @@ Feature: "trident fix-unsafe" chooses the smallest "--scope" based on the worksp
           return items
       """
     When executing "trident fix-unsafe --show=output"
-    Then it prints the lines
-      """
-      unsafe-fix Python (Ruff)
-      Found 1 error (1 fixed, 0 remaining).
-      """
-    And it prints to STDERR
+    Then it prints to STDERR
       """
       1 Python
       running 1 tasks
+      """
+    And it prints the lines
+      """
+      unsafe-fix Python (Ruff)
+      Found 1 error (1 fixed, 0 remaining).
       """
     And the exit code is 0
     And file "untracked.py" now has content
@@ -72,14 +72,14 @@ Feature: "trident fix-unsafe" chooses the smallest "--scope" based on the worksp
   Scenario: on feature branch, branch has no commits, no uncommitted files,
     Given I ran "git checkout -b feature"
     When executing "trident fix-unsafe --show=output"
-    Then it prints the lines
-      """
-      Found 1 error (1 fixed, 0 remaining).
-      """
-    And it prints to STDERR
+    Then it prints to STDERR
       """
       1 Python, 1 other
       running 1 tasks
+      """
+    And it prints the lines
+      """
+      Found 1 error (1 fixed, 0 remaining).
       """
     And the exit code is 0
     And file "on-main.py" now has content
@@ -100,14 +100,14 @@ Feature: "trident fix-unsafe" chooses the smallest "--scope" based on the worksp
           return items
       """
     When executing "trident fix-unsafe --show=output"
-    Then it prints the lines
-      """
-      Found 1 error (1 fixed, 0 remaining).
-      """
-    And it prints to STDERR
+    Then it prints to STDERR
       """
       1 Python
       running 1 tasks
+      """
+    And it prints the lines
+      """
+      Found 1 error (1 fixed, 0 remaining).
       """
     And it does not print
       """
@@ -139,15 +139,15 @@ Feature: "trident fix-unsafe" chooses the smallest "--scope" based on the worksp
           return items
       """
     When executing "trident fix-unsafe --show=output"
-    Then it prints the lines
-      """
-      unsafe-fix Python (Ruff)
-      Found 1 error (1 fixed, 0 remaining).
-      """
-    And it prints to STDERR
+    Then it prints to STDERR
       """
       1 Python
       running 1 tasks
+      """
+    And it prints the lines
+      """
+      unsafe-fix Python (Ruff)
+      Found 1 error (1 fixed, 0 remaining).
       """
     And it does not print
       """

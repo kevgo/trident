@@ -13,12 +13,12 @@ Feature: lint Rust
 
   Scenario: no custom linters defined
     When executing "trident lint --show=output"
-    Then it prints nothing to STDOUT
-    And it prints to STDERR
+    Then it prints to STDERR
       """
       1 Rust, 1 other
       running 0 tasks
       """
+    And it prints nothing to STDOUT
     And the exit code is 0
     And file "main.rs" is unchanged
 
@@ -41,15 +41,15 @@ Feature: lint Rust
       }
       """
     When executing "trident lint --show=output"
-    Then it prints the block
-      """
-      lint Rust (my custom linter)
-      custom linter running
-      """
-    And it prints to STDERR
+    Then it prints to STDERR
       """
       1 JSON, 1 Rust, 1 other
       running 2 tasks
+      """
+    And it prints the block
+      """
+      lint Rust (my custom linter)
+      custom linter running
       """
     And the exit code is 0
     And file "main.rs" is unchanged

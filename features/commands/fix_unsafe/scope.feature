@@ -34,15 +34,15 @@ Feature: "trident fix-unsafe --scope" selects which files to fix
 
   Scenario: --scope=uncommitted fixes only uncommitted files
     When executing "trident fix-unsafe --scope=uncommitted --show=output"
-    Then it prints the lines
-      """
-      unsafe-fix Python (Ruff)
-      Found 1 error (1 fixed, 0 remaining).
-      """
-    And it prints to STDERR
+    Then it prints to STDERR
       """
       1 Python
       running 1 tasks
+      """
+    And it prints the lines
+      """
+      unsafe-fix Python (Ruff)
+      Found 1 error (1 fixed, 0 remaining).
       """
     And the exit code is 0
     And file "untracked.py" now has content
@@ -58,14 +58,14 @@ Feature: "trident fix-unsafe --scope" selects which files to fix
 
   Scenario: --scope=branch fixes files changed on the current branch
     When executing "trident fix-unsafe --scope=branch --show=output"
-    Then it prints the lines
-      """
-      Found 2 errors (2 fixed, 0 remaining).
-      """
-    And it prints to STDERR
+    Then it prints to STDERR
       """
       2 Python
       running 1 tasks
+      """
+    And it prints the lines
+      """
+      Found 2 errors (2 fixed, 0 remaining).
       """
     And the exit code is 0
     And file "committed-on-branch.py" now has content
@@ -88,14 +88,14 @@ Feature: "trident fix-unsafe --scope" selects which files to fix
 
   Scenario: --scope=all fixes all files
     When executing "trident fix-unsafe --scope=all --show=output"
-    Then it prints the lines
-      """
-      Found 3 errors (3 fixed, 0 remaining).
-      """
-    And it prints to STDERR
+    Then it prints to STDERR
       """
       3 Python, 1 other
       running 1 tasks
+      """
+    And it prints the lines
+      """
+      Found 3 errors (3 fixed, 0 remaining).
       """
     And the exit code is 0
     And file "committed-on-branch.py" now has content

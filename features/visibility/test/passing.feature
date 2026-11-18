@@ -13,7 +13,11 @@ Feature: test command with passing tests
 
   Scenario: --show=output
     When executing "trident test --show=output"
-    Then it prints the block
+    Then it prints to STDERR
+      """
+      running 2 tasks
+      """
+    And it prints the block
       """
       test all (unit)
       running unit tests
@@ -23,15 +27,15 @@ Feature: test command with passing tests
       test all (E2E)
       running E2E tests
       """
-    And it prints to STDERR
-      """
-      running 2 tasks
-      """
     And the exit code is 0
 
   Scenario: --show=verbose
     When executing "trident test --show=verbose"
-    Then it prints the lines matching
+    Then it prints to STDERR
+      """
+      running 2 tasks
+      """
+    And it prints the lines matching
       """
       test all \(unit\)
       (sh|bash.exe) -c 'echo running unit tests'
@@ -42,10 +46,6 @@ Feature: test command with passing tests
       test all \(E2E\)
       (sh|bash.exe) -c 'echo running E2E tests'
       running E2E tests
-      """
-    And it prints to STDERR
-      """
-      running 2 tasks
       """
     And the exit code is 0
 

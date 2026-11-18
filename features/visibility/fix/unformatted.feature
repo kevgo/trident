@@ -24,7 +24,12 @@ Feature: fix multiple stacks
 
   Scenario: --show=output
     When executing "trident fix --show=output"
-    Then it prints the block
+    Then it prints to STDERR
+      """
+      1 CSS, 1 Python, 1 TypeScript, 1 other
+      running 5 tasks
+      """
+    And it prints the block
       """
       fix TypeScript (Biome)
       """
@@ -41,11 +46,6 @@ Feature: fix multiple stacks
       """
       format Python (Ruff)
       1 file reformatted
-      """
-    And it prints to STDERR
-      """
-      1 CSS, 1 Python, 1 TypeScript, 1 other
-      running 5 tasks
       """
     And file "main.css" now has content
       """
@@ -64,7 +64,12 @@ Feature: fix multiple stacks
 
   Scenario: --show=verbose
     When executing "trident fix --show=verbose"
-    Then it prints the lines matching
+    Then it prints to STDERR
+      """
+      1 CSS, 1 Python, 1 TypeScript, 1 other
+      running 5 tasks
+      """
+    And it prints the lines matching
       """
       fix TypeScript \(Biome\)
       biome(.exe)? format --write main.ts
@@ -85,11 +90,6 @@ Feature: fix multiple stacks
       format Python \(Ruff\)
       ruff(.exe)? format main.py
       1 file reformatted
-      """
-    And it prints to STDERR
-      """
-      1 CSS, 1 Python, 1 TypeScript, 1 other
-      running 5 tasks
       """
     And file "main.css" now has content
       """

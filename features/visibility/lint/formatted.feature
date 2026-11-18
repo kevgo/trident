@@ -24,7 +24,12 @@ Feature: lint multiple stacks
 
   Scenario: --show=output
     When executing "trident lint --show=output"
-    Then it prints the block
+    Then it prints to STDERR
+      """
+      1 CSS, 1 Python, 1 TypeScript, 1 other
+      running 3 tasks
+      """
+    And it prints the block
       """
       lint Python (Ruff)
       All checks passed!
@@ -37,16 +42,16 @@ Feature: lint multiple stacks
       """
       lint TypeScript (Biome)
       """
-    And it prints to STDERR
-      """
-      1 CSS, 1 Python, 1 TypeScript, 1 other
-      running 3 tasks
-      """
     And all files are unchanged
 
   Scenario: --show=verbose
     When executing "trident lint --show=verbose"
-    Then it prints the lines
+    Then it prints to STDERR
+      """
+      1 CSS, 1 Python, 1 TypeScript, 1 other
+      running 3 tasks
+      """
+    And it prints the lines
       """
       lint CSS (Biome)
       """
@@ -59,11 +64,6 @@ Feature: lint multiple stacks
       lint Python \(Ruff\)
       ruff(.exe)? check main.py
       All checks passed!
-      """
-    And it prints to STDERR
-      """
-      1 CSS, 1 Python, 1 TypeScript, 1 other
-      running 3 tasks
       """
     And all files are unchanged
 
