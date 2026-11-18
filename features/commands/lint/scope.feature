@@ -30,11 +30,8 @@ Feature: "trident lint --scope" selects which files to lint
       """
     And it prints the block
       """
-      untracked.md:1:2: [MD019] Multiple spaces (5) after # in heading [*]
-      """
-    And it prints the lines
-      """
       lint Markdown (rumdl)
+      untracked.md:1:2: [MD019] Multiple spaces (5) after # in heading [*]
       """
     And it does not print
       """
