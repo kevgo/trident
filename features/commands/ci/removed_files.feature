@@ -90,3 +90,4 @@ Feature: "trident ci" processes deleted or renamed files
       """
       # Removed
       """
+    And file "unrelated.md" is unchanged
