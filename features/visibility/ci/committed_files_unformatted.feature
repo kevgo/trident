@@ -25,12 +25,7 @@ Feature: CI if committed files are unformatted
 
   Scenario: --show=output
     When executing "trident ci --show=output"
-    Then it prints to STDERR
-      """
-      1 CSS, 1 Python, 1 TypeScript, 1 other
-      running 9 tasks
-      """
-    And it prints the block
+    Then it prints the block
       """
       delete empty folders
       """
@@ -76,6 +71,11 @@ Feature: CI if committed files are unformatted
       """
       diff --git a/main.py b/main.py
       """
+    And it prints to STDERR
+      """
+      1 CSS, 1 Python, 1 TypeScript, 1 other
+      running 9 tasks
+      """
     And the exit code is 1
     And file "main.css" now has content
       """
@@ -94,10 +94,17 @@ Feature: CI if committed files are unformatted
 
   Scenario: --show=verbose
     When executing "trident ci --show=verbose"
-    Then it prints to STDERR
+    Then it prints the block
       """
-      1 CSS, 1 Python, 1 TypeScript, 1 other
-      running 9 tasks
+      diff --git a/main.css b/main.css
+      """
+    And it prints the block
+      """
+      diff --git a/main.ts b/main.ts
+      """
+    And it prints the block
+      """
+      diff --git a/main.py b/main.py
       """
     And it prints the lines matching
       """
@@ -141,17 +148,10 @@ Feature: CI if committed files are unformatted
       lint CSS \(Biome\)
       biome(.exe)? lint main.css
       """
-    And it prints the block
+    And it prints to STDERR
       """
-      diff --git a/main.css b/main.css
-      """
-    And it prints the block
-      """
-      diff --git a/main.ts b/main.ts
-      """
-    And it prints the block
-      """
-      diff --git a/main.py b/main.py
+      1 CSS, 1 Python, 1 TypeScript, 1 other
+      running 9 tasks
       """
     And the exit code is 1
     And file "main.css" now has content
@@ -171,12 +171,7 @@ Feature: CI if committed files are unformatted
 
   Scenario: --show=names
     When executing "trident ci --show=names"
-    Then it does not print
-      """
-      1 CSS, 1 Python, 1 TypeScript, 1 other
-      running 4 tasks
-      """
-    And it prints the block
+    Then it prints the block
       """
       delete empty folders
       """
@@ -219,6 +214,11 @@ Feature: CI if committed files are unformatted
     And it prints the block
       """
       diff --git a/main.py b/main.py
+      """
+    And it does not print
+      """
+      1 CSS, 1 Python, 1 TypeScript, 1 other
+      running 4 tasks
       """
     And the exit code is 1
     And file "main.css" now has content

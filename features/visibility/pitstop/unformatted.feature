@@ -24,12 +24,7 @@ Feature: pitstop multiple unformatted stacks
 
   Scenario: --show=output
     When executing "trident pitstop --show=output"
-    Then it prints to STDERR
-      """
-      1 CSS, 1 Python, 1 TypeScript, 1 other
-      running 8 tasks
-      """
-    And it prints the block
+    Then it prints the block
       """
       delete empty folders
       """
@@ -63,6 +58,11 @@ Feature: pitstop multiple unformatted stacks
       """
       lint CSS (Biome)
       """
+    And it prints to STDERR
+      """
+      1 CSS, 1 Python, 1 TypeScript, 1 other
+      running 8 tasks
+      """
     And file "main.css" now has content
       """
       p {
@@ -80,12 +80,7 @@ Feature: pitstop multiple unformatted stacks
 
   Scenario: --show=verbose
     When executing "trident pitstop --show=verbose"
-    Then it prints to STDERR
-      """
-      1 CSS, 1 Python, 1 TypeScript, 1 other
-      running 8 tasks
-      """
-    And it prints the lines matching
+    Then it prints the lines matching
       """
       delete empty folders
       delete-empty-folders
@@ -127,6 +122,11 @@ Feature: pitstop multiple unformatted stacks
       lint CSS \(Biome\)
       biome(.exe)? lint main.css
       """
+    And it prints to STDERR
+      """
+      1 CSS, 1 Python, 1 TypeScript, 1 other
+      running 8 tasks
+      """
     And file "main.css" now has content
       """
       p {
@@ -144,12 +144,7 @@ Feature: pitstop multiple unformatted stacks
 
   Scenario: --show=names
     When executing "trident pitstop --show=names"
-    Then it does not print
-      """
-      1 CSS, 1 Python, 1 TypeScript, 1 other
-      running 4 tasks
-      """
-    And it prints only these lines in any order
+    Then it prints only these lines in any order
       """
       fix all (delete empty folders)
       fix Python (Ruff)
@@ -159,6 +154,11 @@ Feature: pitstop multiple unformatted stacks
       lint Python (Ruff)
       lint TypeScript (Biome)
       lint CSS (Biome)
+      """
+    And it does not print
+      """
+      1 CSS, 1 Python, 1 TypeScript, 1 other
+      running 4 tasks
       """
     And file "main.css" now has content
       """

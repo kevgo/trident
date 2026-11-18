@@ -25,12 +25,7 @@ Feature: CI doesn't care about uncommitted files that are unformatted
 
   Scenario: --show=output
     When executing "trident ci --show=output"
-    Then it prints to STDERR
-      """
-      1 CSS, 1 Python, 1 TypeScript, 1 other
-      running 9 tasks
-      """
-    And it prints the block
+    Then it prints the block
       """
       delete empty folders
       """
@@ -64,6 +59,11 @@ Feature: CI doesn't care about uncommitted files that are unformatted
       """
       lint CSS (Biome)
       """
+    And it prints to STDERR
+      """
+      1 CSS, 1 Python, 1 TypeScript, 1 other
+      running 9 tasks
+      """
     And the exit code is 0
     And file "main.css" now has content
       """
@@ -82,12 +82,7 @@ Feature: CI doesn't care about uncommitted files that are unformatted
 
   Scenario: --show=verbose
     When executing "trident ci --show=verbose"
-    Then it prints to STDERR
-      """
-      1 CSS, 1 Python, 1 TypeScript, 1 other
-      running 9 tasks
-      """
-    And it prints the lines matching
+    Then it prints the lines matching
       """
       delete empty folders
       delete-empty-folders
@@ -129,6 +124,11 @@ Feature: CI doesn't care about uncommitted files that are unformatted
       lint CSS \(Biome\)
       biome(.exe)? lint main.css
       """
+    And it prints to STDERR
+      """
+      1 CSS, 1 Python, 1 TypeScript, 1 other
+      running 9 tasks
+      """
     And the exit code is 0
     And file "main.css" now has content
       """
@@ -147,12 +147,7 @@ Feature: CI doesn't care about uncommitted files that are unformatted
 
   Scenario: --show=names
     When executing "trident ci --show=names"
-    Then it does not print
-      """
-      1 CSS, 1 Python, 1 TypeScript, 1 other
-      running 4 tasks
-      """
-    And it prints only these lines in any order
+    Then it prints only these lines in any order
       """
       fix all (delete empty folders)
       fix Python (Ruff)
@@ -163,6 +158,11 @@ Feature: CI doesn't care about uncommitted files that are unformatted
       lint TypeScript (Biome)
       lint CSS (Biome)
       lint all (git diff HEAD --check)
+      """
+    And it does not print
+      """
+      1 CSS, 1 Python, 1 TypeScript, 1 other
+      running 4 tasks
       """
     And the exit code is 0
     And file "main.css" now has content

@@ -22,12 +22,7 @@ Feature: fix multiple stacks with invalid code
 
   Scenario: --show=output
     When executing "trident fix --show=output"
-    Then it prints to STDERR
-      """
-      1 CSS, 1 Python, 1 TypeScript, 1 other
-      running 5 tasks
-      """
-    And it prints the lines
+    Then it prints the lines
       """
       fix CSS (Biome)
       Found 1 error.
@@ -38,18 +33,18 @@ Feature: fix multiple stacks with invalid code
       fix TypeScript (Biome)
       Found 2 errors.
       main.ts:1:13 parse ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      """
+    And it prints to STDERR
+      """
+      1 CSS, 1 Python, 1 TypeScript, 1 other
+      running 5 tasks
       """
     # no python error message here
     And all files are unchanged
 
   Scenario: --show=verbose
     When executing "trident fix --show=verbose"
-    Then it prints to STDERR
-      """
-      1 CSS, 1 Python, 1 TypeScript, 1 other
-      running 5 tasks
-      """
-    And it prints the lines
+    Then it prints the lines
       """
       fix CSS (Biome)
       Found 1 error.
@@ -60,6 +55,11 @@ Feature: fix multiple stacks with invalid code
       fix TypeScript (Biome)
       Found 2 errors.
       main.ts:1:13 parse ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      """
+    And it prints to STDERR
+      """
+      1 CSS, 1 Python, 1 TypeScript, 1 other
+      running 5 tasks
       """
     # no python error message here
     And all files are unchanged
@@ -102,13 +102,6 @@ Feature: fix multiple stacks with invalid code
   Scenario: --show=failed
     When executing "trident fix --show=failed"
     Then it prints nothing to STDERR
-    And it does not print any of these lines
-      """
-      fix CSS (Biome)
-      fix TypeScript (Biome)
-      fix Python (Ruff)
-      format Python (Ruff)
-      """
     And it prints the block
       """
       invalid-syntax: missing closing quote in string literal
@@ -136,5 +129,12 @@ Feature: fix multiple stacks with invalid code
       """
       Found 2 errors.
       main.ts:1:13 parse ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      """
+    And it does not print any of these lines
+      """
+      fix CSS (Biome)
+      fix TypeScript (Biome)
+      fix Python (Ruff)
+      format Python (Ruff)
       """
     And all files are unchanged

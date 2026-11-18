@@ -22,12 +22,7 @@ Feature: lint multiple stacks with invalid code
 
   Scenario: --show=output
     When executing "trident lint --show=output"
-    Then it prints to STDERR
-      """
-      1 CSS, 1 Python, 1 TypeScript, 1 other
-      running 3 tasks
-      """
-    And it prints the lines
+    Then it prints the lines
       """
       lint CSS (Biome)
       Found 1 error.
@@ -38,17 +33,17 @@ Feature: lint multiple stacks with invalid code
       lint TypeScript (Biome)
       Found 2 errors.
       main.ts:1:13 parse ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      """
+    And it prints to STDERR
+      """
+      1 CSS, 1 Python, 1 TypeScript, 1 other
+      running 3 tasks
       """
     And all files are unchanged
 
   Scenario: --show=verbose
     When executing "trident lint --show=verbose"
-    Then it prints to STDERR
-      """
-      1 CSS, 1 Python, 1 TypeScript, 1 other
-      running 3 tasks
-      """
-    And it prints the lines
+    Then it prints the lines
       """
       lint CSS (Biome)
       Found 1 error.
@@ -59,6 +54,11 @@ Feature: lint multiple stacks with invalid code
       lint TypeScript (Biome)
       Found 2 errors.
       main.ts:1:13 parse ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      """
+    And it prints to STDERR
+      """
+      1 CSS, 1 Python, 1 TypeScript, 1 other
+      running 3 tasks
       """
     And all files are unchanged
 
@@ -82,11 +82,6 @@ Feature: lint multiple stacks with invalid code
   Scenario: --show=failed
     When executing "trident lint --show=failed"
     Then it prints nothing to STDERR
-    And it does not print any of these lines
-      """
-      lint CSS (Biome)
-      lint TypeScript (Biome)
-      """
     And it prints the block
       """
       Found 1 error.
@@ -101,5 +96,10 @@ Feature: lint multiple stacks with invalid code
       """
       invalid-syntax: missing closing quote in string literal
        --> main.py:1:7
+      """
+    And it does not print any of these lines
+      """
+      lint CSS (Biome)
+      lint TypeScript (Biome)
       """
     And all files are unchanged
