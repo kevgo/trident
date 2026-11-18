@@ -22,7 +22,7 @@ Feature: "trident ci" processes deleted or renamed files
       """
     And a committed file "removed.md" with content
       """
-      # Removed
+      #     Removed
       """
 
   Scenario: --scope=uncommitted, uncommitted deletion
@@ -77,7 +77,16 @@ Feature: "trident ci" processes deleted or renamed files
       """
     And it prints the block
       """
+      fix Markdown (rumdl)
+      renamed.md:1:2: [MD019] Multiple spaces (5) after # in heading [fixed]
+      """
+    And it prints the block
+      """
+      lint Markdown (rumdl)
       unrelated.md:1:2: [MD019] Multiple spaces (5) after # in heading [*]
       """
     And the exit code is 1
-    And all files are unchanged
+    And file "renamed.md" now has content
+      """
+      # Removed
+      """
