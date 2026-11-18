@@ -215,10 +215,9 @@ Feature: CI if committed files are unformatted
       """
       diff --git a/main.py b/main.py
       """
-    And it does not print
+    And it does not print a block matching
       """
-      1 CSS, 1 Python, 1 TypeScript, 1 other
-      running 4 tasks
+      running .* tasks
       """
     And the exit code is 1
     And file "main.css" now has content
