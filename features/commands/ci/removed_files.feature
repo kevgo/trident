@@ -45,7 +45,6 @@ Feature: "trident ci" processes deleted or renamed files
     And the exit code is 1
     And all files are unchanged
 
-  @this
   Scenario: --scope=branch, committed deletion
     Given I ran "git checkout -b feature"
     And I delete file "removed.md"
