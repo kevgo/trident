@@ -14,14 +14,14 @@ Feature: "trident lint" chooses the smallest "--scope" based on the workspace st
 
   Scenario: on main branch, no uncommitted files
     When executing "trident lint --show=output"
-    Then it prints to STDERR
+    Then it prints the block
+      """
+      on-main.md:1:2: [MD019] Multiple spaces (5) after # in heading [*]
+      """
+    And it prints to STDERR
       """
       1 Markdown, 1 other
       running 2 tasks
-      """
-    And it prints the block
-      """
-      on-main.md:1:2: [MD019] Multiple spaces (5) after # in heading [*]
       """
     And the exit code is 1
     And all files are unchanged
@@ -32,14 +32,14 @@ Feature: "trident lint" chooses the smallest "--scope" based on the workspace st
       #     Untracked
       """
     When executing "trident lint --show=output"
-    Then it prints to STDERR
+    Then it prints the block
+      """
+      untracked.md:1:2: [MD019] Multiple spaces (5) after # in heading [*]
+      """
+    And it prints to STDERR
       """
       1 Markdown
       running 2 tasks
-      """
-    And it prints the block
-      """
-      untracked.md:1:2: [MD019] Multiple spaces (5) after # in heading [*]
       """
     And it does not print
       """
@@ -51,14 +51,14 @@ Feature: "trident lint" chooses the smallest "--scope" based on the workspace st
   Scenario: on feature branch, branch has no commits, no uncommitted files,
     Given I ran "git checkout -b feature"
     When executing "trident lint --show=output"
-    Then it prints to STDERR
+    Then it prints the block
+      """
+      on-main.md:1:2: [MD019] Multiple spaces (5) after # in heading [*]
+      """
+    And it prints to STDERR
       """
       1 Markdown, 1 other
       running 2 tasks
-      """
-    And it prints the block
-      """
-      on-main.md:1:2: [MD019] Multiple spaces (5) after # in heading [*]
       """
     And the exit code is 1
     And all files are unchanged
@@ -70,14 +70,14 @@ Feature: "trident lint" chooses the smallest "--scope" based on the workspace st
       #     Branch
       """
     When executing "trident lint --show=output"
-    Then it prints to STDERR
+    Then it prints the block
+      """
+      committed-on-branch.md:1:2: [MD019] Multiple spaces (5) after # in heading [*]
+      """
+    And it prints to STDERR
       """
       1 Markdown
       running 2 tasks
-      """
-    And it prints the block
-      """
-      committed-on-branch.md:1:2: [MD019] Multiple spaces (5) after # in heading [*]
       """
     And it does not print
       """
@@ -97,14 +97,14 @@ Feature: "trident lint" chooses the smallest "--scope" based on the workspace st
       #     Untracked
       """
     When executing "trident lint --show=output"
-    Then it prints to STDERR
+    Then it prints the block
+      """
+      untracked.md:1:2: [MD019] Multiple spaces (5) after # in heading [*]
+      """
+    And it prints to STDERR
       """
       1 Markdown
       running 2 tasks
-      """
-    And it prints the block
-      """
-      untracked.md:1:2: [MD019] Multiple spaces (5) after # in heading [*]
       """
     And it does not print
       """

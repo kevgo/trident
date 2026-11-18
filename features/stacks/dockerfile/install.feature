@@ -12,13 +12,13 @@ Feature: install hadolint
       USER 65534
       """
     When executing "trident lint --show=output"
-    Then it prints the lines to STDERR
-      """
-      Talking to GitHub API (https://api.github.com/repos/hadolint/hadolint/releases/latest) ... ok
-      """
-    And it prints the lines
+    Then it prints the lines
       """
       lint Dockerfile (hadolint)
+      """
+    And it prints the lines to STDERR
+      """
+      Talking to GitHub API (https://api.github.com/repos/hadolint/hadolint/releases/latest) ... ok
       """
     And the exit code is 0
     And file "run-that-app" now has an additional line matching

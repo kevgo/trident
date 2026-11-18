@@ -24,20 +24,7 @@ Feature: fix multiple good stacks
 
   Scenario: --show=output
     When executing "trident fix --show=output"
-    Then it prints to STDERR
-      """
-      1 CSS, 1 Python, 1 TypeScript, 1 other
-      running 5 tasks
-      """
-    And it prints the lines
-      """
-      fix CSS (Biome)
-      """
-    And it prints the lines
-      """
-      fix TypeScript (Biome)
-      """
-    And it prints the block
+    Then it prints the block
       """
       fix Python (Ruff)
       All checks passed!
@@ -47,16 +34,24 @@ Feature: fix multiple good stacks
       format Python (Ruff)
       1 file left unchanged
       """
-    And all files are unchanged
-
-  Scenario: --show=verbose
-    When executing "trident fix --show=verbose"
-    Then it prints to STDERR
+    And it prints the lines
+      """
+      fix CSS (Biome)
+      """
+    And it prints the lines
+      """
+      fix TypeScript (Biome)
+      """
+    And it prints to STDERR
       """
       1 CSS, 1 Python, 1 TypeScript, 1 other
       running 5 tasks
       """
-    And it prints the lines
+    And all files are unchanged
+
+  Scenario: --show=verbose
+    When executing "trident fix --show=verbose"
+    Then it prints the lines
       """
       fix CSS (Biome)
       """
@@ -75,6 +70,11 @@ Feature: fix multiple good stacks
       format Python \(Ruff\)
       ruff(.exe)? format main.py
       1 file left unchanged
+      """
+    And it prints to STDERR
+      """
+      1 CSS, 1 Python, 1 TypeScript, 1 other
+      running 5 tasks
       """
     And all files are unchanged
 

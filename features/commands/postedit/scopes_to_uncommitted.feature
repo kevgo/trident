@@ -14,13 +14,13 @@ Feature: "trident postedit" lints only uncommitted files
       missing header
       """
     When executing "trident postedit --show=output"
-    Then it prints to STDERR
-      """
-      running 1 tasks
-      """
-    And it prints the lines
+    Then it prints the lines
       """
       lint all (git diff HEAD --check)
+      """
+    And it prints to STDERR
+      """
+      running 1 tasks
       """
     And it does not print
       """
@@ -46,12 +46,7 @@ Feature: "trident postedit" lints only uncommitted files
       missing header
       """
     When executing "trident postedit --show=output"
-    Then it prints to STDERR
-      """
-      2 Markdown
-      running 2 tasks
-      """
-    And it prints the lines
+    Then it prints the lines
       """
       lint Markdown (rumdl)
       """
@@ -62,6 +57,11 @@ Feature: "trident postedit" lints only uncommitted files
     And it prints the lines
       """
       untracked.md:1:1: [MD041] First line in file should be a level 1 heading
+      """
+    And it prints to STDERR
+      """
+      2 Markdown
+      running 2 tasks
       """
     And it does not print
       """
@@ -75,13 +75,13 @@ Feature: "trident postedit" lints only uncommitted files
       missing header
       """
     When executing "trident postedit --show=output"
-    Then it prints to STDERR
+    Then it prints the lines
+      """
+      my file.md:1:1: [MD041] First line in file should be a level 1 heading
+      """
+    And it prints to STDERR
       """
       1 Markdown
       running 2 tasks
-      """
-    And it prints the lines
-      """
-      my file.md:1:1: [MD041] First line in file should be a level 1 heading
       """
     And the exit code is 1

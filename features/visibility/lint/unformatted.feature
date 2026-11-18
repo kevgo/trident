@@ -24,12 +24,7 @@ Feature: lint multiple stacks with unformatted files
 
   Scenario: --show=output
     When executing "trident lint --show=output"
-    Then it prints to STDERR
-      """
-      1 CSS, 1 Python, 1 TypeScript, 1 other
-      running 3 tasks
-      """
-    And it prints the block
+    Then it prints the block
       """
       lint Python (Ruff)
       All checks passed!
@@ -42,17 +37,17 @@ Feature: lint multiple stacks with unformatted files
       """
       lint TypeScript (Biome)
       """
+    And it prints to STDERR
+      """
+      1 CSS, 1 Python, 1 TypeScript, 1 other
+      running 3 tasks
+      """
     And the exit code is 0
     And all files are unchanged
 
   Scenario: --show=verbose
     When executing "trident lint --show=verbose"
-    Then it prints to STDERR
-      """
-      1 CSS, 1 Python, 1 TypeScript, 1 other
-      running 3 tasks
-      """
-    And it prints the lines matching
+    Then it prints the lines matching
       """
       lint Python \(Ruff\)
       ruff(.exe)? check main.py
@@ -67,6 +62,11 @@ Feature: lint multiple stacks with unformatted files
       """
       lint TypeScript \(Biome\)
       biome(.exe)? lint main.ts
+      """
+    And it prints to STDERR
+      """
+      1 CSS, 1 Python, 1 TypeScript, 1 other
+      running 3 tasks
       """
     And the exit code is 0
     And all files are unchanged

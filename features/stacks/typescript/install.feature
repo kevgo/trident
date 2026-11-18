@@ -7,13 +7,13 @@ Feature: install all TypeScript tools
       console.log(  "hello"  );
       """
     When executing "trident fix --show=output"
-    Then it prints the lines to STDERR
-      """
-      Talking to GitHub API (https://api.github.com/repos/biomejs/biome/releases/latest) ... ok
-      """
-    And it prints the lines
+    Then it prints the lines
       """
       fix TypeScript (Biome)
+      """
+    And it prints the lines to STDERR
+      """
+      Talking to GitHub API (https://api.github.com/repos/biomejs/biome/releases/latest) ... ok
       """
     And the exit code is 0
     And file "main.ts" now has content

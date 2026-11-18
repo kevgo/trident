@@ -30,6 +30,6 @@ Feature: pitstop for a codebase without any code
 
   Scenario: --show=failed
     When executing "trident pitstop --show=failed"
-    Then it prints nothing to STDOUT
-    And it prints nothing to STDERR
+    Then it prints nothing to STDERR
+    And it prints nothing to STDOUT
     And the exit code is 0

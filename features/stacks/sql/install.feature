@@ -29,15 +29,15 @@ Feature: install sqlfmt
       SELECT    id, name FROM one
       """
     When executing "trident fix --show=output"
-    Then it prints the lines to STDERR
-      """
-      Talking to GitHub API (https://api.github.com/repos/tconbeer/sqlfmt/releases/latest) ... ok
-      """
-    And it prints the lines
+    Then it prints the lines
       """
       fix SQL (sqlfmt)
       1 file formatted.
       one.sql formatted.
+      """
+    And it prints the lines to STDERR
+      """
+      Talking to GitHub API (https://api.github.com/repos/tconbeer/sqlfmt/releases/latest) ... ok
       """
     And the exit code is 0
     And file "one.sql" now has content

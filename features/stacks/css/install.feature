@@ -9,13 +9,13 @@ Feature: install all CSS tools
       }
       """
     When executing "trident fix --show=output"
-    Then it prints the lines to STDERR
-      """
-      Talking to GitHub API (https://api.github.com/repos/biomejs/biome/releases/latest) ... ok
-      """
-    And it prints the block
+    Then it prints the block
       """
       fix CSS (Biome)
+      """
+    And it prints the lines to STDERR
+      """
+      Talking to GitHub API (https://api.github.com/repos/biomejs/biome/releases/latest) ... ok
       """
     And the exit code is 0
     And file "main.css" now has content

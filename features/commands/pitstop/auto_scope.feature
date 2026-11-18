@@ -14,14 +14,14 @@ Feature: "trident pitstop" chooses the smallest "--scope" based on the workspace
 
   Scenario: on main branch, no uncommitted files
     When executing "trident pitstop --show=output"
-    Then it prints to STDERR
+    Then it prints the block
+      """
+      on-main.md:1:2: [MD019] Multiple spaces (5) after # in heading [fixed]
+      """
+    And it prints to STDERR
       """
       1 Markdown, 1 other
       running 4 tasks
-      """
-    And it prints the block
-      """
-      on-main.md:1:2: [MD019] Multiple spaces (5) after # in heading [fixed]
       """
     And the exit code is 0
     And file "on-main.md" now has content
@@ -35,14 +35,14 @@ Feature: "trident pitstop" chooses the smallest "--scope" based on the workspace
       #     Untracked
       """
     When executing "trident pitstop --show=output"
-    Then it prints to STDERR
+    Then it prints the block
+      """
+      untracked.md:1:2: [MD019] Multiple spaces (5) after # in heading [fixed]
+      """
+    And it prints to STDERR
       """
       1 Markdown
       running 4 tasks
-      """
-    And it prints the block
-      """
-      untracked.md:1:2: [MD019] Multiple spaces (5) after # in heading [fixed]
       """
     And it does not print
       """
@@ -58,14 +58,14 @@ Feature: "trident pitstop" chooses the smallest "--scope" based on the workspace
   Scenario: on feature branch, branch has no commits, no uncommitted files,
     Given I ran "git checkout -b feature"
     When executing "trident pitstop --show=output"
-    Then it prints to STDERR
+    Then it prints the block
+      """
+      on-main.md:1:2: [MD019] Multiple spaces (5) after # in heading [fixed]
+      """
+    And it prints to STDERR
       """
       1 Markdown, 1 other
       running 4 tasks
-      """
-    And it prints the block
-      """
-      on-main.md:1:2: [MD019] Multiple spaces (5) after # in heading [fixed]
       """
     And the exit code is 0
     And file "on-main.md" now has content
@@ -80,14 +80,14 @@ Feature: "trident pitstop" chooses the smallest "--scope" based on the workspace
       #     Branch
       """
     When executing "trident pitstop --show=output"
-    Then it prints to STDERR
+    Then it prints the block
+      """
+      committed-on-branch.md:1:2: [MD019] Multiple spaces (5) after # in heading [fixed]
+      """
+    And it prints to STDERR
       """
       1 Markdown
       running 4 tasks
-      """
-    And it prints the block
-      """
-      committed-on-branch.md:1:2: [MD019] Multiple spaces (5) after # in heading [fixed]
       """
     And it does not print
       """
@@ -111,14 +111,14 @@ Feature: "trident pitstop" chooses the smallest "--scope" based on the workspace
       #     Untracked
       """
     When executing "trident pitstop --show=output"
-    Then it prints to STDERR
+    Then it prints the block
+      """
+      untracked.md:1:2: [MD019] Multiple spaces (5) after # in heading [fixed]
+      """
+    And it prints to STDERR
       """
       1 Markdown
       running 4 tasks
-      """
-    And it prints the block
-      """
-      untracked.md:1:2: [MD019] Multiple spaces (5) after # in heading [fixed]
       """
     And it does not print
       """

@@ -10,14 +10,14 @@ Feature: install Ghokin
           Given a step
       """
     When executing "trident fix --show=output"
-    Then it prints the lines to STDERR
-      """
-      Talking to GitHub API (https://api.github.com/repos/antham/ghokin/releases/latest) ... ok
-      """
-    And it prints the lines
+    Then it prints the lines
       """
       fix Cucumber (Ghokin)
       "main.feature" formatted
+      """
+    And it prints the lines to STDERR
+      """
+      Talking to GitHub API (https://api.github.com/repos/antham/ghokin/releases/latest) ... ok
       """
     And the exit code is 0
     And file "main.feature" now has content

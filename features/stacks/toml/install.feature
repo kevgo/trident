@@ -7,13 +7,13 @@ Feature: install all TOML tools
       key =      "value"
       """
     When executing "trident fix --show=output"
-    Then it prints the lines to STDERR
-      """
-      Talking to GitHub API (https://api.github.com/repos/tamasfe/taplo/releases/latest) ... ok
-      """
-    And it prints the lines
+    Then it prints the lines
       """
       fix TOML (Taplo)
+      """
+    And it prints the lines to STDERR
+      """
+      Talking to GitHub API (https://api.github.com/repos/tamasfe/taplo/releases/latest) ... ok
       """
     And the exit code is 0
     And file "main.toml" now has content

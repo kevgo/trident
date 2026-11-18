@@ -57,15 +57,15 @@ Feature: pitstop --test runs selected tests
       }
       """
     When executing "trident pitstop --show=output"
-    Then it prints the lines to STDERR
-      """
-      1 JSON, 1 other
-      running 2 tasks
-      """
-    And it prints the block
+    Then it prints the block
       """
       test all (unit)
       running unit tests
+      """
+    And it prints the lines to STDERR
+      """
+      1 JSON, 1 other
+      running 2 tasks
       """
     And it does not print
       """
@@ -92,15 +92,15 @@ Feature: pitstop --test runs selected tests
       }
       """
     When executing "trident pitstop --test=cuke --show=output"
-    Then it prints the lines to STDERR
-      """
-      1 JSON, 1 other
-      running 2 tasks
-      """
-    And it prints the block
+    Then it prints the block
       """
       test all (cuke)
       running cuke tests
+      """
+    And it prints the lines to STDERR
+      """
+      1 JSON, 1 other
+      running 2 tasks
       """
     And it does not print
       """
@@ -123,12 +123,7 @@ Feature: pitstop --test runs selected tests
       }
       """
     When executing "trident pitstop --test=unit+cuke --show=output"
-    Then it prints the lines to STDERR
-      """
-      1 JSON, 1 other
-      running 3 tasks
-      """
-    And it prints the block
+    Then it prints the block
       """
       test all (unit)
       running unit tests
@@ -137,6 +132,11 @@ Feature: pitstop --test runs selected tests
       """
       test all (cuke)
       running cuke tests
+      """
+    And it prints the lines to STDERR
+      """
+      1 JSON, 1 other
+      running 3 tasks
       """
     And it does not print
       """
