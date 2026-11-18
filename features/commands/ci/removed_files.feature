@@ -57,13 +57,13 @@ Feature: "trident ci" processes deleted or renamed files
       1 Markdown
       running 1 tasks
       """
-    And it does not print
-      """
-      fix Markdown
-      """
     And it prints the block
       """
       unrelated.md:1:2: [MD019] Multiple spaces (5) after # in heading [*]
+      """
+    And it does not print
+      """
+      fix Markdown
       """
     And the exit code is 1
     And all files are unchanged
