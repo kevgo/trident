@@ -82,11 +82,6 @@ Feature: lint multiple stacks with invalid code
   Scenario: --show=failed
     When executing "trident lint --show=failed"
     Then it prints nothing to STDERR
-    And it does not print any of these lines
-      """
-      lint CSS (Biome)
-      lint TypeScript (Biome)
-      """
     And it prints the block
       """
       Found 1 error.
@@ -101,5 +96,10 @@ Feature: lint multiple stacks with invalid code
       """
       invalid-syntax: missing closing quote in string literal
        --> main.py:1:7
+      """
+    And it does not print any of these lines
+      """
+      lint CSS (Biome)
+      lint TypeScript (Biome)
       """
     And all files are unchanged

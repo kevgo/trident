@@ -29,6 +29,11 @@ Feature: lint multiple stacks
       1 CSS, 1 Python, 1 TypeScript, 1 other
       running 3 tasks
       """
+    And it prints the block
+      """
+      lint Python (Ruff)
+      All checks passed!
+      """
     And it prints the lines
       """
       lint CSS (Biome)
@@ -36,11 +41,6 @@ Feature: lint multiple stacks
     And it prints the lines
       """
       lint TypeScript (Biome)
-      """
-    And it prints the block
-      """
-      lint Python (Ruff)
-      All checks passed!
       """
     And all files are unchanged
 
@@ -69,13 +69,13 @@ Feature: lint multiple stacks
 
   Scenario: --show=names
     When executing "trident lint --show=names"
-    Then it prints only these lines in any order
+    Then it prints nothing to STDERR
+    And it prints only these lines in any order
       """
       lint TypeScript (Biome)
       lint CSS (Biome)
       lint Python (Ruff)
       """
-    And it prints nothing to STDERR
     And all files are unchanged
 
   Scenario: --show=failed

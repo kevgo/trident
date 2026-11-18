@@ -2,11 +2,11 @@ Feature: "trident init:config" writes the default config file
 
   Scenario: write trident.jsonc into an empty project
     When executing "trident init:config"
-    Then it prints
+    Then it prints nothing to STDERR
+    And it prints
       """
       created trident.jsonc
       """
-    And it prints nothing to STDERR
     And the exit code is 0
     And file "trident.jsonc" now has content
       """
@@ -41,11 +41,11 @@ Feature: "trident init:config" writes the default config file
       existing
       """
     When executing "trident init:config"
-    Then it prints
+    Then it prints nothing to STDERR
+    And it prints
       """
       config file <FILENAME> already exists
       """
-    And it prints nothing to STDERR
     And the exit code is 1
     And file "<FILENAME>" is unchanged
 
@@ -60,11 +60,11 @@ Feature: "trident init:config" writes the default config file
       existing
       """
     When executing "trident init:config <FLAG>"
-    Then it prints
+    Then it prints nothing to STDERR
+    And it prints
       """
       created <FILENAME>
       """
-    And it prints nothing to STDERR
     And the exit code is 0
     And file "<FILENAME>" now has content
       """

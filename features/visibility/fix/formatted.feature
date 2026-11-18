@@ -29,14 +29,6 @@ Feature: fix multiple good stacks
       1 CSS, 1 Python, 1 TypeScript, 1 other
       running 5 tasks
       """
-    And it prints the lines
-      """
-      fix CSS (Biome)
-      """
-    And it prints the lines
-      """
-      fix TypeScript (Biome)
-      """
     And it prints the block
       """
       fix Python (Ruff)
@@ -46,6 +38,14 @@ Feature: fix multiple good stacks
       """
       format Python (Ruff)
       1 file left unchanged
+      """
+    And it prints the lines
+      """
+      fix CSS (Biome)
+      """
+    And it prints the lines
+      """
+      fix TypeScript (Biome)
       """
     And all files are unchanged
 

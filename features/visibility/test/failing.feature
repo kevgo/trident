@@ -58,26 +58,26 @@ Feature: test command with a failing test
   Scenario: --show=names
     When executing "trident test --show=names"
     Then it prints nothing to STDERR
-    And it prints the lines
-      """
-      test all (unit)
-      """
     And it prints the block
       """
       test all (E2E)
       failed
+      """
+    And it prints the lines
+      """
+      test all (unit)
       """
     And the exit code is 4
 
   Scenario: --show=failed
     When executing "trident test --show=failed"
     Then it prints nothing to STDERR
-    And it does not print
-      """
-      test all (unit)
-      """
     And it prints the block
       """
       failed
+      """
+    And it does not print
+      """
+      test all (unit)
       """
     And the exit code is 4

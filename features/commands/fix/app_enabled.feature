@@ -47,12 +47,12 @@ Feature: "trident fix" skips disabled applications
       }
       """
     When executing "trident fix --show=output"
-    Then it does not print
-      """
-      delete empty folders
-      """
-    And it prints the block
+    Then it prints the block
       """
       Taplo
+      """
+    And it does not print
+      """
+      delete empty folders
       """
     And the exit code is 0

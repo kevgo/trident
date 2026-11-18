@@ -28,12 +28,9 @@ Feature: "trident lint --scope" selects which stacks to lint
       1 Markdown
       running 2 tasks
       """
-    And it prints the lines
-      """
-      lint Markdown (rumdl)
-      """
     And it prints the block
       """
+      lint Markdown (rumdl)
       untracked.md:1:2: [MD019] Multiple spaces (5) after # in heading [*]
       """
     And it prints the block

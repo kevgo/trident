@@ -144,12 +144,7 @@ Feature: pitstop multiple unformatted stacks
 
   Scenario: --show=names
     When executing "trident pitstop --show=names"
-    Then it does not print
-      """
-      1 CSS, 1 Python, 1 TypeScript, 1 other
-      running 4 tasks
-      """
-    And it prints only these lines in any order
+    Then it prints only these lines in any order
       """
       fix all (delete empty folders)
       fix Python (Ruff)
@@ -159,6 +154,10 @@ Feature: pitstop multiple unformatted stacks
       lint Python (Ruff)
       lint TypeScript (Biome)
       lint CSS (Biome)
+      """
+    And it does not print a block matching
+      """
+      running .* task
       """
     And file "main.css" now has content
       """

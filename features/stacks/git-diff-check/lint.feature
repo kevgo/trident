@@ -13,8 +13,8 @@ Feature: "trident lint" runs "git diff --check"
 
   Scenario: clean repository
     When executing "trident lint --show=failed"
-    Then it prints nothing to STDOUT
-    And it prints nothing to STDERR
+    Then it prints nothing to STDERR
+    And it prints nothing to STDOUT
     And the exit code is 0
 
   Scenario: whitespace error in a changed file
