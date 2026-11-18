@@ -30,11 +30,8 @@ Feature: "trident pitstop --scope" selects which files to process
       """
     And it prints the block
       """
-      untracked.md:1:2: [MD019] Multiple spaces (5) after # in heading [fixed]
-      """
-    And it prints the lines
-      """
       fix Markdown (rumdl)
+      untracked.md:1:2: [MD019] Multiple spaces (5) after # in heading [fixed]
       """
     And it does not print
       """
