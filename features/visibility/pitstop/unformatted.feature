@@ -155,10 +155,9 @@ Feature: pitstop multiple unformatted stacks
       lint TypeScript (Biome)
       lint CSS (Biome)
       """
-    And it does not print
+    And it does not print a block matching
       """
-      1 CSS, 1 Python, 1 TypeScript, 1 other
-      running 4 tasks
+      running .* task
       """
     And file "main.css" now has content
       """

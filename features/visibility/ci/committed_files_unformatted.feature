@@ -217,7 +217,7 @@ Feature: CI if committed files are unformatted
       """
     And it does not print a block matching
       """
-      running .* tasks
+      running .* task
       """
     And the exit code is 1
     And file "main.css" now has content

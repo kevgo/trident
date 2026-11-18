@@ -161,7 +161,7 @@ Feature: CI doesn't care about uncommitted files that are unformatted
       """
     And it does not print a block matching
       """
-      running .* tasks
+      running .* task
       """
     And the exit code is 0
     And file "main.css" now has content
