@@ -90,6 +90,7 @@ Feature: "trident fix" operates only on changed files that still exist in the wo
       """
     And it prints the lines matching
       """
+      fix Markdown \(rumdl\)
       rumdl fmt renamed.md$
       """
     And it does not print
@@ -159,6 +160,7 @@ Feature: "trident fix" operates only on changed files that still exist in the wo
       """
     And it prints the lines matching
       """
+      fix Markdown \(rumdl\)
       rumdl fmt on-branch.md$
       """
     And it does not print
