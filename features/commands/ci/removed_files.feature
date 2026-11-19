@@ -58,6 +58,7 @@ Feature: "trident ci" processes deleted or renamed files
       """
     And it prints the block
       """
+      lint Markdown (rumdl)
       unrelated.md:1:2: [MD019] Multiple spaces (5) after # in heading [*]
       """
     And it does not print
