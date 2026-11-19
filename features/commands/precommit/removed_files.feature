@@ -1,4 +1,4 @@
-Feature: "trident precommit" operates only on staged files that still exist in the workspace
+Feature: "trident precommit" correctly handles deleted files
 
   Background:
     Given a Git repository

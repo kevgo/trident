@@ -1,4 +1,4 @@
-Feature: "trident pitstop" fixes only existing changed files and lints all files of stacks with deleted or renamed files
+Feature: "trident pitstop" correctly handles deleted files
 
   Background:
     Given a Git repository

@@ -1,4 +1,4 @@
-Feature: "trident fix" operates only on changed files that still exist in the workspace
+Feature: "trident fix" correctly handles deleted files
 
   Background:
     Given a Git repository

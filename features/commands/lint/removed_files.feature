@@ -1,4 +1,4 @@
-Feature: "trident lint" lints all files of a stack in which files were deleted or renamed
+Feature: "trident lint" correctly handles deleted files
 
   Background:
     Given a Git repository

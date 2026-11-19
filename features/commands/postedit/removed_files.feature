@@ -1,4 +1,4 @@
-Feature: "trident postedit" lints all files of stacks with uncommitted deletions or renames
+Feature: "trident postedit" correctly handles deleted files
 
   Background:
     Given a Git repository
