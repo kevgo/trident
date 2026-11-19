@@ -40,7 +40,6 @@ Feature: "trident fix" operates only on changed files that still exist in the wo
     And the exit code is 0
     And all files are unchanged
 
-  @this
   Scenario: uncommitted deletion next to a changed file
     Given a file "untracked.md" with content
       """
@@ -56,7 +55,7 @@ Feature: "trident fix" operates only on changed files that still exist in the wo
     And it prints the block matching
       """
       fix Markdown \(rumdl\)
-      .*rumdl fmt untracked.md
+      .*rumdl fmt untracked.md$
       untracked.md:1:2: \[MD019\] Multiple spaces \(5\) after # in heading \[fixed\]
       """
     And it does not print
