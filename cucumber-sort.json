@@ -21,8 +21,8 @@
     "^file \".*\" now matches these lines$",
     "^file \".*\" now has an additional line matching$",
     "^file \".*\" is executable$",
-    "^file \".*\" does not exist$",
     "^file \".*\" is unchanged$",
+    "^file \".*\" does not exist$",
     "^all files are unchanged$$",
     [
       "^the staged changes are$",
