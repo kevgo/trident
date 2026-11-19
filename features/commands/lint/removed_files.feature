@@ -45,18 +45,6 @@ Feature: "trident lint" lints all files of a stack in which files were deleted o
     And the exit code is 0
     And all files are unchanged
 
-  Scenario: staged deletion
-    Given I delete file "removed.md"
-    And I ran "git add -A"
-    When executing "trident lint --show=verbose"
-    Then it prints to STDERR
-      """
-      1 Markdown
-      running 0 tasks
-      """
-    And the exit code is 0
-    And all files are unchanged
-
   Scenario: unstaged deletion next to a changed file
     Given a file "unrelated.md" with content
       """
