@@ -4,8 +4,17 @@ Feature: "trident fix-unsafe" operates only on changed files that still exist in
     Given a Git repository
     And a committed file "run-that-app" with content
       """
-      delete-empty-folders 0.0.2
       ruff 0.15.16
+      """
+    And a committed file "trident.json" with content
+      """
+      {
+        "applications": {
+          "biome": { "enabled": false },
+          "delete-empty-folders": { "enabled": false },
+          "git-diff-check": { "enabled": false }
+        }
+      }
       """
     And a committed file ".ruff.toml" with content
       """
