@@ -4,16 +4,7 @@ Feature: "trident lint" lints all files of a stack in which files were deleted o
     Given a Git repository
     And a committed file "run-that-app" with content
       """
-      delete-empty-folders 0.0.2
       rumdl 0.2.14
-      """
-    And a committed file "unrelated.md" with content
-      """
-      #     Unrelated
-      """
-    And a committed file "removed.md" with content
-      """
-      # Removed
       """
     And a committed file "trident.json" with content
       """
@@ -26,6 +17,10 @@ Feature: "trident lint" lints all files of a stack in which files were deleted o
         "ignore-files": ["ignored.md"]
       }
       """
+    And a committed file "removed.md" with content
+      """
+      # Removed
+      """
 
   Scenario: unstaged deletion
     Given I delete file "removed.md"
@@ -33,21 +28,9 @@ Feature: "trident lint" lints all files of a stack in which files were deleted o
     Then it prints to STDERR
       """
       1 Markdown
-      running 1 tasks
+      running 0 tasks
       """
-    And it prints the block
-      """
-      unrelated.md:1:2: [MD019] Multiple spaces (5) after # in heading [*]
-      """
-    And it prints the lines matching
-      """
-      rumdl check unrelated.md$
-      """
-    And it does not print
-      """
-      removed.md
-      """
-    And the exit code is 1
+    And the exit code is 0
     And all files are unchanged
 
   Scenario: staged deletion
@@ -57,15 +40,40 @@ Feature: "trident lint" lints all files of a stack in which files were deleted o
     Then it prints to STDERR
       """
       1 Markdown
+      running 0 tasks
+      """
+    And the exit code is 0
+    And all files are unchanged
+
+  Scenario: staged deletion
+    Given I delete file "removed.md"
+    And I ran "git add -A"
+    When executing "trident lint --show=verbose"
+    Then it prints to STDERR
+      """
+      1 Markdown
+      running 0 tasks
+      """
+    And the exit code is 0
+    And all files are unchanged
+
+  Scenario: unstaged deletion next to a changed file
+    Given a file "unrelated.md" with content
+      """
+      #     Unrelated
+      """
+    And I delete file "removed.md"
+    When executing "trident lint --show=verbose"
+    Then it prints to STDERR
+      """
+      2 Markdown
       running 1 tasks
       """
-    And it prints the block
+    And it prints the block matching
       """
-      unrelated.md:1:2: [MD019] Multiple spaces (5) after # in heading [*]
-      """
-    And it prints the lines matching
-      """
-      rumdl check unrelated.md$
+      lint Markdown \(rumdl\)
+      .*rumdl check unrelated.md$
+      unrelated.md:1:2: \[MD019\] Multiple spaces \(5\) after # in heading \[\*\]
       """
     And it does not print
       """
@@ -74,6 +82,7 @@ Feature: "trident lint" lints all files of a stack in which files were deleted o
     And the exit code is 1
     And all files are unchanged
 
+  @this
   Scenario: unstaged rename
     Given I rename file "removed.md" to "renamed.md"
     When executing "trident lint --show=verbose"
