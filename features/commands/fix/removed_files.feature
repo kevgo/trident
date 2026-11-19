@@ -4,7 +4,6 @@ Feature: "trident fix" operates only on changed files that still exist in the wo
     Given a Git repository
     And a committed file "run-that-app" with content
       """
-      delete-empty-folders 0.0.2
       rumdl 0.2.14
       """
     And a committed file "trident.json" with content
@@ -53,13 +52,11 @@ Feature: "trident fix" operates only on changed files that still exist in the wo
       2 Markdown
       running 1 tasks
       """
-    And it prints the block
+    And it prints the block matching
       """
-      untracked.md:1:2: [MD019] Multiple spaces (5) after # in heading [fixed]
-      """
-    And it prints the lines matching
-      """
-      rumdl fmt untracked.md$
+      fix Markdown \(rumdl\)
+      .*rumdl fmt untracked.md$
+      untracked.md:1:2: \[MD019\] Multiple spaces \(5\) after # in heading \[fixed\]
       """
     And it does not print
       """
@@ -93,6 +90,7 @@ Feature: "trident fix" operates only on changed files that still exist in the wo
       """
     And it prints the lines matching
       """
+      fix Markdown \(rumdl\)
       rumdl fmt renamed.md$
       """
     And it does not print
@@ -162,6 +160,7 @@ Feature: "trident fix" operates only on changed files that still exist in the wo
       """
     And it prints the lines matching
       """
+      fix Markdown \(rumdl\)
       rumdl fmt on-branch.md$
       """
     And it does not print

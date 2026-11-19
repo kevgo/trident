@@ -4,8 +4,17 @@ Feature: "trident fix-unsafe" operates only on changed files that still exist in
     Given a Git repository
     And a committed file "run-that-app" with content
       """
-      delete-empty-folders 0.0.2
       ruff 0.15.16
+      """
+    And a committed file "trident.json" with content
+      """
+      {
+        "applications": {
+          "biome": { "enabled": false },
+          "delete-empty-folders": { "enabled": false },
+          "git-diff-check": { "enabled": false }
+        }
+      }
       """
     And a committed file ".ruff.toml" with content
       """
@@ -54,14 +63,14 @@ Feature: "trident fix-unsafe" operates only on changed files that still exist in
       2 Python
       running 1 tasks
       """
-    And it prints the lines
+    And it prints the block matching
       """
-      unsafe-fix Python (Ruff)
-      Found 1 error (1 fixed, 0 remaining).
-      """
-    And it prints the lines matching
-      """
-      ruff check --fix --unsafe-fixes untracked.py$
+      unsafe-fix Python \(Ruff\)
+      .*ruff check --fix --unsafe-fixes untracked.py$
+      Found 1 error \(1 fixed, 0 remaining\)\.
+      format Python \(Ruff\)
+      .*ruff format untracked.py$
+      1 file left unchanged
       """
     And the exit code is 0
     And file "untracked.py" now has content
