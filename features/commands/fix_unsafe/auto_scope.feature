@@ -7,7 +7,7 @@ Feature: "trident fix-unsafe" chooses the smallest "--scope" based on the worksp
       delete-empty-folders 0.0.2
       ruff 0.15.16
       """
-    And a committed file ".ruff.toml" with content
+    And a committed file "ruff.toml" with content
       """
       [lint]
       extend-select = ["B006"]
