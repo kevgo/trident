@@ -4,7 +4,6 @@ Feature: "trident fix" operates only on changed files that still exist in the wo
     Given a Git repository
     And a committed file "run-that-app" with content
       """
-      delete-empty-folders 0.0.2
       rumdl 0.2.14
       """
     And a committed file "trident.json" with content
