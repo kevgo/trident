@@ -1,4 +1,4 @@
-use super::{discover_stacks, resolve_scope};
+use super::{determine_scope, discover_stacks};
 use crate::cli::input::{RunArgsWithScope, ShowExt};
 use crate::cli::output::print_metadata;
 use crate::config::Config;
@@ -20,7 +20,7 @@ pub fn fix_unsafe(args: &RunArgsWithScope) -> Result<ExitCode> {
 
     // step 2: discover the stacks
     let repo = Repo::load();
-    let scope = resolve_scope(&args.scope, repo.as_ref());
+    let scope = determine_scope(&args.scope, repo.as_ref());
     let stacks = discover_stacks(scope, repo.as_ref(), &ignores)?;
     if show.display_metadata() {
         print_metadata(&stacks);

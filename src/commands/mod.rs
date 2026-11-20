@@ -27,7 +27,7 @@ pub use test::test;
 pub use update_tools::update_tools;
 
 /// uses the explicit `--scope` if given, otherwise [`infer_scope`]
-pub(crate) fn resolve_scope(explicit: &ScopeFlag, repo: Option<&Repo>) -> CLIScope {
+pub(crate) fn determine_scope(explicit: &ScopeFlag, repo: Option<&Repo>) -> CLIScope {
     match explicit.scope {
         Some(scope) => scope,
         None => infer_scope(repo),
@@ -82,7 +82,7 @@ pub(crate) fn discover_stacks(
 
 #[cfg(test)]
 mod tests {
-    use super::{discover_stacks, infer_scope, resolve_scope};
+    use super::{determine_scope, discover_stacks, infer_scope};
     use crate::cli::input::{CLIScope, ScopeFlag};
     use crate::domain::{DetectedStacks, File, Ignores, Result};
     use crate::git::Repo;
@@ -183,7 +183,7 @@ mod tests {
         let explicit = ScopeFlag {
             scope: Some(CLIScope::All),
         };
-        let have = resolve_scope(&explicit, Some(&repo));
+        let have = determine_scope(&explicit, Some(&repo));
         let want = CLIScope::All;
         pretty::assert_eq!(have, want);
     }
@@ -194,7 +194,7 @@ mod tests {
         let repo = Repo::init(dir.path()).unwrap();
         repo.create_unstaged_file("untracked.md");
         let omitted = ScopeFlag { scope: None };
-        let have = resolve_scope(&omitted, Some(&repo));
+        let have = determine_scope(&omitted, Some(&repo));
         let want = CLIScope::Uncommitted;
         pretty::assert_eq!(have, want);
     }
