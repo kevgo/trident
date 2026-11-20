@@ -1,4 +1,4 @@
-use super::{discover_stacks, resolve_scope};
+use super::{determine_scope, discover_stacks};
 use crate::apps::git_diff_check;
 use crate::apps::git_diff_check::GitDiffCheck;
 use crate::cli::input::{RunArgsWithScope, ShowExt};
@@ -23,8 +23,8 @@ pub fn lint(args: &RunArgsWithScope) -> Result<ExitCode> {
     let repo = git::Repo::load();
 
     // step 2: discover the stacks
-    let files = resolve_scope(&args.scope, repo.as_ref())?;
-    let stacks = discover_stacks(&files, &ignores);
+    let scope = determine_scope(&args.scope, repo.as_ref())?;
+    let stacks = discover_stacks(&scope, &ignores);
     if show.display_metadata() {
         print_metadata(stacks.changed());
     }

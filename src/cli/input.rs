@@ -74,6 +74,7 @@ pub enum CLIScope {
 /// the `--scope` flag
 #[derive(clap::Args)]
 pub struct ScopeFlag {
+    /// files to apply the operation to
     #[arg(long, ignore_case = true)]
     pub scope: Option<CLIScope>,
 }
