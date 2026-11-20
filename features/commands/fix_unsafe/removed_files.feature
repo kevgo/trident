@@ -1,4 +1,4 @@
-Feature: "trident fix-unsafe" operates only on changed files that still exist in the workspace
+Feature: "trident fix-unsafe" correctly handles deleted files
 
   Background:
     Given a Git repository

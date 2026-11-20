@@ -1,49 +1,131 @@
-Feature: "trident postedit" lints all files of stacks with uncommitted deletions or renames
+Feature: "trident postedit" correctly handles deleted files
 
   Background:
     Given a Git repository
     And a committed file "run-that-app" with content
       """
-      delete-empty-folders 0.0.2
       rumdl 0.2.14
       """
-    And a committed file "unrelated.md" with content
+    And a committed file "trident.json" with content
       """
-      missing header
+      {
+        "applications": {
+          "biome": { "enabled": false },
+          "delete-empty-folders": { "enabled": false },
+          "git-diff-check": { "enabled": false }
+        }
+      }
       """
     And a committed file "removed.md" with content
       """
-      # Removed
+      #     Removed
       """
 
-  Scenario: uncommitted deletion
+  Scenario: unstaged deletion
     Given I delete file "removed.md"
-    When executing "trident postedit --show=output"
+    When executing "trident postedit --show=verbose"
     Then it prints to STDERR
       """
       1 Markdown
-      running 2 tasks
+      running 0 tasks
       """
-    And it prints the lines
+    And the exit code is 0
+    And all files are unchanged
+
+  Scenario: staged deletion
+    Given I delete file "removed.md"
+    And I ran "git add -A"
+    When executing "trident lint --show=verbose"
+    Then it prints to STDERR
       """
-      unrelated.md:1:1: [MD041] First line in file should be a level 1 heading
+      1 Markdown
+      running 0 tasks
+      """
+    And the exit code is 0
+    And all files are unchanged
+
+  Scenario: unstaged deletion next to a changed file
+    Given a file "unrelated.md" with content
+      """
+      #     Unrelated
+      """
+    And I delete file "removed.md"
+    When executing "trident postedit --show=verbose"
+    Then it prints to STDERR
+      """
+      2 Markdown
+      running 1 tasks
+      """
+    And it prints the block matching
+      """
+      lint Markdown \(rumdl\)
+      .*rumdl check unrelated.md$
+      unrelated.md:1:2: \[MD019\] Multiple spaces \(5\) after # in heading \[\*\]
+      """
+    And it does not print
+      """
+      removed.md
       """
     And the exit code is 1
     And all files are unchanged
 
-  Scenario: uncommitted rename
+  Scenario: unstaged rename
     Given I rename file "removed.md" to "renamed.md"
-    When executing "trident postedit --show=output"
+    When executing "trident postedit --show=verbose"
     Then it prints to STDERR
       """
       2 Markdown
-      running 2 tasks
+      running 1 tasks
       """
-    And it prints the lines
+    And it prints the block matching
       """
-      unrelated.md:1:1: [MD041] First line in file should be a level 1 heading
+      lint Markdown \(rumdl\)
+      .*rumdl check renamed.md$
+      renamed.md:1:2: \[MD019\] Multiple spaces \(5\) after # in heading \[\*\]
+      """
+    And it does not print
+      """
+      removed.md
       """
     And the exit code is 1
+    And all files are unchanged
+
+  Scenario: staged rename
+    Given I rename file "removed.md" to "renamed.md"
+    And I ran "git add -A"
+    When executing "trident postedit --show=verbose"
+    Then it prints to STDERR
+      """
+      2 Markdown
+      running 1 tasks
+      """
+    And it prints the block matching
+      """
+      lint Markdown \(rumdl\)
+      .*rumdl check renamed.md$
+      renamed.md:1:2: \[MD019\] Multiple spaces \(5\) after # in heading \[\*\]
+      """
+    And it does not print
+      """
+      removed.md
+      """
+    And the exit code is 1
+    And all files are unchanged
+
+  Scenario: staged change to a file that was then deleted
+    Given I change file "removed.md" to
+      """
+      # Changed
+      """
+    And I ran "git add -A"
+    And I delete file "removed.md"
+    When executing "trident postedit --show=verbose"
+    Then it prints to STDERR
+      """
+      1 Markdown
+      running 0 tasks
+      """
+    And the exit code is 0
     And all files are unchanged
 
   Scenario: deletion committed on the feature branch
@@ -51,33 +133,23 @@ Feature: "trident postedit" lints all files of stacks with uncommitted deletions
     And I delete file "removed.md"
     And I ran "git add -A"
     And I ran "git commit -m delete"
-    When executing "trident postedit --show=output"
+    When executing "trident postedit --show=verbose"
     Then it prints to STDERR
       """
-      running 1 tasks
-      """
-    And it does not print
-      """
-      unrelated.md
+      running 0 tasks
       """
     And the exit code is 0
     And all files are unchanged
 
-  Scenario: the file count shows changed files, not linted files
-    Given a committed file "also-unrelated.md" with content
-      """
-      # Also unrelated
-      """
-    And I delete file "removed.md"
-    When executing "trident postedit --show=output"
+  Scenario: committed rename
+    Given I ran "git checkout -b feature"
+    And I rename file "removed.md" to "renamed.md"
+    And I ran "git add -A"
+    And I ran "git commit -m rename"
+    When executing "trident postedit --show=verbose"
     Then it prints to STDERR
       """
-      1 Markdown
-      running 2 tasks
+      running 0 tasks
       """
-    And it prints the lines
-      """
-      unrelated.md:1:1: [MD041] First line in file should be a level 1 heading
-      """
-    And the exit code is 1
+    And the exit code is 0
     And all files are unchanged

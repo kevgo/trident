@@ -1,4 +1,4 @@
-Feature: "trident ci" operates only on changed files that still exist in the workspace
+Feature: "trident ci" correctly handles deleted files
 
   Background:
     Given a Git repository

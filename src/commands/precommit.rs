@@ -43,8 +43,8 @@ fn run(args: &RunArgs) -> Result<()> {
         &ignores,
     );
     if show.display_metadata() {
-        let removed = repo.staged_removed()?;
-        print_metadata(&stacks::include_removed_files(&stacks, &removed, &ignores));
+        let staged_and_removed = staged.all().into_iter().chain(&staged.removed);
+        print_metadata(&stacks::from_files(staged_and_removed, &ignores));
     }
     if staged.is_empty() {
         return Ok(());

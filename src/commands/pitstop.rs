@@ -14,14 +14,17 @@ pub fn pitstop(args: &RunArgsWithTestAndScope) -> Result<ExitCode> {
     let config = Config::load()?;
     let ignores = config.ignores()?;
     let repo = Repo::load();
-    let scope = resolve_scope(&args.scope, repo.as_ref());
-    let stacks = discover_stacks(scope, repo.as_ref(), &ignores)?;
-    let tests = config.test_sequences(
-        &args.test,
-        |commands| commands.pitstop.as_ref(),
-        DefaultTests::None,
-        &stacks,
-    )?;
+    let files = resolve_scope(&args.scope, repo.as_ref())?;
+    let stacks = discover_stacks(&files, &ignores);
+    let tests = to_sequences(
+        config.tests_for(
+            &args.test,
+            |commands| commands.pitstop.as_ref(),
+            DefaultTests::None,
+        )?,
+        Operation::Test,
+        None,
+    );
     run_tasks(&args.run, &config, &stacks, repo.as_ref(), tests)
 }
 

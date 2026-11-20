@@ -10,9 +10,9 @@ mod precommit;
 mod test;
 mod update_tools;
 
-use crate::cli::input::{Scope, ScopeArg};
+use crate::cli::input::{CLIScope, ScopeArg};
 use crate::domain::{DetectedStacks, Ignores, Result};
-use crate::git::Repo;
+use crate::git::{FileChanges, Repo};
 use crate::stacks;
 pub use ci::ci;
 pub use fix::fix;
@@ -26,99 +26,140 @@ pub use precommit::precommit;
 pub use test::test;
 pub use update_tools::update_tools;
 
-/// uses the explicit `--scope` if given, otherwise [`infer_scope`]
-pub(crate) fn resolve_scope(explicit: &ScopeArg, repo: Option<&Repo>) -> Scope {
+/// the scope that a command should operate on
+#[derive(Debug, Eq, PartialEq)]
+pub(crate) enum FileScope {
+    /// process all files in the workspace
+    All,
+
+    /// process only on these changed files
+    Changes(FileChanges),
+}
+
+/// provides the files in the explicit `--scope` if given, otherwise in the [inferred scope](infer_scope)
+pub(crate) fn resolve_scope(explicit: &ScopeArg, repo: Option<&Repo>) -> Result<FileScope> {
     match explicit.scope {
-        Some(scope) => scope,
-        None => infer_scope(repo),
+        Some(scope) => files_in_scope(scope, repo),
+        None => Ok(infer_scope(repo)),
     }
 }
 
-/// infers the file scope for `fix`, `fix-unsafe`, `lint`, `pitstop`, and `test` when `--scope` is omitted
+/// infers the file scope for `fix`, `fix-unsafe`, `lint`, and `pitstop` when `--scope` is omitted
+/// and provides the files in it
 ///
 /// Uses uncommitted changes if any exist, otherwise changes on the current
 /// branch, otherwise all files. Without a Git repository, this is always `all`.
-/// Deleted files count as changes.
-pub(crate) fn infer_scope(repo: Option<&Repo>) -> Scope {
+pub(crate) fn infer_scope(repo: Option<&Repo>) -> FileScope {
     let Some(repo) = repo else {
-        return Scope::All;
+        return FileScope::All;
     };
-    let Ok(uncommitted) = repo.uncommitted() else {
+    let Ok(uncommitted) = repo.uncommitted_changes() else {
         // error running Git --> check all files
-        return Scope::All;
+        return FileScope::All;
     };
-    let Ok(uncommitted_removed) = repo.uncommitted_removed() else {
-        // error running Git --> check all files
-        return Scope::All;
-    };
-    if !uncommitted.is_empty() || !uncommitted_removed.is_empty() {
+    if !uncommitted.is_empty() {
         // uncommitted changes exist --> check only those
-        return Scope::Uncommitted;
+        return FileScope::Changes(uncommitted);
     }
-    let Ok(branch_changed) = repo.branch_changed_files() else {
+    // here there are no uncommitted changes --> the branch changes are the committed ones
+    let Ok(branch) = repo.branch_committed_changes() else {
         // error running Git --> check all files
-        return Scope::All;
+        return FileScope::All;
     };
-    if !branch_changed.is_empty() {
-        return Scope::Branch;
-    }
-    let Ok(branch_deleted) = repo.branch_deleted_files() else {
-        // error running Git --> check all files
-        return Scope::All;
-    };
-    if branch_deleted.is_empty() {
+    if branch.is_empty() {
         // no branch changes --> check all files
-        return Scope::All;
+        return FileScope::All;
     }
-    Scope::Branch
+    FileScope::Changes(branch)
 }
 
-/// provides the stacks that have changes in the given file scope
+/// provides the files in the given scope
 ///
-/// Deleted files count as changes. Their stacks are part of the result, but not the files themselves.
-/// When the current directory is not a Git repository, every scope scans all files.
-pub(crate) fn discover_stacks(
-    scope: Scope,
-    repo: Option<&Repo>,
-    ignores: &Ignores,
-) -> Result<DetectedStacks> {
-    let Some(repo) = repo else {
-        return Ok(stacks::discover_all(ignores));
-    };
-    match scope {
-        Scope::All => {
-            // processing all files doesn't otherwise need Git, so don't fail if Git doesn't work
-            let deleted = repo.branch_deleted_files().unwrap_or_default();
-            Ok(stacks::with_deleted(
-                stacks::discover_all(ignores),
-                &deleted,
-                ignores,
-            ))
+/// When the current directory is not a Git repository, every scope contains all files.
+pub(crate) fn files_in_scope(scope: CLIScope, repo: Option<&Repo>) -> Result<FileScope> {
+    Ok(match (scope, repo) {
+        (CLIScope::All, _) | (_, None) => FileScope::All,
+        (CLIScope::Uncommitted, Some(repo)) => FileScope::Changes(repo.uncommitted_changes()?),
+        (CLIScope::Branch, Some(repo)) => FileScope::Changes(repo.branch_changes()?),
+    })
+}
+
+/// the stacks and files that a command operates on
+pub(crate) struct ScopedStacks {
+    /// the files in scope that exist in the workspace
+    existing: DetectedStacks,
+
+    /// the stacks that differ from `existing` because the scope removes files
+    removed: Option<RemovedStacks>,
+}
+
+/// see [`ScopedStacks::changed`] and [`ScopedStacks::lint`]
+struct RemovedStacks {
+    changed: DetectedStacks,
+    lint: DetectedStacks,
+}
+
+impl ScopedStacks {
+    /// all files in the workspace
+    pub(crate) fn all(ignores: &Ignores) -> ScopedStacks {
+        ScopedStacks {
+            existing: stacks::discover_all(ignores),
+            removed: None,
         }
-        Scope::Uncommitted => Ok(stacks::with_deleted(
-            stacks::from_files(&repo.uncommitted()?, ignores),
-            &repo.uncommitted_deleted()?,
-            ignores,
-        )),
-        Scope::Branch => Ok(stacks::with_deleted(
-            stacks::from_files(&repo.branch_changed_files()?, ignores),
-            &repo.branch_deleted_files()?,
-            ignores,
-        )),
     }
-    let changed = stacks::include_removed_files(&existing, &removed, ignores);
-    let lint = stacks::include_stacks_of_removed_files(&existing, &removed, ignores);
-    Ok(ScopedStacks {
+
+    /// all files that the scope changes, including the ones it deletes or renames away
+    ///
+    /// This is what the user sees as the files in scope.
+    pub(crate) fn changed(&self) -> &DetectedStacks {
+        match &self.removed {
+            Some(removed) => &removed.changed,
+            None => &self.existing,
+        }
+    }
+
+    /// the files to fix: the changed files that still exist in the workspace
+    pub(crate) fn fix(&self) -> &DetectedStacks {
+        &self.existing
+    }
+
+    /// the files to lint: the files to fix,
+    /// plus all files in the stacks of the files that the scope deletes or renames away
+    /// because those files might still refer to the removed file
+    pub(crate) fn lint(&self) -> &DetectedStacks {
+        match &self.removed {
+            Some(removed) => &removed.lint,
+            None => &self.existing,
+        }
+    }
+}
+
+/// provides the stacks for the given files
+pub(crate) fn discover_stacks(files: &FileScope, ignores: &Ignores) -> ScopedStacks {
+    let FileScope::Changes(changes) = files else {
+        return ScopedStacks::all(ignores);
+    };
+    let existing = stacks::from_files(changes.changed(), ignores);
+    if changes.removed().next().is_none() {
+        return ScopedStacks {
+            existing,
+            removed: None,
+        };
+    }
+    let changed = stacks::from_files(changes.all(), ignores);
+    let lint = stacks::include_stacks_of_removed_files(&existing, changes.removed(), ignores);
+    ScopedStacks {
         existing,
         removed: Some(RemovedStacks { changed, lint }),
-    })
+    }
 }
 
 #[cfg(test)]
 mod tests {
-    use super::{discover_stacks, infer_scope, resolve_scope};
-    use crate::cli::input::{Scope, ScopeArg};
-    use crate::domain::{DetectedStacks, File, Ignores, Result, StackType};
+    use super::{FileScope, discover_stacks, files_in_scope, infer_scope, resolve_scope};
+    use crate::cli::input::{CLIScope, ScopeArg};
+    use crate::domain::{DetectedStacks, File, Ignores, Result};
+    use crate::git::FileStatus::{self, Changed, Removed};
     use crate::git::{GitCommandExt, Repo};
     use std::fs;
     use tempfile::TempDir;
@@ -132,42 +173,57 @@ mod tests {
         files
     }
 
+    /// provides the files in the given scope with their status, None for all files
+    fn summary(files: &FileScope) -> Option<Vec<(&str, FileStatus)>> {
+        match files {
+            FileScope::All => None,
+            FileScope::Changes(changes) => Some(changes.summary()),
+        }
+    }
+
     #[test]
     fn uncommitted_includes_only_uncommitted_files() -> Result<()> {
         let dir = TempDir::new().unwrap();
         let repo = Repo::init(dir.path())?;
         repo.create_and_commit_file("committed.md")?;
         repo.create_unstaged_file("untracked.md");
-        let stacks = discover_stacks(Scope::Uncommitted, Some(&repo), &Ignores::empty())?;
-        pretty::assert_eq!(filenames(stacks.fix()), vec![File::from("untracked.md")]);
+        let files = files_in_scope(CLIScope::Uncommitted, Some(&repo))?;
+        pretty::assert_eq!(summary(&files), Some(vec![("untracked.md", Changed)]));
         Ok(())
     }
 
     #[test]
-    fn branch_includes_committed_branch_files_and_uncommitted_files() -> Result<()> {
+    fn branch_includes_committed_and_uncommitted_files() -> Result<()> {
         let dir = TempDir::new().unwrap();
         let repo = Repo::init(dir.path())?;
         repo.create_and_commit_file("on-main.md")?;
         repo.create_and_switch_to_branch("feature")?;
         repo.create_and_commit_file("on-branch.md")?;
         repo.create_unstaged_file("untracked.md");
-        let stacks = discover_stacks(Scope::Branch, Some(&repo), &Ignores::empty())?;
-        pretty::assert_eq!(
-            filenames(stacks.fix()),
-            vec![File::from("on-branch.md"), File::from("untracked.md")]
-        );
+        let files = files_in_scope(CLIScope::Branch, Some(&repo))?;
+        let want = vec![("on-branch.md", Changed), ("untracked.md", Changed)];
+        pretty::assert_eq!(summary(&files), Some(want));
         Ok(())
     }
 
     #[test]
-    fn changed_stacks_include_removed_files() -> Result<()> {
+    fn every_scope_is_all_without_git_repo() -> Result<()> {
+        for scope in [CLIScope::All, CLIScope::Uncommitted, CLIScope::Branch] {
+            pretty::assert_eq!(files_in_scope(scope, None)?, FileScope::All);
+        }
+        Ok(())
+    }
+
+    #[test]
+    fn stacks_of_removed_files() -> Result<()> {
         let dir = TempDir::new().unwrap();
         let repo = Repo::init(dir.path())?;
         repo.create_and_commit_file("deleted.md")?;
         repo.create_and_commit_file("untouched.md")?;
         repo.create_unstaged_file("untracked.md");
         std::fs::remove_file(repo.file_path("deleted.md")).unwrap();
-        let stacks = discover_stacks(Scope::Uncommitted, Some(&repo), &Ignores::empty())?;
+        let files = files_in_scope(CLIScope::Uncommitted, Some(&repo))?;
+        let stacks = discover_stacks(&files, &Ignores::empty());
         pretty::assert_eq!(filenames(stacks.fix()), vec![File::from("untracked.md")]);
         pretty::assert_eq!(
             filenames(stacks.changed()),
@@ -177,8 +233,23 @@ mod tests {
     }
 
     #[test]
+    fn stacks_without_removed_files() -> Result<()> {
+        let dir = TempDir::new().unwrap();
+        let repo = Repo::init(dir.path())?;
+        repo.create_and_commit_file("untouched.md")?;
+        repo.create_unstaged_file("untracked.md");
+        let files = files_in_scope(CLIScope::Uncommitted, Some(&repo))?;
+        let stacks = discover_stacks(&files, &Ignores::empty());
+        let want = vec![File::from("untracked.md")];
+        pretty::assert_eq!(filenames(stacks.fix()), want);
+        pretty::assert_eq!(filenames(stacks.changed()), want);
+        pretty::assert_eq!(filenames(stacks.lint()), want);
+        Ok(())
+    }
+
+    #[test]
     fn infer_all_without_git_repo() {
-        pretty::assert_eq!(infer_scope(None), Scope::All);
+        pretty::assert_eq!(infer_scope(None), FileScope::All);
     }
 
     #[test]
@@ -190,8 +261,7 @@ mod tests {
         repo.create_and_commit_file("on-branch.md").unwrap();
         repo.create_unstaged_file("untracked.md");
         let have = infer_scope(Some(&repo));
-        let want = Scope::Uncommitted;
-        pretty::assert_eq!(have, want);
+        pretty::assert_eq!(summary(&have), Some(vec![("untracked.md", Changed)]));
     }
 
     #[test]
@@ -202,8 +272,7 @@ mod tests {
         repo.create_and_switch_to_branch("feature").unwrap();
         repo.create_and_commit_file("on-branch.md").unwrap();
         let have = infer_scope(Some(&repo));
-        let want = Scope::Branch;
-        pretty::assert_eq!(have, want);
+        pretty::assert_eq!(summary(&have), Some(vec![("on-branch.md", Changed)]));
     }
 
     #[test]
@@ -213,8 +282,7 @@ mod tests {
         repo.create_and_commit_file("on-main.md").unwrap();
         std::fs::remove_file(repo.file_path("on-main.md")).unwrap();
         let have = infer_scope(Some(&repo));
-        let want = Scope::Uncommitted;
-        pretty::assert_eq!(have, want);
+        pretty::assert_eq!(summary(&have), Some(vec![("on-main.md", Removed)]));
     }
 
     #[test]
@@ -232,8 +300,7 @@ mod tests {
             .run()
             .unwrap();
         let have = infer_scope(Some(&repo));
-        let want = Scope::Branch;
-        pretty::assert_eq!(have, want);
+        pretty::assert_eq!(summary(&have), Some(vec![("on-main.md", Removed)]));
     }
 
     #[test]
@@ -241,9 +308,7 @@ mod tests {
         let dir = TempDir::new().unwrap();
         let repo = Repo::init(dir.path()).unwrap();
         repo.create_and_commit_file("on-main.md").unwrap();
-        let have = infer_scope(Some(&repo));
-        let want = Scope::All;
-        pretty::assert_eq!(have, want);
+        pretty::assert_eq!(infer_scope(Some(&repo)), FileScope::All);
     }
 
     #[test]
@@ -252,9 +317,7 @@ mod tests {
         let repo = Repo::init(dir.path()).unwrap();
         repo.create_and_commit_file("on-main.md").unwrap();
         repo.create_and_switch_to_branch("feature").unwrap();
-        let have = infer_scope(Some(&repo));
-        let want = Scope::All;
-        pretty::assert_eq!(have, want);
+        pretty::assert_eq!(infer_scope(Some(&repo)), FileScope::All);
     }
 
     /// a repo with committed Rust and Markdown files on a feature branch without changes
@@ -338,26 +401,26 @@ mod tests {
     }
 
     #[test]
-    fn resolve_uses_explicit_scope() {
+    fn resolve_uses_explicit_scope() -> Result<()> {
         let dir = TempDir::new().unwrap();
-        let repo = Repo::init(dir.path()).unwrap();
+        let repo = Repo::init(dir.path())?;
         repo.create_unstaged_file("untracked.md");
         let explicit = ScopeArg {
-            scope: Some(Scope::All),
+            scope: Some(CLIScope::All),
         };
-        let have = resolve_scope(&explicit, Some(&repo));
-        let want = Scope::All;
-        pretty::assert_eq!(have, want);
+        let have = resolve_scope(&explicit, Some(&repo))?;
+        pretty::assert_eq!(have, FileScope::All);
+        Ok(())
     }
 
     #[test]
-    fn resolve_infers_when_scope_omitted() {
+    fn resolve_infers_when_scope_omitted() -> Result<()> {
         let dir = TempDir::new().unwrap();
-        let repo = Repo::init(dir.path()).unwrap();
+        let repo = Repo::init(dir.path())?;
         repo.create_unstaged_file("untracked.md");
         let omitted = ScopeArg { scope: None };
-        let have = resolve_scope(&omitted, Some(&repo));
-        let want = Scope::Uncommitted;
-        pretty::assert_eq!(have, want);
+        let have = resolve_scope(&omitted, Some(&repo))?;
+        pretty::assert_eq!(summary(&have), Some(vec![("untracked.md", Changed)]));
+        Ok(())
     }
 }

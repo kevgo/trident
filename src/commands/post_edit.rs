@@ -1,5 +1,5 @@
-use super::{discover_stacks, lint};
-use crate::cli::input::{RunArgs, Scope, ShowExt};
+use super::{discover_stacks, files_in_scope, lint};
+use crate::cli::input::{CLIScope, RunArgs, ShowExt};
 use crate::cli::output::print_metadata;
 use crate::config::Config;
 use crate::domain::Result;
@@ -17,7 +17,8 @@ pub fn post_edit(args: &RunArgs) -> Result<ExitCode> {
     let stderr_to_stdout = true;
 
     // step 2: discover the files and their stacks
-    let stacks = discover_stacks(Scope::Uncommitted, git_repo.as_ref(), &ignores)?;
+    let files = files_in_scope(CLIScope::Uncommitted, git_repo.as_ref())?;
+    let stacks = discover_stacks(&files, &ignores);
     if show.display_metadata() {
         print_metadata(stacks.changed());
     }

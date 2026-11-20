@@ -1,8 +1,8 @@
-use super::discover_stacks;
 use super::pitstop::run_tasks;
-use crate::cli::input::{RunArgsWithTestAndScope, Scope};
-use crate::config::{Config, DefaultTests};
-use crate::domain::{Result, UserError};
+use super::{discover_stacks, files_in_scope};
+use crate::cli::input::{CLIScope, RunArgsWithTestAndScope};
+use crate::config::{Config, DefaultTests, to_sequences};
+use crate::domain::{Operation, Result, UserError};
 use crate::git::Repo;
 use std::process::ExitCode;
 
@@ -12,8 +12,9 @@ pub fn ci(args: RunArgsWithTestAndScope) -> Result<ExitCode> {
 
     let config = Config::load()?;
     let ignores = config.ignores()?;
-    let scope = args.scope.unwrap_or(Scope::All);
-    let stacks = discover_stacks(scope, repo.as_ref(), &ignores)?;
+    let scope = args.scope.unwrap_or(CLIScope::All);
+    let files = files_in_scope(scope, repo.as_ref())?;
+    let stacks = discover_stacks(&files, &ignores);
     let args_show = args.run.with_default_show(conc::Show::Output);
     let tests = config.test_sequences(
         &args.test,
