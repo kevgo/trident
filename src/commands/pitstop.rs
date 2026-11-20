@@ -14,8 +14,8 @@ pub fn pitstop(args: &RunArgsWithTestAndScope) -> Result<ExitCode> {
     let config = Config::load()?;
     let ignores = config.ignores()?;
     let repo = Repo::load();
-    let scope = resolve_scope(&args.scope, repo.as_ref());
-    let stacks = discover_stacks(scope, repo.as_ref(), &ignores)?;
+    let files = resolve_scope(&args.scope, repo.as_ref())?;
+    let stacks = discover_stacks(&files, &ignores);
     let tests = to_sequences(
         config.tests_for(
             &args.test,

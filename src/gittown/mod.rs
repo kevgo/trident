@@ -1,3 +1,5 @@
-mod files_changed;
+mod parent_branch;
 
-pub(crate) use files_changed::{files_changed_on_current_branch, files_removed_on_current_branch};
+pub(crate) use parent_branch::parent_branch;
+#[cfg(test)]
+pub(crate) use parent_branch::tests;

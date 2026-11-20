@@ -23,8 +23,8 @@ pub fn fix(args: &RunArgsWithScope) -> Result<ExitCode> {
 
     // step 2: discover the stacks
     let repo = Repo::load();
-    let scope = resolve_scope(&args.scope, repo.as_ref());
-    let stacks = discover_stacks(scope, repo.as_ref(), &ignores)?;
+    let files = resolve_scope(&args.scope, repo.as_ref())?;
+    let stacks = discover_stacks(&files, &ignores);
     if show.display_metadata() {
         print_metadata(stacks.changed());
     }

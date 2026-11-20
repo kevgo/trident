@@ -173,3 +173,30 @@ Feature: "trident fix" correctly handles deleted files
       # Branch
       """
     And file "unrelated.md" is unchanged
+
+  Scenario: --scope=branch with a committed deletion of a file that was then recreated
+    Given I ran "git checkout -b feature"
+    And I delete file "removed.md"
+    And I ran "git add -A"
+    And I ran "git commit -m delete"
+    And a file "removed.md" with content
+      """
+      #     Recreated
+      """
+    When executing "trident fix --scope=branch --show=verbose"
+    Then it prints to STDERR
+      """
+      1 Markdown
+      running 1 tasks
+      """
+    And it prints the lines matching
+      """
+      fix Markdown \(rumdl\)
+      rumdl fmt removed.md$
+      """
+    And the exit code is 0
+    And file "removed.md" now has content
+      """
+      # Recreated
+      """
+    And file "unrelated.md" is unchanged

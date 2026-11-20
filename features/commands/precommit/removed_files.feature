@@ -131,3 +131,24 @@ Feature: "trident precommit" correctly handles deleted files
       """
       # Added
       """
+
+  Scenario: staged deletion of a file that is kept in the workspace
+    Given I ran "git rm --cached --quiet removed.md"
+    When executing "trident precommit --show=verbose"
+    Then it prints to STDERR
+      """
+      1 Markdown
+      """
+    And it prints nothing to STDOUT
+    And the exit code is 0
+    And all files are unchanged
+    And the staged changes are
+      """
+      diff --git a/removed.md b/removed.md
+      deleted file mode 100644
+      index 50032d8..0000000
+      --- a/removed.md
+      +++ /dev/null
+      @@ -1 +0,0 @@
+      -#     Removed
+      """

@@ -100,28 +100,14 @@ pub fn from_files<'a>(
     DetectedStacks::new(result)
 }
 
-/// provides the given stacks with the given removed files added
-#[must_use]
-pub fn include_removed_files(
-    existing: &DetectedStacks,
-    removed: &[File],
-    ignores: &Ignores,
-) -> DetectedStacks {
-    let mut files = removed.to_vec();
-    files.extend(stack_files(existing));
-    files.sort_unstable();
-    files.dedup();
-    from_files(&files, ignores)
-}
-
 /// provides the given stacks with all workspace files of the stacks
 /// that the given removed files belonged to added
 ///
 /// Removing a file can break other files in its stack, for example the ones importing it.
 #[must_use]
-pub fn include_stacks_of_removed_files(
+pub fn include_stacks_of_removed_files<'a>(
     existing: &DetectedStacks,
-    removed: &[File],
+    removed: impl IntoIterator<Item = &'a File>,
     ignores: &Ignores,
 ) -> DetectedStacks {
     include_stacks_of_removed_files_in(Path::new("./"), existing, removed, ignores)
@@ -130,10 +116,10 @@ pub fn include_stacks_of_removed_files(
 /// provides the given stacks with all files under `dir` of the stacks
 /// that the given removed files belonged to added
 #[must_use]
-pub fn include_stacks_of_removed_files_in(
+pub fn include_stacks_of_removed_files_in<'a>(
     dir: &Path,
     existing: &DetectedStacks,
-    removed: &[File],
+    removed: impl IntoIterator<Item = &'a File>,
     ignores: &Ignores,
 ) -> DetectedStacks {
     let mut files = stack_files(existing);
@@ -234,43 +220,6 @@ pub fn discover_all_in(dir: &Path, ignores: &Ignores) -> DetectedStacks {
 
 #[cfg(test)]
 mod tests {
-
-    mod include_removed_files {
-        use crate::domain::{DetectedStacks, File, Ignores};
-        use crate::stacks::{from_files, include_removed_files};
-        use big_s::S;
-        use std::path::Path;
-
-        fn stack_counts(stacks: &DetectedStacks) -> Vec<String> {
-            stacks
-                .into_iter()
-                .map(|stack| format!("{} {}", stack.files.len(), stack.stack))
-                .collect()
-        }
-
-        #[test]
-        fn no_removed_files() {
-            let changed = from_files(&[File::from("changed.md")], &Ignores::empty());
-            let have = include_removed_files(&changed, &[], &Ignores::empty());
-            pretty::assert_eq!(stack_counts(&have), vec!["1 Markdown"]);
-        }
-
-        #[test]
-        fn counts_removed_files_in_their_stacks() {
-            let changed = from_files(&[File::from("changed.md")], &Ignores::empty());
-            let removed = [File::from("removed.md"), File::from("removed.py")];
-            let have = include_removed_files(&changed, &removed, &Ignores::empty());
-            pretty::assert_eq!(stack_counts(&have), vec!["2 Markdown", "1 Python"]);
-        }
-
-        #[test]
-        fn skips_ignored_removed_files() {
-            let ignores = Ignores::new(&[S("removed.md")], Path::new("./")).unwrap();
-            let changed = from_files(&[File::from("changed.md")], &ignores);
-            let have = include_removed_files(&changed, &[File::from("removed.md")], &ignores);
-            pretty::assert_eq!(stack_counts(&have), vec!["1 Markdown"]);
-        }
-    }
 
     mod include_stacks_of_removed_files {
         use crate::domain::{DetectedStacks, File, Ignores};

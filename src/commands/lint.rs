@@ -22,8 +22,8 @@ pub fn lint(args: &RunArgsWithScope) -> Result<ExitCode> {
     let repo = git::Repo::load();
 
     // step 2: discover the stacks
-    let scope = resolve_scope(&args.scope, repo.as_ref());
-    let stacks = discover_stacks(scope, repo.as_ref(), &ignores)?;
+    let files = resolve_scope(&args.scope, repo.as_ref())?;
+    let stacks = discover_stacks(&files, &ignores);
     if show.display_metadata() {
         print_metadata(stacks.changed());
     }

@@ -163,3 +163,72 @@ Feature: "trident lint" correctly handles deleted files
       """
     And the exit code is 0
     And all files are unchanged
+
+  Scenario: --scope=branch with a committed change to a file that was then deleted
+    Given a committed file "untouched.md" with content
+      """
+      # Untouched
+      """
+    And I ran "git checkout -b feature"
+    And I change file "removed.md" to
+      """
+      # Changed
+      """
+    And I ran "git add -A"
+    And I ran "git commit -m change"
+    And I delete file "removed.md"
+    When executing "trident lint --scope=branch --show=verbose"
+    Then it prints to STDERR
+      """
+      1 Markdown
+      running 1 tasks
+      """
+    And it prints the block matching
+      """
+      lint Markdown \(rumdl\)
+      .*rumdl check untouched.md$
+      """
+    And it does not print
+      """
+      removed.md
+      """
+    And the exit code is 0
+    And all files are unchanged
+
+  Scenario: deletion of an ignored file
+    Given a committed file "ignored.md" with content
+      """
+      # Ignored
+      """
+    And a committed file "untouched.md" with content
+      """
+      #     Untouched
+      """
+    And I delete file "ignored.md"
+    When executing "trident lint --show=verbose"
+    Then it prints to STDERR
+      """
+      running 0 tasks
+      """
+    And the exit code is 0
+    And all files are unchanged
+
+  Scenario: file removed from the index but kept in the workspace
+    Given a committed file "kept.md" with content
+      """
+      # Kept
+      """
+    And I ran "git rm --cached --quiet kept.md"
+    When executing "trident lint --show=verbose"
+    Then it prints to STDERR
+      """
+      1 Markdown
+      running 1 tasks
+      """
+    And it prints the block matching
+      """
+      lint Markdown \(rumdl\)
+      .*rumdl check kept.md$
+      """
+    And the exit code is 0
+    And all files are unchanged
