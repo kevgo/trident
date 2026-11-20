@@ -13,14 +13,14 @@ pub(crate) enum FileStatus {
     Removed,
 }
 
-/// a file touched by a set of changes
+/// a file and how it was changed
 #[derive(Clone, Debug, Eq, PartialEq)]
 struct FileChange {
     file: File,
     status: FileStatus,
 }
 
-/// the files touched by a set of changes, sorted and without duplicates
+/// a set of files and how they were changed, sorted and without duplicates
 #[derive(Clone, Debug, Default, Eq, PartialEq)]
 pub(crate) struct FileChanges(Vec<FileChange>);
 
