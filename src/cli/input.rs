@@ -73,13 +73,12 @@ pub enum CLIScope {
 
 /// the `--scope` flag
 #[derive(clap::Args)]
-pub struct ScopeArg {
-    /// files to apply the operation to
+pub struct ScopeFlag {
     #[arg(long, ignore_case = true)]
     pub scope: Option<CLIScope>,
 }
 
-impl ScopeArg {
+impl ScopeFlag {
     /// provides the given default when `--scope` was omitted
     #[must_use]
     pub fn unwrap_or(&self, default: CLIScope) -> CLIScope {
@@ -105,7 +104,7 @@ pub struct RunArgsWithScope {
     pub run: RunArgs,
 
     #[command(flatten)]
-    pub scope: ScopeArg,
+    pub scope: ScopeFlag,
 }
 
 // `RunArgs` with `--test` and `--scope` flags
@@ -115,7 +114,7 @@ pub struct RunArgsWithTestAndScope {
     pub run: RunArgs,
 
     #[command(flatten)]
-    pub scope: ScopeArg,
+    pub scope: ScopeFlag,
 
     /// names of tests to run, joined with +
     #[arg(long, value_delimiter = '+', value_name = "NAME")]
