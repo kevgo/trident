@@ -62,7 +62,7 @@ pub enum Command {
 
 /// which files a command should process
 #[derive(Clone, Copy, Debug, Eq, PartialEq, ValueEnum)]
-pub enum Scope {
+pub enum CLIScope {
     /// uncommitted files
     Uncommitted,
     /// files changed on the current branch
@@ -76,13 +76,13 @@ pub enum Scope {
 pub struct ScopeArg {
     /// files to apply the operation to
     #[arg(long, ignore_case = true)]
-    pub scope: Option<Scope>,
+    pub scope: Option<CLIScope>,
 }
 
 impl ScopeArg {
     /// provides the given default when `--scope` was omitted
     #[must_use]
-    pub fn unwrap_or(&self, default: Scope) -> Scope {
+    pub fn unwrap_or(&self, default: CLIScope) -> CLIScope {
         self.scope.unwrap_or(default)
     }
 }
@@ -202,7 +202,7 @@ pub fn parse() -> Result<Option<Command>> {
 #[cfg(test)]
 mod tests {
     use super::{
-        Cli, Command, RunArgs, RunArgsWithScope, RunArgsWithTest, RunArgsWithTestAndScope, Scope,
+        CLIScope, Cli, Command, RunArgs, RunArgsWithScope, RunArgsWithTest, RunArgsWithTestAndScope,
     };
     use clap::Parser;
     use clap::error::ErrorKind;
@@ -404,10 +404,10 @@ mod tests {
     #[test]
     fn scope_flag_values() {
         let tests = hashmap! {
-            "uncommitted" => Scope::Uncommitted,
-            "branch" => Scope::Branch,
-            "all" => Scope::All,
-            "BRANCH" => Scope::Branch,
+            "uncommitted" => CLIScope::Uncommitted,
+            "branch" => CLIScope::Branch,
+            "all" => CLIScope::All,
+            "BRANCH" => CLIScope::Branch,
         };
         for (value, want) in tests {
             let flag = format!("--scope={value}");

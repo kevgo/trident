@@ -10,7 +10,7 @@ mod precommit;
 mod test;
 mod update_tools;
 
-use crate::cli::input::{Scope, ScopeArg};
+use crate::cli::input::{CLIScope, ScopeArg};
 use crate::domain::{DetectedStacks, Ignores, Result};
 use crate::git::Repo;
 use crate::stacks;
@@ -27,7 +27,7 @@ pub use test::test;
 pub use update_tools::update_tools;
 
 /// uses the explicit `--scope` if given, otherwise [`infer_scope`]
-pub(crate) fn resolve_scope(explicit: &ScopeArg, repo: Option<&Repo>) -> Scope {
+pub(crate) fn resolve_scope(explicit: &ScopeArg, repo: Option<&Repo>) -> CLIScope {
     match explicit.scope {
         Some(scope) => scope,
         None => infer_scope(repo),
@@ -38,41 +38,43 @@ pub(crate) fn resolve_scope(explicit: &ScopeArg, repo: Option<&Repo>) -> Scope {
 ///
 /// Uses uncommitted files if any exist, otherwise files changed on the current
 /// branch, otherwise all files. Without a Git repository, this is always `all`.
-pub(crate) fn infer_scope(repo: Option<&Repo>) -> Scope {
+pub(crate) fn infer_scope(repo: Option<&Repo>) -> CLIScope {
     let Some(repo) = repo else {
-        return Scope::All;
+        return CLIScope::All;
     };
     let Ok(uncommitted) = repo.uncommitted() else {
         // error running Git --> check all files
-        return Scope::All;
+        return CLIScope::All;
     };
     if !uncommitted.is_empty() {
         // uncommitted files exist --> check only those
-        return Scope::Uncommitted;
+        return CLIScope::Uncommitted;
     }
     let Ok(branch_changed) = repo.branch_changed_files() else {
         // error running Git --> check all files
-        return Scope::All;
+        return CLIScope::All;
     };
     if branch_changed.is_empty() {
         // no branch changes --> check all files
-        return Scope::All;
+        return CLIScope::All;
     }
-    Scope::Branch
+    CLIScope::Branch
 }
 
 /// provides the stacks that match the given file scope
 ///
 /// When the current directory is not a Git repository, every scope scans all files.
 pub(crate) fn discover_stacks(
-    scope: Scope,
+    scope: CLIScope,
     repo: Option<&Repo>,
     ignores: &Ignores,
 ) -> Result<DetectedStacks> {
     match (scope, repo) {
-        (Scope::All, _) | (_, None) => Ok(stacks::discover_all(ignores)),
-        (Scope::Uncommitted, Some(repo)) => Ok(stacks::from_files(&repo.uncommitted()?, ignores)),
-        (Scope::Branch, Some(repo)) => {
+        (CLIScope::All, _) | (_, None) => Ok(stacks::discover_all(ignores)),
+        (CLIScope::Uncommitted, Some(repo)) => {
+            Ok(stacks::from_files(&repo.uncommitted()?, ignores))
+        }
+        (CLIScope::Branch, Some(repo)) => {
             Ok(stacks::from_files(&repo.branch_changed_files()?, ignores))
         }
     }
@@ -81,7 +83,7 @@ pub(crate) fn discover_stacks(
 #[cfg(test)]
 mod tests {
     use super::{discover_stacks, infer_scope, resolve_scope};
-    use crate::cli::input::{Scope, ScopeArg};
+    use crate::cli::input::{CLIScope, ScopeArg};
     use crate::domain::{DetectedStacks, File, Ignores, Result};
     use crate::git::Repo;
     use tempfile::TempDir;
@@ -101,7 +103,7 @@ mod tests {
         let repo = Repo::init(dir.path())?;
         repo.create_and_commit_file("committed.md")?;
         repo.create_unstaged_file("untracked.md");
-        let stacks = discover_stacks(Scope::Uncommitted, Some(&repo), &Ignores::empty())?;
+        let stacks = discover_stacks(CLIScope::Uncommitted, Some(&repo), &Ignores::empty())?;
         pretty::assert_eq!(filenames(&stacks), vec![File::from("untracked.md")]);
         Ok(())
     }
@@ -114,7 +116,7 @@ mod tests {
         repo.create_and_switch_to_branch("feature")?;
         repo.create_and_commit_file("on-branch.md")?;
         repo.create_unstaged_file("untracked.md");
-        let stacks = discover_stacks(Scope::Branch, Some(&repo), &Ignores::empty())?;
+        let stacks = discover_stacks(CLIScope::Branch, Some(&repo), &Ignores::empty())?;
         pretty::assert_eq!(
             filenames(&stacks),
             vec![File::from("on-branch.md"), File::from("untracked.md")]
@@ -124,7 +126,7 @@ mod tests {
 
     #[test]
     fn infer_all_without_git_repo() {
-        pretty::assert_eq!(infer_scope(None), Scope::All);
+        pretty::assert_eq!(infer_scope(None), CLIScope::All);
     }
 
     #[test]
@@ -136,7 +138,7 @@ mod tests {
         repo.create_and_commit_file("on-branch.md").unwrap();
         repo.create_unstaged_file("untracked.md");
         let have = infer_scope(Some(&repo));
-        let want = Scope::Uncommitted;
+        let want = CLIScope::Uncommitted;
         pretty::assert_eq!(have, want);
     }
 
@@ -148,7 +150,7 @@ mod tests {
         repo.create_and_switch_to_branch("feature").unwrap();
         repo.create_and_commit_file("on-branch.md").unwrap();
         let have = infer_scope(Some(&repo));
-        let want = Scope::Branch;
+        let want = CLIScope::Branch;
         pretty::assert_eq!(have, want);
     }
 
@@ -158,7 +160,7 @@ mod tests {
         let repo = Repo::init(dir.path()).unwrap();
         repo.create_and_commit_file("on-main.md").unwrap();
         let have = infer_scope(Some(&repo));
-        let want = Scope::All;
+        let want = CLIScope::All;
         pretty::assert_eq!(have, want);
     }
 
@@ -169,7 +171,7 @@ mod tests {
         repo.create_and_commit_file("on-main.md").unwrap();
         repo.create_and_switch_to_branch("feature").unwrap();
         let have = infer_scope(Some(&repo));
-        let want = Scope::All;
+        let want = CLIScope::All;
         pretty::assert_eq!(have, want);
     }
 
@@ -179,10 +181,10 @@ mod tests {
         let repo = Repo::init(dir.path()).unwrap();
         repo.create_unstaged_file("untracked.md");
         let explicit = ScopeArg {
-            scope: Some(Scope::All),
+            scope: Some(CLIScope::All),
         };
         let have = resolve_scope(&explicit, Some(&repo));
-        let want = Scope::All;
+        let want = CLIScope::All;
         pretty::assert_eq!(have, want);
     }
 
@@ -193,7 +195,7 @@ mod tests {
         repo.create_unstaged_file("untracked.md");
         let omitted = ScopeArg { scope: None };
         let have = resolve_scope(&omitted, Some(&repo));
-        let want = Scope::Uncommitted;
+        let want = CLIScope::Uncommitted;
         pretty::assert_eq!(have, want);
     }
 }
