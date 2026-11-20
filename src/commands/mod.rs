@@ -10,7 +10,7 @@ mod precommit;
 mod test;
 mod update_tools;
 
-use crate::cli::input::{CLIScope, ScopeArg};
+use crate::cli::input::{CLIScope, ScopeFlag};
 use crate::domain::{DetectedStacks, Ignores, Result};
 use crate::git::{FileChanges, Repo};
 use crate::stacks;
@@ -37,7 +37,7 @@ pub(crate) enum FileScope {
 }
 
 /// provides the files in the explicit `--scope` if given, otherwise in the [inferred scope](infer_scope)
-pub(crate) fn resolve_scope(explicit: &ScopeArg, repo: Option<&Repo>) -> Result<FileScope> {
+pub(crate) fn resolve_scope(explicit: &ScopeFlag, repo: Option<&Repo>) -> Result<FileScope> {
     match explicit.scope {
         Some(scope) => files_in_scope(scope, repo),
         None => Ok(infer_scope(repo)),
@@ -157,7 +157,7 @@ pub(crate) fn discover_stacks(files: &FileScope, ignores: &Ignores) -> ScopedSta
 #[cfg(test)]
 mod tests {
     use super::{FileScope, discover_stacks, files_in_scope, infer_scope, resolve_scope};
-    use crate::cli::input::{CLIScope, ScopeArg};
+    use crate::cli::input::{CLIScope, ScopeFlag};
     use crate::domain::{DetectedStacks, File, Ignores, Result};
     use crate::git::FileStatus::{self, Changed, Removed};
     use crate::git::{GitCommandExt, Repo};
@@ -324,7 +324,7 @@ mod tests {
         let dir = TempDir::new().unwrap();
         let repo = Repo::init(dir.path())?;
         repo.create_unstaged_file("untracked.md");
-        let explicit = ScopeArg {
+        let explicit = ScopeFlag {
             scope: Some(CLIScope::All),
         };
         let have = resolve_scope(&explicit, Some(&repo))?;
@@ -337,7 +337,7 @@ mod tests {
         let dir = TempDir::new().unwrap();
         let repo = Repo::init(dir.path())?;
         repo.create_unstaged_file("untracked.md");
-        let omitted = ScopeArg { scope: None };
+        let omitted = ScopeFlag { scope: None };
         let have = resolve_scope(&omitted, Some(&repo))?;
         pretty::assert_eq!(summary(&have), Some(vec![("untracked.md", Changed)]));
         Ok(())
