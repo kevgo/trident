@@ -127,8 +127,9 @@ impl ScopedStacks {
 
 /// provides the stacks for the given files
 pub(crate) fn discover_stacks(files: &FileScope, ignores: &Ignores) -> ScopedStacks {
-    let FileScope::Changes(changes) = files else {
-        return ScopedStacks::all(ignores);
+    let changes = match files {
+        FileScope::All => return ScopedStacks::all(ignores),
+        FileScope::Changes(changes) => changes,
     };
     let existing = stacks::from_files(changes.changed(), ignores);
     if changes.removed().next().is_none() {
