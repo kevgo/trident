@@ -11,7 +11,10 @@ pub fn full(args: &RunArgsWithTest) -> Result<ExitCode> {
     let config = Config::load()?;
     let ignores = config.ignores()?;
     let repo = Repo::load();
-    let stacks = ScopedStacks::without_removed_files(stacks::discover_all(&ignores));
+    let stacks = ScopedStacks {
+        existing: stacks::discover_all(&ignores),
+        removed: None,
+    };
     let tests = to_sequences(
         config.tests_for(
             &args.test,

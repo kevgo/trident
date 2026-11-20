@@ -85,14 +85,6 @@ struct RemovedStacks {
 }
 
 impl ScopedStacks {
-    /// the given files, in a scope that doesn't remove any files
-    pub(crate) fn without_removed_files(existing: DetectedStacks) -> Self {
-        Self {
-            existing,
-            removed: None,
-        }
-    }
-
     /// all files that the scope changes, including the ones it deletes or renames away
     ///
     /// This is what the user sees as the files in scope.
@@ -139,7 +131,10 @@ pub(crate) fn discover_stacks(
         ),
     };
     if removed.is_empty() {
-        return Ok(ScopedStacks::without_removed_files(existing));
+        return Ok(ScopedStacks {
+            existing,
+            removed: None,
+        });
     }
     let changed = stacks::include_removed_files(&existing, &removed, ignores);
     let lint = stacks::include_stacks_of_removed_files(&existing, &removed, ignores);
