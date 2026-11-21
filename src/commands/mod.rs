@@ -54,15 +54,15 @@ pub(crate) fn scoped_stacks(
     //
     // The first helper function loads the files to process
     //
-    // step 1: if scope = all, return all files in the workspace
+    // step 1: if scope = all, return all files in the workspace (cannot determine removed files)
     // now we have scope = infer
-    // step 2: load changed files from Git and return if there are any
-    // step 2b: git error --> return all files in the workspace
-    // step 3: load files from branch and return if there are any
-    // step 3b: git error --> return all files in the workspace
-    // step 4: return all files in the workspace
+    // step 2: load changed (changed and removed) files from Git and return if there are any
+    // step 2b: git error --> print warning and return all files in the workspace
+    // step 3: load files from branch (changed and removed) and return if there are any
+    // step 3b: git error --> print warning and return all files in the workspace
+    // step 4: here the branch is empty --> return all files in the workspace
     //
-    // Now we can determine the stacks that these files belong to
+    // Now we can group these files into stacks and return those
     let files = match determine_files(&scope_flag, default_scope, repo) {
         Ok(files) => files,
         Err(err) => {
