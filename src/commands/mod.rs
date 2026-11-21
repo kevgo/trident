@@ -29,13 +29,13 @@ pub use update_tools::update_tools;
 /// arguments for [`scoped_stacks`]
 #[derive(Clone, Copy)]
 pub(crate) struct ScopedStacksArgs<'a> {
-    /// the scope given via `--scope`
+    /// value of the CLI `--scope` flag
     pub(crate) scope_flag: &'a ScopeFlag,
 
-    /// the scope to use when `--scope` is omitted, None to infer it
+    /// the scope to use when `--scope` is omitted, if none is given, use the smallest change: uncommitted files, or branch, or all files
     pub(crate) default_scope: Option<CLIScope>,
 
-    /// the Git repository in the current directory, if there is one
+    /// the Git repository in the current directory
     pub(crate) repo: Option<&'a Repo>,
 
     /// the files to ignore
