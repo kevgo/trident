@@ -27,7 +27,7 @@ fn inner() -> trident::domain::Result<ExitCode> {
         Command::Pitstop(args) => trident::commands::pitstop(args),
         Command::Postedit(args) => trident::commands::post_edit(args),
         Command::Precommit(args) => trident::commands::precommit(args),
-        Command::Test(args) => trident::commands::test(&args),
+        Command::Test(args) => trident::commands::test(args),
         Command::UpdateTools => trident::commands::update_tools(),
     }
 }

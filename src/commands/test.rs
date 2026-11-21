@@ -4,14 +4,10 @@ use crate::domain::{Operation, Result};
 use crate::subshell;
 use std::process::ExitCode;
 
-pub fn test(args: &RunArgsWithTest) -> Result<ExitCode> {
+pub fn test(RunArgsWithTest { run, test }: RunArgsWithTest) -> Result<ExitCode> {
     let config = Config::load()?;
-    let show = args.run.show.unwrap_or(conc::Show::Names);
-    let tests = config.tests_for(
-        &args.test,
-        |commands| commands.test.as_ref(),
-        DefaultTests::All,
-    )?;
+    let show = run.show.unwrap_or(conc::Show::Names);
+    let tests = config.tests_for(&test, |commands| commands.test.as_ref(), DefaultTests::All)?;
     if show.display_metadata() {
         eprintln!("running {} tasks", tests.len());
     }
@@ -22,7 +18,7 @@ pub fn test(args: &RunArgsWithTest) -> Result<ExitCode> {
     let exit_code = subshell::run(subshell::RunArgs {
         sequences: test_sequences,
         error_on_output: false,
-        sequential: args.run.sequential,
+        sequential: run.sequential,
         show,
         stderr_to_stdout: true,
     });
