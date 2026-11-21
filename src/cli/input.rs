@@ -79,14 +79,6 @@ pub struct ScopeFlag {
     pub scope: Option<CLIScope>,
 }
 
-impl ScopeFlag {
-    /// provides the given default when `--scope` was omitted
-    #[must_use]
-    pub fn unwrap_or(&self, default: CLIScope) -> CLIScope {
-        self.scope.unwrap_or(default)
-    }
-}
-
 // `RunArgs` with a `--test` flag
 #[derive(clap::Args)]
 pub struct RunArgsWithTest {
