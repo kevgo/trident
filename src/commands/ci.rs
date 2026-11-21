@@ -15,17 +15,13 @@ pub fn ci(
     let config = Config::load()?;
     let ignores = config.ignores()?;
     let stacks = scoped_stacks(ScopedStacksArgs {
-        scope_flag: args.scope,
+        scope_flag: scope,
         default_scope: Some(CLIScope::All),
         repo: repo.as_ref(),
         ignores,
     });
-    let args_show = args.run.with_default_show(conc::Show::Output);
-    let tests = config.tests_for(
-        &args.test,
-        |commands| commands.ci.as_ref(),
-        DefaultTests::All,
-    )?;
+    let args_show = run.with_default_show(conc::Show::Output);
+    let tests = config.tests_for(&test, |commands| commands.ci.as_ref(), DefaultTests::All)?;
     let test_sequences = to_sequences(tests, Operation::Test, None);
     let exit_code = run_tasks(&args_show, &config, &stacks, repo.as_ref(), test_sequences)?;
     if exit_code != ExitCode::SUCCESS {
