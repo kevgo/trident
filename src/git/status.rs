@@ -7,10 +7,13 @@ use crate::git::ZeroString;
 
 impl Repo {
     /// runs `git status` and returns its stdout
+    ///
+    /// Disables rename detection, so that renames show up
+    /// as a deletion of the old path and an addition of the new path.
     pub(crate) fn status(&self, extra_args: &[&str]) -> Result<GitStatusOutput> {
         Ok(self
             .git_command()
-            .args(["status", "--porcelain=v1", "-z"])
+            .args(["status", "--porcelain=v1", "-z", "--no-renames"])
             .args(extra_args)
             .run_stdout_zero()?
             .into())
@@ -119,16 +122,11 @@ impl Record<'_> {
         )
     }
 
-    pub fn is_uncommitted(&self) -> bool {
-        if self.index == '!' || self.worktree == '!' {
-            return false;
-        }
-        is_present_change(self.index) || is_present_change(self.worktree)
+    /// provides whether this record describes a change to the file,
+    /// as opposed to an ignored file or an unresolved merge conflict
+    pub fn is_change(&self) -> bool {
+        !matches!(self.index, '!' | 'U') && !matches!(self.worktree, '!' | 'U')
     }
-}
-
-fn is_present_change(status: char) -> bool {
-    matches!(status, 'A' | 'M' | 'R' | 'C' | 'T' | '?')
 }
 
 fn log_unexpected_line(line: &str) {
@@ -177,6 +175,33 @@ mod tests {
             for (give, want) in tests {
                 let have = Record::parse(give);
                 assert_eq!(have, want, "{give}");
+            }
+        }
+    }
+
+    mod is_change {
+        use super::super::Record;
+        use maplit::hashmap;
+
+        #[test]
+        fn is_change() {
+            let tests = hashmap! {
+                "M  file.rs" => true,
+                " M file.rs" => true,
+                "MM file.rs" => true,
+                "A  file.rs" => true,
+                "?? file.rs" => true,
+                "D  file.rs" => true,
+                " D file.rs" => true,
+                "MD file.rs" => true,
+                "!! file.rs" => false,
+                "UU file.rs" => false,
+                "DU file.rs" => false,
+                "UD file.rs" => false,
+            };
+            for (give, want) in tests {
+                let record = Record::parse(give).expect(give);
+                assert_eq!(record.is_change(), want, "{give}");
             }
         }
     }

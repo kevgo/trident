@@ -1,4 +1,4 @@
-use super::{determine_scope, discover_stacks};
+use super::{ScopedStacksArgs, scoped_stacks};
 use crate::cli::input::{RunArgsWithScope, ShowExt};
 use crate::cli::output::print_metadata;
 use crate::config::Config;
@@ -20,14 +20,18 @@ pub fn fix_unsafe(RunArgsWithScope { run, scope }: RunArgsWithScope) -> Result<E
 
     // step 2: discover the stacks
     let repo = Repo::load();
-    let scope = determine_scope(&scope, repo.as_ref());
-    let stacks = discover_stacks(scope, repo.as_ref(), &ignores)?;
+    let stacks = scoped_stacks(ScopedStacksArgs {
+        scope_flag: scope,
+        default_scope: None,
+        repo: repo.as_ref(),
+        ignores,
+    });
     if show.display_metadata() {
-        print_metadata(&stacks);
+        print_metadata(stacks.changed());
     }
 
     // step 3: discover the unsafe fixes to run
-    let unsafe_fixes = determine_unsafe_fixes(&stacks, &config)?;
+    let unsafe_fixes = determine_unsafe_fixes(stacks.fix(), &config)?;
     if show.display_metadata() {
         eprintln!("running {} tasks", unsafe_fixes.len());
     }

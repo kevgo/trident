@@ -62,7 +62,7 @@ mod tests {
             fs::write(repo.file_path("untracked.txt"), "content").unwrap();
             repo.commit_empty("empty")?;
             pretty::assert_eq!(repo.committed_files()?, Vec::<String>::new());
-            pretty::assert_eq!(repo.uncommitted()?, vec![File::from("untracked.txt")]);
+            pretty::assert_eq!(repo.uncommitted_files()?, vec![File::from("untracked.txt")]);
             assert_eq!(repo.last_commit_message()?, "empty");
             Ok(())
         }

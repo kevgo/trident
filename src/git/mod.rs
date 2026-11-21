@@ -9,6 +9,7 @@ mod create_unstaged_file;
 mod current_branch;
 mod default_branch;
 mod diff;
+mod file_changes;
 mod has_ref;
 mod last_commit_message;
 mod merge_base;
@@ -22,6 +23,9 @@ mod uncommitted;
 mod zerostring;
 
 pub(crate) use command::GitCommandExt;
+pub(crate) use file_changes::FileChanges;
+#[cfg(test)]
+pub(crate) use file_changes::FileStatus;
 pub(crate) use repo::Repo;
 pub(crate) use staged::StagedFiles;
 pub(crate) use zerostring::ZeroString;

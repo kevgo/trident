@@ -203,6 +203,14 @@ and `pitstop` commands choose a scope matching the current situation:
   process all files on the current branch
 - otherwise process all files
 
+Deleting or renaming a file can break other files,
+for example ones that still import it.
+When the selected scope deletes or renames a file,
+lints therefore check all files of that file's stack.
+Fixes process only the changed files that still exist.
+This also applies to `trident postedit`,
+which always uses the `uncommitted` scope.
+
 ### `--sequential`
 
 By default, Trident runs as many tools as possible concurrently.

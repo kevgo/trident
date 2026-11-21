@@ -40,6 +40,7 @@ mod tests {
             let want = StagedFiles {
                 partial: vec![],
                 full: vec![File::from("a.txt")],
+                removed: vec![],
             };
             pretty::assert_eq!(have, want);
             Ok(())
@@ -55,6 +56,7 @@ mod tests {
             let want = StagedFiles {
                 partial: vec![],
                 full: vec![File::from("my file.txt")],
+                removed: vec![],
             };
             pretty::assert_eq!(have, want);
             Ok(())
@@ -71,6 +73,7 @@ mod tests {
             let want = StagedFiles {
                 partial: vec![],
                 full: vec![File::from("file\"quote.txt")],
+                removed: vec![],
             };
             pretty::assert_eq!(have, want);
             Ok(())
@@ -87,6 +90,7 @@ mod tests {
             let want = StagedFiles {
                 partial: vec![],
                 full: vec![File::from("sub/nested.txt")],
+                removed: vec![],
             };
             pretty::assert_eq!(have, want);
             Ok(())
@@ -103,6 +107,7 @@ mod tests {
             let want = StagedFiles {
                 partial: vec![],
                 full: vec![File::from("a.txt")],
+                removed: vec![],
             };
             pretty::assert_eq!(have, want);
             Ok(())
@@ -119,6 +124,7 @@ mod tests {
             let want = StagedFiles {
                 partial: vec![],
                 full: vec![File::from("a.txt")],
+                removed: vec![],
             };
             pretty::assert_eq!(have, want);
             Ok(())
@@ -164,6 +170,7 @@ mod tests {
             let want = StagedFiles {
                 partial: vec![],
                 full: vec![a, b],
+                removed: vec![],
             };
             pretty::assert_eq!(have, want);
             Ok(())
@@ -180,6 +187,7 @@ mod tests {
             let want = StagedFiles {
                 partial: vec![],
                 full: vec![file],
+                removed: vec![],
             };
             pretty::assert_eq!(have, want);
             Ok(())
@@ -197,6 +205,7 @@ mod tests {
             let want = StagedFiles {
                 partial: vec![],
                 full: vec![file],
+                removed: vec![],
             };
             pretty::assert_eq!(have, want);
             Ok(())
@@ -213,6 +222,7 @@ mod tests {
             let want = StagedFiles {
                 partial: vec![],
                 full: vec![file],
+                removed: vec![],
             };
             pretty::assert_eq!(have, want);
             Ok(())
@@ -230,6 +240,7 @@ mod tests {
             let want = StagedFiles {
                 partial: vec![],
                 full: vec![a],
+                removed: vec![],
             };
             pretty::assert_eq!(have, want);
             Ok(())

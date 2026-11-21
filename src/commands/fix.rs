@@ -1,4 +1,4 @@
-use super::{determine_scope, discover_stacks};
+use super::{ScopedStacksArgs, scoped_stacks};
 use crate::apps::delete_empty_folders;
 use crate::apps::delete_empty_folders::DeleteEmptyFolders;
 use crate::apps::keep_sorted;
@@ -23,14 +23,18 @@ pub fn fix(RunArgsWithScope { run, scope }: RunArgsWithScope) -> Result<ExitCode
 
     // step 2: discover the stacks
     let repo = Repo::load();
-    let scope = determine_scope(&scope, repo.as_ref());
-    let stacks = discover_stacks(scope, repo.as_ref(), &ignores)?;
+    let stacks = scoped_stacks(ScopedStacksArgs {
+        scope_flag: scope,
+        default_scope: None,
+        repo: repo.as_ref(),
+        ignores,
+    });
     if show.display_metadata() {
-        print_metadata(&stacks);
+        print_metadata(stacks.changed());
     }
 
     // step 3: discover the fixes to run
-    let fixes = determine_fixes(&config, &stacks)?;
+    let fixes = determine_fixes(&config, stacks.fix())?;
     if show.display_metadata() {
         eprintln!("running {} tasks", fixes.len());
     }

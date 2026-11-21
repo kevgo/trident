@@ -44,6 +44,7 @@ New applications:
 
 New behaviors:
   - auto-scope: `ci`, `fix`, `fix-unsafe`, `lint`, and `pitstop` now process files based on the current situation, and accept `--scope=uncommitted|branch|all` to override the file selection
+  - deleting or renaming a file now lints all files of its stack, to catch for example imports of the old file name. Fixes still process only the changed files that still exist.
   - support for tests: Tricorder can now run unit tests and other custom test scripts concurrently with the lints and fixes
     - define them in the `test` section of each stack or command
     - customize them using the new `--test` flag

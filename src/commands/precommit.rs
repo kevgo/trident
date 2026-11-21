@@ -32,12 +32,13 @@ fn run(RunArgs { sequential, show }: RunArgs) -> Result<()> {
 
     // step 2: discover the staged files and their stacks
     let staged = repo.staged()?;
-    if staged.is_empty() {
-        return Ok(());
-    }
     let stacks = stacks::from_staged(&staged, &ignores);
     if show.display_metadata() {
-        print_metadata(&stacks);
+        let staged_and_removed = staged.all().into_iter().chain(&staged.removed);
+        print_metadata(&stacks::from_files(staged_and_removed, &ignores));
+    }
+    if staged.is_empty() {
+        return Ok(());
     }
 
     // step 3: fingerprint the staged files before running the fixes

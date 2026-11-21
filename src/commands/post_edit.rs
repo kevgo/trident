@@ -1,5 +1,5 @@
-use super::{discover_stacks, lint};
-use crate::cli::input::{CLIScope, RunArgs, ShowExt};
+use super::{ScopedStacksArgs, lint, scoped_stacks};
+use crate::cli::input::{CLIScope, RunArgs, ScopeFlag, ShowExt};
 use crate::cli::output::print_metadata;
 use crate::config::Config;
 use crate::domain::Result;
@@ -16,13 +16,18 @@ pub fn post_edit(RunArgs { sequential, show }: RunArgs) -> Result<ExitCode> {
     let stderr_to_stdout = true;
 
     // step 2: discover the files and their stacks
-    let stacks = discover_stacks(CLIScope::Uncommitted, git_repo.as_ref(), &ignores)?;
+    let stacks = scoped_stacks(ScopedStacksArgs {
+        scope_flag: ScopeFlag { scope: None },
+        default_scope: Some(CLIScope::Uncommitted),
+        repo: git_repo.as_ref(),
+        ignores,
+    });
     if show.display_metadata() {
-        print_metadata(&stacks);
+        print_metadata(stacks.changed());
     }
 
     // step 3: discover the lints to run
-    let lints = lint::determine_lints(&config, &stacks, git_repo.as_ref())?;
+    let lints = lint::determine_lints(&config, stacks.lint(), git_repo.as_ref())?;
     if show.display_metadata() {
         eprintln!("running {} tasks", lints.len());
     }
