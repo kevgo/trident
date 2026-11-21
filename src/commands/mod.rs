@@ -29,7 +29,7 @@ pub use update_tools::update_tools;
 /// arguments for [`scoped_stacks`]
 pub(crate) struct ScopedStacksArgs<'a> {
     /// value of the CLI `--scope` flag
-    pub(crate) scope_flag: &'a ScopeFlag,
+    pub(crate) scope_flag: ScopeFlag,
 
     /// the scope to use when `--scope` is omitted, if none is given, use the smallest change: uncommitted files, or branch, or all files
     pub(crate) default_scope: Option<CLIScope>,
@@ -38,7 +38,7 @@ pub(crate) struct ScopedStacksArgs<'a> {
     pub(crate) repo: Option<&'a Repo>,
 
     /// the files to ignore
-    pub(crate) ignores: &'a Ignores,
+    pub(crate) ignores: Ignores,
 }
 
 /// provides the stacks and files that a command should process
@@ -63,7 +63,7 @@ pub(crate) fn scoped_stacks(
             FileScope::All
         }
     };
-    discover_stacks(&files, ignores)
+    discover_stacks(&files, &ignores)
 }
 
 /// the files that a command should process
@@ -79,7 +79,7 @@ enum FileScope {
 /// provides the files in the scope given via `--scope`,
 /// otherwise in the default scope, otherwise in the inferred scope
 fn determine_files(
-    scope_flag: &ScopeFlag,
+    scope_flag: ScopeFlag,
     default_scope: Option<CLIScope>,
     repo: Option<&Repo>,
 ) -> Result<FileScope> {
@@ -243,12 +243,9 @@ mod tests {
     fn every_scope_is_all_without_git_repo() -> Result<()> {
         for scope in [CLIScope::All, CLIScope::Uncommitted, CLIScope::Branch] {
             let flag = ScopeFlag { scope: Some(scope) };
-            pretty::assert_eq!(determine_files(&flag, None, None)?, FileScope::All);
+            pretty::assert_eq!(determine_files(flag, None, None)?, FileScope::All);
             let no_flag = ScopeFlag { scope: None };
-            pretty::assert_eq!(
-                determine_files(&no_flag, Some(scope), None)?,
-                FileScope::All
-            );
+            pretty::assert_eq!(determine_files(no_flag, Some(scope), None)?, FileScope::All);
         }
         Ok(())
     }
@@ -290,7 +287,7 @@ mod tests {
     fn infer_all_without_git_repo() {
         let no_flag = ScopeFlag { scope: None };
         pretty::assert_eq!(
-            determine_files(&no_flag, None, None).unwrap(),
+            determine_files(no_flag, None, None).unwrap(),
             FileScope::All
         );
     }
@@ -304,7 +301,7 @@ mod tests {
         repo.create_and_commit_file("on-branch.md").unwrap();
         repo.create_unstaged_file("untracked.md");
         let no_flag = ScopeFlag { scope: None };
-        let have = determine_files(&no_flag, None, Some(&repo)).unwrap();
+        let have = determine_files(no_flag, None, Some(&repo)).unwrap();
         pretty::assert_eq!(summary(&have), Some(vec![("untracked.md", Changed)]));
     }
 
@@ -316,7 +313,7 @@ mod tests {
         repo.create_and_switch_to_branch("feature").unwrap();
         repo.create_and_commit_file("on-branch.md").unwrap();
         let no_flag = ScopeFlag { scope: None };
-        let have = determine_files(&no_flag, None, Some(&repo)).unwrap();
+        let have = determine_files(no_flag, None, Some(&repo)).unwrap();
         pretty::assert_eq!(summary(&have), Some(vec![("on-branch.md", Changed)]));
     }
 
@@ -327,7 +324,7 @@ mod tests {
         repo.create_and_commit_file("on-main.md").unwrap();
         std::fs::remove_file(repo.file_path("on-main.md")).unwrap();
         let no_flag = ScopeFlag { scope: None };
-        let have = determine_files(&no_flag, None, Some(&repo)).unwrap();
+        let have = determine_files(no_flag, None, Some(&repo)).unwrap();
         pretty::assert_eq!(summary(&have), Some(vec![("on-main.md", Removed)]));
     }
 
@@ -346,7 +343,7 @@ mod tests {
             .run()
             .unwrap();
         let no_flag = ScopeFlag { scope: None };
-        let have = determine_files(&no_flag, None, Some(&repo)).unwrap();
+        let have = determine_files(no_flag, None, Some(&repo)).unwrap();
         pretty::assert_eq!(summary(&have), Some(vec![("on-main.md", Removed)]));
     }
 
@@ -356,7 +353,7 @@ mod tests {
         let repo = Repo::init(dir.path()).unwrap();
         repo.create_and_commit_file("on-main.md").unwrap();
         let no_flag = ScopeFlag { scope: None };
-        let have = determine_files(&no_flag, None, Some(&repo)).unwrap();
+        let have = determine_files(no_flag, None, Some(&repo)).unwrap();
         pretty::assert_eq!(have, FileScope::All);
     }
 
@@ -367,7 +364,7 @@ mod tests {
         repo.create_and_commit_file("on-main.md").unwrap();
         repo.create_and_switch_to_branch("feature").unwrap();
         let no_flag = ScopeFlag { scope: None };
-        let have = determine_files(&no_flag, None, Some(&repo)).unwrap();
+        let have = determine_files(no_flag, None, Some(&repo)).unwrap();
         pretty::assert_eq!(have, FileScope::All);
     }
 
@@ -379,7 +376,7 @@ mod tests {
         let explicit = ScopeFlag {
             scope: Some(CLIScope::All),
         };
-        let have = determine_files(&explicit, None, Some(&repo))?;
+        let have = determine_files(explicit, None, Some(&repo))?;
         pretty::assert_eq!(have, FileScope::All);
         Ok(())
     }
@@ -390,7 +387,7 @@ mod tests {
         let repo = Repo::init(dir.path())?;
         repo.create_unstaged_file("untracked.md");
         let omitted = ScopeFlag { scope: None };
-        let have = determine_files(&omitted, None, Some(&repo))?;
+        let have = determine_files(omitted, None, Some(&repo))?;
         pretty::assert_eq!(summary(&have), Some(vec![("untracked.md", Changed)]));
         Ok(())
     }
@@ -401,7 +398,7 @@ mod tests {
         let repo = Repo::init(dir.path())?;
         repo.create_unstaged_file("untracked.md");
         let omitted = ScopeFlag { scope: None };
-        let have = determine_files(&omitted, Some(CLIScope::All), Some(&repo))?;
+        let have = determine_files(omitted, Some(CLIScope::All), Some(&repo))?;
         pretty::assert_eq!(have, FileScope::All);
         Ok(())
     }
@@ -414,7 +411,7 @@ mod tests {
         let explicit = ScopeFlag {
             scope: Some(CLIScope::Uncommitted),
         };
-        let have = determine_files(&explicit, Some(CLIScope::All), Some(&repo))?;
+        let have = determine_files(explicit, Some(CLIScope::All), Some(&repo))?;
         pretty::assert_eq!(summary(&have), Some(vec![("untracked.md", Changed)]));
         Ok(())
     }
@@ -426,7 +423,7 @@ mod tests {
         std::fs::remove_dir_all(dir.path().join(".git")).unwrap();
         for scope in [Some(CLIScope::Uncommitted), Some(CLIScope::Branch), None] {
             let flag = ScopeFlag { scope };
-            assert!(determine_files(&flag, None, Some(&repo)).is_err());
+            assert!(determine_files(flag, None, Some(&repo)).is_err());
         }
         Ok(())
     }

@@ -23,10 +23,10 @@ pub fn lint(args: &RunArgsWithScope) -> Result<ExitCode> {
 
     // step 2: discover the stacks
     let stacks = scoped_stacks(ScopedStacksArgs {
-        scope_flag: &args.scope,
+        scope_flag: args.scope,
         default_scope: None,
         repo: repo.as_ref(),
-        ignores: &ignores,
+        ignores,
     });
     if show.display_metadata() {
         print_metadata(stacks.changed());

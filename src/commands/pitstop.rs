@@ -15,10 +15,10 @@ pub fn pitstop(args: &RunArgsWithTestAndScope) -> Result<ExitCode> {
     let ignores = config.ignores()?;
     let repo = Repo::load();
     let stacks = scoped_stacks(ScopedStacksArgs {
-        scope_flag: &args.scope,
+        scope_flag: args.scope,
         default_scope: None,
         repo: repo.as_ref(),
-        ignores: &ignores,
+        ignores,
     });
     let tests = to_sequences(
         config.tests_for(

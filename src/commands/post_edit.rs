@@ -18,10 +18,10 @@ pub fn post_edit(args: &RunArgs) -> Result<ExitCode> {
 
     // step 2: discover the files and their stacks
     let stacks = scoped_stacks(ScopedStacksArgs {
-        scope_flag: &ScopeFlag { scope: None },
+        scope_flag: ScopeFlag { scope: None },
         default_scope: Some(CLIScope::Uncommitted),
         repo: git_repo.as_ref(),
-        ignores: &ignores,
+        ignores,
     });
     if show.display_metadata() {
         print_metadata(stacks.changed());

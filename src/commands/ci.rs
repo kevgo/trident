@@ -13,10 +13,10 @@ pub fn ci(args: RunArgsWithTestAndScope) -> Result<ExitCode> {
     let config = Config::load()?;
     let ignores = config.ignores()?;
     let stacks = scoped_stacks(ScopedStacksArgs {
-        scope_flag: &args.scope,
+        scope_flag: args.scope,
         default_scope: Some(CLIScope::All),
         repo: repo.as_ref(),
-        ignores: &ignores,
+        ignores,
     });
     let args_show = args.run.with_default_show(conc::Show::Output);
     let tests = config.tests_for(
