@@ -6,14 +6,13 @@ use crate::domain::Result;
 use crate::{git, subshell};
 use std::process::ExitCode;
 
-pub fn post_edit(args: &RunArgs) -> Result<ExitCode> {
+pub fn post_edit(RunArgs { sequential, show }: RunArgs) -> Result<ExitCode> {
     // step 1: load the config
     let config = Config::load()?;
     let ignores = config.ignores()?;
     let git_repo = git::Repo::load();
-    let show = args.show.unwrap_or(conc::Show::Failed);
+    let show = show.unwrap_or(conc::Show::Failed);
     let error_on_output = false;
-    let sequential = args.sequential;
     let stderr_to_stdout = true;
 
     // step 2: discover the files and their stacks

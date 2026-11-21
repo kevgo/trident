@@ -6,7 +6,9 @@ use crate::domain::{Operation, Result, UserError};
 use crate::git::Repo;
 use std::process::ExitCode;
 
-pub fn ci(args: RunArgsWithTestAndScope) -> Result<ExitCode> {
+pub fn ci(
+    RunArgsWithTestAndScope { run, scope, test }: RunArgsWithTestAndScope,
+) -> Result<ExitCode> {
     let repo = Repo::load();
     let before_diff = repo.as_ref().and_then(|repo| repo.diff().ok());
 
