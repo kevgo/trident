@@ -27,7 +27,6 @@ pub use test::test;
 pub use update_tools::update_tools;
 
 /// arguments for [`scoped_stacks`]
-#[derive(Clone, Copy)]
 pub(crate) struct ScopedStacksArgs<'a> {
     /// value of the CLI `--scope` flag
     pub(crate) scope_flag: &'a ScopeFlag,
@@ -48,13 +47,14 @@ pub(crate) struct ScopedStacksArgs<'a> {
 /// Without both, it is inferred from the state of the Git repository.
 /// Outside of a Git repository, every scope contains all files.
 /// When Git fails, this prints the error and processes all files.
-pub(crate) fn scoped_stacks(args: ScopedStacksArgs) -> ScopedStacks {
-    let ScopedStacksArgs {
+pub(crate) fn scoped_stacks(
+    ScopedStacksArgs {
         scope_flag,
         default_scope,
         repo,
         ignores,
-    } = args;
+    }: ScopedStacksArgs,
+) -> ScopedStacks {
     let files = match determine_files(scope_flag, default_scope, repo) {
         Ok(files) => files,
         Err(err) => {
