@@ -72,7 +72,7 @@ pub enum CLIScope {
 }
 
 /// the `--scope` flag
-#[derive(Clone, Copy, clap::Args)]
+#[derive(Clone, clap::Args)]
 pub struct ScopeFlag {
     /// files to apply the operation to
     #[arg(long, ignore_case = true)]
