@@ -121,9 +121,12 @@ pub(crate) struct ScopedStacks {
     removed: Option<RemovedStacks>,
 }
 
-/// see [`ScopedStacks::changed`] and [`ScopedStacks::lint`]
+/// files that have been removed from the workspace
 struct RemovedStacks {
+    /// see [`ScopedStacks::changed`]
     changed: DetectedStacks,
+
+    /// see [`ScopedStacks::lint`]
     lint: DetectedStacks,
 }
 
