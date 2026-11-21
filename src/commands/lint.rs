@@ -11,18 +11,18 @@ use ahash::AHashMap;
 use nonempty::NonEmpty;
 use std::process::ExitCode;
 
-pub fn lint(args: &RunArgsWithScope) -> Result<ExitCode> {
+pub fn lint(RunArgsWithScope { run, scope }: RunArgsWithScope) -> Result<ExitCode> {
     // step 1: load the config
     let config = Config::load()?;
     let ignores = config.ignores()?;
-    let show = args.run.show.unwrap_or(conc::Show::Names);
+    let show = run.show.unwrap_or(conc::Show::Names);
     let error_on_output = false;
-    let sequential = args.run.sequential;
+    let sequential = run.sequential;
     let stderr_to_stdout = true;
     let repo = git::Repo::load();
 
     // step 2: discover the stacks
-    let scope = determine_scope(&args.scope, repo.as_ref());
+    let scope = determine_scope(&scope, repo.as_ref());
     let stacks = discover_stacks(scope, repo.as_ref(), &ignores)?;
     if show.display_metadata() {
         print_metadata(&stacks);
