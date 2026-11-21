@@ -54,8 +54,8 @@ pub(crate) fn scoped_stacks(
     //
     // The current implementation is weird:
     //
-    // - determine only the changed files, but not all files in the workspace
-    //   - this gets stored in FileScope
+    // - determine only the files using Git, but not using the filesystem if Git isn't available
+    //   - this gets stored in the FileScope enum
     //   - if no files changed: return a placeholder to use all files instead of loading the files
     // - so now we sometimes have files, and sometimes not
     // - now group these changed files into stacks
@@ -65,7 +65,7 @@ pub(crate) fn scoped_stacks(
     // This can be streamlined.
     //
     // step 1: determine the files to process
-    //   - based on the given scope, either using Git or from the filesystem
+    //   - based on the given scope, using either Git or the filesystem
     //   - Git error: print warning and use filesystem
     // step 2: group these file changes into stacks
     let files = match determine_files(&scope_flag, default_scope, repo) {
