@@ -14,21 +14,20 @@ use ahash::AHashMap;
 use nonempty::NonEmpty;
 use std::process::ExitCode;
 
-pub fn precommit(args: &RunArgs) -> Result<ExitCode> {
+pub fn precommit(args: RunArgs) -> Result<ExitCode> {
     if let Err(err) = run(args) {
         err.print();
     }
     Ok(ExitCode::SUCCESS)
 }
 
-fn run(args: &RunArgs) -> Result<()> {
+fn run(RunArgs { sequential, show }: RunArgs) -> Result<()> {
     // step 1: load the config
     let config = Config::load()?;
     let ignores = config.ignores()?;
     let repo = git::Repo::load().ok_or(UserError::NoGitRepository)?;
-    let show = args.show.unwrap_or(conc::Show::Names);
+    let show = show.unwrap_or(conc::Show::Names);
     let error_on_output = false;
-    let sequential = args.sequential;
     let stderr_to_stdout = true;
 
     // step 2: discover the staged files and their stacks

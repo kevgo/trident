@@ -1,4 +1,4 @@
-use super::{determine_scope, discover_stacks};
+use super::{ScopedStacksArgs, scoped_stacks};
 use crate::apps::delete_empty_folders;
 use crate::apps::delete_empty_folders::DeleteEmptyFolders;
 use crate::apps::keep_sorted;
@@ -12,19 +12,23 @@ use ahash::AHashMap;
 use nonempty::NonEmpty;
 use std::process::ExitCode;
 
-pub fn fix(args: &RunArgsWithScope) -> Result<ExitCode> {
+pub fn fix(RunArgsWithScope { run, scope }: RunArgsWithScope) -> Result<ExitCode> {
     // step 1: load the config
     let config = Config::load()?;
     let ignores = config.ignores()?;
-    let show = args.run.show.unwrap_or(conc::Show::Names);
+    let show = run.show.unwrap_or(conc::Show::Names);
     let error_on_output = false;
-    let sequential = args.run.sequential;
+    let sequential = run.sequential;
     let stderr_to_stdout = true;
 
     // step 2: discover the stacks
     let repo = Repo::load();
-    let scope = determine_scope(&args.scope, repo.as_ref())?;
-    let stacks = discover_stacks(&scope, &ignores);
+    let stacks = scoped_stacks(ScopedStacksArgs {
+        scope_flag: scope,
+        default_scope: None,
+        repo: repo.as_ref(),
+        ignores,
+    });
     if show.display_metadata() {
         print_metadata(stacks.changed());
     }

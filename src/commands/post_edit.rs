@@ -1,24 +1,27 @@
-use super::{discover_stacks, files_in_scope, lint};
-use crate::cli::input::{CLIScope, RunArgs, ShowExt};
+use super::{ScopedStacksArgs, lint, scoped_stacks};
+use crate::cli::input::{CLIScope, RunArgs, ScopeFlag, ShowExt};
 use crate::cli::output::print_metadata;
 use crate::config::Config;
 use crate::domain::Result;
 use crate::{git, subshell};
 use std::process::ExitCode;
 
-pub fn post_edit(args: &RunArgs) -> Result<ExitCode> {
+pub fn post_edit(RunArgs { sequential, show }: RunArgs) -> Result<ExitCode> {
     // step 1: load the config
     let config = Config::load()?;
     let ignores = config.ignores()?;
     let git_repo = git::Repo::load();
-    let show = args.show.unwrap_or(conc::Show::Failed);
+    let show = show.unwrap_or(conc::Show::Failed);
     let error_on_output = false;
-    let sequential = args.sequential;
     let stderr_to_stdout = true;
 
     // step 2: discover the files and their stacks
-    let files = files_in_scope(CLIScope::Uncommitted, git_repo.as_ref())?;
-    let stacks = discover_stacks(&files, &ignores);
+    let stacks = scoped_stacks(ScopedStacksArgs {
+        scope_flag: ScopeFlag { scope: None },
+        default_scope: Some(CLIScope::Uncommitted),
+        repo: git_repo.as_ref(),
+        ignores,
+    });
     if show.display_metadata() {
         print_metadata(stacks.changed());
     }

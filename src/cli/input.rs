@@ -72,19 +72,11 @@ pub enum CLIScope {
 }
 
 /// the `--scope` flag
-#[derive(clap::Args)]
+#[derive(Clone, clap::Args)]
 pub struct ScopeFlag {
     /// files to apply the operation to
     #[arg(long, ignore_case = true)]
     pub scope: Option<CLIScope>,
-}
-
-impl ScopeFlag {
-    /// provides the given default when `--scope` was omitted
-    #[must_use]
-    pub fn unwrap_or(&self, default: CLIScope) -> CLIScope {
-        self.scope.unwrap_or(default)
-    }
 }
 
 // `RunArgs` with a `--test` flag

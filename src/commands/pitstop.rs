@@ -1,7 +1,7 @@
 use crate::cli::input::{RunArgs, RunArgsWithTestAndScope, ShowExt};
 use crate::cli::output::print_metadata;
 use crate::commands::lint::Lints;
-use crate::commands::{ScopedStacks, determine_scope, discover_stacks, fix, lint};
+use crate::commands::{ScopedStacks, ScopedStacksArgs, fix, lint, scoped_stacks};
 use crate::config::{Config, DefaultTests, to_sequences};
 use crate::domain::{Operation, Result, Runnables, StackType};
 use crate::git::Repo;
@@ -10,22 +10,28 @@ use ahash::AHashMap;
 use nonempty::NonEmpty;
 use std::process::ExitCode;
 
-pub fn pitstop(args: &RunArgsWithTestAndScope) -> Result<ExitCode> {
+pub fn pitstop(
+    RunArgsWithTestAndScope { run, scope, test }: RunArgsWithTestAndScope,
+) -> Result<ExitCode> {
     let config = Config::load()?;
     let ignores = config.ignores()?;
     let repo = Repo::load();
-    let scope = determine_scope(&args.scope, repo.as_ref())?;
-    let stacks = discover_stacks(&scope, &ignores);
+    let stacks = scoped_stacks(ScopedStacksArgs {
+        scope_flag: scope,
+        default_scope: None,
+        repo: repo.as_ref(),
+        ignores,
+    });
     let tests = to_sequences(
         config.tests_for(
-            &args.test,
+            &test,
             |commands| commands.pitstop.as_ref(),
             DefaultTests::None,
         )?,
         Operation::Test,
         None,
     );
-    run_tasks(&args.run, &config, &stacks, repo.as_ref(), tests)
+    run_tasks(&run, &config, &stacks, repo.as_ref(), tests)
 }
 
 /// runs global fixes, then stack-specific fixes, then lints on the given stacks

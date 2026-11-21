@@ -1,20 +1,25 @@
 use super::pitstop::run_tasks;
-use super::{discover_stacks, files_in_scope};
+use super::{ScopedStacksArgs, scoped_stacks};
 use crate::cli::input::{CLIScope, RunArgsWithTestAndScope};
 use crate::config::{Config, DefaultTests, to_sequences};
 use crate::domain::{Operation, Result, UserError};
 use crate::git::Repo;
 use std::process::ExitCode;
 
-pub fn ci(args: RunArgsWithTestAndScope) -> Result<ExitCode> {
+pub fn ci(
+    RunArgsWithTestAndScope { run, scope, test }: RunArgsWithTestAndScope,
+) -> Result<ExitCode> {
     let repo = Repo::load();
     let before_diff = repo.as_ref().and_then(|repo| repo.diff().ok());
 
     let config = Config::load()?;
     let ignores = config.ignores()?;
-    let scope = args.scope.unwrap_or(CLIScope::All);
-    let files = files_in_scope(scope, repo.as_ref())?;
-    let stacks = discover_stacks(&files, &ignores);
+    let stacks = scoped_stacks(ScopedStacksArgs {
+        scope_flag: args.scope,
+        default_scope: Some(CLIScope::All),
+        repo: repo.as_ref(),
+        ignores,
+    });
     let args_show = args.run.with_default_show(conc::Show::Output);
     let tests = config.test_sequences(
         &args.test,
