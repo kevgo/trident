@@ -42,11 +42,6 @@ pub(crate) struct ScopedStacksArgs<'a> {
 }
 
 /// provides the stacks and files that a command should process
-///
-/// The scope is the one given via `--scope`, otherwise the given default scope.
-/// Without both, it is inferred from the state of the Git repository.
-/// Outside of a Git repository, every scope contains all files.
-/// When Git fails, this prints the error and processes all files.
 pub(crate) fn scoped_stacks(
     ScopedStacksArgs {
         scope_flag,
