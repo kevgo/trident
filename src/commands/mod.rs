@@ -52,17 +52,22 @@ pub(crate) fn scoped_stacks(
 ) -> ScopedStacks {
     // TODO: implement this more straightforward and step by step
     //
-    // The first helper function loads the files to process
+    // The current implementation is weird:
     //
-    // step 1: if scope = all, return all files in the workspace (cannot determine removed files)
-    // now we have scope = infer
-    // step 2: load changed (changed and removed) files from Git and return if there are any
-    // step 2b: git error --> print warning and return all files in the workspace
-    // step 3: load files from branch (changed and removed) and return if there are any
-    // step 3b: git error --> print warning and return all files in the workspace
-    // step 4: here the branch is empty --> return all files in the workspace
+    // - determine only the changed files, but not all files in the workspace
+    //   - this gets stored in FileScope
+    //   - if no files changed: return a placeholder to use all files instead of loading the files
+    // - so now we sometimes have files, and sometimes not
+    // - now group these changed files into stacks
+    //   - if we have the files: group them directly
+    //   - if we don't have files: load them from the workspace and group them
     //
-    // Now we can group these files into stacks and return those
+    // This can be streamlined.
+    //
+    // step 1: determine the files to process
+    //   - based on the given scope, either using Git or from the filesystem
+    //   - Git error: print warning and use filesystem
+    // step 2: group these file changes into stacks
     let files = match determine_files(&scope_flag, default_scope, repo) {
         Ok(files) => files,
         Err(err) => {
