@@ -20,9 +20,6 @@ build:  # builds the project in debug mode
 build-release:	# builds the project in release mode
 	cargo build --release
 
-build-git-double:  # builds the Git double that the end-to-end tests use
-	cargo build --release --locked --package=git_double
-
 ci: build  # run the full CI pipeline
 	$(TRIDENT) ci
 
@@ -112,6 +109,9 @@ ${RTA}:
 	rm -f tools/rta* || true
 	(cd tools && curl https://raw.githubusercontent.com/kevgo/run-that-app/main/download.sh | sh -s -- --version ${RUN_THAT_APP_VERSION} --name rta@${RUN_THAT_APP_VERSION})
 	ln -s rta@$(RUN_THAT_APP_VERSION)$(EXE) tools/rta$(EXE)
+
+build-git-double:  # builds the Git double that the end-to-end tests use
+	cargo build --release --locked --package=git_double
 
 .DEFAULT_GOAL := help
 .SILENT:
