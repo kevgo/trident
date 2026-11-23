@@ -167,10 +167,7 @@ fn it_runs_the_git_commands(world: &mut TridentWorld, step: &Step) {
     let have = world.git_commands().join("\n");
     if snapshots::enabled() {
         if have != want {
-            let path = world
-                .feature_path
-                .clone()
-                .expect("the feature file path is unknown, is the `before` hook wired up?");
+            let path = world.feature_path.clone().unwrap();
             snapshots::queue_update(snapshots::SnapshotEdit {
                 path,
                 step_line: step.position.line,
