@@ -33,6 +33,7 @@ pub fn compare_lines_any_order<'a>(
     CompareResult { missing, extra }
 }
 
+#[must_use]
 pub struct CompareResult<'a> {
     pub missing: Vec<&'a str>,
     pub extra: Vec<&'a str>,
