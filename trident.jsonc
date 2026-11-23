@@ -39,6 +39,10 @@
           {
             "name": "cargo clippy for Cucumber code",
             "command": "cargo clippy --test=cuke --all-features -- --deny=warnings"
+          },
+          {
+            "name": "cargo clippy for the Git double code",
+            "command": "cargo clippy --package=git_double --all-features -- --deny=warnings"
           }
         ]
       },
