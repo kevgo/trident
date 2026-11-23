@@ -10,3 +10,6 @@ pedantic = { level = "deny" }
 
 [lints.rust]
 unsafe_code = "forbid"
+
+[dependencies]
+shell-escape = "0.1.5"

@@ -16,18 +16,9 @@ pub fn log_entry<S: AsRef<str>>(args: &[S]) -> String {
     let mut result = String::from("git");
     for arg in args {
         result.push(' ');
-        result.push_str(&quote(arg.as_ref()));
+        result.push_str(&shell_escape::unix::escape(arg.as_ref().into()));
     }
     result
-}
-
-/// quotes the given argument the way a POSIX shell would need it
-fn quote(arg: &str) -> String {
-    let is_safe = |c: char| c.is_ascii_alphanumeric() || "@%+=:,./_-^~".contains(c);
-    if !arg.is_empty() && arg.chars().all(is_safe) {
-        return arg.to_string();
-    }
-    format!("'{}'", arg.replace('\'', r"'\''"))
 }
 
 #[cfg(test)]
