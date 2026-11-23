@@ -168,6 +168,13 @@ fn it_runs_the_git_commands(world: &mut TridentWorld, step: &Step) {
     if snapshots::enabled() {
         if have != want {
             let path = world.feature_path.clone().unwrap();
+            let display_path = path.strip_prefix(&world.cwd).unwrap_or(&path);
+            // starts with a newline to not append to the dots that the DotWriter prints
+            println!(
+                "\nupdating the Git commands in {}:{}",
+                display_path.display(),
+                step.position.line
+            );
             snapshots::queue_update(snapshots::SnapshotEdit {
                 path,
                 step_line: step.position.line,
