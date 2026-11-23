@@ -7,7 +7,6 @@ use regex::Regex;
 use std::env::{self, consts::EXE_SUFFIX};
 use std::fs;
 use std::path::{Path, PathBuf};
-use std::process::Command;
 use std::sync::{LazyLock, OnceLock};
 use tempfile::TempDir;
 
@@ -23,20 +22,25 @@ pub struct GitDouble {
     real_git: PathBuf,
 }
 
-/// builds the Git double and installs it as `git` into a temporary directory
+/// installs the Git double as `git` into a temporary directory
 ///
+/// The Git double must already be built, which `make build-git-double` does.
 /// The installation exists as long as the returned `TempDir` does.
 pub fn install_double(project_dir: &Path) -> TempDir {
     let real_git = which::which("git").expect("cannot find the Git executable");
-    build(project_dir);
-    let bin_dir = tempfile::Builder::new()
-        .prefix("trident-git-double-")
-        .tempdir()
-        .expect("cannot create directory for the Git double");
     let built_path = project_dir
         .join("target")
         .join("release")
         .join(format!("git_double{EXE_SUFFIX}"));
+    assert!(
+        built_path.is_file(),
+        "the Git double {} doesn't exist, please run \"make build-git-double\"",
+        built_path.display()
+    );
+    let bin_dir = tempfile::Builder::new()
+        .prefix("trident-git-double-")
+        .tempdir()
+        .expect("cannot create directory for the Git double");
     let installed_path = bin_dir.path().join(format!("git{EXE_SUFFIX}"));
     fs::copy(&built_path, &installed_path).unwrap_or_else(|err| {
         panic!(
@@ -54,17 +58,6 @@ pub fn install_double(project_dir: &Path) -> TempDir {
         .set(GitDouble { path_var, real_git })
         .expect("the Git double is already installed");
     bin_dir
-}
-
-/// compiles the Git double, which Cargo doesn't do automatically because it is a separate package
-fn build(project_dir: &Path) {
-    let cargo = env::var_os("CARGO").unwrap_or_else(|| "cargo".into());
-    let status = Command::new(cargo)
-        .args(["build", "--release", "--quiet", "--package=git_double"])
-        .current_dir(project_dir)
-        .status()
-        .expect("cannot run Cargo to build the Git double");
-    assert!(status.success(), "cannot build the Git double");
 }
 
 /// configures the given command to log the Git commands it runs into the given file
