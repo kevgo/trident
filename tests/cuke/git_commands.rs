@@ -1,6 +1,6 @@
 //! Lets the end-to-end tests see which Git commands Trident runs.
 //!
-//! Trident runs with a `PATH` whose first entry contains the `git_double` binary, named `git`.
+//! This file allows the Cucumber test runner to call Trident with a `PATH` whose first entry contains the double for the Git executable.
 //! This double logs its invocations and then runs the real Git executable.
 
 use regex::Regex;
@@ -60,7 +60,7 @@ pub fn install_double(project_dir: &Path) -> TempDir {
     bin_dir
 }
 
-/// configures the given command to log the Git commands it runs into the given file
+/// configures the given Command instance to log the Git commands it runs into the given file
 pub fn configure(command: &mut tokio::process::Command, log_file: &Path) {
     let double = INSTALLED.get().expect("the Git double is not installed");
     command
