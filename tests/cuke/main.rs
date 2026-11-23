@@ -45,14 +45,21 @@ async fn main() {
                     return;
                 }
                 let Some(world) = world else { return };
+                let path = match feature.path.as_ref() {
+                    Some(path) => path.to_string_lossy(),
+                    None => Cow::Borrowed("(unknown)"),
+                };
+                let unverified = world.unverified_aspects();
+                assert!(
+                    unverified.is_empty(),
+                    "{path}:{line}  Scenario does not verify {}",
+                    unverified.join(", "),
+                    line = scenario.position.line,
+                );
                 if run_that_app_file::is_asserted_by(scenario) {
                     return;
                 }
                 if let Err(err) = run_that_app_file::verify_unchanged(world).await {
-                    let path = match feature.path.as_ref() {
-                        Some(path) => path.to_string_lossy(),
-                        None => Cow::Borrowed("(unknown)"),
-                    };
                     panic!(
                         "{path}:{line}  Scenario unexpectedly changed file run-that-app: {err}",
                         line = scenario.position.line,

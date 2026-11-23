@@ -29,6 +29,15 @@ pub struct TridentWorld {
 
     /// the Git commands that the last Trident run executed
     pub git_commands: Option<Vec<String>>,
+
+    /// whether a step verified what Trident printed to STDOUT
+    pub stdout_verified: bool,
+
+    /// whether a step verified what Trident printed to STDERR
+    pub stderr_verified: bool,
+
+    /// whether a step verified the Git commands that Trident executed
+    pub git_commands_verified: bool,
 }
 
 impl TridentWorld {
@@ -49,6 +58,9 @@ impl TridentWorld {
             feature_path: None,
             git_log,
             git_commands: None,
+            stdout_verified: false,
+            stderr_verified: false,
+            git_commands_verified: false,
         }
     }
 
@@ -63,6 +75,21 @@ impl TridentWorld {
     /// provides the Git commands that the last Trident run executed
     pub fn git_commands(&self) -> &[String] {
         self.git_commands.as_deref().expect("Trident hasn't run")
+    }
+
+    /// describes the aspects of the Trident run that the scenario did not verify
+    pub fn unverified_aspects(&self) -> Vec<&'static str> {
+        let mut result = Vec::new();
+        if !self.stdout_verified {
+            result.push("STDOUT");
+        }
+        if !self.stderr_verified {
+            result.push("STDERR");
+        }
+        if !self.git_commands_verified {
+            result.push("the executed Git commands");
+        }
+        result
     }
 
     /// provides the content that the file with the given filename had before the tested logic ran

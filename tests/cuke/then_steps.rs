@@ -125,6 +125,8 @@ fn assert_executable(metadata: &std::fs::Metadata, filename: &str) {
 
 #[then("it does not print")]
 fn it_does_not_print(world: &mut TridentWorld, step: &Step) {
+    world.stdout_verified = true;
+    world.stderr_verified = true;
     let want = step.docstring.as_ref().unwrap().trim();
     let output = world.output.as_ref().expect("no output");
     let stdout = str::from_utf8(&output.stdout).expect("non-UTF-8 output");
@@ -141,6 +143,7 @@ fn it_does_not_print(world: &mut TridentWorld, step: &Step) {
 
 #[then("it does not print any of these lines")]
 fn it_does_not_print_the_lines(world: &mut TridentWorld, step: &Step) {
+    world.stdout_verified = true;
     let want = step.docstring.as_ref().unwrap().trim();
     let output = world.output.as_ref().expect("no command run");
     let stdout = str::from_utf8(&output.stdout).expect("non-UTF-8 output");
@@ -151,6 +154,7 @@ fn it_does_not_print_the_lines(world: &mut TridentWorld, step: &Step) {
 
 #[then("it does not print a block matching")]
 fn it_does_not_print_a_block_matching(world: &mut TridentWorld, step: &Step) {
+    world.stdout_verified = true;
     let want = step.docstring.as_ref().unwrap().trim();
     let output = world.output.as_ref().expect("no command run");
     let stripped = strip_ansi_escapes::strip(&output.stdout);
@@ -163,6 +167,7 @@ fn it_does_not_print_a_block_matching(world: &mut TridentWorld, step: &Step) {
 
 #[then("it runs the Git commands")]
 fn it_runs_the_git_commands(world: &mut TridentWorld, step: &Step) {
+    world.git_commands_verified = true;
     let want = step.docstring.as_ref().unwrap().trim();
     let have = world.git_commands().join("\n");
     if snapshots::enabled() {
@@ -188,6 +193,7 @@ fn it_runs_the_git_commands(world: &mut TridentWorld, step: &Step) {
 
 #[then("it runs no Git commands")]
 fn it_runs_no_git_commands(world: &mut TridentWorld) {
+    world.git_commands_verified = true;
     let have = world.git_commands();
     assert!(
         have.is_empty(),
@@ -198,6 +204,7 @@ fn it_runs_no_git_commands(world: &mut TridentWorld) {
 
 #[then("it prints")]
 fn it_prints(world: &mut TridentWorld, step: &Step) {
+    world.stdout_verified = true;
     let want = step.docstring.as_ref().unwrap().trim();
     let output = world.output.as_ref().expect("no command run");
     let stripped = strip_ansi_escapes::strip(&output.stdout);
@@ -207,6 +214,7 @@ fn it_prints(world: &mut TridentWorld, step: &Step) {
 
 #[then("it prints nothing to STDOUT")]
 fn it_prints_nothing_to_stdout(world: &mut TridentWorld) {
+    world.stdout_verified = true;
     let output = world.output.as_ref().expect("no command run");
     let stripped = strip_ansi_escapes::strip(&output.stdout);
     let stdout = str::from_utf8(&stripped).expect("non-UTF-8 output");
@@ -215,6 +223,7 @@ fn it_prints_nothing_to_stdout(world: &mut TridentWorld) {
 
 #[then("it prints nothing to STDERR")]
 fn it_prints_nothing_to_stderr(world: &mut TridentWorld) {
+    world.stderr_verified = true;
     let output = world.output.as_ref().expect("no command run");
     let stripped = strip_ansi_escapes::strip(&output.stderr);
     let stderr = str::from_utf8(&stripped).expect("non-UTF-8 output");
@@ -223,6 +232,7 @@ fn it_prints_nothing_to_stderr(world: &mut TridentWorld) {
 
 #[then("it prints to STDERR")]
 fn it_prints_to_stderr(world: &mut TridentWorld, step: &Step) {
+    world.stderr_verified = true;
     let want = step.docstring.as_ref().unwrap().trim();
     let output = world.output.as_ref().expect("no command run");
     let stripped = strip_ansi_escapes::strip(&output.stderr);
@@ -232,6 +242,7 @@ fn it_prints_to_stderr(world: &mut TridentWorld, step: &Step) {
 
 #[then("it prints the block")]
 fn it_prints_the_block(world: &mut TridentWorld, step: &Step) {
+    world.stdout_verified = true;
     let want = step.docstring.as_ref().unwrap().trim();
     let output = world.output.as_ref().expect("no command run");
     let stripped = strip_ansi_escapes::strip(&output.stdout);
@@ -244,6 +255,7 @@ fn it_prints_the_block(world: &mut TridentWorld, step: &Step) {
 
 #[then("it prints the block matching")]
 fn it_prints_the_block_matching(world: &mut TridentWorld, step: &Step) {
+    world.stdout_verified = true;
     let want = step.docstring.as_ref().unwrap().trim();
     let output = world.output.as_ref().expect("no command run");
     let stripped = strip_ansi_escapes::strip(&output.stdout);
@@ -256,6 +268,7 @@ fn it_prints_the_block_matching(world: &mut TridentWorld, step: &Step) {
 
 #[then("it prints the lines")]
 fn it_prints_the_lines(world: &mut TridentWorld, step: &Step) {
+    world.stdout_verified = true;
     let want = step.docstring.as_ref().unwrap().trim();
     let output = world.output.as_ref().expect("no command run");
     let stripped = strip_ansi_escapes::strip(&output.stdout);
@@ -284,6 +297,7 @@ fn it_prints_the_lines(world: &mut TridentWorld, step: &Step) {
 
 #[then("it prints the lines matching")]
 fn it_prints_the_lines_matching(world: &mut TridentWorld, step: &Step) {
+    world.stdout_verified = true;
     let want = step.docstring.as_ref().unwrap().trim();
     let output = world.output.as_ref().expect("no command run");
     let stripped = strip_ansi_escapes::strip(&output.stdout);
@@ -298,6 +312,7 @@ fn it_prints_the_lines_matching(world: &mut TridentWorld, step: &Step) {
 
 #[then("it prints the lines to STDERR")]
 fn it_prints_the_lines_to_stderr(world: &mut TridentWorld, step: &Step) {
+    world.stderr_verified = true;
     let want = step.docstring.as_ref().unwrap().trim();
     let output = world.output.as_ref().expect("no command run");
     let stripped = strip_ansi_escapes::strip(&output.stderr);
@@ -312,6 +327,7 @@ fn it_prints_the_lines_to_stderr(world: &mut TridentWorld, step: &Step) {
 
 #[then("it prints only these lines in any order")]
 fn prints_lines_any_order(world: &mut TridentWorld, step: &Step) {
+    world.stdout_verified = true;
     let mut want = step.docstring.as_ref().unwrap()[1..]
         .lines()
         .collect::<Vec<&str>>();
@@ -329,6 +345,7 @@ fn prints_lines_any_order(world: &mut TridentWorld, step: &Step) {
 
 #[then("it prints only these regexes in any order")]
 fn prints_regexes_any_order(world: &mut TridentWorld, step: &Step) {
+    world.stdout_verified = true;
     let want = step.docstring.as_ref().unwrap()[1..]
         .lines()
         .collect::<Vec<&str>>();
