@@ -15,7 +15,7 @@ pub fn ci(
     let config = Config::load()?;
     let ignores = config.ignores()?;
     let stacks = scoped_stacks(ScopedStacksArgs {
-        scope_flag: args.scope,
+        scope_flag: scope,
         default_scope: Some(CLIScope::All),
         repo: repo.as_ref(),
         ignores,

@@ -106,6 +106,7 @@ pub struct RunArgsWithTestAndScope {
     #[command(flatten)]
     pub run: RunArgs,
 
+    // TODO: rename this to scope_flag?
     #[command(flatten)]
     pub scope: ScopeFlag,
 

@@ -42,11 +42,6 @@ pub(crate) struct ScopedStacksArgs<'a> {
 }
 
 /// provides the stacks and files that a command should process
-///
-/// The scope is the one given via `--scope`, otherwise the given default scope.
-/// Without both, it is inferred from the state of the Git repository.
-/// Outside of a Git repository, every scope contains all files.
-/// When Git fails, this prints the error and processes all files.
 pub(crate) fn scoped_stacks(
     ScopedStacksArgs {
         scope_flag,
@@ -55,6 +50,24 @@ pub(crate) fn scoped_stacks(
         ignores,
     }: ScopedStacksArgs,
 ) -> ScopedStacks {
+    // TODO: implement this more straightforward and step by step
+    //
+    // The current implementation is weird:
+    //
+    // - determine only the files using Git, but not using the filesystem if Git isn't available
+    //   - this gets stored in the FileScope enum
+    //   - if no files changed: return a placeholder to use all files instead of loading the files
+    // - so now we sometimes have files, and sometimes not
+    // - now group these changed files into stacks
+    //   - if we have the files: group them directly
+    //   - if we don't have files: load them from the workspace and group them
+    //
+    // This can be streamlined.
+    //
+    // step 1: determine the files to process
+    //   - based on the given scope, using either Git or the filesystem
+    //   - Git error: print warning and use filesystem
+    // step 2: group these file changes into stacks
     let files = match determine_files(&scope_flag, default_scope, repo) {
         Ok(files) => files,
         Err(err) => {
@@ -126,9 +139,12 @@ pub(crate) struct ScopedStacks {
     removed: Option<RemovedStacks>,
 }
 
-/// see [`ScopedStacks::changed`] and [`ScopedStacks::lint`]
+/// files that have been removed from the workspace
 struct RemovedStacks {
+    /// see [`ScopedStacks::changed`]
     changed: DetectedStacks,
+
+    /// see [`ScopedStacks::lint`]
     lint: DetectedStacks,
 }
 
