@@ -4,8 +4,8 @@ pub fn compare_lines_any_order<'a>(
     have: &'a mut Vec<&str>,
     want: &'a mut Vec<&str>,
 ) -> CompareResult<'a> {
-    have.sort();
-    want.sort();
+    have.sort_unstable();
+    want.sort_unstable();
     let mut missing = Vec::new();
     let mut extra = Vec::new();
     let mut i = 0;
