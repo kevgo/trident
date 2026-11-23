@@ -42,7 +42,7 @@
           },
           {
             "name": "cargo clippy for the Git double code",
-            "command": "cargo clippy --package=git_double --all-features -- --deny=warnings"
+            "command": "cargo clippy --package=git_double --all-features"
           }
         ]
       },

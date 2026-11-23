@@ -6,7 +6,7 @@ description = "Test double for the Git executable that logs its invocations befo
 publish = false
 
 [lints.clippy]
-pedantic = { level = "warn", priority = -1 }
+pedantic = { level = "deny", priority = -1 }
 
 [lints.rust]
 unsafe_code = "forbid"
