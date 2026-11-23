@@ -2,7 +2,7 @@
 /// Lines whose trimmed form starts with `#` are treated as comments.
 pub(crate) fn content_lines(text: &str) -> impl Iterator<Item = &str> {
     text.lines()
-        .map(|line| line.trim())
+        .map(str::trim)
         .filter(|line| !line.is_empty() && !line.starts_with('#'))
 }
 
