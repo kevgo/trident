@@ -1,4 +1,5 @@
 use std::cmp::Ordering;
+use std::fmt::Write;
 
 pub fn compare_lines_any_order<'a>(
     have: &'a mut Vec<&str>,
@@ -42,11 +43,11 @@ impl CompareResult<'_> {
         let mut message = String::new();
         message.push_str("\nmissing lines:\n");
         for (i, line) in self.missing.iter().enumerate() {
-            message.push_str(&format!("{}. '{}'\n", i + 1, line));
+            let _ = write!(message, "{}. '{}'\n", i + 1, line);
         }
         message.push_str("extra lines:\n");
         for (i, line) in self.extra.iter().enumerate() {
-            message.push_str(&format!("{}. '{}'\n", i + 1, line));
+            let _ = write!(message, "{}. '{}'\n", i + 1, line);
         }
         message.push_str("end\n");
         message
