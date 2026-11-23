@@ -78,6 +78,7 @@ async fn main() {
     // process::exit doesn't run destructors
     drop(git_double_dir);
     if had_failures.load(Ordering::SeqCst) {
+        // TODO: is there a better way to signal the test failure? Process.exit doesn't wind down the stack properly.
         std::process::exit(1);
     }
 }
