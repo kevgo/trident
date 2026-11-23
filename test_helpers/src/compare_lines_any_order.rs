@@ -1,11 +1,12 @@
 use std::cmp::Ordering;
+use std::fmt::Write;
 
 pub fn compare_lines_any_order<'a>(
     have: &'a mut Vec<&str>,
     want: &'a mut Vec<&str>,
 ) -> CompareResult<'a> {
-    have.sort();
-    want.sort();
+    have.sort_unstable();
+    want.sort_unstable();
     let mut missing = Vec::new();
     let mut extra = Vec::new();
     let mut i = 0;
@@ -32,21 +33,22 @@ pub fn compare_lines_any_order<'a>(
     CompareResult { missing, extra }
 }
 
+#[must_use]
 pub struct CompareResult<'a> {
     pub missing: Vec<&'a str>,
     pub extra: Vec<&'a str>,
 }
 
-impl<'a> CompareResult<'a> {
+impl CompareResult<'_> {
     pub fn message(&self) -> String {
         let mut message = String::new();
         message.push_str("\nmissing lines:\n");
         for (i, line) in self.missing.iter().enumerate() {
-            message.push_str(&format!("{}. '{}'\n", i + 1, line));
+            let _ = writeln!(message, "{}. '{}'", i + 1, line);
         }
         message.push_str("extra lines:\n");
         for (i, line) in self.extra.iter().enumerate() {
-            message.push_str(&format!("{}. '{}'\n", i + 1, line));
+            let _ = writeln!(message, "{}. '{}'", i + 1, line);
         }
         message.push_str("end\n");
         message

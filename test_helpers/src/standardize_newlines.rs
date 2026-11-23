@@ -1,5 +1,6 @@
+#[must_use]
 pub fn standardize_newlines(content: &str) -> String {
-    content.replace("\r\n", "\n").replace("\r", "\n")
+    content.replace("\r\n", "\n").replace('\r', "\n")
 }
 
 #[cfg(test)]
