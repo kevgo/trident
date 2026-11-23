@@ -37,7 +37,7 @@ pub struct CompareResult<'a> {
     pub extra: Vec<&'a str>,
 }
 
-impl<'a> CompareResult<'a> {
+impl CompareResult<'_> {
     pub fn message(&self) -> String {
         let mut message = String::new();
         message.push_str("\nmissing lines:\n");
