@@ -3,6 +3,7 @@ use regex::Regex;
 
 /// Verifies that each line in `have` matches exactly one regex in `want`, in any order.
 /// Each regex must match the entire line.
+#[must_use]
 pub fn compare_regexes_any_order<'a>(have: &'a [&str], want: &'a [&str]) -> CompareResult<'a> {
     // Uses bipartite matching: matches each regex to exactly one line and vice versa.
     // A regex without a line is reported as `missing`,

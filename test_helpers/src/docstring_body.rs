@@ -1,4 +1,5 @@
 /// normalizes the content of a Gherkin docstring
+#[must_use]
 pub fn docstring_body(content: &str) -> String {
     // remove the leading newline that follows the opening quotes
     let content = content.strip_prefix('\r').unwrap_or(content);

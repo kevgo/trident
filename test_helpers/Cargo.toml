@@ -15,6 +15,7 @@ maplit = "1.0.2"
 [lints.clippy]
 pedantic = { level = "deny" }
 missing_errors_doc = "allow"
+missing_panics_doc = "allow"
 
 [lints.rust]
 unsafe_code = "forbid"
