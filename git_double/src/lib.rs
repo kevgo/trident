@@ -5,8 +5,6 @@
 //! and then runs the real Git executable named by [`REAL_GIT_VAR`].
 
 /// name of the environment variable that contains the path of the file to log Git invocations into
-///
-/// The double does not log if this variable is not set.
 pub const LOG_FILE_VAR: &str = "TRIDENT_GIT_DOUBLE_LOG";
 
 /// name of the environment variable that contains the path of the real Git executable
