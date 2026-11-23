@@ -21,6 +21,7 @@ static SNAPSHOT_EDITS: LazyLock<Mutex<Vec<SnapshotEdit>>> =
     LazyLock::new(|| Mutex::new(Vec::new()));
 
 /// indicates whether the test run should update the golden snapshots
+#[must_use]
 pub fn enabled() -> bool {
     env::var("TRIDENT_UPDATE_SNAPSHOTS").is_ok_and(|value| !value.is_empty())
 }

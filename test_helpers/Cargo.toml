@@ -11,3 +11,11 @@ regex = "1.13.1"
 pretty = { package = "pretty_assertions", version = "1.4.1" }
 big_s = "1.0.2"
 maplit = "1.0.2"
+
+[lints.clippy]
+pedantic = { level = "deny" }
+missing_errors_doc = "allow"
+missing_panics_doc = "allow"
+
+[lints.rust]
+unsafe_code = "forbid"
