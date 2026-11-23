@@ -43,11 +43,11 @@ impl CompareResult<'_> {
         let mut message = String::new();
         message.push_str("\nmissing lines:\n");
         for (i, line) in self.missing.iter().enumerate() {
-            let _ = write!(message, "{}. '{}'\n", i + 1, line);
+            let _ = writeln!(message, "{}. '{}'", i + 1, line);
         }
         message.push_str("extra lines:\n");
         for (i, line) in self.extra.iter().enumerate() {
-            let _ = write!(message, "{}. '{}'\n", i + 1, line);
+            let _ = writeln!(message, "{}. '{}'", i + 1, line);
         }
         message.push_str("end\n");
         message
