@@ -29,6 +29,11 @@ Feature: precommit JSONC
       """
     And the exit code is 0
     And file "main.jsonc" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z
+      """
 
   Scenario: unformatted JSONC
     Given a file "main.jsonc" with content
@@ -54,6 +59,12 @@ Feature: precommit JSONC
       """
       { "key": "other" } // comment
       """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z
+      git add -- main.jsonc other.jsonc
+      """
 
   Scenario: invalid JSONC
     Given a file "main.jsonc" with content
@@ -69,3 +80,8 @@ Feature: precommit JSONC
       """
     And the exit code is 0
     And file "main.jsonc" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z
+      """

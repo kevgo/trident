@@ -19,6 +19,10 @@ Feature: fix TOML
       """
     And the exit code is 0
     And file "main.toml" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: unformatted TOML
     Given a file "main.toml" with content
@@ -43,6 +47,10 @@ Feature: fix TOML
       """
       key = "other"
       """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: invalid TOML
     Given a file "main.toml" with content
@@ -57,3 +65,7 @@ Feature: fix TOML
       """
     And the exit code is 1
     And file "main.toml" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """

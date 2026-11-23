@@ -161,6 +161,37 @@ fn it_does_not_print_a_block_matching(world: &mut TridentWorld, step: &Step) {
     );
 }
 
+#[then("it runs the Git commands")]
+fn it_runs_the_git_commands(world: &mut TridentWorld, step: &Step) {
+    let want = step.docstring.as_ref().unwrap().trim();
+    let have = world.git_commands().join("\n");
+    if snapshots::enabled() {
+        if have != want {
+            let path = world
+                .feature_path
+                .clone()
+                .expect("the feature file path is unknown, is the `before` hook wired up?");
+            snapshots::queue_update(snapshots::SnapshotEdit {
+                path,
+                step_line: step.position.line,
+                new_content: have,
+            });
+        }
+        return;
+    }
+    pretty::assert_eq!(have, want, "unexpected Git commands");
+}
+
+#[then("it runs no Git commands")]
+fn it_runs_no_git_commands(world: &mut TridentWorld) {
+    let have = world.git_commands();
+    assert!(
+        have.is_empty(),
+        "expected no Git commands but Trident ran:\n\n{}",
+        have.join("\n")
+    );
+}
+
 #[then("it prints")]
 fn it_prints(world: &mut TridentWorld, step: &Step) {
     let want = step.docstring.as_ref().unwrap().trim();

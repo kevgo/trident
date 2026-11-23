@@ -34,6 +34,10 @@ Feature: ignore a CSS file
     And the exit code is 0
     And file "bad.css" is unchanged
     And file "good.css" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: fixing
     Given a file "good.css" with content
@@ -61,3 +65,7 @@ Feature: ignore a CSS file
       }
       """
     And file "bad.css" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """

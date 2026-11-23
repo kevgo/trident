@@ -57,6 +57,10 @@ Feature: full runs all fixes, lints, and tests
       """
       print("hello")
       """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: commands.full.test runs those tests by default
     Given a file "run-that-app" with content
@@ -98,3 +102,7 @@ Feature: full runs all fixes, lints, and tests
       running cuke tests
       """
     And the exit code is 0
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """

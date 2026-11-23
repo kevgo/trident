@@ -27,6 +27,10 @@ Feature: fix JSONC
       """
     And the exit code is 0
     And file "main.jsonc" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: unformatted JSONC
     Given a file "main.jsonc" with content
@@ -51,6 +55,10 @@ Feature: fix JSONC
       """
       { "key": "other" } // comment
       """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: invalid JSONC
     Given a file "main.jsonc" with content
@@ -65,3 +73,7 @@ Feature: fix JSONC
       """
     And the exit code is 1
     And file "main.jsonc" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """

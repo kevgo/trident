@@ -23,6 +23,12 @@ pub struct TridentWorld {
 
     /// path to the .feature file of the currently running scenario
     pub feature_path: Option<PathBuf>,
+
+    /// the file into which the Git double logs the Git commands that Trident runs
+    pub git_log: PathBuf,
+
+    /// the Git commands that the last Trident run executed
+    pub git_commands: Option<Vec<String>>,
 }
 
 impl TridentWorld {
@@ -32,6 +38,8 @@ impl TridentWorld {
         let dir = tempdir.path().join(random);
         std::fs::create_dir(&dir).unwrap();
         let cwd = std::env::current_dir().unwrap();
+        // outside of the workspace so that it doesn't show up as an untracked file
+        let git_log = tempdir.path().join("git-commands.log");
         Self {
             _tempdir: tempdir,
             cwd,
@@ -39,6 +47,8 @@ impl TridentWorld {
             original_files: Vec::new(),
             output: None,
             feature_path: None,
+            git_log,
+            git_commands: None,
         }
     }
 
@@ -48,6 +58,11 @@ impl TridentWorld {
             Some(result) => result.status.code().unwrap(),
             None => panic!(),
         }
+    }
+
+    /// provides the Git commands that the last Trident run executed
+    pub fn git_commands(&self) -> &[String] {
+        self.git_commands.as_deref().expect("Trident hasn't run")
     }
 
     /// provides the content that the file with the given filename had before the tested logic ran

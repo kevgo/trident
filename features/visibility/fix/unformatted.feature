@@ -61,6 +61,10 @@ Feature: fix multiple stacks
       """
       console.log("hello");
       """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: --show=verbose
     When executing "trident fix --show=verbose"
@@ -105,6 +109,10 @@ Feature: fix multiple stacks
       """
       console.log("hello");
       """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: --show=names
     When executing "trident fix --show=names"
@@ -135,6 +143,10 @@ Feature: fix multiple stacks
       """
       console.log("hello");
       """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: --show=failed
     When executing "trident fix --show=failed"
@@ -152,4 +164,8 @@ Feature: fix multiple stacks
     And file "main.ts" now has content
       """
       console.log("hello");
+      """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
       """

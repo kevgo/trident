@@ -21,6 +21,7 @@ Feature: run tests sequentially
       slow done
       """
     And the exit code is 0
+    And it runs no Git commands
 
   Scenario: with --sequential
     When executing "trident test --sequential --show=output"
@@ -32,3 +33,4 @@ Feature: run tests sequentially
       fast done
       """
     And the exit code is 0
+    And it runs no Git commands

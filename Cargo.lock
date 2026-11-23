@@ -895,6 +895,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "git_double"
+version = "0.0.0"
+
+[[package]]
 name = "globset"
 version = "0.4.19"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2170,6 +2174,7 @@ dependencies = [
  "concurrent_shell_commands",
  "contains_lines",
  "cucumber",
+ "git_double",
  "ignore",
  "itertools",
  "jsonc-parser",

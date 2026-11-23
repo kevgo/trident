@@ -22,3 +22,7 @@ Feature: run lints sequentially
       fast done
       """
     And the exit code is 0
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """

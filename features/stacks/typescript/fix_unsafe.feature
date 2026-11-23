@@ -24,6 +24,10 @@ Feature: unsafe-fix TypeScript
       const name = "Alice";
       const _greeting = `Hello, ${name}!`;
       """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: fix
     When executing "trident fix --show=output"
@@ -33,3 +37,7 @@ Feature: unsafe-fix TypeScript
       """
     And the exit code is 0
     And file "main.ts" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """

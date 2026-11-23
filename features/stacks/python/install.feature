@@ -39,3 +39,7 @@ Feature: install all Python tools
       ruff \d+\.\d+\.\d+
       """
     And file "main.py" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """

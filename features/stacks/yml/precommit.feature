@@ -21,6 +21,11 @@ Feature: precommit YML
       """
     And the exit code is 0
     And file "main.yml" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z
+      """
 
   Scenario: unformatted YML
     Given a file "main.yml" with content
@@ -46,6 +51,12 @@ Feature: precommit YML
       """
       key: other
       """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z
+      git add -- main.yml other.yml
+      """
 
   Scenario: invalid YML
     Given a file "main.yml" with content
@@ -61,3 +72,8 @@ Feature: precommit YML
       """
     And the exit code is 0
     And file "main.yml" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z
+      """

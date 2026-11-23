@@ -46,6 +46,10 @@ Feature: exclude a file from being linted by a specific app only
       Cargo.toml
       """
     And the exit code is 0
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: fix still formats the file
     When executing "trident fix --show=verbose"
@@ -67,6 +71,10 @@ Feature: exclude a file from being linted by a specific app only
       """
       key = "value"
       """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: fix-unsafe still formats the file
     When executing "trident fix-unsafe --show=verbose"
@@ -87,4 +95,8 @@ Feature: exclude a file from being linted by a specific app only
     And file "other.toml" now has content
       """
       key = "value"
+      """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
       """

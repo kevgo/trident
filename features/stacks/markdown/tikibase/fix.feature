@@ -40,6 +40,10 @@ Feature: fix Markdown with Tikibase
     And the exit code is 0
     And file "one.md" is unchanged
     And file "two.md" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: unformatted Markdown
     Given a file "one.md" with content
@@ -69,6 +73,10 @@ Feature: fix Markdown with Tikibase
       - [One](one.md)
       """
     And file "one.md" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: invalid Markdown
     Given a file "main.md" with content
@@ -89,3 +97,7 @@ Feature: fix Markdown with Tikibase
       """
     And the exit code is 0
     And file "main.md" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """

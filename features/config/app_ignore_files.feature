@@ -39,6 +39,10 @@ Feature: ignore files for an application
       Cargo.toml
       """
     And the exit code is 0
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: fix honors application-level ignored files
     Given a file "trident.json" with content
@@ -71,6 +75,10 @@ Feature: ignore files for an application
       key = "value"
       """
     And file "Cargo.toml" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: lint honors globally ignored files
     Given a file "trident.json" with content
@@ -90,6 +98,10 @@ Feature: ignore files for an application
       Cargo.toml
       """
     And the exit code is 0
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: fix honors globally ignored files
     Given a file "trident.json" with content
@@ -109,3 +121,7 @@ Feature: ignore files for an application
       Cargo.toml
       """
     And the exit code is 0
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """

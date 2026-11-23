@@ -20,6 +20,11 @@ Feature: precommit CSS
     Then it prints nothing to STDOUT
     And the exit code is 0
     And file "main.css" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z
+      """
 
   Scenario: unformatted CSS
     Given a file "main.css" with content
@@ -50,6 +55,12 @@ Feature: precommit CSS
       \tcolor: blue;
       }
       """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z
+      git add -- main.css other.css
+      """
 
   Scenario: invalid CSS
     Given a file "main.css" with content
@@ -66,3 +77,8 @@ Feature: precommit CSS
       """
     And the exit code is 0
     And file "main.css" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z
+      """

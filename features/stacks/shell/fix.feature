@@ -24,6 +24,10 @@ Feature: fix Shell
       """
     And the exit code is 0
     And file "one.sh" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: unformatted Shell
     Given a file "one.sh" with content
@@ -63,6 +67,10 @@ Feature: fix Shell
       }
       foo
       """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: invalid Shell
     Given a file "one.sh" with content
@@ -78,6 +86,10 @@ Feature: fix Shell
       """
     And the exit code is 1
     And file "one.sh" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: Shell with lint errors
     Given a file "one.sh" with content
@@ -92,3 +104,7 @@ Feature: fix Shell
       """
     And the exit code is 0
     And file "one.sh" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """

@@ -33,6 +33,10 @@ Feature: pitstop Shell on Windows
       }
       foo
       """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: unformatted Shell with lint errors
     Given a file "one.sh" with content
@@ -66,4 +70,8 @@ Feature: pitstop Shell on Windows
       """
       #!/usr/bin/env bash
       cd /tmp
+      """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
       """

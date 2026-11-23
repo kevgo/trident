@@ -49,3 +49,7 @@ Feature: install Tikibase
       """
       tikibase \d+\.\d+\.\d+
       """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """

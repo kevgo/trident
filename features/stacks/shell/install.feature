@@ -42,3 +42,7 @@ Feature: install all Shell tools
       shellcheck \d+\.\d+\.\d+
       shfmt \d+\.\d+\.\d+
       """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """

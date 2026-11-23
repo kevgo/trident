@@ -36,6 +36,11 @@ Feature: "trident precommit" skips disabled applications
       """
     And the exit code is 0
     And file "config.toml" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z
+      """
 
   Scenario: skips a disabled global application
     Given a file "trident.json" with content
@@ -62,4 +67,10 @@ Feature: "trident precommit" skips disabled applications
     And file "config.toml" now has content
       """
       key = "value"
+      """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z
+      git add -- config.toml
       """

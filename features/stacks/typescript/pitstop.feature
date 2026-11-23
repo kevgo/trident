@@ -30,6 +30,10 @@ Feature: pitstop TypeScript
       """
       console.log("other");
       """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: unformatted TypeScript with lint errors
     Given a file "main.ts" with content
@@ -51,4 +55,8 @@ Feature: pitstop TypeScript
       function foo() {
       \tlet a = 1;
       }
+      """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
       """

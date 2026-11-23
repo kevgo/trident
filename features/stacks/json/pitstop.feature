@@ -22,6 +22,10 @@ Feature: pitstop JSON
       """
       { "key": "value" }
       """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: unformatted JSON with lint errors
     Given a file "main.json" with content
@@ -43,4 +47,8 @@ Feature: pitstop JSON
       \t"key": "value",
       \t"key": "value"
       }
+      """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
       """

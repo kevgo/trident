@@ -21,3 +21,7 @@ Feature: install all YML tools
       delete-empty-folders \d+\.\d+\.\d+
       yamlfmt \d+\.\d+\.\d+
       """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """

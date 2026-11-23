@@ -16,6 +16,13 @@ Feature: "trident pitstop" runs "git diff --check"
     Then it prints nothing to STDERR
     And it prints nothing to STDOUT
     And the exit code is 0
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z --untracked-files=all
+      git status --porcelain=v1 -z --untracked-files=all
+      git diff HEAD --check
+      """
 
   Scenario: whitespace error in a changed file
     Given I change file "main.txt" to
@@ -29,6 +36,13 @@ Feature: "trident pitstop" runs "git diff --check"
       main.txt:2: space before tab in indent.
       """
     And the exit code is 2
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z --untracked-files=all
+      git status --porcelain=v1 -z --untracked-files=all
+      git diff HEAD --check
+      """
 
   Scenario: conflict markers in a changed file
     Given I change file "main.txt" to
@@ -48,3 +62,10 @@ Feature: "trident pitstop" runs "git diff --check"
       main.txt:6: leftover conflict marker
       """
     And the exit code is 2
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z --untracked-files=all
+      git status --porcelain=v1 -z --untracked-files=all
+      git diff HEAD --check
+      """

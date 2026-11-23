@@ -43,6 +43,10 @@ Feature: lint multiple stacks
       lint TypeScript (Biome)
       """
     And all files are unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: --show=verbose
     When executing "trident lint --show=verbose"
@@ -66,6 +70,10 @@ Feature: lint multiple stacks
       All checks passed!
       """
     And all files are unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: --show=names
     When executing "trident lint --show=names"
@@ -77,8 +85,16 @@ Feature: lint multiple stacks
       lint Python (Ruff)
       """
     And all files are unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: --show=failed
     When executing "trident lint --show=failed"
     Then it prints nothing to STDOUT
     And all files are unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """

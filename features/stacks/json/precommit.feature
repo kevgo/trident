@@ -18,6 +18,11 @@ Feature: precommit JSON
     Then it prints nothing to STDOUT
     And the exit code is 0
     And file "main.json" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z
+      """
 
   Scenario: unformatted JSON
     Given a file "main.json" with content
@@ -31,6 +36,12 @@ Feature: precommit JSON
     And file "main.json" now has content
       """
       { "key": "value" }
+      """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z
+      git add -- main.json
       """
 
   Scenario: invalid JSON
@@ -46,3 +57,8 @@ Feature: precommit JSON
       """
     And the exit code is 0
     And file "main.json" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z
+      """

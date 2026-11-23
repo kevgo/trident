@@ -31,6 +31,10 @@ Feature: fix Go
       """
     And the exit code is 0
     And file "main.go" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: unformatted Go
     Given a file "main.go" with content
@@ -80,6 +84,10 @@ Feature: fix Go
       	fmt.Println("Hello, other!")
       }
       """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: invalid Go
     Given a file "main.go" with content
@@ -98,3 +106,7 @@ Feature: fix Go
       """
     And the exit code is 2
     And file "main.go" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """

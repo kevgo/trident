@@ -27,3 +27,7 @@ Feature: display statistics about the codebase during pitstop
       1 CSS, 1 Python, 1 TypeScript, 1 other
       running 8 tasks
       """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """

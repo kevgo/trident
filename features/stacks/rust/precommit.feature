@@ -24,6 +24,11 @@ Feature: precommit Rust
       fix all (delete empty folders)
       """
     And the exit code is 0
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z
+      """
 
   Scenario: a custom fix is defined
     Given a file "trident.json" with content
@@ -55,3 +60,8 @@ Feature: precommit Rust
       custom fix running
       """
     And the exit code is 0
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z
+      """

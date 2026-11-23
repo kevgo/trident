@@ -21,6 +21,11 @@ Feature: precommit TOML
       """
     And the exit code is 0
     And file "main.toml" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z
+      """
 
   Scenario: unformatted TOML
     Given a file "main.toml" with content
@@ -46,6 +51,12 @@ Feature: precommit TOML
       """
       key = "other"
       """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z
+      git add -- main.toml other.toml
+      """
 
   Scenario: invalid TOML
     Given a file "main.toml" with content
@@ -61,3 +72,8 @@ Feature: precommit TOML
       """
     And the exit code is 0
     And file "main.toml" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z
+      """

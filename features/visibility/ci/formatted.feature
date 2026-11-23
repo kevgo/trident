@@ -62,6 +62,10 @@ Feature: CI multiple formatted stacks
       """
     And the exit code is 0
     And all files are unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: --show=verbose
     When executing "trident ci --show=verbose"
@@ -106,6 +110,10 @@ Feature: CI multiple formatted stacks
       """
     And the exit code is 0
     And all files are unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: --show=names
     When executing "trident ci --show=names"
@@ -122,9 +130,17 @@ Feature: CI multiple formatted stacks
       """
     And the exit code is 0
     And all files are unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: --show=failed
     When executing "trident ci --show=failed"
     Then it prints nothing to STDOUT
     And the exit code is 0
     And all files are unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """

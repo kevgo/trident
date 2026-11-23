@@ -28,6 +28,10 @@ Feature: fix Python
     And the exit code is 0
     And file "main.py" is unchanged
     And file "other.py" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: unformatted Python
     Given a file "main.py" with content
@@ -55,6 +59,10 @@ Feature: fix Python
     And file "other.py" now has content
       """
       print("Hello, other!")
+      """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
       """
 
   Scenario: invalid Python
@@ -104,3 +112,7 @@ Feature: fix Python
     And the exit code is 1
     And file "main.py" is unchanged
     And file "other.py" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """

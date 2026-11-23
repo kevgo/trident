@@ -32,6 +32,10 @@ Feature: keep-sorted support
       """
     And file "unsorted_1.toml" is unchanged
     And file "unsorted_2.toml" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: keep-sorted sorts marker-bearing files when enabled
     Given a file "trident.json" with content
@@ -64,6 +68,10 @@ Feature: keep-sorted support
       d = 1
       # keep-sorted end
       """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: does not sort globally ignored files
     Given a file "trident.json" with content
@@ -90,6 +98,10 @@ Feature: keep-sorted support
       # keep-sorted end
       """
     And file "unsorted_1.toml" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: does not sort files that should not be sorted
     Given a file "trident.json" with content
@@ -116,3 +128,7 @@ Feature: keep-sorted support
       # keep-sorted end
       """
     And file "unsorted_1.toml" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """

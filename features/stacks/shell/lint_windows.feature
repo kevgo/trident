@@ -19,6 +19,10 @@ Feature: lint Shell
     Then it prints nothing to STDOUT
     And the exit code is 0
     And all files are unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: unformatted Shell
     Given a file "one.sh" with content
@@ -33,6 +37,10 @@ Feature: lint Shell
     Then it prints nothing to STDOUT
     And the exit code is 0
     And all files are unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: invalid Shell
     Given a file "one.sh" with content
@@ -44,3 +52,7 @@ Feature: lint Shell
     Then it prints nothing to STDOUT
     And the exit code is 0
     And all files are unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """

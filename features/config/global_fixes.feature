@@ -43,6 +43,10 @@ Feature: custom fixes
       fix JSON (Biome)
       """
     And the exit code is 0
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: custom lint fails
     Given a file "trident.json" with content
@@ -66,3 +70,7 @@ Feature: custom fixes
       custom lint failed
       """
     And the exit code is 4
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """

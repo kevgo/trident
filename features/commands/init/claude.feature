@@ -44,6 +44,7 @@ Feature: "trident init:claude" installs Claude-compatible agent hooks
       "$TRIDENT" postedit
       """
     And file ".claude/trident-hooks/post_write.sh" is executable
+    And it runs no Git commands
 
   Scenario: claude settings exist already
     Given a file ".claude/settings.json" with content
@@ -62,6 +63,7 @@ Feature: "trident init:claude" installs Claude-compatible agent hooks
     And the exit code is 1
     And file ".claude/settings.json" is unchanged
     And file ".claude/trident-hooks/post_write.sh" does not exist
+    And it runs no Git commands
 
   Scenario: claude hook exists already
     And a file ".claude/trident-hooks/post_write.sh" with content
@@ -80,6 +82,7 @@ Feature: "trident init:claude" installs Claude-compatible agent hooks
     And the exit code is 1
     And file ".claude/trident-hooks/post_write.sh" is unchanged
     And file ".claude/settings.json" does not exist
+    And it runs no Git commands
 
   Scenario: --force overwrites existing files
     Given a file ".claude/settings.json" with content
@@ -133,3 +136,4 @@ Feature: "trident init:claude" installs Claude-compatible agent hooks
       "$TRIDENT" postedit
       """
     And file ".claude/trident-hooks/post_write.sh" is executable
+    And it runs no Git commands

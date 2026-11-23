@@ -16,6 +16,10 @@ Feature: lint YML
     Then it prints nothing to STDOUT
     And the exit code is 0
     And file "main.yml" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: unformatted YML
     Given a file "main.yml" with content
@@ -26,6 +30,10 @@ Feature: lint YML
     Then it prints nothing to STDOUT
     And the exit code is 0
     And file "main.yml" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: invalid YML
     Given a file "main.yml" with content
@@ -36,3 +44,7 @@ Feature: lint YML
     Then it prints nothing to STDOUT
     And the exit code is 0
     And file "main.yml" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """

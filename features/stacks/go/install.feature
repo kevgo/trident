@@ -41,3 +41,7 @@ Feature: install all Go tools
       delete-empty-folders \d+\.\d+\.\d+
       gofumpt \d+\.\d+\.\d+
       """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """

@@ -19,6 +19,10 @@ Feature: fix TypeScript
       """
     And the exit code is 0
     And file "main.ts" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: unformatted TypeScript
     Given a file "main.ts" with content
@@ -43,6 +47,10 @@ Feature: fix TypeScript
       """
       console.log("other");
       """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: invalid TypeScript
     Given a file "main.ts" with content
@@ -57,3 +65,7 @@ Feature: fix TypeScript
       """
     And the exit code is 1
     And file "main.ts" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """

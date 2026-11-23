@@ -34,6 +34,7 @@ Feature: test command with a failing test
       failed
       """
     And the exit code is 4
+    And it runs no Git commands
 
   Scenario: --show=verbose
     When executing "trident test --show=verbose"
@@ -54,6 +55,7 @@ Feature: test command with a failing test
       failed
       """
     And the exit code is 4
+    And it runs no Git commands
 
   Scenario: --show=names
     When executing "trident test --show=names"
@@ -68,6 +70,7 @@ Feature: test command with a failing test
       test all (unit)
       """
     And the exit code is 4
+    And it runs no Git commands
 
   Scenario: --show=failed
     When executing "trident test --show=failed"
@@ -81,3 +84,4 @@ Feature: test command with a failing test
       test all (unit)
       """
     And the exit code is 4
+    And it runs no Git commands

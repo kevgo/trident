@@ -28,3 +28,7 @@ Feature: "trident postedit" skips disabled applications
       """
     And the exit code is 0
     And file "config.toml" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """

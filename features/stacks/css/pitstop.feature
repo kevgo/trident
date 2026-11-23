@@ -27,6 +27,10 @@ Feature: pitstop CSS
       \tcolor: red;
       }
       """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: unformatted CSS with lint error
     Given a file "main.css" with content
@@ -49,4 +53,8 @@ Feature: pitstop CSS
       .foo {
       \tcolr: blue;
       }
+      """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
       """

@@ -48,6 +48,10 @@ Feature: fix multiple good stacks
       fix TypeScript (Biome)
       """
     And all files are unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: --show=verbose
     When executing "trident fix --show=verbose"
@@ -77,6 +81,10 @@ Feature: fix multiple good stacks
       1 file left unchanged
       """
     And all files are unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: --show=names
     When executing "trident fix --show=names"
@@ -89,8 +97,16 @@ Feature: fix multiple good stacks
       fix TypeScript (Biome)
       """
     And all files are unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: --show=failed
     When executing "trident fix --show=failed"
     Then it prints nothing to STDOUT
     And all files are unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """

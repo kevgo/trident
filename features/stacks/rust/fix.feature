@@ -24,6 +24,10 @@ Feature: fix Rust
       """
     And the exit code is 0
     And file "main.rs" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: rust-specific fixes
     Given a file "trident.json" with content
@@ -64,3 +68,7 @@ Feature: fix Rust
       """
     And the exit code is 0
     And file "main.rs" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """

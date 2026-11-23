@@ -32,3 +32,7 @@ Feature: install Ghokin
       delete-empty-folders \d+\.\d+\.\d+
       ghokin \d+\.\d+\.\d+
       """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """

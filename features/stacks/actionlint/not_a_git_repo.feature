@@ -31,3 +31,7 @@ Feature: GitHub Actions workflow files not in a Git repository
       """
     And the exit code is 3
     And all files are unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """

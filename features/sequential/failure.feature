@@ -22,3 +22,4 @@ Feature: sequential runs continue after a failure
       three failed
       """
     And the exit code is 4
+    And it runs no Git commands

@@ -24,6 +24,7 @@ Feature: "trident init:githook" installs the Git pre-commit hook
       "$TRIDENT" precommit
       """
     And file ".git/hooks/pre-commit" is executable
+    And it runs no Git commands
 
   Scenario: not a Git repository
     When executing "trident init:githook"
@@ -32,6 +33,7 @@ Feature: "trident init:githook" installs the Git pre-commit hook
       not a git repository (no .git directory)
       """
     And the exit code is 1
+    And it runs no Git commands
 
   Scenario: Git worktree
     Given a file ".git" with content
@@ -44,6 +46,7 @@ Feature: "trident init:githook" installs the Git pre-commit hook
       please run this command in the main Git worktree
       """
     And the exit code is 1
+    And it runs no Git commands
 
   Scenario: existing hook is left unchanged
     Given a Git repository
@@ -62,6 +65,7 @@ Feature: "trident init:githook" installs the Git pre-commit hook
       """
     And the exit code is 1
     And file ".git/hooks/pre-commit" is unchanged
+    And it runs no Git commands
 
   Scenario: --force overwrites an existing hook
     Given a Git repository
@@ -91,3 +95,4 @@ Feature: "trident init:githook" installs the Git pre-commit hook
       "$TRIDENT" precommit
       """
     And file ".git/hooks/pre-commit" is executable
+    And it runs no Git commands

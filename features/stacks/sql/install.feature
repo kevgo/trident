@@ -49,3 +49,7 @@ Feature: install sqlfmt
       delete-empty-folders \d+\.\d+\.\d+
       sqlfmt \d+\.\d+\.\d+
       """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """

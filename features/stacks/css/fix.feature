@@ -21,6 +21,10 @@ Feature: fix CSS
       """
     And the exit code is 0
     And file "main.css" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: unformatted CSS
     Given a file "main.css" with content
@@ -53,6 +57,10 @@ Feature: fix CSS
       \tcolor: blue;
       }
       """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: invalid CSS
     Given a file "main.css" with content
@@ -69,3 +77,7 @@ Feature: fix CSS
       """
     And the exit code is 1
     And file "main.css" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """

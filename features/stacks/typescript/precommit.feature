@@ -21,6 +21,11 @@ Feature: precommit TypeScript
       """
     And the exit code is 0
     And file "main.ts" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z
+      """
 
   Scenario: unformatted TypeScript
     Given a file "main.ts" with content
@@ -46,6 +51,12 @@ Feature: precommit TypeScript
       """
       console.log("other");
       """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z
+      git add -- main.ts other.ts
+      """
 
   Scenario: invalid TypeScript
     Given a file "main.ts" with content
@@ -61,3 +72,8 @@ Feature: precommit TypeScript
       """
     And the exit code is 0
     And file "main.ts" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z
+      """

@@ -26,3 +26,7 @@ Feature: display statistics about the codebase
       1 CSS, 1 Python, 1 TypeScript, 1 other
       running 3 tasks
       """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """

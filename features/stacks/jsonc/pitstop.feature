@@ -38,6 +38,10 @@ Feature: pitstop JSONC
       """
       { "key": "other" } // comment
       """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: invalid JSONC
     Given a file "main.jsonc" with content
@@ -52,3 +56,7 @@ Feature: pitstop JSONC
       """
     And the exit code is 1
     And file "main.jsonc" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """

@@ -48,6 +48,11 @@ Feature: precommit SQL
     And the exit code is 0
     And file "one.sql" is unchanged
     And file "two.sql" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z
+      """
 
   Scenario: unformatted SQL
     Given a file "one.sql" with content
@@ -69,6 +74,12 @@ Feature: precommit SQL
     And file "two.sql" now has content
       """
       select id, name from two
+      """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z
+      git add -- one.sql two.sql
       """
 
   Scenario: invalid SQL
@@ -94,6 +105,11 @@ Feature: precommit SQL
     And the exit code is 0
     And file "one.sql" is unchanged
     And file "two.sql" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z
+      """
 
   Scenario Outline: unsupported SQL flavors
     Given a file "migration.<FILE EXTENSION>" with content
@@ -109,6 +125,11 @@ Feature: precommit SQL
       """
     And the exit code is 0
     And file "migration.<FILE EXTENSION>" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z
+      """
 
     Examples:
       | FILE EXTENSION |

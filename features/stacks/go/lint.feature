@@ -28,6 +28,10 @@ Feature: lint Go
       """
     And the exit code is 0
     And file "main.go" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: invalid Go
     Given a file "main.go" with content
@@ -49,3 +53,7 @@ Feature: lint Go
       """
     And the exit code is failure
     And file "main.go" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """

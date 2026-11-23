@@ -89,6 +89,10 @@ Feature: pitstop Cucumber
         Scenario: bar2
           Given another step
       """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: unformatted Cucumber with lint error
     Given a file "main.feature" with content
@@ -110,4 +114,8 @@ Feature: pitstop Cucumber
       Feature: foo
 
         Given a step
+      """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
       """

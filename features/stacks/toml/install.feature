@@ -25,3 +25,7 @@ Feature: install all TOML tools
       delete-empty-folders \d+\.\d+\.\d+
       taplo \d+\.\d+\.\d+
       """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """

@@ -19,6 +19,10 @@ Feature: fix YML
       """
     And the exit code is 0
     And file "main.yml" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: unformatted YML
     Given a file "main.yml" with content
@@ -43,6 +47,10 @@ Feature: fix YML
       """
       key: other
       """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: invalid YML
     Given a file "main.yml" with content
@@ -57,3 +65,7 @@ Feature: fix YML
       """
     And the exit code is 1
     And file "main.yml" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """

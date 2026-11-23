@@ -42,3 +42,9 @@ Feature: "trident precommit" formats and stages files with partially staged chan
       +line 2 new
       """
     And there are no unstaged changes
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z
+      git add -- file.md
+      """

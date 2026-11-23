@@ -41,6 +41,10 @@ Feature: pitstop Go
       \tfmt.Println("Hello")
       }
       """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: unformatted Go with lint errors
     Given a file "main.go" with content
@@ -91,4 +95,8 @@ Feature: pitstop Go
       func main() {
       \tfmt.Printf("Other")
       }
+      """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
       """

@@ -30,6 +30,11 @@ Feature: precommit Go
     Then it prints nothing to STDOUT
     And the exit code is 0
     And file "main.go" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z
+      """
 
   Scenario: unformatted Go
     Given a file "main.go" with content
@@ -72,6 +77,12 @@ Feature: precommit Go
       	fmt.Println("Hello, other!")
       }
       """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z
+      git add -- main.go other.go
+      """
 
   Scenario: invalid Go
     Given a file "main.go" with content
@@ -90,3 +101,8 @@ Feature: precommit Go
       """
     And the exit code is 0
     And file "main.go" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z
+      """

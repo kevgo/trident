@@ -42,6 +42,10 @@ Feature: lint a Tikibase
       """
     And the exit code is 0
     And all files are unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: unformatted Markdown
     Given a file "one.md" with content
@@ -63,6 +67,10 @@ Feature: lint a Tikibase
       """
     And the exit code is 2
     And all files are unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: invalid Markdown
     Given a file "main.md" with content
@@ -82,3 +90,7 @@ Feature: lint a Tikibase
       """
     And the exit code is 1
     And all files are unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """

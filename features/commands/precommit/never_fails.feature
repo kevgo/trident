@@ -13,6 +13,7 @@ Feature: "trident precommit" always exits 0
       config file (trident.json): unknown field `unknown-key`
       """
     And the exit code is 0
+    And it runs no Git commands
 
   Scenario: not a Git repository
     When executing "trident precommit"
@@ -21,3 +22,7 @@ Feature: "trident precommit" always exits 0
       not a git repository (no .git directory)
       """
     And the exit code is 0
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
