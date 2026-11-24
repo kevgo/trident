@@ -6,7 +6,16 @@ pub fn docstring_body(content: &str) -> String {
     let content = content.strip_prefix('\n').unwrap_or(content);
 
     // replace \t with actual tabs
-    content.replace("\\t", "\t")
+    let content = content.replace("\\t", "\t");
+
+    // add a trailing newline
+    let content = content + "\n";
+
+    // on Windows, replace \n with \r\n
+    #[cfg(target_os = "windows")]
+    let content = content.replace("\n", "\r\n");
+
+    content
 }
 
 #[cfg(test)]

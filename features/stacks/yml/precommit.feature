@@ -12,6 +12,7 @@ Feature: precommit YML
     Given a file "main.yml" with content
       """
       key: value
+
       """
     And I ran "git add main.yml"
     When executing "trident precommit --show=output"
