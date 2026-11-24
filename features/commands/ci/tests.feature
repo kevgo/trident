@@ -1,7 +1,7 @@
 Feature: CI runs all fixes, formatters, lints, and tests
 
   Background:
-    Given a file "run-that-app" with content
+    Given a file "run-that-app" with unix newlines
       """
       biome 2.4.0
       delete-empty-folders 0.0.2
@@ -11,7 +11,7 @@ Feature: CI runs all fixes, formatters, lints, and tests
       """
 
   Scenario:
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "tests": [
@@ -20,7 +20,7 @@ Feature: CI runs all fixes, formatters, lints, and tests
         ]
       }
       """
-    And a file "main.py" with content
+    And a file "main.py" with unix newlines
       """
       print("hello")
       """
@@ -52,7 +52,7 @@ Feature: CI runs all fixes, formatters, lints, and tests
       """
 
   Scenario: test fails
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "tests": [
@@ -79,7 +79,7 @@ Feature: CI runs all fixes, formatters, lints, and tests
       """
 
   Scenario: --test selects named tests
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "tests": [
@@ -116,7 +116,7 @@ Feature: CI runs all fixes, formatters, lints, and tests
       """
 
   Scenario: commands.ci.test runs those tests by default
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "tests": [
@@ -152,7 +152,7 @@ Feature: CI runs all fixes, formatters, lints, and tests
       """
 
   Scenario: unknown test name
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "tests": [

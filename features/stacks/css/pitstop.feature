@@ -1,14 +1,14 @@
 Feature: pitstop CSS
 
   Background:
-    Given a file "run-that-app" with content
+    Given a file "run-that-app" with unix newlines
       """
       biome 2.4.0
       delete-empty-folders 0.0.2
       """
 
   Scenario: unformatted CSS
-    Given a file "main.css" with content
+    Given a file "main.css" with unix newlines
       """
       .foo {
         color : red ;
@@ -33,7 +33,7 @@ Feature: pitstop CSS
       """
 
   Scenario: unformatted CSS with lint error
-    Given a file "main.css" with content
+    Given a file "main.css" with unix newlines
       """
       .foo {
         colr: blue;

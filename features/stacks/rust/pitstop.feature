@@ -1,12 +1,12 @@
 Feature: pitstop Rust
 
   Background:
-    Given a file "run-that-app" with content
+    Given a file "run-that-app" with unix newlines
       """
       biome 2.4.0
       delete-empty-folders 0.0.2
       """
-    And a file "main.rs" with content
+    And a file "main.rs" with unix newlines
       """
       // some Rust code
       """
@@ -30,7 +30,7 @@ Feature: pitstop Rust
       """
 
   Scenario: custom linters and fixes defined
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "stacks": {

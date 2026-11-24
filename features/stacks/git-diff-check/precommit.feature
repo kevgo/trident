@@ -2,7 +2,7 @@ Feature: "trident precommit" does not run "git diff --check"
 
   Background:
     Given a Git repository
-    And a file "run-that-app" with content
+    And a file "run-that-app" with unix newlines
       """
       delete-empty-folders 0.0.2
       """

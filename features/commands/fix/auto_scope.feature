@@ -41,7 +41,7 @@ Feature: "trident fix" chooses the smallest "--scope" based on the workspace sta
       """
 
   Scenario: on main branch, has uncommitted files
-    And a file "untracked.md" with content
+    And a file "untracked.md" with unix newlines
       """
       #     Untracked
       """
@@ -147,7 +147,7 @@ Feature: "trident fix" chooses the smallest "--scope" based on the workspace sta
       """
       #     Branch
       """
-    And a file "untracked.md" with content
+    And a file "untracked.md" with unix newlines
       """
       #     Untracked
       """

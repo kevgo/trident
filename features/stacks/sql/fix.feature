@@ -1,14 +1,14 @@
 Feature: fix SQL
 
   Background:
-    Given a file "run-that-app" with content
+    Given a file "run-that-app" with unix newlines
       """
       biome 2.4.0
       delete-empty-folders 0.0.2
       sqlfmt 0.32.0
       uv 0.13.0
       """
-    And a file "trident.json" with content
+    And a file "trident.json" with unix newlines
       """
       {
         "applications": {
@@ -35,11 +35,11 @@ Feature: fix SQL
       """
 
   Scenario: valid SQL
-    Given a file "one.sql" with content
+    Given a file "one.sql" with unix newlines
       """
       select id, name from one
       """
-    And a file "two.sql" with content
+    And a file "two.sql" with unix newlines
       """
       select id, name from two
       """
@@ -58,11 +58,11 @@ Feature: fix SQL
       """
 
   Scenario: unformatted SQL
-    Given a file "one.sql" with content
+    Given a file "one.sql" with unix newlines
       """
       SELECT            id, name FROM one
       """
-    And a file "two.sql" with content
+    And a file "two.sql" with unix newlines
       """
       SELECT            id, name FROM two
       """
@@ -90,11 +90,11 @@ Feature: fix SQL
       """
 
   Scenario: invalid SQL
-    Given a file "one.sql" with content
+    Given a file "one.sql" with unix newlines
       """
       SELECT FROM "
       """
-    And a file "two.sql" with content
+    And a file "two.sql" with unix newlines
       """
       SELECT FROM "
       """
@@ -118,7 +118,7 @@ Feature: fix SQL
       """
 
   Scenario Outline: unsupported SQL flavors
-    Given a file "migration.<FILE EXTENSION>" with content
+    Given a file "migration.<FILE EXTENSION>" with unix newlines
       """
       CREATE TABLE orders (id INT, total DECIMAL(10,2));
       """

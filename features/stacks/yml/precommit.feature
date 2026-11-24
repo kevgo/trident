@@ -2,17 +2,17 @@ Feature: precommit YML
 
   Background:
     Given a Git repository
-    And a file "run-that-app" with content
+    And a file "run-that-app" with unix newlines
       """
       delete-empty-folders 0.0.2
       yamlfmt 0.21.0
       """
 
+@this
   Scenario: valid YML
-    Given a file "main.yml" with content
+    Given a file "main.yml" with platform-specific newlines and content
       """
       key: value
-
       """
     And I ran "git add main.yml"
     When executing "trident precommit --show=output"
@@ -29,11 +29,11 @@ Feature: precommit YML
       """
 
   Scenario: unformatted YML
-    Given a file "main.yml" with content
+    Given a file "main.yml" with unix newlines
       """
       key:     value
       """
-    And a file "other.yml" with content
+    And a file "other.yml" with unix newlines
       """
       key:     other
       """
@@ -60,7 +60,7 @@ Feature: precommit YML
       """
 
   Scenario: invalid YML
-    Given a file "main.yml" with content
+    Given a file "main.yml" with unix newlines
       """
       key: "
       """

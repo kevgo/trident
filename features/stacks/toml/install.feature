@@ -2,7 +2,7 @@
 Feature: install all TOML tools
 
   Scenario: not installed
-    Given a file "main.toml" with content
+    Given a file "main.toml" with unix newlines
       """
       key =      "value"
       """

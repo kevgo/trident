@@ -1,12 +1,12 @@
 Feature: pitstop Go
 
   Background:
-    Given a file "go.mod" with content
+    Given a file "go.mod" with unix newlines
       """
       module example.com/demo
       go 1.27
       """
-    And a file "run-that-app" with content
+    And a file "run-that-app" with unix newlines
       """
       delete-empty-folders 0.0.2
       gofumpt 0.10.0
@@ -14,7 +14,7 @@ Feature: pitstop Go
       """
 
   Scenario: unformatted Go
-    Given a file "main.go" with content
+    Given a file "main.go" with unix newlines
       """
       package main
       import "fmt"
@@ -47,7 +47,7 @@ Feature: pitstop Go
       """
 
   Scenario: unformatted Go with lint errors
-    Given a file "main.go" with content
+    Given a file "main.go" with unix newlines
       """
       package main
       import "fmt"
@@ -55,7 +55,7 @@ Feature: pitstop Go
       	fmt.Printf(    "Hello")
       }
       """
-    And a file "other.go" with content
+    And a file "other.go" with unix newlines
       """
       package other
       import "fmt"

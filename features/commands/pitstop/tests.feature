@@ -1,7 +1,7 @@
 Feature: pitstop --test runs selected tests
 
   Background:
-    Given a file "run-that-app" with content
+    Given a file "run-that-app" with unix newlines
       """
       delete-empty-folders 0.0.2
       ruff 0.15.16
@@ -10,7 +10,7 @@ Feature: pitstop --test runs selected tests
       """
 
   Scenario: without --test, configured tests do not run
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "applications": {
@@ -43,7 +43,7 @@ Feature: pitstop --test runs selected tests
       """
 
   Scenario: commands.pitstop.test runs those tests by default
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "applications": {
@@ -82,7 +82,7 @@ Feature: pitstop --test runs selected tests
       """
 
   Scenario: --test overrides commands.pitstop.test
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "applications": {
@@ -121,7 +121,7 @@ Feature: pitstop --test runs selected tests
       """
 
   Scenario: --test selects named tests
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "applications": {
@@ -161,7 +161,7 @@ Feature: pitstop --test runs selected tests
       """
 
   Scenario: test fails
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "applications": {
@@ -191,7 +191,7 @@ Feature: pitstop --test runs selected tests
       """
 
   Scenario: unknown test name in commands.pitstop.test
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "tests": [
@@ -217,7 +217,7 @@ Feature: pitstop --test runs selected tests
       """
 
   Scenario: unknown test name
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "tests": [

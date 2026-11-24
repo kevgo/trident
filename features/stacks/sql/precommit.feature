@@ -2,12 +2,12 @@ Feature: precommit SQL
 
   Background:
     Given a Git repository
-    And a file "run-that-app" with content
+    And a file "run-that-app" with unix newlines
       """
       sqlfmt 0.32.0
       uv 0.13.0
       """
-    And a file "trident.json" with content
+    And a file "trident.json" with unix newlines
       """
       {
         "applications": {
@@ -34,11 +34,11 @@ Feature: precommit SQL
       """
 
   Scenario: valid SQL
-    Given a file "one.sql" with content
+    Given a file "one.sql" with unix newlines
       """
       select id, name from one
       """
-    And a file "two.sql" with content
+    And a file "two.sql" with unix newlines
       """
       select id, name from two
       """
@@ -55,11 +55,11 @@ Feature: precommit SQL
       """
 
   Scenario: unformatted SQL
-    Given a file "one.sql" with content
+    Given a file "one.sql" with unix newlines
       """
       SELECT            id, name FROM one
       """
-    And a file "two.sql" with content
+    And a file "two.sql" with unix newlines
       """
       SELECT            id, name FROM two
       """
@@ -83,11 +83,11 @@ Feature: precommit SQL
       """
 
   Scenario: invalid SQL
-    Given a file "one.sql" with content
+    Given a file "one.sql" with unix newlines
       """
       SELECT FROM "
       """
-    And a file "two.sql" with content
+    And a file "two.sql" with unix newlines
       """
       SELECT FROM "
       """
@@ -112,7 +112,7 @@ Feature: precommit SQL
       """
 
   Scenario Outline: unsupported SQL flavors
-    Given a file "migration.<FILE EXTENSION>" with content
+    Given a file "migration.<FILE EXTENSION>" with unix newlines
       """
       CREATE TABLE orders (id INT, total DECIMAL(10,2));
       """

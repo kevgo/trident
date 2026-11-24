@@ -2,11 +2,11 @@
 Feature: install all JSON tools
 
   Scenario: not installed
-    Given a file "run-that-app" with content
+    Given a file "run-that-app" with unix newlines
       """
       delete-empty-folders 0.0.2
       """
-    And a file "main.json" with content
+    And a file "main.json" with unix newlines
       """
       {"key":"value"}
       """

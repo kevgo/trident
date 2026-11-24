@@ -1,11 +1,11 @@
 Feature: "trident lint" does not run "git diff --check" if not a Git repository
 
   Scenario: Git not installed
-    Given a file "run-that-app" with content
+    Given a file "run-that-app" with unix newlines
       """
       delete-empty-folders 0.0.2
       """
-    And a file "main.txt" with content
+    And a file "main.txt" with unix newlines
       """
       line one
       <<<<<<< HEAD:main.txt

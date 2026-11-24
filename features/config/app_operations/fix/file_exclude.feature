@@ -1,13 +1,13 @@
 Feature: exclude a file from being fixed by a specific app only
 
   Background:
-    Given a file "run-that-app" with content
+    Given a file "run-that-app" with unix newlines
       """
       biome 2.4.0
       delete-empty-folders 0.0.2
       taplo 0.10.0
       """
-    And a file "trident.json" with content
+    And a file "trident.json" with unix newlines
       """
       {
         "applications": {
@@ -21,11 +21,11 @@ Feature: exclude a file from being fixed by a specific app only
         }
       }
       """
-    And a file "other.toml" with content
+    And a file "other.toml" with unix newlines
       """
       key =     "value"
       """
-    And a file "Cargo.toml" with content
+    And a file "Cargo.toml" with unix newlines
       """
       [package]
       name =      "demo"

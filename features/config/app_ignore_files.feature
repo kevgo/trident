@@ -1,24 +1,24 @@
 Feature: ignore files for an application
 
   Background:
-    Given a file "run-that-app" with content
+    Given a file "run-that-app" with unix newlines
       """
       biome 2.4.0
       delete-empty-folders 0.0.2
       taplo 0.10.0
       """
-    And a file "Cargo.toml" with content
+    And a file "Cargo.toml" with unix newlines
       """
       [package]
       name = "demo"
       """
-    And a file "config.toml" with content
+    And a file "config.toml" with unix newlines
       """
       key = "value"
       """
 
   Scenario: lint honors application-level ignored files
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "applications": {
@@ -45,7 +45,7 @@ Feature: ignore files for an application
       """
 
   Scenario: fix honors application-level ignored files
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "applications": {
@@ -55,7 +55,7 @@ Feature: ignore files for an application
         }
       }
       """
-    And a file "config.toml" with content
+    And a file "config.toml" with unix newlines
       """
       key =     "value"
       """
@@ -81,7 +81,7 @@ Feature: ignore files for an application
       """
 
   Scenario: lint honors globally ignored files
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "ignore-files": ["Cargo.toml"]
@@ -104,7 +104,7 @@ Feature: ignore files for an application
       """
 
   Scenario: fix honors globally ignored files
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "ignore-files": ["Cargo.toml"]

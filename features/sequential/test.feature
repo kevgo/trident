@@ -1,7 +1,7 @@
 Feature: run tests sequentially
 
   Background:
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "tests": [

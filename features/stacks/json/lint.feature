@@ -1,14 +1,14 @@
 Feature: lint JSON
 
   Background:
-    Given a file "run-that-app" with content
+    Given a file "run-that-app" with unix newlines
       """
       biome 2.4.0
       delete-empty-folders 0.0.2
       """
 
   Scenario: valid JSON
-    Given a file "main.json" with content
+    Given a file "main.json" with unix newlines
       """
       { "key": "value" }
       """
@@ -25,7 +25,7 @@ Feature: lint JSON
       """
 
   Scenario: unformatted JSON
-    Given a file "main.json" with content
+    Given a file "main.json" with unix newlines
       """
       {"key":"value"}
       """
@@ -42,7 +42,7 @@ Feature: lint JSON
       """
 
   Scenario: invalid JSON
-    Given a file "main.json" with content
+    Given a file "main.json" with unix newlines
       """
       { "key":
       """

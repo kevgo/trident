@@ -1,12 +1,12 @@
 Feature: fix Go
 
   Background:
-    Given a file "go.mod" with content
+    Given a file "go.mod" with unix newlines
       """
       module example.com/demo
       go 1.21
       """
-    And a file "run-that-app" with content
+    And a file "run-that-app" with unix newlines
       """
       delete-empty-folders 0.0.2
       gofumpt 0.10.0
@@ -14,7 +14,7 @@ Feature: fix Go
       """
 
   Scenario: valid Go
-    Given a file "main.go" with content
+    Given a file "main.go" with unix newlines
       """
       package main
 
@@ -37,7 +37,7 @@ Feature: fix Go
       """
 
   Scenario: unformatted Go
-    Given a file "main.go" with content
+    Given a file "main.go" with unix newlines
       """
       package main
       import "fmt"
@@ -45,7 +45,7 @@ Feature: fix Go
       	fmt.Println(    "Hello, world!")
       }
       """
-    And a file "other.go" with content
+    And a file "other.go" with unix newlines
       """
       package other
       import "fmt"
@@ -90,7 +90,7 @@ Feature: fix Go
       """
 
   Scenario: invalid Go
-    Given a file "main.go" with content
+    Given a file "main.go" with unix newlines
       """
       package main
       import "fmt"

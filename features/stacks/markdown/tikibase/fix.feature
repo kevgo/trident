@@ -1,14 +1,14 @@
 Feature: fix Markdown with Tikibase
 
   Background:
-    Given a file "run-that-app" with content
+    Given a file "run-that-app" with unix newlines
       """
       biome 2.4.0
       delete-empty-folders 0.0.2
       rumdl 0.2.14
       tikibase 0.6.2
       """
-    And a file "tikibase.json" with content
+    And a file "tikibase.json" with unix newlines
       """
       {
         "ignore": [
@@ -19,13 +19,13 @@ Feature: fix Markdown with Tikibase
       """
 
   Scenario: valid Markdown
-    Given a file "one.md" with content
+    Given a file "one.md" with unix newlines
       """
       # One
 
       also check out [Two](two.md)
       """
-    And a file "two.md" with content
+    And a file "two.md" with unix newlines
       """
       # Two
 
@@ -46,13 +46,13 @@ Feature: fix Markdown with Tikibase
       """
 
   Scenario: unformatted Markdown
-    Given a file "one.md" with content
+    Given a file "one.md" with unix newlines
       """
       # One
 
       also check out [Two](two.md)
       """
-    And a file "two.md" with content
+    And a file "two.md" with unix newlines
       """
       # Two
       """
@@ -79,7 +79,7 @@ Feature: fix Markdown with Tikibase
       """
 
   Scenario: invalid Markdown
-    Given a file "main.md" with content
+    Given a file "main.md" with unix newlines
       """
       # hello
 

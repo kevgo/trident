@@ -1,7 +1,7 @@
 Feature: stack-specific lints
 
   Background:
-    Given a file "run-that-app" with content
+    Given a file "run-that-app" with unix newlines
       """
       biome 2.4.0
       delete-empty-folders 0.0.2
@@ -9,7 +9,7 @@ Feature: stack-specific lints
       """
 
   Scenario: "additional-lints" adds custom lints to the built-in ones for that stack
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "stacks": {
@@ -23,7 +23,7 @@ Feature: stack-specific lints
         }
       }
       """
-    And a file "main.py" with content
+    And a file "main.py" with unix newlines
       """
       # some Python code
       """
@@ -44,7 +44,7 @@ Feature: stack-specific lints
       """
 
   Scenario: "replace-lints" replaces the built-in lints for that stack
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "stacks": {
@@ -58,7 +58,7 @@ Feature: stack-specific lints
         }
       }
       """
-    And a file "main.py" with content
+    And a file "main.py" with unix newlines
       """
       # some Python code
       """
@@ -79,7 +79,7 @@ Feature: stack-specific lints
       """
 
   Scenario: disable a stack's lints
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "stacks": {
@@ -91,7 +91,7 @@ Feature: stack-specific lints
         }
       }
       """
-    And a file "main.py" with content
+    And a file "main.py" with unix newlines
       """
       # some Python code
       """
@@ -107,7 +107,7 @@ Feature: stack-specific lints
       """
 
   Scenario: runs only when files of that stack exist
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "stacks": {

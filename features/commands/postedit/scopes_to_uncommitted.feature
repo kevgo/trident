@@ -47,7 +47,7 @@ Feature: "trident postedit" lints only uncommitted files
       """
       missing header
       """
-    And a file "untracked.md" with content
+    And a file "untracked.md" with unix newlines
       """
       missing header
       """
@@ -82,7 +82,7 @@ Feature: "trident postedit" lints only uncommitted files
       """
 
   Scenario: untracked file with spaces in the name
-    Given a file "my file.md" with content
+    Given a file "my file.md" with unix newlines
       """
       missing header
       """

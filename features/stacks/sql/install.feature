@@ -2,7 +2,7 @@
 Feature: install sqlfmt
 
   Scenario: not installed
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "applications": {
@@ -24,7 +24,7 @@ Feature: install sqlfmt
         }
       }
       """
-    And a file "one.sql" with content
+    And a file "one.sql" with unix newlines
       """
       SELECT    id, name FROM one
       """

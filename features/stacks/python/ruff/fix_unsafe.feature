@@ -1,13 +1,13 @@
 Feature: unsafe-fix Python
 
   Background:
-    Given a file "run-that-app" with content
+    Given a file "run-that-app" with unix newlines
       """
       delete-empty-folders 0.0.2
       ruff 0.15.16
       taplo 0.10.0
       """
-    And a file "main.py" with content
+    And a file "main.py" with unix newlines
       """
       def add_to_list(item, items=[]):
           items.append(item)
@@ -17,7 +17,7 @@ Feature: unsafe-fix Python
       print(add_to_list("a"))  # ["a"]
       print(add_to_list("b"))  # ["a", "b"]
       """
-    And a file "ruff.toml" with content
+    And a file "ruff.toml" with unix newlines
       """
       [lint]
       extend-select = ["B006"]

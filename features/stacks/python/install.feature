@@ -2,15 +2,15 @@
 Feature: install all Python tools
 
   Scenario: not installed
-    Given a file "run-that-app" with content
+    Given a file "run-that-app" with unix newlines
       """
       biome 2.4.0
       """
-    And a file "main.py" with content
+    And a file "main.py" with unix newlines
       """
       print    ("Hello, world!")
       """
-    And a file "pyrightconfig.json" with content
+    And a file "pyrightconfig.json" with unix newlines
       """
       {
         "typeCheckingMode": "strict"

@@ -1,19 +1,19 @@
 Feature: lint Go
 
   Background:
-    Given a file "go.mod" with content
+    Given a file "go.mod" with unix newlines
       """
       module example.com/demo
       go 1.27
       """
-    And a file "run-that-app" with content
+    And a file "run-that-app" with unix newlines
       """
       delete-empty-folders 0.0.2
       golangci-lint 2.15.0
       """
 
   Scenario: valid Go
-    Given a file "main.go" with content
+    Given a file "main.go" with unix newlines
       """
       package main
       import "fmt"
@@ -34,7 +34,7 @@ Feature: lint Go
       """
 
   Scenario: invalid Go
-    Given a file "main.go" with content
+    Given a file "main.go" with unix newlines
       """
       package main
       import "fmt"

@@ -1,12 +1,12 @@
 Feature: ignore a CSS file
 
   Background:
-    Given a file "run-that-app" with content
+    Given a file "run-that-app" with unix newlines
       """
       biome 2.4.0
       delete-empty-folders 0.0.2
       """
-    And a file "trident.json" with content
+    And a file "trident.json" with unix newlines
       """
       {
         "ignore-files": ["bad.css"]
@@ -14,13 +14,13 @@ Feature: ignore a CSS file
       """
 
   Scenario: linting
-    Given a file "good.css" with content
+    Given a file "good.css" with unix newlines
       """
       .foo {
         color: green;
       }
       """
-    And a file "bad.css" with content
+    And a file "bad.css" with unix newlines
       """
       .bar {
         col
@@ -40,13 +40,13 @@ Feature: ignore a CSS file
       """
 
   Scenario: fixing
-    Given a file "good.css" with content
+    Given a file "good.css" with unix newlines
       """
       .foo {
         color : red ;
       }
       """
-    And a file "bad.css" with content
+    And a file "bad.css" with unix newlines
       """
       .bar {
         color : green ;

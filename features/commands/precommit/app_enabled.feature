@@ -2,19 +2,19 @@ Feature: "trident precommit" skips disabled applications
 
   Background:
     Given a Git repository
-    And a file "run-that-app" with content
+    And a file "run-that-app" with unix newlines
       """
       biome 2.4.0
       delete-empty-folders 0.0.2
       taplo 0.10.0
       """
-    And a file "config.toml" with content
+    And a file "config.toml" with unix newlines
       """
       key =     "value"
       """
 
   Scenario: skips a disabled application
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "applications": {
@@ -43,7 +43,7 @@ Feature: "trident precommit" skips disabled applications
       """
 
   Scenario: skips a disabled global application
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "applications": {

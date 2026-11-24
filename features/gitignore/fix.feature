@@ -1,19 +1,19 @@
 Feature: don't fix files in .gitignore
 
   Scenario: all Python files are ignored
-    Given a file ".gitignore" with content
+    Given a file ".gitignore" with unix newlines
       """
       *.py
       """
-    And a file ".git/info/exclude" with content
+    And a file ".git/info/exclude" with unix newlines
       """
       this file must exist for the .gitignore detection to work
       """
-    And a file "main.py" with content
+    And a file "main.py" with unix newlines
       """
       #      this file will get ignored
       """
-    And a file "run-that-app" with content
+    And a file "run-that-app" with unix newlines
       """
       delete-empty-folders 0.0.2
       """

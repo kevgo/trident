@@ -2,14 +2,14 @@
 Feature: install Gherkin Lint
 
   Scenario: not installed
-    Given a file "features/one.feature" with content
+    Given a file "features/one.feature" with unix newlines
       """
       Feature: one
 
         Scenario: one
           Given a step
       """
-    And a file ".gherkin-lintrc" with content
+    And a file ".gherkin-lintrc" with unix newlines
       """
       {}
       """

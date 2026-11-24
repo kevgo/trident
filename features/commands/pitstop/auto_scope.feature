@@ -42,7 +42,7 @@ Feature: "trident pitstop" chooses the smallest "--scope" based on the workspace
       """
 
   Scenario: on main branch, has uncommitted files
-    And a file "untracked.md" with content
+    And a file "untracked.md" with unix newlines
       """
       #     Untracked
       """
@@ -155,7 +155,7 @@ Feature: "trident pitstop" chooses the smallest "--scope" based on the workspace
       """
       #     Branch
       """
-    And a file "untracked.md" with content
+    And a file "untracked.md" with unix newlines
       """
       #     Untracked
       """

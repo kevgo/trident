@@ -1,14 +1,14 @@
 Feature: fix YML
 
   Background:
-    Given a file "run-that-app" with content
+    Given a file "run-that-app" with unix newlines
       """
       delete-empty-folders 0.0.2
       yamlfmt 0.21.0
       """
 
   Scenario: valid YML
-    Given a file "main.yml" with content
+    Given a file "main.yml" with platform-specific newlines and content
       """
       key: value
       """
@@ -25,11 +25,11 @@ Feature: fix YML
       """
 
   Scenario: unformatted YML
-    Given a file "main.yml" with content
+    Given a file "main.yml" with unix newlines
       """
       key:     value
       """
-    And a file "other.yml" with content
+    And a file "other.yml" with unix newlines
       """
       key:     other
       """
@@ -53,7 +53,7 @@ Feature: fix YML
       """
 
   Scenario: invalid YML
-    Given a file "main.yml" with content
+    Given a file "main.yml" with unix newlines
       """
       key: "
       """

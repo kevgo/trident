@@ -52,7 +52,7 @@ Feature: "trident fix-unsafe" chooses the smallest "--scope" based on the worksp
       """
 
   Scenario: on main branch, has uncommitted files
-    And a file "untracked.py" with content
+    And a file "untracked.py" with unix newlines
       """
       def add_to_list(item, items=[]):
           items.append(item)
@@ -177,7 +177,7 @@ Feature: "trident fix-unsafe" chooses the smallest "--scope" based on the worksp
           items.append(item)
           return items
       """
-    And a file "untracked.py" with content
+    And a file "untracked.py" with unix newlines
       """
       def add_to_list(item, items=[]):
           items.append(item)

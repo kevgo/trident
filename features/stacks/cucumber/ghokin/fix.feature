@@ -1,14 +1,14 @@
 Feature: fix Cucumber
 
   Background:
-    Given a file "run-that-app" with content
+    Given a file "run-that-app" with unix newlines
       """
       delete-empty-folders 0.0.2
       ghokin 3.10.0
       """
 
   Scenario: valid Cucumber
-    Given a file "main.feature" with content
+    Given a file "main.feature" with unix newlines
       """
       Feature: foo
 
@@ -29,14 +29,14 @@ Feature: fix Cucumber
       """
 
   Scenario: unformatted Cucumber
-    Given a file "main.feature" with content
+    Given a file "main.feature" with unix newlines
       """
       Feature:   foo
 
         Scenario:   bar
           Given   a step
       """
-    And a file "other.feature" with content
+    And a file "other.feature" with unix newlines
       """
       Feature:   foo2
 
@@ -71,7 +71,7 @@ Feature: fix Cucumber
       """
 
   Scenario: invalid Cucumber
-    Given a file "main.feature" with content
+    Given a file "main.feature" with unix newlines
       """
       Feat
       """

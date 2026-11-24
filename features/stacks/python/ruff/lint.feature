@@ -1,18 +1,18 @@
 Feature: lint Python
 
   Background:
-    Given a file "run-that-app" with content
+    Given a file "run-that-app" with unix newlines
       """
       delete-empty-folders 0.0.2
       ruff 0.15.16
       """
 
   Scenario: valid Python
-    Given a file "main.py" with content
+    Given a file "main.py" with unix newlines
       """
       print("Hello, world!")
       """
-    And a file "other.py" with content
+    And a file "other.py" with unix newlines
       """
       print("Hello, other!")
       """
@@ -31,11 +31,11 @@ Feature: lint Python
       """
 
   Scenario: unformatted Python
-    Given a file "main.py" with content
+    Given a file "main.py" with unix newlines
       """
       print   ("Hello, world!")
       """
-    And a file "other.py" with content
+    And a file "other.py" with unix newlines
       """
       print   ("Hello, other!")
       """
@@ -49,11 +49,11 @@ Feature: lint Python
       """
 
   Scenario: invalid Python
-    Given a file "main.py" with content
+    Given a file "main.py" with unix newlines
       """
       print("
       """
-    And a file "other.py" with content
+    And a file "other.py" with unix newlines
       """
       print("
       """

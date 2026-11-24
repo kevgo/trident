@@ -1,14 +1,14 @@
 Feature: lint CSS
 
   Background:
-    Given a file "run-that-app" with content
+    Given a file "run-that-app" with unix newlines
       """
       biome 2.4.0
       delete-empty-folders 0.0.2
       """
 
   Scenario: valid CSS
-    Given a file "main.css" with content
+    Given a file "main.css" with unix newlines
       """
       .foo {
       \tcolor: red;
@@ -27,7 +27,7 @@ Feature: lint CSS
       """
 
   Scenario: unformatted CSS
-    Given a file "main.css" with content
+    Given a file "main.css" with unix newlines
       """
       .foo {
         color : red ;
@@ -46,7 +46,7 @@ Feature: lint CSS
       """
 
   Scenario: invalid CSS
-    Given a file "main.css" with content
+    Given a file "main.css" with unix newlines
       """
       .foo {
         col

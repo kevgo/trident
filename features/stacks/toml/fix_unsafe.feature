@@ -1,12 +1,12 @@
 Feature: unsafe-fix TOML
 
   Background:
-    Given a file "run-that-app" with content
+    Given a file "run-that-app" with unix newlines
       """
       delete-empty-folders 0.0.2
       taplo 0.10.0
       """
-    And a file "main.toml" with content
+    And a file "main.toml" with unix newlines
       """
       [package
       name="demo"

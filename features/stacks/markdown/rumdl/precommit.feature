@@ -2,14 +2,14 @@ Feature: precommit Markdown
 
   Background:
     Given a Git repository
-    And a file "run-that-app" with content
+    And a file "run-that-app" with unix newlines
       """
       delete-empty-folders 0.0.2
       rumdl 0.2.14
       """
 
   Scenario: valid Markdown
-    Given a file "main.md" with content
+    Given a file "main.md" with unix newlines
       """
       # Hello
       """
@@ -25,7 +25,7 @@ Feature: precommit Markdown
       """
 
   Scenario: unformatted JSON
-    Given a file "main.md" with content
+    Given a file "main.md" with unix newlines
       """
       #     Hello
       """
@@ -45,7 +45,7 @@ Feature: precommit Markdown
       """
 
   Scenario: unformatted Markdown with spaces in the filename
-    Given a file "my file.md" with content
+    Given a file "my file.md" with unix newlines
       """
       #     Hello
       """
@@ -65,7 +65,7 @@ Feature: precommit Markdown
       """
 
   Scenario: invalid JSON
-    Given a file "main.md" with content
+    Given a file "main.md" with unix newlines
       """
       # hello
 

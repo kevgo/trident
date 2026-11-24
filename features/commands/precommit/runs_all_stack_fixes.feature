@@ -2,13 +2,13 @@ Feature: "trident precommit" runs all fixes for the changed files
 
   Scenario: runs Tikibase even though its config file is not changed
     Given a Git repository
-    And a file "run-that-app" with content
+    And a file "run-that-app" with unix newlines
       """
       delete-empty-folders 0.0.2
       rumdl 0.2.14
       tikibase 0.6.2
       """
-    And a file "tikibase.json" with content
+    And a file "tikibase.json" with unix newlines
       """
       {
         "ignore": [
@@ -17,7 +17,7 @@ Feature: "trident precommit" runs all fixes for the changed files
         "bidiLinks": false
       }
       """
-    And a file "one.md" with content
+    And a file "one.md" with unix newlines
       """
       # One
 

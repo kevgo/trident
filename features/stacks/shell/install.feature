@@ -2,11 +2,11 @@
 Feature: install all Shell tools
 
   Scenario: not installed
-    Given a file "run-that-app" with content
+    Given a file "run-that-app" with unix newlines
       """
       delete-empty-folders 0.0.2
       """
-    And a file "one.sh" with content
+    And a file "one.sh" with unix newlines
       """
       #!/usr/bin/env bash
       foo()   {

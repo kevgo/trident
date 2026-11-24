@@ -2,12 +2,12 @@ Feature: "trident precommit" formats but does not stage files with partially sta
 
   Scenario: precommit partially staged changes
     Given a Git repository
-    And a file "run-that-app" with content
+    And a file "run-that-app" with unix newlines
       """
       delete-empty-folders 0.0.2
       rumdl 0.2.14
       """
-    And a file "file.md" with content
+    And a file "file.md" with unix newlines
       """
       line     1 old
 

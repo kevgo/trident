@@ -2,14 +2,14 @@ Feature: lint GitHub Actions workflow files
 
   Background:
     Given a Git repository
-    And a file "run-that-app" with content
+    And a file "run-that-app" with unix newlines
       """
       actionlint 1.7.12
       delete-empty-folders 0.0.2
       """
 
   Scenario: valid workflow
-    Given a file ".github/workflows/main.yml" with content
+    Given a file ".github/workflows/main.yml" with unix newlines
       """
       name: CI
       on:
@@ -43,7 +43,7 @@ Feature: lint GitHub Actions workflow files
       """
 
   Scenario: invalid workflow
-    Given a file ".github/workflows/main.yml" with content
+    Given a file ".github/workflows/main.yml" with unix newlines
       """
       key: "
       """

@@ -1,18 +1,18 @@
 Feature: pitstop TypeScript
 
   Background:
-    Given a file "run-that-app" with content
+    Given a file "run-that-app" with unix newlines
       """
       biome 2.4.0
       delete-empty-folders 0.0.2
       """
 
   Scenario: unformatted TypeScript
-    Given a file "main.ts" with content
+    Given a file "main.ts" with unix newlines
       """
       console.log(  "hello"  );
       """
-    And a file "other.ts" with content
+    And a file "other.ts" with unix newlines
       """
       console.log(  "other"  );
       """
@@ -36,7 +36,7 @@ Feature: pitstop TypeScript
       """
 
   Scenario: unformatted TypeScript with lint errors
-    Given a file "main.ts" with content
+    Given a file "main.ts" with unix newlines
       """
       function foo() {
         let a = 1;

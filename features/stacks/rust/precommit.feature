@@ -2,11 +2,11 @@ Feature: precommit Rust
 
   Background:
     Given a Git repository
-    And a file "run-that-app" with content
+    And a file "run-that-app" with unix newlines
       """
       delete-empty-folders 0.0.2
       """
-    And a file "main.rs" with content
+    And a file "main.rs" with unix newlines
       """
       // some Rust code
       """
@@ -31,7 +31,7 @@ Feature: precommit Rust
       """
 
   Scenario: a custom fix is defined
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "stacks": {

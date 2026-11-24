@@ -3,7 +3,7 @@ Feature: precommit Shell
 
   Background:
     Given a Git repository
-    And a file "run-that-app" with content
+    And a file "run-that-app" with unix newlines
       """
       delete-empty-folders 0.0.2
       shellcheck 0.11.0
@@ -11,7 +11,7 @@ Feature: precommit Shell
       """
 
   Scenario: valid Shell
-    Given a file "one.sh" with content
+    Given a file "one.sh" with unix newlines
       """
       #!/usr/bin/env bash
       foo() {
@@ -31,7 +31,7 @@ Feature: precommit Shell
       """
 
   Scenario: unformatted Shell
-    Given a file "one.sh" with content
+    Given a file "one.sh" with unix newlines
       """
       #!/usr/bin/env bash
       foo()   {
@@ -39,7 +39,7 @@ Feature: precommit Shell
       }
       foo
       """
-    And a file "two.sh" with content
+    And a file "two.sh" with unix newlines
       """
       #!/usr/bin/env bash
       foo()   {
@@ -75,7 +75,7 @@ Feature: precommit Shell
       """
 
   Scenario: invalid Shell
-    Given a file "one.sh" with content
+    Given a file "one.sh" with unix newlines
       """
       #!/usr/bin/env bash
       if [ "$1" = "a" ]

@@ -1,14 +1,14 @@
 Feature: lint YML
 
   Background:
-    Given a file "run-that-app" with content
+    Given a file "run-that-app" with unix newlines
       """
       delete-empty-folders 0.0.2
       yamlfmt 0.21.0
       """
 
   Scenario: valid YML
-    Given a file "main.yml" with content
+    Given a file "main.yml" with unix newlines
       """
       key: value
       """
@@ -22,7 +22,7 @@ Feature: lint YML
       """
 
   Scenario: unformatted YML
-    Given a file "main.yml" with content
+    Given a file "main.yml" with unix newlines
       """
       key:     value
       """
@@ -36,7 +36,7 @@ Feature: lint YML
       """
 
   Scenario: invalid YML
-    Given a file "main.yml" with content
+    Given a file "main.yml" with unix newlines
       """
       key: "
       """

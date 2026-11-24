@@ -2,14 +2,14 @@
 Feature: lint Python with Pyright
 
   Background:
-    Given a file "run-that-app" with content
+    Given a file "run-that-app" with unix newlines
       """
       biome 2.4.0
       delete-empty-folders 0.0.2
       pyright 1.1.414
       ruff 0.15.16
       """
-    And a file "trident.json" with content
+    And a file "trident.json" with unix newlines
       """
       {
         "applications": {
@@ -25,7 +25,7 @@ Feature: lint Python with Pyright
         }
       }
       """
-    And a file "pyrightconfig.json" with content
+    And a file "pyrightconfig.json" with unix newlines
       """
       {
         "typeCheckingMode": "strict"
@@ -33,11 +33,11 @@ Feature: lint Python with Pyright
       """
 
   Scenario: valid Python with Pyright
-    Given a file "main.py" with content
+    Given a file "main.py" with unix newlines
       """
       print("Hello, world!")
       """
-    And a file "other.py" with content
+    And a file "other.py" with unix newlines
       """
       print("Hello, other!")
       """
@@ -61,11 +61,11 @@ Feature: lint Python with Pyright
       """
 
   Scenario: unformatted Python
-    Given a file "main.py" with content
+    Given a file "main.py" with unix newlines
       """
       print   ("Hello, world!")
       """
-    And a file "other.py" with content
+    And a file "other.py" with unix newlines
       """
       print   ("Hello, other!")
       """
@@ -89,12 +89,12 @@ Feature: lint Python with Pyright
       """
 
   Scenario: typecheck errors
-    Given a file "main.py" with content
+    Given a file "main.py" with unix newlines
       """
       a: int = "text"
       print(a)
       """
-    And a file "other.py" with content
+    And a file "other.py" with unix newlines
       """
       b: int = "text"
       print(b)
@@ -114,11 +114,11 @@ Feature: lint Python with Pyright
       """
 
   Scenario: invalid Python
-    Given a file "main.py" with content
+    Given a file "main.py" with unix newlines
       """
       print(123
       """
-    And a file "other.py" with content
+    And a file "other.py" with unix newlines
       """
       print("
       """

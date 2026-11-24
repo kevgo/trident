@@ -2,7 +2,7 @@
 Feature: lint Shell on Unix
 
   Background:
-    Given a file "run-that-app" with content
+    Given a file "run-that-app" with unix newlines
       """
       delete-empty-folders 0.0.2
       shellcheck 0.11.0
@@ -10,7 +10,7 @@ Feature: lint Shell on Unix
       """
 
   Scenario: valid Shell
-    Given a file "one.sh" with content
+    Given a file "one.sh" with unix newlines
       """
       #!/usr/bin/env bash
       echo "one"
@@ -28,7 +28,7 @@ Feature: lint Shell on Unix
       """
 
   Scenario: unformatted Shell
-    Given a file "one.sh" with content
+    Given a file "one.sh" with unix newlines
       """
       #!/usr/bin/env bash
       foo()   {
@@ -49,12 +49,12 @@ Feature: lint Shell on Unix
       """
 
   Scenario: invalid Shell
-    Given a file "one.sh" with content
+    Given a file "one.sh" with unix newlines
       """
       #!/usr/bin/env bash
       echo $1
       """
-    And a file "two.sh" with content
+    And a file "two.sh" with unix newlines
       """
       #!/usr/bin/env bash
       cd /tmp

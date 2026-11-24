@@ -1,7 +1,7 @@
 Feature: checking a codebase without any code
 
   Background:
-    Given a file "run-that-app" with content
+    Given a file "run-that-app" with unix newlines
       """
       delete-empty-folders 0.0.2
       """

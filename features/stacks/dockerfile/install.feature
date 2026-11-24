@@ -2,11 +2,11 @@
 Feature: install hadolint
 
   Scenario: not installed
-    Given a file "run-that-app" with content
+    Given a file "run-that-app" with unix newlines
       """
       delete-empty-folders 0.0.2
       """
-    And a file "Dockerfile" with content
+    And a file "Dockerfile" with unix newlines
       """
       FROM alpine:3.20
       USER 65534

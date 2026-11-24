@@ -1,14 +1,14 @@
 Feature: pitstop Python
 
   Background:
-    Given a file "run-that-app" with content
+    Given a file "run-that-app" with unix newlines
       """
       delete-empty-folders 0.0.2
       ruff 0.15.16
       """
 
   Scenario: unformatted Python
-    Given a file "main.py" with content
+    Given a file "main.py" with unix newlines
       """
       print   ("Hello, world!")
       """
@@ -34,7 +34,7 @@ Feature: pitstop Python
       """
 
   Scenario: unformatted Python with lint errors
-    Given a file "main.py" with content
+    Given a file "main.py" with unix newlines
       """
       def greet():
         a   =   1

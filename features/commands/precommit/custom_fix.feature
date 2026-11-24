@@ -2,13 +2,13 @@ Feature: stack-scoped custom fixes
 
   Background:
     Given a Git repository
-    And a file "run-that-app" with content
+    And a file "run-that-app" with unix newlines
       """
       delete-empty-folders 0.0.2
       ruff 0.15.16
       rumdl 0.2.14
       """
-    And a file "trident.json" with content
+    And a file "trident.json" with unix newlines
       """
       {
         "stacks": {
@@ -27,11 +27,11 @@ Feature: stack-scoped custom fixes
       #!/bin/sh
       echo "PYTHON FIX RAN"
       """
-    And a file "main.py" with content
+    And a file "main.py" with unix newlines
       """
       print("hello")
       """
-    And a file "one.md" with content
+    And a file "one.md" with unix newlines
       """
       # One
       """

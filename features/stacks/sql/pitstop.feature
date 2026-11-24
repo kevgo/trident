@@ -1,13 +1,13 @@
 Feature: pitstop SQL
 
   Background:
-    Given a file "run-that-app" with content
+    Given a file "run-that-app" with unix newlines
       """
       biome 2.4.0
       sqlfmt 0.32.0
       uv 0.13.0
       """
-    And a file "trident.json" with content
+    And a file "trident.json" with unix newlines
       """
       {
         "applications": {
@@ -34,11 +34,11 @@ Feature: pitstop SQL
       """
 
   Scenario: unformatted SQL
-    Given a file "one.sql" with content
+    Given a file "one.sql" with unix newlines
       """
       SELECT            id, name FROM one
       """
-    And a file "two.sql" with content
+    And a file "two.sql" with unix newlines
       """
       SELECT            id, name FROM two
       """
@@ -66,7 +66,7 @@ Feature: pitstop SQL
       """
 
   Scenario: unformatted SQL with lint errors
-    Given a file "one.sql" with content
+    Given a file "one.sql" with unix newlines
       """
       SELECT INTO
       """

@@ -1,14 +1,14 @@
 Feature: lint Markdown
 
   Background:
-    Given a file "run-that-app" with content
+    Given a file "run-that-app" with unix newlines
       """
       delete-empty-folders 0.0.2
       rumdl 0.2.14
       """
 
   Scenario: valid Markdown
-    Given a file "main.md" with content
+    Given a file "main.md" with unix newlines
       """
       # Hello
       """
@@ -25,7 +25,7 @@ Feature: lint Markdown
       """
 
   Scenario: unformatted Markdown
-    Given a file "main.md" with content
+    Given a file "main.md" with unix newlines
       """
       #     Hello
       """
@@ -43,7 +43,7 @@ Feature: lint Markdown
       """
 
   Scenario: invalid Markdown
-    Given a file "main.md" with content
+    Given a file "main.md" with unix newlines
       """
       text
       """
@@ -61,7 +61,7 @@ Feature: lint Markdown
       """
 
   Scenario: file with spaces in the name
-    Given a file "my file.md" with content
+    Given a file "my file.md" with unix newlines
       """
       text
       """

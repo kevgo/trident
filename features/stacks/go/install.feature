@@ -2,12 +2,12 @@
 Feature: install all Go tools
 
   Scenario: not installed
-    Given a file "go.mod" with content
+    Given a file "go.mod" with unix newlines
       """
       module example.com/demo
       go 1.21
       """
-    And a file "main.go" with content
+    And a file "main.go" with unix newlines
       """
       package main
       import "fmt"

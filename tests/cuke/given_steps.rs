@@ -2,13 +2,13 @@ use crate::jitter::jitter;
 use crate::world::{ExistingFile, TridentWorld};
 use cucumber::gherkin::Step;
 use cucumber::given;
-use test_helpers::docstring_body;
+use test_helpers::{docstring_body, platform_newlines, standardize_newlines};
 use tokio::fs;
 use tokio::process::Command;
 
 #[given(expr = "a committed file {string} with content")]
 async fn a_committed_file_with_content(world: &mut TridentWorld, step: &Step, filename: String) {
-    a_file_with_content(world, step, filename.clone()).await;
+    write_file(world, step, filename.clone(), Newlines::Unix).await;
     Command::new("git")
         .arg("add")
         .arg(&filename)
@@ -29,9 +29,27 @@ async fn a_committed_file_with_content(world: &mut TridentWorld, step: &Step, fi
         .unwrap();
 }
 
-#[given(expr = "a file {string} with content")]
-async fn a_file_with_content(world: &mut TridentWorld, step: &Step, filename: String) {
-    let content = docstring_body(step.docstring.as_ref().unwrap());
+#[given(expr = "a file {string} with unix newlines")]
+async fn a_file_with_unix_newlines(world: &mut TridentWorld, step: &Step, filename: String) {
+    write_file(world, step, filename, Newlines::Unix).await;
+}
+
+#[given(expr = "a file {string} with platform-specific newlines and content")]
+async fn a_file_with_platform_newlines(world: &mut TridentWorld, step: &Step, filename: String) {
+    write_file(world, step, filename, Newlines::Platform).await;
+}
+
+enum Newlines {
+    Unix,
+    Platform,
+}
+
+async fn write_file(world: &mut TridentWorld, step: &Step, filename: String, newlines: Newlines) {
+    let body = docstring_body(step.docstring.as_ref().unwrap());
+    let content = match newlines {
+        Newlines::Unix => standardize_newlines(&body),
+        Newlines::Platform => platform_newlines(&body),
+    };
     let filepath = world.dir.join(&filename);
     let parent = filepath.parent().unwrap();
     if parent != world.dir {
@@ -56,7 +74,7 @@ async fn i_change_file_to(world: &mut TridentWorld, step: &Step, filename: Strin
         "file '{}' does not exist",
         filepath.display()
     );
-    a_file_with_content(world, step, filename).await;
+    write_file(world, step, filename, Newlines::Unix).await;
 }
 
 #[given(expr = "a Git repository")]
@@ -86,7 +104,7 @@ async fn a_git_repository(world: &mut TridentWorld) {
 async fn an_executable_file_with_content(world: &mut TridentWorld, step: &Step, filename: String) {
     #[cfg(unix)]
     let filepath = world.dir.join(&filename);
-    a_file_with_content(world, step, filename).await;
+    write_file(world, step, filename, Newlines::Unix).await;
     #[cfg(unix)]
     {
         use std::os::unix::fs::PermissionsExt;

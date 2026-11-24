@@ -1,14 +1,14 @@
 Feature: disable an application's lint operation
 
   Background:
-    Given a file "run-that-app" with content
+    Given a file "run-that-app" with unix newlines
       """
       biome 2.4.0
       delete-empty-folders 0.0.2
       rumdl 0.2.14
       taplo 0.10.0
       """
-    And a file "trident.json" with content
+    And a file "trident.json" with unix newlines
       """
       {
         "applications": {
@@ -22,11 +22,11 @@ Feature: disable an application's lint operation
         }
       }
       """
-    And a file "other.md" with content
+    And a file "other.md" with unix newlines
       """
       # a markdown file
       """
-    And a file "Cargo.toml" with content
+    And a file "Cargo.toml" with unix newlines
       """
       [package]
       name =      "demo"

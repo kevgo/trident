@@ -2,7 +2,7 @@ Feature: precommit Cucumber
 
   Background:
     Given a Git repository
-    And a file "run-that-app" with content
+    And a file "run-that-app" with unix newlines
       """
       delete-empty-folders 0.0.2
       ghokin 3.10.0
@@ -11,7 +11,7 @@ Feature: precommit Cucumber
     And I ran "git commit -m original"
 
   Scenario: valid Cucumber
-    Given a file "main.feature" with content
+    Given a file "main.feature" with unix newlines
       """
       Feature: foo
 
@@ -29,14 +29,14 @@ Feature: precommit Cucumber
       """
 
   Scenario: unformatted Cucumber
-    Given a file "main.feature" with content
+    Given a file "main.feature" with unix newlines
       """
       Feature:   foo
 
         Scenario:   bar
           Given   a step
       """
-    And a file "other.feature" with content
+    And a file "other.feature" with unix newlines
       """
       Feature:   foo2
 
@@ -69,7 +69,7 @@ Feature: precommit Cucumber
       """
 
   Scenario: invalid Cucumber
-    Given a file "main.feature" with content
+    Given a file "main.feature" with unix newlines
       """
       Feat
       """

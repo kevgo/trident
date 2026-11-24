@@ -1,13 +1,13 @@
 Feature: lint Cucumber
 
   Background:
-    Given a file "run-that-app" with content
+    Given a file "run-that-app" with unix newlines
       """
       delete-empty-folders 0.0.2
       gherkin-lint 4.2.4
       node 26.4.0
       """
-    And a file ".gherkin-lintrc" with content
+    And a file ".gherkin-lintrc" with unix newlines
       """
       {
         "allowed-tags": [ "on", { "tags": ["@online"] } ],
@@ -53,7 +53,7 @@ Feature: lint Cucumber
       """
 
   Scenario: valid Cucumber
-    Given a file "features/one.feature" with content
+    Given a file "features/one.feature" with unix newlines
       """
       Feature: one
 
@@ -73,7 +73,7 @@ Feature: lint Cucumber
       """
 
   Scenario: unformatted Cucumber
-    Given a file "features/one.feature" with content
+    Given a file "features/one.feature" with unix newlines
       """
       Feature: one
 
@@ -94,7 +94,7 @@ Feature: lint Cucumber
       """
 
   Scenario: invalid Cucumber
-    Given a file "features/one.feature" with content
+    Given a file "features/one.feature" with unix newlines
       """
       Feat
       """

@@ -1,21 +1,21 @@
 Feature: lint multiple stacks with invalid code
 
   Background:
-    Given a file "run-that-app" with content
+    Given a file "run-that-app" with unix newlines
       """
       biome 2.4.0
       delete-empty-folders 0.0.2
       ruff 0.15.16
       """
-    And a file "main.py" with content
+    And a file "main.py" with unix newlines
       """
       print("
       """
-    And a file "main.css" with content
+    And a file "main.css" with unix newlines
       """
       .foo {
       """
-    And a file "main.ts" with content
+    And a file "main.ts" with unix newlines
       """
       console.log("
       """

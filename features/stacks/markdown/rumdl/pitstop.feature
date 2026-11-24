@@ -1,14 +1,14 @@
 Feature: pitstop Markdown
 
   Background:
-    Given a file "run-that-app" with content
+    Given a file "run-that-app" with unix newlines
       """
       delete-empty-folders 0.0.2
       rumdl 0.2.14
       """
 
   Scenario: unformatted Markdown
-    Given a file "main.md" with content
+    Given a file "main.md" with unix newlines
       """
       #     Hello
       """
@@ -29,7 +29,7 @@ Feature: pitstop Markdown
       """
 
   Scenario: file with spaces in the name
-    Given a file "my file.md" with content
+    Given a file "my file.md" with unix newlines
       """
       #     Hello
       """
@@ -50,7 +50,7 @@ Feature: pitstop Markdown
       """
 
   Scenario: unformatted Markdown with lint errors
-    Given a file "main.md" with content
+    Given a file "main.md" with unix newlines
       """
       one
 

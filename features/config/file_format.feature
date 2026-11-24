@@ -1,13 +1,13 @@
 Feature: config file format
 
   Background:
-    Given a file "run-that-app" with content
+    Given a file "run-that-app" with unix newlines
       """
       delete-empty-folders 0.0.2
       """
 
   Scenario: comments and trailing commas are accepted
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         // a comment
@@ -35,7 +35,7 @@ Feature: config file format
       """
 
   Scenario: trident.jsonc is used when trident.json is absent
-    Given a file "trident.jsonc" with content
+    Given a file "trident.jsonc" with unix newlines
       """
       {
         "applications": {
@@ -59,7 +59,7 @@ Feature: config file format
       """
 
   Scenario: trident.json takes precedence over trident.jsonc
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "applications": {
@@ -70,7 +70,7 @@ Feature: config file format
         ]
       }
       """
-    And a file "trident.jsonc" with content
+    And a file "trident.jsonc" with unix newlines
       """
       {
         "applications": {
@@ -98,7 +98,7 @@ Feature: config file format
       """
 
   Scenario: unknown keys are rejected
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "unknown-key": true

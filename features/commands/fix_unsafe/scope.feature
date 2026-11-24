@@ -25,7 +25,7 @@ Feature: "trident fix-unsafe --scope" selects which files to fix
           items.append(item)
           return items
       """
-    And a file "untracked.py" with content
+    And a file "untracked.py" with unix newlines
       """
       def add_to_list(item, items=[]):
           items.append(item)

@@ -2,14 +2,14 @@ Feature: precommit TypeScript
 
   Background:
     Given a Git repository
-    And a file "run-that-app" with content
+    And a file "run-that-app" with unix newlines
       """
       biome 2.4.0
       delete-empty-folders 0.0.2
       """
 
   Scenario: valid TypeScript
-    Given a file "main.ts" with content
+    Given a file "main.ts" with unix newlines
       """
       console.log("hello");
       """
@@ -28,11 +28,11 @@ Feature: precommit TypeScript
       """
 
   Scenario: unformatted TypeScript
-    Given a file "main.ts" with content
+    Given a file "main.ts" with unix newlines
       """
       console.log(  "hello"  );
       """
-    And a file "other.ts" with content
+    And a file "other.ts" with unix newlines
       """
       console.log(  "other"  );
       """
@@ -59,7 +59,7 @@ Feature: precommit TypeScript
       """
 
   Scenario: invalid TypeScript
-    Given a file "main.ts" with content
+    Given a file "main.ts" with unix newlines
       """
       console.log("
       """

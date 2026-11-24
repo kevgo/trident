@@ -2,14 +2,14 @@ Feature: precommit JSON
 
   Background:
     Given a Git repository
-    And a file "run-that-app" with content
+    And a file "run-that-app" with unix newlines
       """
       biome 2.4.0
       delete-empty-folders 0.0.2
       """
 
   Scenario: valid JSON
-    Given a file "main.json" with content
+    Given a file "main.json" with unix newlines
       """
       { "key": "value" }
       """
@@ -25,7 +25,7 @@ Feature: precommit JSON
       """
 
   Scenario: unformatted JSON
-    Given a file "main.json" with content
+    Given a file "main.json" with unix newlines
       """
       {"key":"value"}
       """
@@ -45,7 +45,7 @@ Feature: precommit JSON
       """
 
   Scenario: invalid JSON
-    Given a file "main.json" with content
+    Given a file "main.json" with unix newlines
       """
       { "key":
       """

@@ -1,14 +1,14 @@
 Feature: pitstop Dockerfile with hadolint
 
   Background:
-    Given a file "run-that-app" with content
+    Given a file "run-that-app" with unix newlines
       """
       delete-empty-folders 0.0.2
       hadolint 2.15.1
       """
 
   Scenario: valid Dockerfile
-    Given a file "Dockerfile" with content
+    Given a file "Dockerfile" with unix newlines
       """
       FROM alpine:3.20
       USER 65534
@@ -26,7 +26,7 @@ Feature: pitstop Dockerfile with hadolint
       """
 
   Scenario: invalid Dockerfile
-    Given a file "Dockerfile" with content
+    Given a file "Dockerfile" with unix newlines
       """
       FROM alpine:3.20
       WORKDIR tmp

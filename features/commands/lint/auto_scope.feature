@@ -39,7 +39,7 @@ Feature: "trident lint" chooses the smallest "--scope" based on the workspace st
       """
 
   Scenario: on main branch, has uncommitted files
-    And a file "untracked.md" with content
+    And a file "untracked.md" with unix newlines
       """
       #     Untracked
       """
@@ -141,7 +141,7 @@ Feature: "trident lint" chooses the smallest "--scope" based on the workspace st
       """
       #     Branch
       """
-    And a file "untracked.md" with content
+    And a file "untracked.md" with unix newlines
       """
       #     Untracked
       """
