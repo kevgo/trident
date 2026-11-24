@@ -9,7 +9,7 @@ pub fn docstring_body(content: &str) -> String {
     let content = content.replace("\\t", "\t");
 
     // add a trailing newline
-    let content = content + "\n";
+    // let content = content + "\n";
 
     // on Windows, replace \n with \r\n
     #[cfg(target_os = "windows")]
