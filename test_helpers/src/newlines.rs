@@ -2,11 +2,9 @@
 #[must_use]
 pub fn platform_newlines(content: &str) -> String {
     let content = crate::unix_newlines(content);
-    if cfg!(windows) {
-        content.replace('\n', "\r\n")
-    } else {
-        content
-    }
+    #[cfg(windows)]
+    let content = content.replace('\n', "\r\n");
+    content
 }
 
 #[must_use]
