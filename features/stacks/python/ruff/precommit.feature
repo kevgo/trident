@@ -23,6 +23,11 @@ Feature: precommit Python
     And the exit code is 0
     And file "main.py" is unchanged
     And file "other.py" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z
+      """
 
   Scenario: unformatted Python
     Given a file "main.py" with content
@@ -44,6 +49,12 @@ Feature: precommit Python
     And file "other.py" now has content
       """
       print("Hello, other!")
+      """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z
+      git add -- main.py other.py
       """
 
   Scenario: invalid Python
@@ -92,3 +103,8 @@ Feature: precommit Python
     And the exit code is 0
     And file "main.py" is unchanged
     And file "other.py" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z
+      """

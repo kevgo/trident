@@ -2,7 +2,7 @@
 Feature: install all TypeScript tools
 
   Scenario: not installed
-    Given a file "main.ts" with content
+    Given a file "main.ts" with unix newlines
       """
       console.log(  "hello"  );
       """
@@ -24,4 +24,8 @@ Feature: install all TypeScript tools
       """
       delete-empty-folders \d+\.\d+\.\d+
       biome \d+\.\d+\.\d+
+      """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
       """

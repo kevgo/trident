@@ -24,3 +24,7 @@ Feature: install Gherkin Lint
       gherkin-lint \d+\.\d+\.\d+
       node \d+\.\d+\.\d+
       """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """

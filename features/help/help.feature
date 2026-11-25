@@ -12,6 +12,7 @@ Feature: Displaying help
       For more information, try '--help'.
       """
     And the exit code is 1
+    And it runs no Git commands
 
   Scenario: help command
     When executing "trident help"
@@ -42,6 +43,7 @@ Feature: Displaying help
         -V, --version  Print version
       """
     And the exit code is 0
+    And it runs no Git commands
 
   Scenario: --help flag
     When executing "trident --help"
@@ -72,6 +74,7 @@ Feature: Displaying help
         -V, --version  Print version
       """
     And the exit code is 0
+    And it runs no Git commands
 
   Scenario: -h flag
     When executing "trident -h"
@@ -102,6 +105,7 @@ Feature: Displaying help
         -V, --version  Print version
       """
     And the exit code is 0
+    And it runs no Git commands
 
   Scenario: help for a subcommand
     When executing "trident help lint"
@@ -136,6 +140,7 @@ Feature: Displaying help
                 Print help \(see a summary with '-h'\)
       """
     And the exit code is 0
+    And it runs no Git commands
 
   Scenario: help for the ci command
     When executing "trident help ci"
@@ -173,6 +178,7 @@ Feature: Displaying help
                 Print help \(see a summary with '-h'\)
       """
     And the exit code is 0
+    And it runs no Git commands
 
   Scenario: help for the full command
     When executing "trident help full"
@@ -202,6 +208,7 @@ Feature: Displaying help
                 Print help \(see a summary with '-h'\)
       """
     And the exit code is 0
+    And it runs no Git commands
 
   Scenario: help for the pitstop command
     When executing "trident help pitstop"
@@ -239,6 +246,7 @@ Feature: Displaying help
                 Print help \(see a summary with '-h'\)
       """
     And the exit code is 0
+    And it runs no Git commands
 
   Scenario: help for the fix command
     When executing "trident help fix"
@@ -273,6 +281,7 @@ Feature: Displaying help
                 Print help \(see a summary with '-h'\)
       """
     And the exit code is 0
+    And it runs no Git commands
 
   Scenario: help for the test command
     When executing "trident help test"
@@ -302,3 +311,4 @@ Feature: Displaying help
                 Print help \(see a summary with '-h'\)
       """
     And the exit code is 0
+    And it runs no Git commands

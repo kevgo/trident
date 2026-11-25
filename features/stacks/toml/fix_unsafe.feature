@@ -6,7 +6,7 @@ Feature: unsafe-fix TOML
       delete-empty-folders 0.0.2
       taplo 0.10.0
       """
-    And a file "main.toml" with content
+    And a file "main.toml" with unix newlines
       """
       [package
       name="demo"
@@ -26,6 +26,10 @@ Feature: unsafe-fix TOML
       name="demo"
       version = "0.1.0"
       """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: fix
     When executing "trident fix --show=output"
@@ -36,3 +40,7 @@ Feature: unsafe-fix TOML
       """
     And the exit code is 1
     And file "main.toml" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """

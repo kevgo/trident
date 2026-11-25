@@ -9,7 +9,7 @@ Feature: fix Shell
       """
 
   Scenario: valid Shell
-    Given a file "one.sh" with content
+    Given a file "one.sh" with unix newlines
       """
       #!/usr/bin/env bash
       foo() {
@@ -24,9 +24,13 @@ Feature: fix Shell
       """
     And the exit code is 0
     And file "one.sh" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: unformatted Shell
-    Given a file "one.sh" with content
+    Given a file "one.sh" with unix newlines
       """
       #!/usr/bin/env bash
       if [ "$1" = "a" ]
@@ -34,7 +38,7 @@ Feature: fix Shell
             echo   "a"
       fi
       """
-    And a file "two.sh" with content
+    And a file "two.sh" with unix newlines
       """
       #!/usr/bin/env bash
       foo()   {
@@ -63,9 +67,13 @@ Feature: fix Shell
       }
       foo
       """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: invalid Shell
-    Given a file "one.sh" with content
+    Given a file "one.sh" with unix newlines
       """
       #!/usr/bin/env bash
       if [ "$1" = "a" ]
@@ -78,9 +86,13 @@ Feature: fix Shell
       """
     And the exit code is 1
     And file "one.sh" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: Shell with lint errors
-    Given a file "one.sh" with content
+    Given a file "one.sh" with unix newlines
       """
       #!/usr/bin/env bash
       echo $1
@@ -92,3 +104,7 @@ Feature: fix Shell
       """
     And the exit code is 0
     And file "one.sh" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """

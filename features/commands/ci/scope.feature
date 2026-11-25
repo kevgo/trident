@@ -47,6 +47,14 @@ Feature: "trident ci --scope" selects which files to process
       """
     And file "committed-on-branch.md" is unchanged
     And file "on-main.md" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git diff HEAD --color
+      git status --porcelain=v1 -z --untracked-files=all
+      git diff HEAD --check
+      git diff HEAD --color
+      """
 
   Scenario: --scope=branch processes files changed on the current branch
     When executing "trident ci --scope=branch --show=output"
@@ -77,6 +85,19 @@ Feature: "trident ci --scope" selects which files to process
       # Untracked
       """
     And file "on-main.md" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git diff HEAD --color
+      git status --porcelain=v1 -z --untracked-files=all
+      git town diff-parent --name-only --non-interactive
+      git symbolic-ref --short refs/remotes/origin/HEAD
+      git rev-parse --verify --quiet refs/heads/main
+      git merge-base HEAD main
+      git diff -z --name-only --diff-filter=ACMRT {SHA}...HEAD
+      git diff HEAD --check
+      git diff HEAD --color
+      """
 
   Scenario: --scope=all processes all files
     When executing "trident ci --scope=all --show=output"
@@ -109,4 +130,11 @@ Feature: "trident ci --scope" selects which files to process
     And file "untracked.md" now has content
       """
       # Untracked
+      """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git diff HEAD --color
+      git diff HEAD --check
+      git diff HEAD --color
       """

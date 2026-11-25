@@ -16,6 +16,11 @@ Feature: "trident precommit" does not run "git diff --check"
     Then it prints nothing to STDERR
     And it prints nothing to STDOUT
     And the exit code is 0
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z
+      """
 
   Scenario: whitespace error in a changed file
     Given I change file "main.txt" to
@@ -27,6 +32,11 @@ Feature: "trident precommit" does not run "git diff --check"
     Then it prints nothing to STDERR
     And it prints nothing to STDOUT
     And the exit code is 0
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z
+      """
 
   Scenario: conflict markers in a changed file
     Given I change file "main.txt" to
@@ -42,3 +52,8 @@ Feature: "trident precommit" does not run "git diff --check"
     Then it prints nothing to STDERR
     And it prints nothing to STDOUT
     And the exit code is 0
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z
+      """

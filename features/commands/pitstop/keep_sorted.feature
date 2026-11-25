@@ -29,7 +29,7 @@ Feature: "trident pitstop" keep-sorted only rewrites files changed on the curren
 
   Scenario: on a feature branch, does not sort files that were not changed on the branch
     Given I ran "git checkout -b feature"
-    And a file "changed.toml" with content
+    And a file "changed.toml" with unix newlines
       """
       # keep-sorted start
       b = 2
@@ -50,6 +50,13 @@ Feature: "trident pitstop" keep-sorted only rewrites files changed on the curren
       # keep-sorted end
       """
     And file "untouched.toml" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z --untracked-files=all
+      git status --porcelain=v1 -z --untracked-files=all
+      git diff HEAD --check
+      """
 
   Scenario: on the main branch, does not sort committed files that were not changed
     Given a committed file "changed.toml" with content
@@ -80,3 +87,10 @@ Feature: "trident pitstop" keep-sorted only rewrites files changed on the curren
       # keep-sorted end
       """
     And file "untouched.toml" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z --untracked-files=all
+      git status --porcelain=v1 -z --untracked-files=all
+      git diff HEAD --check
+      """

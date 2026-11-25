@@ -20,6 +20,10 @@ Feature: pitstop Dockerfile with hadolint
       """
     And the exit code is 0
     And file "Dockerfile" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: invalid Dockerfile
     Given a file "Dockerfile" with content
@@ -35,3 +39,7 @@ Feature: pitstop Dockerfile with hadolint
       """
     And the exit code is 1
     And file "Dockerfile" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """

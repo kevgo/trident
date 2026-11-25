@@ -27,6 +27,12 @@ Feature: "trident postedit" lints only uncommitted files
       lint Markdown
       """
     And the exit code is 0
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z --untracked-files=all
+      git diff HEAD --check
+      """
 
   Scenario: has uncommitted files
     Given a committed file "already_committed.md" with content
@@ -68,6 +74,12 @@ Feature: "trident postedit" lints only uncommitted files
       already_committed.md
       """
     And the exit code is 1
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z --untracked-files=all
+      git diff HEAD --check
+      """
 
   Scenario: untracked file with spaces in the name
     Given a file "my file.md" with content
@@ -85,3 +97,9 @@ Feature: "trident postedit" lints only uncommitted files
       my file.md:1:1: [MD041] First line in file should be a level 1 heading
       """
     And the exit code is 1
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z --untracked-files=all
+      git diff HEAD --check
+      """

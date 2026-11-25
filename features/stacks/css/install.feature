@@ -2,7 +2,7 @@
 Feature: install all CSS tools
 
   Scenario: not installed
-    Given a file "main.css" with content
+    Given a file "main.css" with unix newlines
       """
       .foo {
         color:    red;
@@ -28,4 +28,8 @@ Feature: install all CSS tools
       """
       delete-empty-folders \d+\.\d+\.\d+
       biome \d+\.\d+\.\d+
+      """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
       """

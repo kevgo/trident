@@ -6,13 +6,13 @@ Feature: unsafe-fix CSS
       biome 2.4.0
       delete-empty-folders 0.0.2
       """
-    And a file "main.css" with content
+    And a file "main.css" with unix newlines
       """
       .style {
       \tcolor: red !important;
       }
       """
-    And a file "biome.json" with content
+    And a file "biome.json" with unix newlines
       """
       {
         "linter": {
@@ -38,6 +38,10 @@ Feature: unsafe-fix CSS
       \tcolor: red;
       }
       """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: fix
     When executing "trident fix --show=output"
@@ -47,3 +51,7 @@ Feature: unsafe-fix CSS
       """
     And the exit code is 0
     And file "main.css" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """

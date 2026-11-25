@@ -19,6 +19,10 @@ Feature: lint Markdown
       """
     And the exit code is 0
     And file "main.md" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: unformatted Markdown
     Given a file "main.md" with content
@@ -33,6 +37,10 @@ Feature: lint Markdown
       """
     And the exit code is 1
     And file "main.md" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: invalid Markdown
     Given a file "main.md" with content
@@ -47,6 +55,10 @@ Feature: lint Markdown
       """
     And the exit code is 1
     And file "main.md" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: file with spaces in the name
     Given a file "my file.md" with content
@@ -61,3 +73,7 @@ Feature: lint Markdown
       """
     And the exit code is 1
     And file "my file.md" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """

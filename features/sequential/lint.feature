@@ -1,7 +1,7 @@
 Feature: run lints sequentially
 
   Scenario: custom lints
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "applications": {
@@ -22,3 +22,7 @@ Feature: run lints sequentially
       fast done
       """
     And the exit code is 0
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """

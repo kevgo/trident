@@ -22,6 +22,11 @@ Feature: precommit Cucumber
     Then it prints nothing to STDOUT
     And the exit code is 0
     And file "main.feature" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z
+      """
 
   Scenario: unformatted Cucumber
     Given a file "main.feature" with content
@@ -56,6 +61,12 @@ Feature: precommit Cucumber
         Scenario: bar2
           Given another step
       """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z
+      git add -- main.feature other.feature
+      """
 
   Scenario: invalid Cucumber
     Given a file "main.feature" with content
@@ -71,3 +82,8 @@ Feature: precommit Cucumber
       """
     And the exit code is 0
     And file "main.feature" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z
+      """

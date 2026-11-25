@@ -6,7 +6,7 @@ Feature: install all JSON tools
       """
       delete-empty-folders 0.0.2
       """
-    And a file "main.json" with content
+    And a file "main.json" with unix newlines
       """
       {"key":"value"}
       """
@@ -23,4 +23,8 @@ Feature: install all JSON tools
     And file "run-that-app" now has an additional line matching
       """
       biome \d+\.\d+\.\d+
+      """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
       """

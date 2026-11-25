@@ -9,7 +9,7 @@ Feature: lint Python with Pyright
       pyright 1.1.414
       ruff 0.15.16
       """
-    And a file "trident.json" with content
+    And a file "trident.json" with unix newlines
       """
       {
         "applications": {
@@ -25,7 +25,7 @@ Feature: lint Python with Pyright
         }
       }
       """
-    And a file "pyrightconfig.json" with content
+    And a file "pyrightconfig.json" with unix newlines
       """
       {
         "typeCheckingMode": "strict"
@@ -55,6 +55,10 @@ Feature: lint Python with Pyright
     And the exit code is 0
     And file "main.py" is unchanged
     And file "other.py" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: unformatted Python
     Given a file "main.py" with content
@@ -79,6 +83,10 @@ Feature: lint Python with Pyright
     And the exit code is 0
     And file "main.py" is unchanged
     And file "other.py" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: typecheck errors
     Given a file "main.py" with content
@@ -100,6 +108,10 @@ Feature: lint Python with Pyright
     And the exit code is 1
     And file "main.py" is unchanged
     And file "other.py" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: invalid Python
     Given a file "main.py" with content
@@ -124,3 +136,7 @@ Feature: lint Python with Pyright
     And the exit code is 1
     And file "main.py" is unchanged
     And file "other.py" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """

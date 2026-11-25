@@ -31,6 +31,8 @@
       "^the unstaged changes are$",
       "^there are no staged changes$",
       "^there are no unstaged changes$"
-    ]
+    ],
+    "^it runs the Git commands$",
+    "^it runs no Git commands$"
   ]
 }

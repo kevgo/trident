@@ -26,22 +26,22 @@ ci: build  # run the full CI pipeline
 contest: ${RTA}
 	$(CONTEST)
 
-cuke: build-release  # runs all end-to-end tests
+cuke: build-release build-git-double  # runs all end-to-end tests
 	cargo test --test=cuke -- -t "not @online"
 
-cuke-slow: build-release  # runs the end-to-end tests one by one
+cuke-slow: build-release build-git-double  # runs the end-to-end tests one by one
 	cargo test --test=cuke -- -t "not @online" --concurrency 1
 
-cuke-online: build-release  # runs the end-to-end tests online
+cuke-online: build-release build-git-double  # runs the end-to-end tests online
 	cargo test --test=cuke -- -t @online --concurrency 1
 
-cuke-update: build-release  # updates the golden snapshots in the end-to-end tests
+cuke-update: build-release build-git-double  # updates the golden snapshots in the end-to-end tests
 	TRIDENT_UPDATE_SNAPSHOTS=1 cargo test --test=cuke -- --concurrency 1
 
-cuke-all: build-release  # runs all end-to-end tests including the ones making network calls
+cuke-all: build-release build-git-double  # runs all end-to-end tests including the ones making network calls
 	cargo test --test=cuke -- --concurrency 1
 
-cukethis: build-release  # runs only end-to-end tests tagged with @this
+cukethis: build-release build-git-double  # runs only end-to-end tests tagged with @this
 	cargo test --test=cuke -- -t @this
 
 .PHONY: demo
@@ -109,6 +109,9 @@ ${RTA}:
 	rm -f tools/rta* || true
 	(cd tools && curl https://raw.githubusercontent.com/kevgo/run-that-app/main/download.sh | sh -s -- --version ${RUN_THAT_APP_VERSION} --name rta@${RUN_THAT_APP_VERSION})
 	ln -s rta@$(RUN_THAT_APP_VERSION)$(EXE) tools/rta$(EXE)
+
+build-git-double:  # builds the Git double that the end-to-end tests use
+	cargo build --release --locked --package=git_double
 
 .DEFAULT_GOAL := help
 .SILENT:

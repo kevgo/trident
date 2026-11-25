@@ -91,6 +91,13 @@ Feature: CI if committed files are unformatted
       """
       console.log("hello");
       """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git diff HEAD --color
+      git diff HEAD --check
+      git diff HEAD --color
+      """
 
   Scenario: --show=verbose
     When executing "trident ci --show=verbose"
@@ -168,6 +175,13 @@ Feature: CI if committed files are unformatted
       """
       console.log("hello");
       """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git diff HEAD --color
+      git diff HEAD --check
+      git diff HEAD --color
+      """
 
   Scenario: --show=names
     When executing "trident ci --show=names"
@@ -234,6 +248,13 @@ Feature: CI if committed files are unformatted
       """
       console.log("hello");
       """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git diff HEAD --color
+      git diff HEAD --check
+      git diff HEAD --color
+      """
 
   Scenario: --show=failed
     When executing "trident ci --show=failed"
@@ -267,4 +288,11 @@ Feature: CI if committed files are unformatted
     And file "main.ts" now has content
       """
       console.log("hello");
+      """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git diff HEAD --color
+      git diff HEAD --check
+      git diff HEAD --color
       """

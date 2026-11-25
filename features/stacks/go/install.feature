@@ -7,7 +7,7 @@ Feature: install all Go tools
       module example.com/demo
       go 1.21
       """
-    And a file "main.go" with content
+    And a file "main.go" with unix newlines
       """
       package main
       import "fmt"
@@ -40,4 +40,8 @@ Feature: install all Go tools
       """
       delete-empty-folders \d+\.\d+\.\d+
       gofumpt \d+\.\d+\.\d+
+      """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
       """

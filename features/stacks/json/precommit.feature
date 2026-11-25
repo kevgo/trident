@@ -9,7 +9,7 @@ Feature: precommit JSON
       """
 
   Scenario: valid JSON
-    Given a file "main.json" with content
+    Given a file "main.json" with unix newlines
       """
       { "key": "value" }
       """
@@ -18,9 +18,14 @@ Feature: precommit JSON
     Then it prints nothing to STDOUT
     And the exit code is 0
     And file "main.json" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z
+      """
 
   Scenario: unformatted JSON
-    Given a file "main.json" with content
+    Given a file "main.json" with unix newlines
       """
       {"key":"value"}
       """
@@ -32,9 +37,15 @@ Feature: precommit JSON
       """
       { "key": "value" }
       """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z
+      git add -- main.json
+      """
 
   Scenario: invalid JSON
-    Given a file "main.json" with content
+    Given a file "main.json" with unix newlines
       """
       { "key":
       """
@@ -46,3 +57,8 @@ Feature: precommit JSON
       """
     And the exit code is 0
     And file "main.json" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z
+      """

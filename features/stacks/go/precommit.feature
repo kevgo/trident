@@ -15,7 +15,7 @@ Feature: precommit Go
       """
 
   Scenario: valid Go
-    Given a file "main.go" with content
+    Given a file "main.go" with unix newlines
       """
       package main
 
@@ -30,9 +30,14 @@ Feature: precommit Go
     Then it prints nothing to STDOUT
     And the exit code is 0
     And file "main.go" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z
+      """
 
   Scenario: unformatted Go
-    Given a file "main.go" with content
+    Given a file "main.go" with unix newlines
       """
       package main
       import "fmt"
@@ -40,7 +45,7 @@ Feature: precommit Go
       	fmt.Println(    "Hello, world!")
       }
       """
-    And a file "other.go" with content
+    And a file "other.go" with unix newlines
       """
       package other
       import "fmt"
@@ -72,9 +77,15 @@ Feature: precommit Go
       	fmt.Println("Hello, other!")
       }
       """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z
+      git add -- main.go other.go
+      """
 
   Scenario: invalid Go
-    Given a file "main.go" with content
+    Given a file "main.go" with unix newlines
       """
       package main
       import "fmt"
@@ -90,3 +101,8 @@ Feature: precommit Go
       """
     And the exit code is 0
     And file "main.go" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z
+      """

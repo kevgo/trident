@@ -1,0 +1,15 @@
+[package]
+name = "git_double"
+version = "0.0.0"
+edition = "2024"
+description = "Test double for the Git executable that logs its invocations before running the real Git."
+publish = false
+
+[lints.clippy]
+pedantic = { level = "deny" }
+
+[lints.rust]
+unsafe_code = "forbid"
+
+[dependencies]
+shell-escape = "0.1.5"

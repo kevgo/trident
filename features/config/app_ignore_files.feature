@@ -7,18 +7,18 @@ Feature: ignore files for an application
       delete-empty-folders 0.0.2
       taplo 0.10.0
       """
-    And a file "Cargo.toml" with content
+    And a file "Cargo.toml" with unix newlines
       """
       [package]
       name = "demo"
       """
-    And a file "config.toml" with content
+    And a file "config.toml" with unix newlines
       """
       key = "value"
       """
 
   Scenario: lint honors application-level ignored files
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "applications": {
@@ -39,9 +39,13 @@ Feature: ignore files for an application
       Cargo.toml
       """
     And the exit code is 0
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: fix honors application-level ignored files
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "applications": {
@@ -51,7 +55,7 @@ Feature: ignore files for an application
         }
       }
       """
-    And a file "config.toml" with content
+    And a file "config.toml" with unix newlines
       """
       key =     "value"
       """
@@ -71,9 +75,13 @@ Feature: ignore files for an application
       key = "value"
       """
     And file "Cargo.toml" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: lint honors globally ignored files
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "ignore-files": ["Cargo.toml"]
@@ -90,9 +98,13 @@ Feature: ignore files for an application
       Cargo.toml
       """
     And the exit code is 0
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: fix honors globally ignored files
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "ignore-files": ["Cargo.toml"]
@@ -109,3 +121,7 @@ Feature: ignore files for an application
       Cargo.toml
       """
     And the exit code is 0
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """

@@ -1,7 +1,7 @@
 Feature: run a pitstop sequentially
 
   Scenario: custom fixes, lints, and tests
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "applications": {
@@ -33,3 +33,7 @@ Feature: run a pitstop sequentially
       unit done
       """
     And the exit code is 0
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """

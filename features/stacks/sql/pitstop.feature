@@ -7,7 +7,7 @@ Feature: pitstop SQL
       sqlfmt 0.32.0
       uv 0.13.0
       """
-    And a file "trident.json" with content
+    And a file "trident.json" with unix newlines
       """
       {
         "applications": {
@@ -60,6 +60,10 @@ Feature: pitstop SQL
       """
       select id, name from two
       """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: unformatted SQL with lint errors
     Given a file "one.sql" with content
@@ -74,3 +78,7 @@ Feature: pitstop SQL
       """
     And the exit code is 0
     And file "one.sql" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """

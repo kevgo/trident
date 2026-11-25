@@ -54,6 +54,13 @@ Feature: "trident pitstop" enables fixes whose config is already committed
 
       also check out [Two](two.md)
       """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z --untracked-files=all
+      git status --porcelain=v1 -z --untracked-files=all
+      git diff HEAD --check
+      """
 
   Scenario: on the main branch, runs Tikibase even though its config file is not changed
     Given I change file "one.md" to
@@ -77,4 +84,11 @@ Feature: "trident pitstop" enables fixes whose config is already committed
       # One
 
       also check out [Two](two.md)
+      """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z --untracked-files=all
+      git status --porcelain=v1 -z --untracked-files=all
+      git diff HEAD --check
       """
