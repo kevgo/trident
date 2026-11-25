@@ -11,7 +11,7 @@ Feature: "trident lint" skips disabled applications
       """
       key =     "value"
       """
-    And a file "trident.json" with unix newlines
+    And a file "trident.json" with content
       """
       {
         "applications": {

@@ -6,7 +6,7 @@ Feature: install Tikibase
       """
       delete-empty-folders 0.0.2
       """
-    And a file "trident.json" with unix newlines
+    And a file "trident.json" with content
       """
       {
         "applications": {

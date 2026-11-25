@@ -7,7 +7,7 @@ Feature: disable an application's fix-unsafe operation
       delete-empty-folders 0.0.2
       taplo 0.10.0
       """
-    And a file "trident.json" with unix newlines
+    And a file "trident.json" with content
       """
       {
         "applications": {

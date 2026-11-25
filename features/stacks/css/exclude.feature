@@ -6,7 +6,7 @@ Feature: ignore a CSS file
       biome 2.4.0
       delete-empty-folders 0.0.2
       """
-    And a file "trident.json" with unix newlines
+    And a file "trident.json" with content
       """
       {
         "ignore-files": ["bad.css"]

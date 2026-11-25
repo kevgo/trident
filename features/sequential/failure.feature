@@ -1,7 +1,7 @@
 Feature: sequential runs continue after a failure
 
   Scenario: the first test fails
-    Given a file "trident.json" with unix newlines
+    Given a file "trident.json" with content
       """
       {
         "tests": [

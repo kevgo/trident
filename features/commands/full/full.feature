@@ -7,7 +7,7 @@ Feature: full runs all fixes, lints, and tests
       delete-empty-folders 0.0.2
       ruff 0.15.16
       """
-    And a file "trident.json" with unix newlines
+    And a file "trident.json" with content
       """
       {
         "tests": [
@@ -69,7 +69,7 @@ Feature: full runs all fixes, lints, and tests
       delete-empty-folders 0.0.2
       ruff 0.15.16
       """
-    And a file "trident.json" with unix newlines
+    And a file "trident.json" with content
       """
       {
         "applications": {

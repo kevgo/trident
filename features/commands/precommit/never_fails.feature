@@ -1,7 +1,7 @@
 Feature: "trident precommit" always exits 0
 
   Scenario: invalid config file
-    Given a file "trident.json" with unix newlines
+    Given a file "trident.json" with content
       """
       {
         "unknown-key": true

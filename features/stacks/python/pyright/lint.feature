@@ -9,7 +9,7 @@ Feature: lint Python with Pyright
       pyright 1.1.414
       ruff 0.15.16
       """
-    And a file "trident.json" with unix newlines
+    And a file "trident.json" with content
       """
       {
         "applications": {

@@ -11,7 +11,7 @@ Feature: CI runs all fixes, formatters, lints, and tests
       """
 
   Scenario:
-    Given a file "trident.json" with unix newlines
+    Given a file "trident.json" with content
       """
       {
         "tests": [
@@ -52,7 +52,7 @@ Feature: CI runs all fixes, formatters, lints, and tests
       """
 
   Scenario: test fails
-    Given a file "trident.json" with unix newlines
+    Given a file "trident.json" with content
       """
       {
         "tests": [
@@ -79,7 +79,7 @@ Feature: CI runs all fixes, formatters, lints, and tests
       """
 
   Scenario: --test selects named tests
-    Given a file "trident.json" with unix newlines
+    Given a file "trident.json" with content
       """
       {
         "tests": [
@@ -116,7 +116,7 @@ Feature: CI runs all fixes, formatters, lints, and tests
       """
 
   Scenario: commands.ci.test runs those tests by default
-    Given a file "trident.json" with unix newlines
+    Given a file "trident.json" with content
       """
       {
         "tests": [
@@ -152,7 +152,7 @@ Feature: CI runs all fixes, formatters, lints, and tests
       """
 
   Scenario: unknown test name
-    Given a file "trident.json" with unix newlines
+    Given a file "trident.json" with content
       """
       {
         "tests": [

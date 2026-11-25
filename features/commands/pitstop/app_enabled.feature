@@ -13,7 +13,7 @@ Feature: "trident pitstop" skips disabled applications
       """
 
   Scenario: skips a disabled application
-    Given a file "trident.json" with unix newlines
+    Given a file "trident.json" with content
       """
       {
         "applications": {
@@ -40,7 +40,7 @@ Feature: "trident pitstop" skips disabled applications
       """
 
   Scenario: skips a disabled global application
-    Given a file "trident.json" with unix newlines
+    Given a file "trident.json" with content
       """
       {
         "applications": {

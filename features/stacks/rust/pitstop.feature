@@ -30,7 +30,7 @@ Feature: pitstop Rust
       """
 
   Scenario: custom linters and fixes defined
-    Given a file "trident.json" with unix newlines
+    Given a file "trident.json" with content
       """
       {
         "stacks": {

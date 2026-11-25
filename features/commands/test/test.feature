@@ -1,7 +1,7 @@
 Feature: custom tests
 
   Scenario: tests pass
-    Given a file "trident.json" with unix newlines
+    Given a file "trident.json" with content
       """
       {
         "tests": [
@@ -33,7 +33,7 @@ Feature: custom tests
     And it runs no Git commands
 
   Scenario: test fails
-    Given a file "trident.json" with unix newlines
+    Given a file "trident.json" with content
       """
       {
         "tests": [
@@ -57,7 +57,7 @@ Feature: custom tests
     And it runs no Git commands
 
   Scenario: unnamed test uses the command as the name
-    Given a file "trident.json" with unix newlines
+    Given a file "trident.json" with content
       """
       {
         "tests": [
@@ -85,7 +85,7 @@ Feature: custom tests
     And it runs no Git commands
 
   Scenario: --test selects named tests
-    Given a file "trident.json" with unix newlines
+    Given a file "trident.json" with content
       """
       {
         "tests": [
@@ -118,7 +118,7 @@ Feature: custom tests
     And it runs no Git commands
 
   Scenario: commands.test.test runs those tests by default
-    Given a file "trident.json" with unix newlines
+    Given a file "trident.json" with content
       """
       {
         "tests": [
@@ -150,7 +150,7 @@ Feature: custom tests
     And it runs no Git commands
 
   Scenario: unknown test name
-    Given a file "trident.json" with unix newlines
+    Given a file "trident.json" with content
       """
       {
         "tests": [

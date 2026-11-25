@@ -8,7 +8,7 @@ Feature: fix SQL
       sqlfmt 0.32.0
       uv 0.13.0
       """
-    And a file "trident.json" with unix newlines
+    And a file "trident.json" with content
       """
       {
         "applications": {

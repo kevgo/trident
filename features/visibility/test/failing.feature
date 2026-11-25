@@ -1,7 +1,7 @@
 Feature: test command with a failing test
 
   Background:
-    Given a file "trident.json" with unix newlines
+    Given a file "trident.json" with content
       """
       {
         "tests": [

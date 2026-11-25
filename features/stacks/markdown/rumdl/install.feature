@@ -12,7 +12,7 @@ Feature: install Rumdl
       """
       #     Hello
       """
-    And a file "trident.json" with unix newlines
+    And a file "trident.json" with content
       """
       {
         "applications": {

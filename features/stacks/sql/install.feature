@@ -2,7 +2,7 @@
 Feature: install sqlfmt
 
   Scenario: not installed
-    Given a file "trident.json" with unix newlines
+    Given a file "trident.json" with content
       """
       {
         "applications": {

@@ -18,7 +18,7 @@ Feature: ignore files for an application
       """
 
   Scenario: lint honors application-level ignored files
-    Given a file "trident.json" with unix newlines
+    Given a file "trident.json" with content
       """
       {
         "applications": {
@@ -45,7 +45,7 @@ Feature: ignore files for an application
       """
 
   Scenario: fix honors application-level ignored files
-    Given a file "trident.json" with unix newlines
+    Given a file "trident.json" with content
       """
       {
         "applications": {
@@ -81,7 +81,7 @@ Feature: ignore files for an application
       """
 
   Scenario: lint honors globally ignored files
-    Given a file "trident.json" with unix newlines
+    Given a file "trident.json" with content
       """
       {
         "ignore-files": ["Cargo.toml"]
@@ -104,7 +104,7 @@ Feature: ignore files for an application
       """
 
   Scenario: fix honors globally ignored files
-    Given a file "trident.json" with unix newlines
+    Given a file "trident.json" with content
       """
       {
         "ignore-files": ["Cargo.toml"]
