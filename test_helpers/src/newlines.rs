@@ -1,7 +1,7 @@
 /// Line endings for the current operating system: CRLF on Windows, LF elsewhere.
 #[must_use]
 pub fn platform_newlines(content: &str) -> String {
-    let content = crate::standardize_newlines(content);
+    let content = crate::unix_newlines(content);
     if cfg!(windows) {
         content.replace('\n', "\r\n")
     } else {
@@ -10,7 +10,7 @@ pub fn platform_newlines(content: &str) -> String {
 }
 
 #[must_use]
-pub fn standardize_newlines(content: &str) -> String {
+pub fn unix_newlines(content: &str) -> String {
     content.replace("\r\n", "\n").replace('\r', "\n")
 }
 
@@ -18,7 +18,7 @@ pub fn standardize_newlines(content: &str) -> String {
 mod tests {
 
     mod standardize_newlines {
-        use super::super::standardize_newlines;
+        use super::super::unix_newlines;
         use maplit::hashmap;
 
         #[test]
@@ -32,7 +32,7 @@ mod tests {
                 "one\r\ntwo\rthree\nfour" => "one\ntwo\nthree\nfour", // mixed newlines
             };
             for (given, want) in tests {
-                let have = standardize_newlines(given);
+                let have = unix_newlines(given);
                 pretty::assert_eq!(have, want);
             }
         }

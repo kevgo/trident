@@ -4,7 +4,7 @@ use cucumber::gherkin::Step;
 use cucumber::then;
 use regex::Regex;
 use std::path::Path;
-use test_helpers::{docstring_body, snapshots, standardize_newlines};
+use test_helpers::{docstring_body, snapshots, unix_newlines};
 use tokio::fs;
 use tokio::process::Command;
 
@@ -76,7 +76,7 @@ async fn file_has_additional_line_matching(
 async fn file_has_content(world: &mut TridentWorld, step: &Step, filename: String) {
     let want = docstring_body(step.docstring.as_ref().unwrap());
     let filepath = world.dir.join(&filename);
-    let have = standardize_newlines(&fs::read_to_string(filepath).await.unwrap());
+    let have = unix_newlines(&fs::read_to_string(filepath).await.unwrap());
     pretty::assert_eq!(have, want, "\n\nHAVE:\n{have}\n\nWANT:\n{want}\n\n");
 }
 

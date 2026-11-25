@@ -1,6 +1,6 @@
 use crate::world::{ExistingFile, TridentWorld};
 use cucumber::gherkin::Step;
-use test_helpers::{docstring_body, platform_newlines, standardize_newlines};
+use test_helpers::{docstring_body, platform_newlines, unix_newlines};
 use tokio::fs;
 
 pub enum Newlines {
@@ -16,7 +16,7 @@ pub async fn write_file(
 ) {
     let body = docstring_body(step.docstring.as_ref().unwrap());
     let content = match newlines {
-        Newlines::Unix => standardize_newlines(&body),
+        Newlines::Unix => unix_newlines(&body),
         Newlines::Platform => platform_newlines(&body),
     };
     let filepath = world.dir.join(&filename);
