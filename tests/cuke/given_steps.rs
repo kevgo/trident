@@ -34,7 +34,7 @@ async fn a_file_with_unix_newlines(world: &mut TridentWorld, step: &Step, filena
     write_file(world, step, filename, Newlines::Unix).await;
 }
 
-#[given(expr = "a file {string} with platform-specific newlines and content")]
+#[given(expr = "a file {string} with content")]
 async fn a_file_with_platform_newlines(world: &mut TridentWorld, step: &Step, filename: String) {
     write_file(world, step, filename, Newlines::Platform).await;
 }

@@ -8,7 +8,7 @@ Feature: fix YML
       """
 
   Scenario: valid YML
-    Given a file "main.yml" with platform-specific newlines and content
+    Given a file "main.yml" with content
       """
       key: value
       """
