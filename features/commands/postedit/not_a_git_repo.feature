@@ -23,3 +23,7 @@ Feature: "trident postedit" lints all files outside a Git repository
       """
     And the exit code is 1
     And file "main.md" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """

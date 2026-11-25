@@ -4,7 +4,7 @@ use cucumber::gherkin::Step;
 use cucumber::then;
 use regex::Regex;
 use std::path::Path;
-use test_helpers::{docstring_body, snapshots, standardize_newlines};
+use test_helpers::{docstring_body, snapshots, unix_newlines};
 use tokio::fs;
 use tokio::process::Command;
 
@@ -76,7 +76,7 @@ async fn file_has_additional_line_matching(
 async fn file_has_content(world: &mut TridentWorld, step: &Step, filename: String) {
     let want = docstring_body(step.docstring.as_ref().unwrap());
     let filepath = world.dir.join(&filename);
-    let have = standardize_newlines(&fs::read_to_string(filepath).await.unwrap());
+    let have = unix_newlines(&fs::read_to_string(filepath).await.unwrap());
     pretty::assert_eq!(have, want, "\n\nHAVE:\n{have}\n\nWANT:\n{want}\n\n");
 }
 
@@ -158,6 +158,41 @@ fn it_does_not_print_a_block_matching(world: &mut TridentWorld, step: &Step) {
     assert!(
         !Regex::new(want).unwrap().is_match(stdout),
         "output does match the block\n\nHAVE:\n{stdout}\n\nWANT (regex):\n{want}\n\n"
+    );
+}
+
+#[then("it runs the Git commands")]
+fn it_runs_the_git_commands(world: &mut TridentWorld, step: &Step) {
+    let want = step.docstring.as_ref().unwrap().trim();
+    let have = world.git_commands().join("\n");
+    if snapshots::enabled() {
+        if have != want {
+            let path = world.feature_path.clone().unwrap();
+            let display_path = path.strip_prefix(&world.cwd).unwrap_or(&path);
+            // starts with a newline to not append to the dots that the DotWriter prints
+            println!(
+                "\nupdating the Git commands in {}:{}",
+                display_path.display(),
+                step.position.line
+            );
+            snapshots::queue_update(snapshots::SnapshotEdit {
+                path,
+                step_line: step.position.line,
+                new_content: have,
+            });
+        }
+        return;
+    }
+    pretty::assert_eq!(want, have, "unexpected Git commands");
+}
+
+#[then("it runs no Git commands")]
+fn it_runs_no_git_commands(world: &mut TridentWorld) {
+    let have = world.git_commands();
+    assert!(
+        have.is_empty(),
+        "expected no Git commands but Trident ran:\n\n{}",
+        have.join("\n")
     );
 }
 

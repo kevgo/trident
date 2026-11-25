@@ -9,14 +9,14 @@ Feature: keep-sorted support
       ripgrep 15.2.0
       taplo 0.10.0
       """
-    And a file "unsorted_1.toml" with content
+    And a file "unsorted_1.toml" with unix newlines
       """
       # keep-sorted start
       a = 1
       b = 1
       # keep-sorted end
       """
-    And a file "unsorted_2.toml" with content
+    And a file "unsorted_2.toml" with unix newlines
       """
       # keep-sorted start
       c = 1
@@ -32,9 +32,13 @@ Feature: keep-sorted support
       """
     And file "unsorted_1.toml" is unchanged
     And file "unsorted_2.toml" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: keep-sorted sorts marker-bearing files when enabled
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "applications": {
@@ -64,9 +68,13 @@ Feature: keep-sorted support
       d = 1
       # keep-sorted end
       """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: does not sort globally ignored files
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "ignore-files": ["unsorted_1.toml"],
@@ -90,9 +98,13 @@ Feature: keep-sorted support
       # keep-sorted end
       """
     And file "unsorted_1.toml" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: does not sort files that should not be sorted
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "applications": {
@@ -116,3 +128,7 @@ Feature: keep-sorted support
       # keep-sorted end
       """
     And file "unsorted_1.toml" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """

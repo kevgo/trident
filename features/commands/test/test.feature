@@ -1,7 +1,7 @@
 Feature: custom tests
 
   Scenario: tests pass
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "tests": [
@@ -30,9 +30,10 @@ Feature: custom tests
       . ./tests ./tests/one.sh ./trident.json
       """
     And the exit code is 0
+    And it runs no Git commands
 
   Scenario: test fails
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "tests": [
@@ -53,9 +54,10 @@ Feature: custom tests
       custom test failed
       """
     And the exit code is 4
+    And it runs no Git commands
 
   Scenario: unnamed test uses the command as the name
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "tests": [
@@ -70,6 +72,7 @@ Feature: custom tests
       unnamed
       """
     And the exit code is 0
+    And it runs no Git commands
 
   Scenario: missing tests succeeds
     When executing "trident test --show=output"
@@ -79,9 +82,10 @@ Feature: custom tests
       """
     And it prints nothing to STDOUT
     And the exit code is 0
+    And it runs no Git commands
 
   Scenario: --test selects named tests
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "tests": [
@@ -111,9 +115,10 @@ Feature: custom tests
       running slow tests
       """
     And the exit code is 0
+    And it runs no Git commands
 
   Scenario: commands.test.test runs those tests by default
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "tests": [
@@ -142,9 +147,10 @@ Feature: custom tests
       running cuke tests
       """
     And the exit code is 0
+    And it runs no Git commands
 
   Scenario: unknown test name
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "tests": [
@@ -160,3 +166,4 @@ Feature: custom tests
       available tests: unit, cuke
       """
     And the exit code is 1
+    And it runs no Git commands

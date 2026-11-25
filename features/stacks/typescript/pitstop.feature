@@ -8,11 +8,11 @@ Feature: pitstop TypeScript
       """
 
   Scenario: unformatted TypeScript
-    Given a file "main.ts" with content
+    Given a file "main.ts" with unix newlines
       """
       console.log(  "hello"  );
       """
-    And a file "other.ts" with content
+    And a file "other.ts" with unix newlines
       """
       console.log(  "other"  );
       """
@@ -30,9 +30,13 @@ Feature: pitstop TypeScript
       """
       console.log("other");
       """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: unformatted TypeScript with lint errors
-    Given a file "main.ts" with content
+    Given a file "main.ts" with unix newlines
       """
       function foo() {
         let a = 1;
@@ -51,4 +55,8 @@ Feature: pitstop TypeScript
       function foo() {
       \tlet a = 1;
       }
+      """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
       """

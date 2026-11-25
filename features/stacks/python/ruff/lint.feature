@@ -25,6 +25,10 @@ Feature: lint Python
     And the exit code is 0
     And file "main.py" is unchanged
     And file "other.py" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: unformatted Python
     Given a file "main.py" with content
@@ -39,6 +43,10 @@ Feature: lint Python
     Then the exit code is 0
     And file "main.py" is unchanged
     And file "other.py" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: invalid Python
     Given a file "main.py" with content
@@ -53,3 +61,7 @@ Feature: lint Python
     Then the exit code is 1
     And file "main.py" is unchanged
     And file "other.py" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """

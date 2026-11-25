@@ -2,7 +2,7 @@
 Feature: install all YML tools
 
   Scenario: not installed
-    Given a file "main.yml" with content
+    Given a file "main.yml" with unix newlines
       """
       key:     value
       """
@@ -20,4 +20,8 @@ Feature: install all YML tools
       """
       delete-empty-folders \d+\.\d+\.\d+
       yamlfmt \d+\.\d+\.\d+
+      """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
       """

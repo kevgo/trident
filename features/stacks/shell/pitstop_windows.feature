@@ -10,7 +10,7 @@ Feature: pitstop Shell on Windows
       """
 
   Scenario: unformatted Shell
-    Given a file "one.sh" with content
+    Given a file "one.sh" with unix newlines
       """
       #!/usr/bin/env bash
       foo()   {
@@ -33,9 +33,13 @@ Feature: pitstop Shell on Windows
       }
       foo
       """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: unformatted Shell with lint errors
-    Given a file "one.sh" with content
+    Given a file "one.sh" with unix newlines
       """
       #!/usr/bin/env bash
       foo()   {
@@ -43,7 +47,7 @@ Feature: pitstop Shell on Windows
       }
       foo
       """
-    And a file "two.sh" with content
+    And a file "two.sh" with unix newlines
       """
       #!/usr/bin/env bash
       cd   /tmp
@@ -66,4 +70,8 @@ Feature: pitstop Shell on Windows
       """
       #!/usr/bin/env bash
       cd /tmp
+      """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
       """

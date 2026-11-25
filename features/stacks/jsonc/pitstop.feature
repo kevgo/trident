@@ -6,7 +6,7 @@ Feature: pitstop JSONC
       biome 2.4.0
       delete-empty-folders 0.0.2
       """
-    And a file "trident.json" with content
+    And a file "trident.json" with unix newlines
       """
       {
         "applications": {
@@ -16,11 +16,11 @@ Feature: pitstop JSONC
       """
 
   Scenario: unformatted JSONC
-    Given a file "main.jsonc" with content
+    Given a file "main.jsonc" with unix newlines
       """
       {  "key"  :  "value"  } // comment
       """
-    And a file "other.jsonc" with content
+    And a file "other.jsonc" with unix newlines
       """
       {  "key"  :  "other"  } // comment
       """
@@ -38,9 +38,13 @@ Feature: pitstop JSONC
       """
       { "key": "other" } // comment
       """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: invalid JSONC
-    Given a file "main.jsonc" with content
+    Given a file "main.jsonc" with unix newlines
       """
       { "key":
       """
@@ -52,3 +56,7 @@ Feature: pitstop JSONC
       """
     And the exit code is 1
     And file "main.jsonc" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """

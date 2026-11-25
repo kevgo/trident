@@ -8,7 +8,7 @@ Feature: stack-scoped custom fixes
       ruff 0.15.16
       rumdl 0.2.14
       """
-    And a file "trident.json" with content
+    And a file "trident.json" with unix newlines
       """
       {
         "stacks": {
@@ -51,6 +51,11 @@ Feature: stack-scoped custom fixes
       PYTHON FIX RAN
       """
     And the exit code is 0
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z
+      """
 
   Scenario: no file of the stack is staged
     And I change file "one.md" to
@@ -68,3 +73,8 @@ Feature: stack-scoped custom fixes
       PYTHON FIX RAN
       """
     And the exit code is 0
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z
+      """

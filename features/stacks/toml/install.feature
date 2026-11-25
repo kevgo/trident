@@ -2,7 +2,7 @@
 Feature: install all TOML tools
 
   Scenario: not installed
-    Given a file "main.toml" with content
+    Given a file "main.toml" with unix newlines
       """
       key =      "value"
       """
@@ -24,4 +24,8 @@ Feature: install all TOML tools
       """
       delete-empty-folders \d+\.\d+\.\d+
       taplo \d+\.\d+\.\d+
+      """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
       """

@@ -10,13 +10,13 @@ Feature: display statistics about the codebase
       """
       print("Hello, world!")
       """
-    And a file "main.css" with content
+    And a file "main.css" with unix newlines
       """
       p {
       \tcolor: red;
       }
       """
-    And a file "main.ts" with content
+    And a file "main.ts" with unix newlines
       """
       console.log("hello");
       """
@@ -25,4 +25,8 @@ Feature: display statistics about the codebase
       """
       1 CSS, 1 Python, 1 TypeScript, 1 other
       running 3 tasks
+      """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
       """

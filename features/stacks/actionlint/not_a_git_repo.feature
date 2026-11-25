@@ -6,7 +6,7 @@ Feature: GitHub Actions workflow files not in a Git repository
       actionlint 1.7.12
       delete-empty-folders 0.0.2
       """
-    And a file ".github/workflows/main.yml" with content
+    And a file ".github/workflows/main.yml" with unix newlines
       """
       name: CI
       on:
@@ -31,3 +31,7 @@ Feature: GitHub Actions workflow files not in a Git repository
       """
     And the exit code is 3
     And all files are unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """

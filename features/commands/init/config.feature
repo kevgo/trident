@@ -34,6 +34,7 @@ Feature: "trident init:config" writes the default config file
         "applications": {}
       }
       """
+    And it runs no Git commands
 
   Scenario Outline: existing config file
     Given a file "<FILENAME>" with content
@@ -48,6 +49,7 @@ Feature: "trident init:config" writes the default config file
       """
     And the exit code is 1
     And file "<FILENAME>" is unchanged
+    And it runs no Git commands
 
     Examples:
       | FILENAME      |
@@ -92,6 +94,7 @@ Feature: "trident init:config" writes the default config file
         "applications": {}
       }
       """
+    And it runs no Git commands
 
     Examples:
       | FILENAME      | FLAG    |

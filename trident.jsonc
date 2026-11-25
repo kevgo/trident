@@ -43,6 +43,10 @@
           {
             "name": "cargo clippy for test-helpers",
             "command": "cargo clippy --package=test_helpers --all-features"
+          },
+          {
+            "name": "cargo clippy for the Git double code",
+            "command": "cargo clippy --package=git_double --all-features"
           }
         ]
       },

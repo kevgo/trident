@@ -8,7 +8,7 @@ Feature: lint SQL
       sqlfmt 0.32.0
       uv 0.13.0
       """
-    And a file "trident.json" with content
+    And a file "trident.json" with unix newlines
       """
       {
         "applications": {
@@ -45,6 +45,10 @@ Feature: lint SQL
     And the exit code is 0
     And file "one.sql" is unchanged
     And file "two.sql" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: unformatted SQL
     Given a file "one.sql" with content
@@ -55,6 +59,10 @@ Feature: lint SQL
     Then it prints nothing to STDOUT
     And the exit code is 0
     And file "one.sql" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: invalid SQL
     Given a file "one.sql" with content
@@ -70,6 +78,10 @@ Feature: lint SQL
     And the exit code is 0
     And file "one.sql" is unchanged
     And file "two.sql" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario Outline: unsupported SQL flavors
     Given a file "migration.<FILE EXTENSION>" with content
@@ -84,6 +96,10 @@ Feature: lint SQL
       """
     And the exit code is 0
     And file "migration.<FILE EXTENSION>" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
     Examples:
       | FILE EXTENSION |

@@ -6,7 +6,7 @@ Feature: unsafe-fix TypeScript
       biome 2.4.0
       delete-empty-folders 0.0.2
       """
-    And a file "main.ts" with content
+    And a file "main.ts" with unix newlines
       """
       const name = "Alice";
       const greeting = "Hello, " + name + "!";
@@ -24,6 +24,10 @@ Feature: unsafe-fix TypeScript
       const name = "Alice";
       const _greeting = `Hello, ${name}!`;
       """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: fix
     When executing "trident fix --show=output"
@@ -33,3 +37,7 @@ Feature: unsafe-fix TypeScript
       """
     And the exit code is 0
     And file "main.ts" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """

@@ -43,6 +43,12 @@ Feature: "trident lint --scope" selects which files to lint
       """
     And the exit code is 1
     And all files are unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z --untracked-files=all
+      git diff HEAD --check
+      """
 
   Scenario: --scope=branch lints files changed on the current branch
     When executing "trident lint --scope=branch --show=output"
@@ -65,6 +71,17 @@ Feature: "trident lint --scope" selects which files to lint
       """
     And the exit code is 1
     And all files are unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z --untracked-files=all
+      git town diff-parent --name-only --non-interactive
+      git symbolic-ref --short refs/remotes/origin/HEAD
+      git rev-parse --verify --quiet refs/heads/main
+      git merge-base HEAD main
+      git diff -z --name-only --diff-filter=ACMRT {SHA}...HEAD
+      git diff HEAD --check
+      """
 
   Scenario: --scope=all lints all files
     When executing "trident lint --scope=all --show=output"
@@ -87,3 +104,8 @@ Feature: "trident lint --scope" selects which files to lint
       """
     And the exit code is 1
     And all files are unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git diff HEAD --check
+      """

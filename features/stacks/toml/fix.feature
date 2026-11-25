@@ -8,7 +8,7 @@ Feature: fix TOML
       """
 
   Scenario: valid TOML
-    Given a file "main.toml" with content
+    Given a file "main.toml" with unix newlines
       """
       key = "value"
       """
@@ -19,13 +19,17 @@ Feature: fix TOML
       """
     And the exit code is 0
     And file "main.toml" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: unformatted TOML
-    Given a file "main.toml" with content
+    Given a file "main.toml" with unix newlines
       """
       key =     "value"
       """
-    And a file "other.toml" with content
+    And a file "other.toml" with unix newlines
       """
       key =     "other"
       """
@@ -43,9 +47,13 @@ Feature: fix TOML
       """
       key = "other"
       """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: invalid TOML
-    Given a file "main.toml" with content
+    Given a file "main.toml" with unix newlines
       """
       key = "
       """
@@ -57,3 +65,7 @@ Feature: fix TOML
       """
     And the exit code is 1
     And file "main.toml" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """

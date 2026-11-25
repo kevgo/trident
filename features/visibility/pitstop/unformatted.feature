@@ -11,13 +11,13 @@ Feature: pitstop multiple unformatted stacks
       """
       print(  "hello"  )
       """
-    And a file "main.css" with content
+    And a file "main.css" with unix newlines
       """
       p {
         color : red ;
       }
       """
-    And a file "main.ts" with content
+    And a file "main.ts" with unix newlines
       """
       console.log(  "hello"  );
       """
@@ -76,6 +76,10 @@ Feature: pitstop multiple unformatted stacks
     And file "main.ts" now has content
       """
       console.log("hello");
+      """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
       """
 
   Scenario: --show=verbose
@@ -141,6 +145,10 @@ Feature: pitstop multiple unformatted stacks
       """
       console.log("hello");
       """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: --show=names
     When executing "trident pitstop --show=names"
@@ -173,6 +181,10 @@ Feature: pitstop multiple unformatted stacks
       """
       console.log("hello");
       """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: --show=failed
     When executing "trident pitstop --show=failed"
@@ -190,4 +202,8 @@ Feature: pitstop multiple unformatted stacks
     And file "main.ts" now has content
       """
       console.log("hello");
+      """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
       """

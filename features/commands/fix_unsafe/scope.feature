@@ -55,6 +55,11 @@ Feature: "trident fix-unsafe --scope" selects which files to fix
       """
     And file "committed-on-branch.py" is unchanged
     And file "on-main.py" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z --untracked-files=all
+      """
 
   Scenario: --scope=branch fixes files changed on the current branch
     When executing "trident fix-unsafe --scope=branch --show=output"
@@ -85,6 +90,16 @@ Feature: "trident fix-unsafe --scope" selects which files to fix
           return items
       """
     And file "on-main.py" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z --untracked-files=all
+      git town diff-parent --name-only --non-interactive
+      git symbolic-ref --short refs/remotes/origin/HEAD
+      git rev-parse --verify --quiet refs/heads/main
+      git merge-base HEAD main
+      git diff -z --name-only --diff-filter=ACMRT {SHA}...HEAD
+      """
 
   Scenario: --scope=all fixes all files
     When executing "trident fix-unsafe --scope=all --show=output"
@@ -121,4 +136,8 @@ Feature: "trident fix-unsafe --scope" selects which files to fix
               items = []
           items.append(item)
           return items
+      """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
       """

@@ -6,7 +6,7 @@ Feature: install Tikibase
       """
       delete-empty-folders 0.0.2
       """
-    And a file "trident.json" with content
+    And a file "trident.json" with unix newlines
       """
       {
         "applications": {
@@ -15,7 +15,7 @@ Feature: install Tikibase
         }
       }
       """
-    And a file "tikibase.json" with content
+    And a file "tikibase.json" with unix newlines
       """
       {
         "ignore": [
@@ -48,4 +48,8 @@ Feature: install Tikibase
     And file "run-that-app" now has an additional line matching
       """
       tikibase \d+\.\d+\.\d+
+      """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
       """

@@ -18,6 +18,11 @@ Feature: precommit Markdown
     Then it prints nothing to STDOUT
     And the exit code is 0
     And file "main.md" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z
+      """
 
   Scenario: unformatted JSON
     Given a file "main.md" with content
@@ -31,6 +36,12 @@ Feature: precommit Markdown
     And file "main.md" now has content
       """
       # Hello
+      """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z
+      git add -- main.md
       """
 
   Scenario: unformatted Markdown with spaces in the filename
@@ -46,6 +57,12 @@ Feature: precommit Markdown
       """
       # Hello
       """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z
+      git add -- 'my file.md'
+      """
 
   Scenario: invalid JSON
     Given a file "main.md" with content
@@ -59,3 +76,8 @@ Feature: precommit Markdown
     Then it prints nothing to STDOUT
     And the exit code is 0
     And file "main.md" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z
+      """

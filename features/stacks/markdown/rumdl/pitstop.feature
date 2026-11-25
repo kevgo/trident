@@ -23,6 +23,10 @@ Feature: pitstop Markdown
       """
       # Hello
       """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: file with spaces in the name
     Given a file "my file.md" with content
@@ -39,6 +43,10 @@ Feature: pitstop Markdown
     And file "my file.md" now has content
       """
       # Hello
+      """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
       """
 
   Scenario: unformatted Markdown with lint errors
@@ -64,4 +72,8 @@ Feature: pitstop Markdown
       one
 
       two
+      """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
       """

@@ -9,7 +9,7 @@ Feature: stack-specific fixes
       """
 
   Scenario: "additional-fixes" adds custom fixes to the built-in ones for that stack
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "stacks": {
@@ -38,9 +38,13 @@ Feature: stack-specific fixes
       MY FIX RAN
       """
     And the exit code is 0
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: "replace-fixes" replaces the built-in fixes for that stack
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "stacks": {
@@ -69,9 +73,13 @@ Feature: stack-specific fixes
       fix Python (Ruff)
       """
     And the exit code is 0
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: disable a stack's fixes
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "stacks": {
@@ -93,9 +101,13 @@ Feature: stack-specific fixes
       fix Python (Ruff)
       """
     And the exit code is 0
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: runs only when files of that stack exist
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "stacks": {
@@ -116,3 +128,7 @@ Feature: stack-specific fixes
       MY FIX RAN
       """
     And the exit code is 0
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """

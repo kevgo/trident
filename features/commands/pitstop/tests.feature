@@ -10,7 +10,7 @@ Feature: pitstop --test runs selected tests
       """
 
   Scenario: without --test, configured tests do not run
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "applications": {
@@ -37,9 +37,13 @@ Feature: pitstop --test runs selected tests
       running cuke tests
       """
     And the exit code is 0
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: commands.pitstop.test runs those tests by default
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "applications": {
@@ -72,9 +76,13 @@ Feature: pitstop --test runs selected tests
       running cuke tests
       """
     And the exit code is 0
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: --test overrides commands.pitstop.test
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "applications": {
@@ -107,9 +115,13 @@ Feature: pitstop --test runs selected tests
       running unit tests
       """
     And the exit code is 0
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: --test selects named tests
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "applications": {
@@ -143,9 +155,13 @@ Feature: pitstop --test runs selected tests
       running slow tests
       """
     And the exit code is 0
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: test fails
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "applications": {
@@ -169,9 +185,13 @@ Feature: pitstop --test runs selected tests
       custom test failed
       """
     And the exit code is 4
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: unknown test name in commands.pitstop.test
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "tests": [
@@ -191,9 +211,13 @@ Feature: pitstop --test runs selected tests
       available tests: unit
       """
     And the exit code is 1
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: unknown test name
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "tests": [
@@ -209,3 +233,7 @@ Feature: pitstop --test runs selected tests
       available tests: unit, cuke
       """
     And the exit code is 1
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """

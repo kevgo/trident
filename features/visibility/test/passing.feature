@@ -1,7 +1,7 @@
 Feature: test command with passing tests
 
   Background:
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "tests": [
@@ -28,6 +28,7 @@ Feature: test command with passing tests
       running E2E tests
       """
     And the exit code is 0
+    And it runs no Git commands
 
   Scenario: --show=verbose
     When executing "trident test --show=verbose"
@@ -48,6 +49,7 @@ Feature: test command with passing tests
       running E2E tests
       """
     And the exit code is 0
+    And it runs no Git commands
 
   Scenario: --show=names
     When executing "trident test --show=names"
@@ -58,9 +60,11 @@ Feature: test command with passing tests
       test all (E2E)
       """
     And the exit code is 0
+    And it runs no Git commands
 
   Scenario: --show=failed
     When executing "trident test --show=failed"
     Then it prints nothing to STDERR
     And it prints nothing to STDOUT
     And the exit code is 0
+    And it runs no Git commands

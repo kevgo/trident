@@ -7,7 +7,7 @@ Feature: disable an application's fix-unsafe operation
       delete-empty-folders 0.0.2
       taplo 0.10.0
       """
-    And a file "trident.json" with content
+    And a file "trident.json" with unix newlines
       """
       {
         "applications": {
@@ -21,13 +21,13 @@ Feature: disable an application's fix-unsafe operation
         }
       }
       """
-    And a file "other.css" with content
+    And a file "other.css" with unix newlines
       """
       .foo {
       \tcolor: red;
       }
       """
-    And a file "Cargo.toml" with content
+    And a file "Cargo.toml" with unix newlines
       """
       [package]
       name =      "demo"
@@ -48,6 +48,10 @@ Feature: disable an application's fix-unsafe operation
       """
     And the exit code is 0
     And file "Cargo.toml" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: lint still runs the application
     When executing "trident lint --show=verbose"
@@ -62,6 +66,10 @@ Feature: disable an application's fix-unsafe operation
       biome(.exe)? lint other.css
       """
     And the exit code is 0
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: fix still runs the application
     When executing "trident fix --show=verbose"
@@ -76,3 +84,7 @@ Feature: disable an application's fix-unsafe operation
       biome(.exe)? format --write other.css
       """
     And the exit code is 0
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """

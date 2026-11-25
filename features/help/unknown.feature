@@ -11,3 +11,4 @@ Feature: wrong CLI command
       For more information, try '--help'.
       """
     And the exit code is 1
+    And it runs no Git commands
