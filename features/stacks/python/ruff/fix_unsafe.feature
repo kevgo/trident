@@ -27,8 +27,6 @@ Feature: unsafe-fix Python
     When executing "trident fix-unsafe --show=output"
     Then it prints the lines
       """
-      unsafe-fix TOML (Taplo)
-       INFO taplo:format_files:collect_files: found files total=1 excluded=0 files=["/tmp/.tmpH1jDPL/502752668947887438/ruff.toml"] cwd="/tmp/.tmpH1jDPL/502752668947887438"
       unsafe-fix Python (Ruff)
       Found 1 error (1 fixed, 0 remaining).
       format Python (Ruff)
@@ -57,20 +55,8 @@ Feature: unsafe-fix Python
     Then it prints the lines
       """
       fix all (delete empty folders)
-      fix TOML (Taplo)
-       INFO taplo:format_files:collect_files: found files total=1 excluded=0 files=["/tmp/.tmpBFkKE0/4229047332084141781/ruff.toml"] cwd="/tmp/.tmpBFkKE0/4229047332084141781"
       fix Python (Ruff)
       B006 Do not use mutable data structures for argument defaults
-       --> main.py:1:29
-        |
-      1 | def add_to_list(item, items=[]):
-        |                             ^^
-      2 |     items.append(item)
-      3 |     return items
-        |
-      help: Replace with `None`; initialize within function
-
-      Found 1 error.
       No fixes available (1 hidden fix can be enabled with the `--unsafe-fixes` option).
       """
     And the exit code is 1
