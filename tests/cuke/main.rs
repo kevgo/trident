@@ -1,6 +1,7 @@
 #![allow(clippy::needless_pass_by_value)]
 
 mod dot_writer;
+mod filesystem;
 mod git_commands;
 mod given_steps;
 mod jitter;
