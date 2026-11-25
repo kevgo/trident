@@ -14,7 +14,7 @@ Feature: ignore files in .gitignore
       """
       # this file will get ignored
       """
-    And a file "run-that-app" with unix newlines
+    And a file "run-that-app" with content
       """
       delete-empty-folders 0.0.2
       """

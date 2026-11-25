@@ -2,7 +2,7 @@ Feature: CI if committed files are unformatted
 
   Background:
     Given a Git repository
-    And a file "run-that-app" with unix newlines
+    And a file "run-that-app" with content
       """
       biome 2.4.0
       delete-empty-folders 0.0.2

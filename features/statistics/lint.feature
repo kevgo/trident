@@ -1,7 +1,7 @@
 Feature: display statistics about the codebase
 
   Scenario: multiple stacks
-    Given a file "run-that-app" with unix newlines
+    Given a file "run-that-app" with content
       """
       biome 2.4.0
       ruff 0.15.16

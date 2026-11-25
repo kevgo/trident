@@ -2,13 +2,13 @@ Feature: precommit YML
 
   Background:
     Given a Git repository
-    And a file "run-that-app" with unix newlines
+    And a file "run-that-app" with content
       """
       delete-empty-folders 0.0.2
       yamlfmt 0.21.0
       """
 
-@this
+  @this
   Scenario: valid YML
     Given a file "main.yml" with platform-specific newlines and content
       """

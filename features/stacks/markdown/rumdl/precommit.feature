@@ -2,7 +2,7 @@ Feature: precommit Markdown
 
   Background:
     Given a Git repository
-    And a file "run-that-app" with unix newlines
+    And a file "run-that-app" with content
       """
       delete-empty-folders 0.0.2
       rumdl 0.2.14

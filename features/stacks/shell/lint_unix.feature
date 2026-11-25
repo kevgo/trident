@@ -2,7 +2,7 @@
 Feature: lint Shell on Unix
 
   Background:
-    Given a file "run-that-app" with unix newlines
+    Given a file "run-that-app" with content
       """
       delete-empty-folders 0.0.2
       shellcheck 0.11.0

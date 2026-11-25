@@ -1,7 +1,7 @@
 Feature: "trident lint" does not run "git diff --check" if not a Git repository
 
   Scenario: Git not installed
-    Given a file "run-that-app" with unix newlines
+    Given a file "run-that-app" with content
       """
       delete-empty-folders 0.0.2
       """

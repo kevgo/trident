@@ -2,7 +2,7 @@
 Feature: install all Python tools
 
   Scenario: not installed
-    Given a file "run-that-app" with unix newlines
+    Given a file "run-that-app" with content
       """
       biome 2.4.0
       """

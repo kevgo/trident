@@ -1,7 +1,7 @@
 Feature: lint Dockerfile
 
   Background:
-    Given a file "run-that-app" with unix newlines
+    Given a file "run-that-app" with content
       """
       delete-empty-folders 0.0.2
       hadolint 2.15.1

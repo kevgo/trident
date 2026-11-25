@@ -2,7 +2,7 @@
 Feature: install hadolint
 
   Scenario: not installed
-    Given a file "run-that-app" with unix newlines
+    Given a file "run-that-app" with content
       """
       delete-empty-folders 0.0.2
       """

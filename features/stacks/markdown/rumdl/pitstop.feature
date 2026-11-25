@@ -1,7 +1,7 @@
 Feature: pitstop Markdown
 
   Background:
-    Given a file "run-that-app" with unix newlines
+    Given a file "run-that-app" with content
       """
       delete-empty-folders 0.0.2
       rumdl 0.2.14

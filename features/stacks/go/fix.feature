@@ -6,7 +6,7 @@ Feature: fix Go
       module example.com/demo
       go 1.21
       """
-    And a file "run-that-app" with unix newlines
+    And a file "run-that-app" with content
       """
       delete-empty-folders 0.0.2
       gofumpt 0.10.0

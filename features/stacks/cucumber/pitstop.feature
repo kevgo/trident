@@ -1,7 +1,7 @@
 Feature: pitstop Cucumber
 
   Background:
-    Given a file "run-that-app" with unix newlines
+    Given a file "run-that-app" with content
       """
       delete-empty-folders 0.0.2
       gherkin-lint 4.2.4

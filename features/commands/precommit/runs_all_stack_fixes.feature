@@ -2,7 +2,7 @@ Feature: "trident precommit" runs all fixes for the changed files
 
   Scenario: runs Tikibase even though its config file is not changed
     Given a Git repository
-    And a file "run-that-app" with unix newlines
+    And a file "run-that-app" with content
       """
       delete-empty-folders 0.0.2
       rumdl 0.2.14

@@ -2,7 +2,7 @@ Feature: "trident precommit" formats and stages files with fully staged changes
 
   Scenario: precommit a fully staged file
     Given a Git repository
-    And a file "run-that-app" with unix newlines
+    And a file "run-that-app" with content
       """
       delete-empty-folders 0.0.2
       rumdl 0.2.14
@@ -40,7 +40,7 @@ Feature: "trident precommit" formats and stages files with fully staged changes
 
   Scenario: precommit a fully staged file with spaces in the name
     Given a Git repository
-    And a file "run-that-app" with unix newlines
+    And a file "run-that-app" with content
       """
       delete-empty-folders 0.0.2
       rumdl 0.2.14

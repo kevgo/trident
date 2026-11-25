@@ -2,7 +2,7 @@ Feature: precommit Cucumber
 
   Background:
     Given a Git repository
-    And a file "run-that-app" with unix newlines
+    And a file "run-that-app" with content
       """
       delete-empty-folders 0.0.2
       ghokin 3.10.0

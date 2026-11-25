@@ -1,7 +1,7 @@
 Feature: pitstop YML
 
   Scenario: unformatted YML
-    Given a file "run-that-app" with unix newlines
+    Given a file "run-that-app" with content
       """
       delete-empty-folders 0.0.2
       yamlfmt 0.21.0
@@ -34,7 +34,7 @@ Feature: pitstop YML
       """
 
   Scenario: duplicate keys
-    Given a file "run-that-app" with unix newlines
+    Given a file "run-that-app" with content
       """
       delete-empty-folders 0.0.2
       yamlfmt 0.21.0

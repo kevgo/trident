@@ -2,7 +2,7 @@
 Feature: install Rumdl
 
   Scenario: not installed
-    Given a file "run-that-app" with unix newlines
+    Given a file "run-that-app" with content
       """
       # more info at https://github.com/kevgo/run-that-app
 
