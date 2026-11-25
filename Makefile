@@ -35,8 +35,11 @@ cuke-slow: build-release build-git-double  # runs the end-to-end tests one by on
 cuke-online: build-release build-git-double  # runs the end-to-end tests online
 	cargo test --test=cuke -- -t @online --concurrency 1
 
-cuke-update: build-release build-git-double  # updates the golden snapshots in the end-to-end tests
-	TRIDENT_UPDATE_SNAPSHOTS=1 cargo test --test=cuke -- --concurrency 1
+cuke-update-git: build-release build-git-double  # updates the "it runs the Git commands" blocks in the end-to-end tests
+	TRIDENT_UPDATE_GIT=1 cargo test --test=cuke -- --concurrency 1
+
+cuke-update-output: build-release build-git-double  # updates the "it prints the lines" blocks in the end-to-end tests
+	TRIDENT_UPDATE_OUTPUT=1 cargo test --test=cuke -- --concurrency 1
 
 cuke-all: build-release build-git-double  # runs all end-to-end tests including the ones making network calls
 	cargo test --test=cuke -- --concurrency 1
