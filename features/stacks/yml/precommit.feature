@@ -8,9 +8,8 @@ Feature: precommit YML
       yamlfmt 0.21.0
       """
 
-  @this
   Scenario: valid YML
-    Given a file "main.yml" with unix newlines
+    Given a file "main.yml" with content
       """
       key: value
       """
