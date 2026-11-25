@@ -165,7 +165,7 @@ fn it_does_not_print_a_block_matching(world: &mut TridentWorld, step: &Step) {
 fn it_runs_the_git_commands(world: &mut TridentWorld, step: &Step) {
     let want = step.docstring.as_ref().unwrap().trim();
     let have = world.git_commands().join("\n");
-    if snapshots::enabled() {
+    if snapshots::update_git() {
         if have != want {
             let path = world.feature_path.clone().unwrap();
             let display_path = path.strip_prefix(&world.cwd).unwrap_or(&path);
@@ -260,7 +260,7 @@ fn it_prints_the_lines(world: &mut TridentWorld, step: &Step) {
     let output = world.output.as_ref().expect("no command run");
     let stripped = strip_ansi_escapes::strip(&output.stdout);
     let stdout = str::from_utf8(&stripped).expect("non-UTF-8 output");
-    if snapshots::enabled() {
+    if snapshots::update_output() {
         if stdout != want {
             let path = world
                 .feature_path
