@@ -1,3 +1,17 @@
+pub enum Newlines {
+    Unix,
+    Platform,
+}
+
+impl Newlines {
+    pub fn apply(self, content: &str) -> String {
+        match self {
+            Newlines::Unix => unix_newlines(content),
+            Newlines::Platform => platform_newlines(content),
+        }
+    }
+}
+
 /// Line endings for the current operating system: CRLF on Windows, LF elsewhere.
 #[must_use]
 pub fn platform_newlines(content: &str) -> String {

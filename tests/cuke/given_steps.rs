@@ -1,8 +1,9 @@
-use crate::filesystem::{Newlines, write_file};
+use crate::filesystem::write_file;
 use crate::jitter::jitter;
 use crate::world::TridentWorld;
 use cucumber::gherkin::Step;
 use cucumber::given;
+use test_helpers::Newlines;
 use tokio::process::Command;
 
 #[given(expr = "a committed file {string} with content")]

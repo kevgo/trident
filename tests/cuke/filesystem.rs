@@ -1,12 +1,8 @@
 use crate::world::{ExistingFile, TridentWorld};
 use cucumber::gherkin::Step;
+use test_helpers::Newlines;
 use test_helpers::{docstring_body, platform_newlines, unix_newlines};
 use tokio::fs;
-
-pub enum Newlines {
-    Unix,
-    Platform,
-}
 
 pub async fn write_file(
     world: &mut TridentWorld,
