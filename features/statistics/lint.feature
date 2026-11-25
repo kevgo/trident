@@ -6,7 +6,7 @@ Feature: display statistics about the codebase
       biome 2.4.0
       ruff 0.15.16
       """
-    And a file "main.py" with unix newlines
+    And a file "main.py" with content
       """
       print("Hello, world!")
       """

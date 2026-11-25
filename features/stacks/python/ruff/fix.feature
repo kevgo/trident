@@ -8,7 +8,7 @@ Feature: fix Python
       """
 
   Scenario: valid Python
-    And a file "main.py" with unix newlines
+    And a file "main.py" with content
       """
       print("Hello, world!")
       """
@@ -34,7 +34,7 @@ Feature: fix Python
       """
 
   Scenario: unformatted Python
-    Given a file "main.py" with unix newlines
+    Given a file "main.py" with content
       """
       print   ("Hello, world!")
       """
@@ -66,7 +66,7 @@ Feature: fix Python
       """
 
   Scenario: invalid Python
-    Given a file "main.py" with unix newlines
+    Given a file "main.py" with content
       """
       print("
       """

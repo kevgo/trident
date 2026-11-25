@@ -7,7 +7,7 @@ Feature: unsafe-fix Python
       ruff 0.15.16
       taplo 0.10.0
       """
-    And a file "main.py" with unix newlines
+    And a file "main.py" with content
       """
       def add_to_list(item, items=[]):
           items.append(item)

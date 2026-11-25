@@ -6,7 +6,7 @@ Feature: install all Python tools
       """
       biome 2.4.0
       """
-    And a file "main.py" with unix newlines
+    And a file "main.py" with content
       """
       print    ("Hello, world!")
       """

@@ -9,7 +9,7 @@ Feature: don't fix files in .gitignore
       """
       this file must exist for the .gitignore detection to work
       """
-    And a file "main.py" with unix newlines
+    And a file "main.py" with content
       """
       #      this file will get ignored
       """

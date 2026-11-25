@@ -7,7 +7,7 @@ Feature: fix multiple stacks with invalid code
       delete-empty-folders 0.0.2
       ruff 0.15.16
       """
-    And a file "main.py" with unix newlines
+    And a file "main.py" with content
       """
       print("
       """

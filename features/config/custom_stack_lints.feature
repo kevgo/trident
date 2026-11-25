@@ -23,7 +23,7 @@ Feature: stack-specific lints
         }
       }
       """
-    And a file "main.py" with unix newlines
+    And a file "main.py" with content
       """
       # some Python code
       """
@@ -58,7 +58,7 @@ Feature: stack-specific lints
         }
       }
       """
-    And a file "main.py" with unix newlines
+    And a file "main.py" with content
       """
       # some Python code
       """
@@ -91,7 +91,7 @@ Feature: stack-specific lints
         }
       }
       """
-    And a file "main.py" with unix newlines
+    And a file "main.py" with content
       """
       # some Python code
       """

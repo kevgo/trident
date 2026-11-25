@@ -19,7 +19,7 @@ Feature: full runs all fixes, lints, and tests
       """
       {  "key"  :  "value"  }
       """
-    And a file "main.py" with unix newlines
+    And a file "main.py" with content
       """
       print(  "hello"  )
       """

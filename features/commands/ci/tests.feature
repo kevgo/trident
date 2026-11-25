@@ -20,7 +20,7 @@ Feature: CI runs all fixes, formatters, lints, and tests
         ]
       }
       """
-    And a file "main.py" with unix newlines
+    And a file "main.py" with content
       """
       print("hello")
       """

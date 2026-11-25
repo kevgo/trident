@@ -9,7 +9,7 @@ Feature: precommit Python
       """
 
   Scenario: valid Python
-    And a file "main.py" with unix newlines
+    And a file "main.py" with content
       """
       print("Hello, world!")
       """
@@ -30,7 +30,7 @@ Feature: precommit Python
       """
 
   Scenario: unformatted Python
-    Given a file "main.py" with unix newlines
+    Given a file "main.py" with content
       """
       print   ("Hello, world!")
       """
@@ -58,7 +58,7 @@ Feature: precommit Python
       """
 
   Scenario: invalid Python
-    Given a file "main.py" with unix newlines
+    Given a file "main.py" with content
       """
       print("
       """

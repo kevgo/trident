@@ -8,7 +8,7 @@ Feature: pitstop Python
       """
 
   Scenario: unformatted Python
-    Given a file "main.py" with unix newlines
+    Given a file "main.py" with content
       """
       print   ("Hello, world!")
       """
@@ -34,7 +34,7 @@ Feature: pitstop Python
       """
 
   Scenario: unformatted Python with lint errors
-    Given a file "main.py" with unix newlines
+    Given a file "main.py" with content
       """
       def greet():
         a   =   1

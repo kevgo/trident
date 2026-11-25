@@ -27,7 +27,7 @@ Feature: stack-scoped custom fixes
       #!/bin/sh
       echo "PYTHON FIX RAN"
       """
-    And a file "main.py" with unix newlines
+    And a file "main.py" with content
       """
       print("hello")
       """

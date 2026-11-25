@@ -8,7 +8,7 @@ Feature: lint Python
       """
 
   Scenario: valid Python
-    Given a file "main.py" with unix newlines
+    Given a file "main.py" with content
       """
       print("Hello, world!")
       """
@@ -31,7 +31,7 @@ Feature: lint Python
       """
 
   Scenario: unformatted Python
-    Given a file "main.py" with unix newlines
+    Given a file "main.py" with content
       """
       print   ("Hello, world!")
       """
@@ -49,7 +49,7 @@ Feature: lint Python
       """
 
   Scenario: invalid Python
-    Given a file "main.py" with unix newlines
+    Given a file "main.py" with content
       """
       print("
       """

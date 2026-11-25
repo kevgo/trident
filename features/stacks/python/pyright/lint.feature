@@ -33,7 +33,7 @@ Feature: lint Python with Pyright
       """
 
   Scenario: valid Python with Pyright
-    Given a file "main.py" with unix newlines
+    Given a file "main.py" with content
       """
       print("Hello, world!")
       """
@@ -61,7 +61,7 @@ Feature: lint Python with Pyright
       """
 
   Scenario: unformatted Python
-    Given a file "main.py" with unix newlines
+    Given a file "main.py" with content
       """
       print   ("Hello, world!")
       """
@@ -89,7 +89,7 @@ Feature: lint Python with Pyright
       """
 
   Scenario: typecheck errors
-    Given a file "main.py" with unix newlines
+    Given a file "main.py" with content
       """
       a: int = "text"
       print(a)
@@ -114,7 +114,7 @@ Feature: lint Python with Pyright
       """
 
   Scenario: invalid Python
-    Given a file "main.py" with unix newlines
+    Given a file "main.py" with content
       """
       print(123
       """
