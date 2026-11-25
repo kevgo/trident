@@ -18,6 +18,7 @@ Feature: lint CSS
     Then it prints the lines
       """
       lint CSS (Biome)
+      Checked 1 file in 819µs. No fixes applied.
       """
     And the exit code is 0
     And file "main.css" is unchanged
@@ -56,7 +57,49 @@ Feature: lint CSS
     Then it prints the lines
       """
       lint CSS (Biome)
+      Checked 1 file in 767µs. No fixes applied.
       Found 2 errors.
+      main.css:3:1 parse ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+        × Expected a compound selector but instead found '}'.
+
+          1 │ .foo {
+          2 │   col
+        > 3 │ }
+            │ ^
+          4 │
+
+        i Expected a compound selector here.
+
+          1 │ .foo {
+          2 │   col
+        > 3 │ }
+            │ ^
+          4 │
+
+
+      main.css:4:1 parse ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+        × expected `{` but instead the file ends
+
+          2 │   col
+          3 │ }
+        > 4 │
+            │
+
+        i the file ends here
+
+          2 │   col
+          3 │ }
+        > 4 │
+            │
+
+
+      lint ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+        × Some errors were emitted while running checks.
+
+
       """
     And the exit code is 1
     And file "main.css" is unchanged

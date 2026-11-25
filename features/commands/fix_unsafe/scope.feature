@@ -43,6 +43,8 @@ Feature: "trident fix-unsafe --scope" selects which files to fix
       """
       unsafe-fix Python (Ruff)
       Found 1 error (1 fixed, 0 remaining).
+      format Python (Ruff)
+      1 file left unchanged
       """
     And the exit code is 0
     And file "untracked.py" now has content
@@ -58,7 +60,7 @@ Feature: "trident fix-unsafe --scope" selects which files to fix
     And it runs the Git commands
       """
       git rev-parse --is-inside-work-tree
-      git status --porcelain=v1 -z --untracked-files=all
+      git status --porcelain=v1 -z --no-renames --untracked-files=all
       """
 
   Scenario: --scope=branch fixes files changed on the current branch
@@ -70,7 +72,10 @@ Feature: "trident fix-unsafe --scope" selects which files to fix
       """
     And it prints the lines
       """
+      unsafe-fix Python (Ruff)
       Found 2 errors (2 fixed, 0 remaining).
+      format Python (Ruff)
+      2 files left unchanged
       """
     And the exit code is 0
     And file "committed-on-branch.py" now has content
@@ -93,12 +98,12 @@ Feature: "trident fix-unsafe --scope" selects which files to fix
     And it runs the Git commands
       """
       git rev-parse --is-inside-work-tree
-      git status --porcelain=v1 -z --untracked-files=all
-      git town diff-parent --name-only --non-interactive
+      git status --porcelain=v1 -z --no-renames --untracked-files=all
+      git town config get-parent
       git symbolic-ref --short refs/remotes/origin/HEAD
       git rev-parse --verify --quiet refs/heads/main
       git merge-base HEAD main
-      git diff -z --name-only --diff-filter=ACMRT {SHA}...HEAD
+      git diff -z --name-only --no-renames {SHA}...HEAD
       """
 
   Scenario: --scope=all fixes all files
@@ -110,7 +115,10 @@ Feature: "trident fix-unsafe --scope" selects which files to fix
       """
     And it prints the lines
       """
+      unsafe-fix Python (Ruff)
       Found 3 errors (3 fixed, 0 remaining).
+      format Python (Ruff)
+      3 files left unchanged
       """
     And the exit code is 0
     And file "committed-on-branch.py" now has content

@@ -54,5 +54,5 @@ Feature: "trident precommit" formats but does not stage files with partially sta
     And it runs the Git commands
       """
       git rev-parse --is-inside-work-tree
-      git status --porcelain=v1 -z
+      git status --porcelain=v1 -z --no-renames
       """

@@ -27,6 +27,7 @@ Feature: fix Go
     When executing "trident fix --show=output"
     Then it prints the lines
       """
+      fix all (delete empty folders)
       fix Go (gofumpt)
       """
     And the exit code is 0
@@ -56,11 +57,16 @@ Feature: fix Go
     When executing "trident fix --show=output"
     Then it prints the lines
       """
+      fix all (delete empty folders)
       fix Go (gofumpt)
       main.go
+      other.go
       """
     And it prints the lines
       """
+      fix all (delete empty folders)
+      fix Go (gofumpt)
+      main.go
       other.go
       """
     And the exit code is 0

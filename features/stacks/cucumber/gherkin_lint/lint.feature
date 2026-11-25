@@ -84,7 +84,10 @@ Feature: lint Cucumber
     Then it prints the lines
       """
       lint Cucumber (gherkin-lint)
+      /tmp/.tmpa88Iv6/8168979426496652790/features/one.feature
         4    Wrong indentation for "given", expected indentation level of 4, but got 12    indentation
+
+
       """
     And the exit code is 1
     And file "features/one.feature" is unchanged
@@ -102,7 +105,10 @@ Feature: lint Cucumber
     Then it prints the lines
       """
       lint Cucumber (gherkin-lint)
+      /tmp/.tmpApsstH/7852803243410865469/features/one.feature
         1    (1:1): expected: #EOF, #Language, #TagLine, #FeatureLine, #Comment, #Empty, got 'Feat'    unexpected-error
+
+
       """
     And the exit code is 1
     And file "features/one.feature" is unchanged

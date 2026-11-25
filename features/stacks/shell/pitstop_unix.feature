@@ -21,6 +21,7 @@ Feature: pitstop Shell on Unix
     When executing "trident pitstop --show=output"
     Then it prints the lines
       """
+      fix all (delete empty folders)
       fix Shell (shfmt)
       lint Shell (ShellCheck)
       """
@@ -55,11 +56,19 @@ Feature: pitstop Shell on Unix
     When executing "trident pitstop --show=output"
     Then it prints the lines
       """
+      fix all (delete empty folders)
       fix Shell (shfmt)
       lint Shell (ShellCheck)
+
       In two.sh line 2:
       cd /tmp
       ^-----^ SC2164 (warning): Use 'cd ... || exit' or 'cd ... || return' in case cd fails.
+
+      Did you mean:
+      cd /tmp || exit
+
+      For more information:
+        https://www.shellcheck.net/wiki/SC2164 -- Use 'cd ... || exit' or 'cd ... |...
       """
     And the exit code is 1
     And file "one.sh" now has content

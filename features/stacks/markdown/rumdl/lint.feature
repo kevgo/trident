@@ -16,6 +16,8 @@ Feature: lint Markdown
     Then it prints the lines
       """
       lint Markdown (rumdl)
+
+      Success: No issues found in 1 file (2ms)
       """
     And the exit code is 0
     And file "main.md" is unchanged
@@ -52,6 +54,8 @@ Feature: lint Markdown
       """
       lint Markdown (rumdl)
       main.md:1:1: [MD041] First line in file should be a level 1 heading
+
+      Issues: Found 1 issues in 1 file (1ms)
       """
     And the exit code is 1
     And file "main.md" is unchanged
@@ -70,6 +74,8 @@ Feature: lint Markdown
       """
       lint Markdown (rumdl)
       my file.md:1:1: [MD041] First line in file should be a level 1 heading
+
+      Issues: Found 1 issues in 1 file (1ms)
       """
     And the exit code is 1
     And file "my file.md" is unchanged

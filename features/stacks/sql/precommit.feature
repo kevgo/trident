@@ -51,7 +51,7 @@ Feature: precommit SQL
     And it runs the Git commands
       """
       git rev-parse --is-inside-work-tree
-      git status --porcelain=v1 -z
+      git status --porcelain=v1 -z --no-renames
       """
 
   Scenario: unformatted SQL
@@ -78,7 +78,7 @@ Feature: precommit SQL
     And it runs the Git commands
       """
       git rev-parse --is-inside-work-tree
-      git status --porcelain=v1 -z
+      git status --porcelain=v1 -z --no-renames
       git add -- one.sql two.sql
       """
 
@@ -108,7 +108,7 @@ Feature: precommit SQL
     And it runs the Git commands
       """
       git rev-parse --is-inside-work-tree
-      git status --porcelain=v1 -z
+      git status --porcelain=v1 -z --no-renames
       """
 
   Scenario Outline: unsupported SQL flavors
@@ -128,7 +128,7 @@ Feature: precommit SQL
     And it runs the Git commands
       """
       git rev-parse --is-inside-work-tree
-      git status --porcelain=v1 -z
+      git status --porcelain=v1 -z --no-renames
       """
 
     Examples:

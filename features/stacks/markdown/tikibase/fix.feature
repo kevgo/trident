@@ -34,8 +34,13 @@ Feature: fix Markdown with Tikibase
     When executing "trident fix --show=output"
     Then it prints the lines
       """
+      fix all (delete empty folders)
       fix Markdown (tikibase)
       fix Markdown (rumdl)
+
+      Success: No issues found in 2 files (4ms)
+      fix JSON (Biome)
+      Formatted 1 file in 309µs. Fixed 1 file.
       """
     And the exit code is 0
     And file "one.md" is unchanged
@@ -59,9 +64,15 @@ Feature: fix Markdown with Tikibase
     When executing "trident fix --show=output"
     Then it prints the lines
       """
+      fix all (delete empty folders)
       fix Markdown (tikibase)
       two.md:3  added one.md to occurrences section
       fix Markdown (rumdl)
+      two.md:3:1: [MD001] Expected heading level 2, but found heading level 3 [fixed]
+
+      Fixed: Fixed 1/1 issues in 1 file (5ms)
+      fix JSON (Biome)
+      Formatted 1 file in 315µs. Fixed 1 file.
       """
     And the exit code is 0
     And file "two.md" now has content

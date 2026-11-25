@@ -18,6 +18,7 @@ Feature: fix Cucumber
     When executing "trident fix --show=output"
     Then it prints the lines
       """
+      fix all (delete empty folders)
       fix Cucumber (Ghokin)
       "main.feature" formatted
       """
@@ -46,6 +47,7 @@ Feature: fix Cucumber
     When executing "trident fix --show=output"
     Then it prints the lines
       """
+      fix all (delete empty folders)
       fix Cucumber (Ghokin)
       "main.feature" formatted
       "other.feature" formatted
@@ -78,6 +80,7 @@ Feature: fix Cucumber
     When executing "trident fix --show=output"
     Then it prints the lines
       """
+      fix all (delete empty folders)
       fix Cucumber (Ghokin)
       Parser errors:
       (1:1): expected: #EOF, #Language, #TagLine, #FeatureLine, #Comment, #Empty, got 'Feat'

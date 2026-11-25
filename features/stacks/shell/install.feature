@@ -25,6 +25,7 @@ Feature: install all Shell tools
       """
     And it prints the lines
       """
+      fix all (delete empty folders)
       fix Shell (shfmt)
       lint Shell (ShellCheck)
       """

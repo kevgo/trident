@@ -16,6 +16,7 @@ Feature: install Ghokin
       """
     And it prints the lines
       """
+      fix all (delete empty folders)
       fix Cucumber (Ghokin)
       "main.feature" formatted
       """

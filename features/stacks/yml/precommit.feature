@@ -24,7 +24,7 @@ Feature: precommit YML
     And it runs the Git commands
       """
       git rev-parse --is-inside-work-tree
-      git status --porcelain=v1 -z
+      git status --porcelain=v1 -z --no-renames
       """
 
   Scenario: unformatted YML
@@ -40,6 +40,7 @@ Feature: precommit YML
     When executing "trident precommit --show=output"
     Then it prints the lines
       """
+      fix all (delete empty folders)
       fix YML (yamlfmt)
       """
     And the exit code is 0
@@ -54,7 +55,7 @@ Feature: precommit YML
     And it runs the Git commands
       """
       git rev-parse --is-inside-work-tree
-      git status --porcelain=v1 -z
+      git status --porcelain=v1 -z --no-renames
       git add -- main.yml other.yml
       """
 
@@ -67,7 +68,9 @@ Feature: precommit YML
     When executing "trident precommit --show=output"
     Then it prints the lines
       """
+      fix all (delete empty folders)
       fix YML (yamlfmt)
+      encountered the following formatting errors:
       main.yml: yaml: line 2: found unexpected end of stream
       """
     And the exit code is 0
@@ -75,5 +78,5 @@ Feature: precommit YML
     And it runs the Git commands
       """
       git rev-parse --is-inside-work-tree
-      git status --porcelain=v1 -z
+      git status --porcelain=v1 -z --no-renames
       """

@@ -17,8 +17,11 @@ Feature: pitstop CSS
     When executing "trident pitstop --show=output"
     Then it prints the lines
       """
+      fix all (delete empty folders)
       fix CSS (Biome)
+      Formatted 1 file in 768µs. Fixed 1 file.
       lint CSS (Biome)
+      Checked 1 file in 6ms. No fixes applied.
       """
     And the exit code is 0
     And file "main.css" now has content
@@ -42,10 +45,32 @@ Feature: pitstop CSS
     When executing "trident pitstop --show=output"
     Then it prints the lines
       """
+      fix all (delete empty folders)
       fix CSS (Biome)
+      Formatted 1 file in 381µs. Fixed 1 file.
       lint CSS (Biome)
+      Checked 1 file in 660µs. No fixes applied.
       Found 1 error.
+      main.css:2:2 lint/correctness/noUnknownProperty ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
         × Unknown property is not allowed.
+
+          1 │ .foo {
+        > 2 │ colr: blue;
+            │ ^^^^
+          3 │ }
+          4 │
+
+        i See CSS Specifications and browser specific properties for more details.
+
+        i To resolve this issue, replace the unknown property with a valid CSS property.
+
+
+      lint ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+        × Some errors were emitted while running checks.
+
+
       """
     And the exit code is 1
     And file "main.css" now has content

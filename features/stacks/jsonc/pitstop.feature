@@ -27,7 +27,11 @@ Feature: pitstop JSONC
     When executing "trident pitstop --show=output"
     Then it prints the lines
       """
+      fix all (delete empty folders)
       fix JSONC (Biome)
+      Formatted 2 files in 351µs. Fixed 2 files.
+      lint JSONC (Biome)
+      Checked 2 files in 716µs. No fixes applied.
       """
     And the exit code is 0
     And file "main.jsonc" now has content

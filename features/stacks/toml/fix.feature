@@ -36,7 +36,9 @@ Feature: fix TOML
     When executing "trident fix --show=output"
     Then it prints the lines
       """
+      fix all (delete empty folders)
       fix TOML (Taplo)
+       INFO taplo:format_files:collect_files: found files total=2 excluded=0 files=["/tmp/.tmpWvNofv/7354843356311689787/main.toml", "/tmp/.tmpWvNofv/7354843356311689787/other.toml"] cwd="/tmp/.tmpWvNofv/7354843356311689787"
       """
     And the exit code is 0
     And file "main.toml" now has content
@@ -60,8 +62,24 @@ Feature: fix TOML
     When executing "trident fix --show=output"
     Then it prints the lines
       """
+      fix all (delete empty folders)
       fix TOML (Taplo)
+       INFO taplo:format_files:collect_files: found files total=1 excluded=0 files=["/tmp/.tmpS2O3Z5/10565799516198748315/main.toml"] cwd="/tmp/.tmpS2O3Z5/10565799516198748315"
       error: invalid TOML
+        ┌─ /tmp/.tmpS2O3Z5/10565799516198748315/main.toml:1:7
+        │
+      1 │ key = "
+        │       ^ unexpected token
+
+      error: invalid TOML
+        ┌─ /tmp/.tmpS2O3Z5/10565799516198748315/main.toml:1:8
+        │
+      1 │   key = "
+        │ ╭───────^
+      2 │ │
+        │ ╰^ expected value
+
+      ERROR operation failed error=some files were not formatted due to syntax errors
       """
     And the exit code is 1
     And file "main.toml" is unchanged

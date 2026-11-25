@@ -33,5 +33,5 @@ Feature: "trident precommit" does not format files with unstaged changes
     And it runs the Git commands
       """
       git rev-parse --is-inside-work-tree
-      git status --porcelain=v1 -z
+      git status --porcelain=v1 -z --no-renames
       """

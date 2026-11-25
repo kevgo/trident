@@ -46,7 +46,19 @@ Feature: full runs all fixes, lints, and tests
       """
     And it prints the lines
       """
+      fix all (delete empty folders)
+      fix Python (Ruff)
+      All checks passed!
       fix JSON (Biome)
+      Formatted 2 files in 312µs. Fixed 2 files.
+      format Python (Ruff)
+      1 file reformatted
+      lint Python (Ruff)
+      All checks passed!
+      lint JSON (Biome)
+      Checked 2 files in 655µs. No fixes applied.
+      test all (unit)
+      running unit tests
       """
     And the exit code is 0
     And file "main.json" now has content

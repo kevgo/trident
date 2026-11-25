@@ -13,7 +13,9 @@ Feature: install all TypeScript tools
       """
     And it prints the lines
       """
+      fix all (delete empty folders)
       fix TypeScript (Biome)
+      Formatted 1 file in 696µs. Fixed 1 file.
       """
     And the exit code is 0
     And file "main.ts" now has content

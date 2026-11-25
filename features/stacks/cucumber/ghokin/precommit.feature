@@ -25,7 +25,7 @@ Feature: precommit Cucumber
     And it runs the Git commands
       """
       git rev-parse --is-inside-work-tree
-      git status --porcelain=v1 -z
+      git status --porcelain=v1 -z --no-renames
       """
 
   Scenario: unformatted Cucumber
@@ -64,7 +64,7 @@ Feature: precommit Cucumber
     And it runs the Git commands
       """
       git rev-parse --is-inside-work-tree
-      git status --porcelain=v1 -z
+      git status --porcelain=v1 -z --no-renames
       git add -- main.feature other.feature
       """
 
@@ -85,5 +85,5 @@ Feature: precommit Cucumber
     And it runs the Git commands
       """
       git rev-parse --is-inside-work-tree
-      git status --porcelain=v1 -z
+      git status --porcelain=v1 -z --no-renames
       """

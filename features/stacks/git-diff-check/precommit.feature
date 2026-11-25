@@ -19,7 +19,7 @@ Feature: "trident precommit" does not run "git diff --check"
     And it runs the Git commands
       """
       git rev-parse --is-inside-work-tree
-      git status --porcelain=v1 -z
+      git status --porcelain=v1 -z --no-renames
       """
 
   Scenario: whitespace error in a changed file
@@ -35,7 +35,7 @@ Feature: "trident precommit" does not run "git diff --check"
     And it runs the Git commands
       """
       git rev-parse --is-inside-work-tree
-      git status --porcelain=v1 -z
+      git status --porcelain=v1 -z --no-renames
       """
 
   Scenario: conflict markers in a changed file
@@ -55,5 +55,5 @@ Feature: "trident precommit" does not run "git diff --check"
     And it runs the Git commands
       """
       git rev-parse --is-inside-work-tree
-      git status --porcelain=v1 -z
+      git status --porcelain=v1 -z --no-renames
       """
