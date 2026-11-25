@@ -25,7 +25,7 @@ use world::TridentWorld;
 #[tokio::main(flavor = "current_thread")]
 async fn main() -> ExitCode {
     let had_failures = Arc::new(AtomicBool::new(false));
-    let git_double_dir = git_commands::install_double(&std::env::current_dir().unwrap());
+    let _git_double_dir = git_commands::install_double(&std::env::current_dir().unwrap());
     let mut cli = cli::Opts::<_, runner::basic::Cli, _>::parsed();
     // Cucumber ignores custom filters when the CLI provides a tag or name filter,
     // so we take them over and apply them together with the platform filter.
@@ -84,8 +84,7 @@ async fn main() -> ExitCode {
     if snapshots::enabled() {
         snapshots::flush();
     }
-    // process::exit doesn't run destructors
-    drop(git_double_dir);
+    drop(_git_double_dir);
     if had_failures.load(Ordering::SeqCst) {
         ExitCode::FAILURE
     } else {
