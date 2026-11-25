@@ -9,7 +9,7 @@ Feature: stack-specific fixes
       """
 
   Scenario: "additional-fixes" adds custom fixes to the built-in ones for that stack
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "stacks": {
@@ -44,7 +44,7 @@ Feature: stack-specific fixes
       """
 
   Scenario: "replace-fixes" replaces the built-in fixes for that stack
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "stacks": {
@@ -79,7 +79,7 @@ Feature: stack-specific fixes
       """
 
   Scenario: disable a stack's fixes
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "stacks": {
@@ -107,7 +107,7 @@ Feature: stack-specific fixes
       """
 
   Scenario: runs only when files of that stack exist
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "stacks": {

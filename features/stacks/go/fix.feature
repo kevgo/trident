@@ -1,7 +1,7 @@
 Feature: fix Go
 
   Background:
-    Given a file "go.mod" with unix newlines
+    Given a file "go.mod" with content
       """
       module example.com/demo
       go 1.21

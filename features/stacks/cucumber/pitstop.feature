@@ -8,7 +8,7 @@ Feature: pitstop Cucumber
       ghokin 3.10.0
       node 26.4.0
       """
-    And a file ".gherkin-lintrc" with unix newlines
+    And a file ".gherkin-lintrc" with content
       """
       {
         "allowed-tags": [ "on", { "tags": ["@online"] } ],
@@ -54,14 +54,14 @@ Feature: pitstop Cucumber
       """
 
   Scenario: unformatted Cucumber
-    Given a file "main.feature" with unix newlines
+    Given a file "main.feature" with content
       """
       Feature:   foo
 
         Scenario:   bar
           Given   a step
       """
-    And a file "other.feature" with unix newlines
+    And a file "other.feature" with content
       """
       Feature:   foo2
 
@@ -95,7 +95,7 @@ Feature: pitstop Cucumber
       """
 
   Scenario: unformatted Cucumber with lint error
-    Given a file "main.feature" with unix newlines
+    Given a file "main.feature" with content
       """
       Feature:    foo
 

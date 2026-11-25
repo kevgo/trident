@@ -2,7 +2,7 @@
 Feature: install Ghokin
 
   Scenario: not installed
-    Given a file "main.feature" with unix newlines
+    Given a file "main.feature" with content
       """
       Feature:   foo
 

@@ -19,13 +19,13 @@ Feature: lint a Tikibase
       """
 
   Scenario: valid Markdown
-    Given a file "one.md" with unix newlines
+    Given a file "one.md" with content
       """
       # One
 
       also check out [Two](two.md)
       """
-    And a file "two.md" with unix newlines
+    And a file "two.md" with content
       """
       # Two
 
@@ -48,13 +48,13 @@ Feature: lint a Tikibase
       """
 
   Scenario: unformatted Markdown
-    Given a file "one.md" with unix newlines
+    Given a file "one.md" with content
       """
       # One
 
       also check out [Two](two.md)
       """
-    And a file "two.md" with unix newlines
+    And a file "two.md" with content
       """
       # Two
       """
@@ -73,7 +73,7 @@ Feature: lint a Tikibase
       """
 
   Scenario: invalid Markdown
-    Given a file "main.md" with unix newlines
+    Given a file "main.md" with content
       """
       text
       """

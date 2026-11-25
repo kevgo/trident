@@ -7,7 +7,7 @@ Feature: config file format
       """
 
   Scenario: comments and trailing commas are accepted
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         // a comment
@@ -59,7 +59,7 @@ Feature: config file format
       """
 
   Scenario: trident.json takes precedence over trident.jsonc
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "applications": {
@@ -98,7 +98,7 @@ Feature: config file format
       """
 
   Scenario: unknown keys are rejected
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "unknown-key": true

@@ -1,7 +1,7 @@
 Feature: run lints sequentially
 
   Scenario: custom lints
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "applications": {

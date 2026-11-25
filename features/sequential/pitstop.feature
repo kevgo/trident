@@ -1,7 +1,7 @@
 Feature: run a pitstop sequentially
 
   Scenario: custom fixes, lints, and tests
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "applications": {

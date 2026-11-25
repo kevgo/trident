@@ -8,7 +8,7 @@ Feature: lint Dockerfile
       """
 
   Scenario: valid Dockerfile
-    Given a file "Dockerfile" with unix newlines
+    Given a file "Dockerfile" with content
       """
       FROM alpine:3.20
       USER 65534
@@ -26,12 +26,12 @@ Feature: lint Dockerfile
       """
 
   Scenario: invalid Dockerfile
-    Given a file "Dockerfile" with unix newlines
+    Given a file "Dockerfile" with content
       """
       FROM alpine:3.20
       WORKDIR tmp
       """
-    And a file "subdir/Dockerfile" with unix newlines
+    And a file "subdir/Dockerfile" with content
       """
       FROM alpine:3.20
       WORKDIR other

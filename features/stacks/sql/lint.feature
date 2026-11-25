@@ -8,7 +8,7 @@ Feature: lint SQL
       sqlfmt 0.32.0
       uv 0.13.0
       """
-    And a file "trident.json" with content
+    And a file "trident.json" with unix newlines
       """
       {
         "applications": {
@@ -32,11 +32,11 @@ Feature: lint SQL
       """
 
   Scenario: valid SQL
-    Given a file "one.sql" with unix newlines
+    Given a file "one.sql" with content
       """
       select id, name from one
       """
-    And a file "two.sql" with unix newlines
+    And a file "two.sql" with content
       """
       select id, name from two
       """
@@ -51,7 +51,7 @@ Feature: lint SQL
       """
 
   Scenario: unformatted SQL
-    Given a file "one.sql" with unix newlines
+    Given a file "one.sql" with content
       """
       SELECT            id, name FROM one
       """
@@ -65,11 +65,11 @@ Feature: lint SQL
       """
 
   Scenario: invalid SQL
-    Given a file "one.sql" with unix newlines
+    Given a file "one.sql" with content
       """
       SELECT FROM "
       """
-    And a file "two.sql" with unix newlines
+    And a file "two.sql" with content
       """
       SELECT FROM "
       """
@@ -84,7 +84,7 @@ Feature: lint SQL
       """
 
   Scenario Outline: unsupported SQL flavors
-    Given a file "migration.<FILE EXTENSION>" with unix newlines
+    Given a file "migration.<FILE EXTENSION>" with content
       """
       CREATE TABLE orders (id INT, total DECIMAL(10,2));
       """

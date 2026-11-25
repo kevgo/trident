@@ -2,7 +2,7 @@ Feature: precommit Go
 
   Background:
     Given a Git repository
-    And a file "go.mod" with unix newlines
+    And a file "go.mod" with content
       """
       module example.com/demo
       go 1.21

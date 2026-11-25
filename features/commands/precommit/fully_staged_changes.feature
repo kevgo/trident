@@ -7,7 +7,7 @@ Feature: "trident precommit" formats and stages files with fully staged changes
       delete-empty-folders 0.0.2
       rumdl 0.2.14
       """
-    And a file "file.md" with unix newlines
+    And a file "file.md" with content
       """
       # Original
       """
@@ -45,7 +45,7 @@ Feature: "trident precommit" formats and stages files with fully staged changes
       delete-empty-folders 0.0.2
       rumdl 0.2.14
       """
-    And a file "my file.md" with unix newlines
+    And a file "my file.md" with content
       """
       # Original
       """

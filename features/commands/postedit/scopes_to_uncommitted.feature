@@ -82,7 +82,7 @@ Feature: "trident postedit" lints only uncommitted files
       """
 
   Scenario: untracked file with spaces in the name
-    Given a file "my file.md" with unix newlines
+    Given a file "my file.md" with content
       """
       missing header
       """

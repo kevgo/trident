@@ -6,7 +6,7 @@ Feature: install hadolint
       """
       delete-empty-folders 0.0.2
       """
-    And a file "Dockerfile" with unix newlines
+    And a file "Dockerfile" with content
       """
       FROM alpine:3.20
       USER 65534

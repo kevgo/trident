@@ -9,7 +9,7 @@ Feature: lint Python with Pyright
       pyright 1.1.414
       ruff 0.15.16
       """
-    And a file "trident.json" with content
+    And a file "trident.json" with unix newlines
       """
       {
         "applications": {
@@ -37,7 +37,7 @@ Feature: lint Python with Pyright
       """
       print("Hello, world!")
       """
-    And a file "other.py" with unix newlines
+    And a file "other.py" with content
       """
       print("Hello, other!")
       """
@@ -65,7 +65,7 @@ Feature: lint Python with Pyright
       """
       print   ("Hello, world!")
       """
-    And a file "other.py" with unix newlines
+    And a file "other.py" with content
       """
       print   ("Hello, other!")
       """
@@ -94,7 +94,7 @@ Feature: lint Python with Pyright
       a: int = "text"
       print(a)
       """
-    And a file "other.py" with unix newlines
+    And a file "other.py" with content
       """
       b: int = "text"
       print(b)
@@ -118,7 +118,7 @@ Feature: lint Python with Pyright
       """
       print(123
       """
-    And a file "other.py" with unix newlines
+    And a file "other.py" with content
       """
       print("
       """

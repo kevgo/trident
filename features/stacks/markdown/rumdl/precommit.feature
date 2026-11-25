@@ -9,7 +9,7 @@ Feature: precommit Markdown
       """
 
   Scenario: valid Markdown
-    Given a file "main.md" with unix newlines
+    Given a file "main.md" with content
       """
       # Hello
       """
@@ -25,7 +25,7 @@ Feature: precommit Markdown
       """
 
   Scenario: unformatted JSON
-    Given a file "main.md" with unix newlines
+    Given a file "main.md" with content
       """
       #     Hello
       """
@@ -45,7 +45,7 @@ Feature: precommit Markdown
       """
 
   Scenario: unformatted Markdown with spaces in the filename
-    Given a file "my file.md" with unix newlines
+    Given a file "my file.md" with content
       """
       #     Hello
       """
@@ -65,7 +65,7 @@ Feature: precommit Markdown
       """
 
   Scenario: invalid JSON
-    Given a file "main.md" with unix newlines
+    Given a file "main.md" with content
       """
       # hello
 
