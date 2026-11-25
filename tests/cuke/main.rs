@@ -77,7 +77,6 @@ async fn main() -> ExitCode {
     if snapshots::enabled() {
         snapshots::flush();
     }
-    drop(_git_double_dir);
     if had_failures.load(Ordering::SeqCst) {
         ExitCode::FAILURE
     } else {
