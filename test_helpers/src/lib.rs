@@ -4,7 +4,6 @@ mod content_lines;
 mod docstring_body;
 mod has_additional_lines;
 mod newlines;
-mod platform_newlines;
 mod remove_line_matching;
 mod remove_lines;
 pub mod snapshots;

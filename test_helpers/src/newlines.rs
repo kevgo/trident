@@ -4,6 +4,7 @@ pub enum Newlines {
 }
 
 impl Newlines {
+    #[must_use]
     pub fn apply(self, content: &str) -> String {
         match self {
             Newlines::Unix => unix_newlines(content),
