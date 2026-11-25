@@ -8,7 +8,7 @@ Feature: disable an application's lint operation
       rumdl 0.2.14
       taplo 0.10.0
       """
-    And a file "trident.json" with content
+    And a file "trident.json" with unix newlines
       """
       {
         "applications": {
@@ -26,7 +26,7 @@ Feature: disable an application's lint operation
       """
       # a markdown file
       """
-    And a file "Cargo.toml" with content
+    And a file "Cargo.toml" with unix newlines
       """
       [package]
       name =      "demo"

@@ -8,7 +8,7 @@ Feature: pitstop CSS
       """
 
   Scenario: unformatted CSS
-    Given a file "main.css" with content
+    Given a file "main.css" with unix newlines
       """
       .foo {
         color : red ;
@@ -33,7 +33,7 @@ Feature: pitstop CSS
       """
 
   Scenario: unformatted CSS with lint error
-    Given a file "main.css" with content
+    Given a file "main.css" with unix newlines
       """
       .foo {
         colr: blue;

@@ -8,7 +8,7 @@ Feature: fix YML
       """
 
   Scenario: valid YML
-    Given a file "main.yml" with content
+    Given a file "main.yml" with unix newlines
       """
       key: value
       """
@@ -25,11 +25,11 @@ Feature: fix YML
       """
 
   Scenario: unformatted YML
-    Given a file "main.yml" with content
+    Given a file "main.yml" with unix newlines
       """
       key:     value
       """
-    And a file "other.yml" with content
+    And a file "other.yml" with unix newlines
       """
       key:     other
       """
@@ -53,7 +53,7 @@ Feature: fix YML
       """
 
   Scenario: invalid YML
-    Given a file "main.yml" with content
+    Given a file "main.yml" with unix newlines
       """
       key: "
       """

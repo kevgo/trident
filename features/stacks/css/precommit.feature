@@ -9,7 +9,7 @@ Feature: precommit CSS
       """
 
   Scenario: valid CSS
-    Given a file "main.css" with content
+    Given a file "main.css" with unix newlines
       """
       .foo {
       \tcolor: red;
@@ -27,13 +27,13 @@ Feature: precommit CSS
       """
 
   Scenario: unformatted CSS
-    Given a file "main.css" with content
+    Given a file "main.css" with unix newlines
       """
       .foo {
         color : red ;
       }
       """
-    And a file "other.css" with content
+    And a file "other.css" with unix newlines
       """
       .bar {
         color : blue ;
@@ -63,7 +63,7 @@ Feature: precommit CSS
       """
 
   Scenario: invalid CSS
-    Given a file "main.css" with content
+    Given a file "main.css" with unix newlines
       """
       .foo {
         col

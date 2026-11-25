@@ -11,13 +11,13 @@ Feature: CI multiple formatted stacks
       """
       print("hello")
       """
-    And a file "main.css" with content
+    And a file "main.css" with unix newlines
       """
       .foo {
       \tcolor: red;
       }
       """
-    And a file "main.ts" with content
+    And a file "main.ts" with unix newlines
       """
       console.log("hello");
       """

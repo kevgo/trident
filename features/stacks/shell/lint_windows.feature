@@ -10,7 +10,7 @@ Feature: lint Shell
       """
 
   Scenario: valid Shell
-    Given a file "one.sh" with content
+    Given a file "one.sh" with unix newlines
       """
       #!/usr/bin/env bash
       echo "one"
@@ -25,7 +25,7 @@ Feature: lint Shell
       """
 
   Scenario: unformatted Shell
-    Given a file "one.sh" with content
+    Given a file "one.sh" with unix newlines
       """
       #!/usr/bin/env bash
       foo()   {
@@ -43,7 +43,7 @@ Feature: lint Shell
       """
 
   Scenario: invalid Shell
-    Given a file "one.sh" with content
+    Given a file "one.sh" with unix newlines
       """
       #!/usr/bin/env bash
       echo $1

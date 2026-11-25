@@ -1,6 +1,7 @@
 #![allow(clippy::needless_pass_by_value)]
 
 mod dot_writer;
+mod filesystem;
 mod git_commands;
 mod given_steps;
 mod jitter;
@@ -13,6 +14,7 @@ use cucumber::tag::Ext as _;
 use cucumber::{World, WriterExt as _, cli, event, gherkin, runner};
 use dot_writer::DotWriter;
 use std::borrow::Cow;
+use std::process::ExitCode;
 use std::sync::{
     Arc,
     atomic::{AtomicBool, Ordering},
@@ -21,7 +23,7 @@ use test_helpers::snapshots;
 use world::TridentWorld;
 
 #[tokio::main(flavor = "current_thread")]
-async fn main() {
+async fn main() -> ExitCode {
     let had_failures = Arc::new(AtomicBool::new(false));
     let git_double_dir = git_commands::install_double(&std::env::current_dir().unwrap());
     let mut cli = cli::Opts::<_, runner::basic::Cli, _>::parsed();
@@ -85,8 +87,9 @@ async fn main() {
     // process::exit doesn't run destructors
     drop(git_double_dir);
     if had_failures.load(Ordering::SeqCst) {
-        // TODO: is there a better way to signal the test failure? Process.exit doesn't wind down the stack properly.
-        std::process::exit(1);
+        ExitCode::FAILURE
+    } else {
+        ExitCode::SUCCESS
     }
 }
 

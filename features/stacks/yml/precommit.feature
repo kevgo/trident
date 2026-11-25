@@ -12,7 +12,6 @@ Feature: precommit YML
     Given a file "main.yml" with content
       """
       key: value
-
       """
     And I ran "git add main.yml"
     When executing "trident precommit --show=output"
@@ -29,11 +28,11 @@ Feature: precommit YML
       """
 
   Scenario: unformatted YML
-    Given a file "main.yml" with content
+    Given a file "main.yml" with unix newlines
       """
       key:     value
       """
-    And a file "other.yml" with content
+    And a file "other.yml" with unix newlines
       """
       key:     other
       """
@@ -60,7 +59,7 @@ Feature: precommit YML
       """
 
   Scenario: invalid YML
-    Given a file "main.yml" with content
+    Given a file "main.yml" with unix newlines
       """
       key: "
       """

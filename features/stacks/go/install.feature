@@ -7,7 +7,7 @@ Feature: install all Go tools
       module example.com/demo
       go 1.21
       """
-    And a file "main.go" with content
+    And a file "main.go" with unix newlines
       """
       package main
       import "fmt"

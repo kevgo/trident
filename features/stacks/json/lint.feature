@@ -8,7 +8,7 @@ Feature: lint JSON
       """
 
   Scenario: valid JSON
-    Given a file "main.json" with content
+    Given a file "main.json" with unix newlines
       """
       { "key": "value" }
       """
@@ -25,7 +25,7 @@ Feature: lint JSON
       """
 
   Scenario: unformatted JSON
-    Given a file "main.json" with content
+    Given a file "main.json" with unix newlines
       """
       {"key":"value"}
       """
@@ -42,7 +42,7 @@ Feature: lint JSON
       """
 
   Scenario: invalid JSON
-    Given a file "main.json" with content
+    Given a file "main.json" with unix newlines
       """
       { "key":
       """

@@ -6,7 +6,7 @@ Feature: install all JSON tools
       """
       delete-empty-folders 0.0.2
       """
-    And a file "main.json" with content
+    And a file "main.json" with unix newlines
       """
       {"key":"value"}
       """

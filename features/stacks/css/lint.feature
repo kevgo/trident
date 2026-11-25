@@ -8,7 +8,7 @@ Feature: lint CSS
       """
 
   Scenario: valid CSS
-    Given a file "main.css" with content
+    Given a file "main.css" with unix newlines
       """
       .foo {
       \tcolor: red;
@@ -27,7 +27,7 @@ Feature: lint CSS
       """
 
   Scenario: unformatted CSS
-    Given a file "main.css" with content
+    Given a file "main.css" with unix newlines
       """
       .foo {
         color : red ;
@@ -46,7 +46,7 @@ Feature: lint CSS
       """
 
   Scenario: invalid CSS
-    Given a file "main.css" with content
+    Given a file "main.css" with unix newlines
       """
       .foo {
         col

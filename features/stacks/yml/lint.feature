@@ -8,7 +8,7 @@ Feature: lint YML
       """
 
   Scenario: valid YML
-    Given a file "main.yml" with content
+    Given a file "main.yml" with unix newlines
       """
       key: value
       """
@@ -22,7 +22,7 @@ Feature: lint YML
       """
 
   Scenario: unformatted YML
-    Given a file "main.yml" with content
+    Given a file "main.yml" with unix newlines
       """
       key:     value
       """
@@ -36,7 +36,7 @@ Feature: lint YML
       """
 
   Scenario: invalid YML
-    Given a file "main.yml" with content
+    Given a file "main.yml" with unix newlines
       """
       key: "
       """

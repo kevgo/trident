@@ -11,7 +11,7 @@ Feature: custom fixes
       """
 
   Scenario: custom fixes run in the order defined
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "global-fixes": [
@@ -49,7 +49,7 @@ Feature: custom fixes
       """
 
   Scenario: custom lint fails
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "global-lints": [

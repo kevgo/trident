@@ -6,7 +6,7 @@ Feature: unsafe-fix TypeScript
       biome 2.4.0
       delete-empty-folders 0.0.2
       """
-    And a file "main.ts" with content
+    And a file "main.ts" with unix newlines
       """
       const name = "Alice";
       const greeting = "Hello, " + name + "!";

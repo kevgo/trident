@@ -8,7 +8,7 @@ Feature: stack-scoped custom fixes
       ruff 0.15.16
       rumdl 0.2.14
       """
-    And a file "trident.json" with content
+    And a file "trident.json" with unix newlines
       """
       {
         "stacks": {

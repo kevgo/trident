@@ -2,7 +2,7 @@
 Feature: install all TypeScript tools
 
   Scenario: not installed
-    Given a file "main.ts" with content
+    Given a file "main.ts" with unix newlines
       """
       console.log(  "hello"  );
       """

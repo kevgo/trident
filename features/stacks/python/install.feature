@@ -10,7 +10,7 @@ Feature: install all Python tools
       """
       print    ("Hello, world!")
       """
-    And a file "pyrightconfig.json" with content
+    And a file "pyrightconfig.json" with unix newlines
       """
       {
         "typeCheckingMode": "strict"

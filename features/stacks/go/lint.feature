@@ -13,7 +13,7 @@ Feature: lint Go
       """
 
   Scenario: valid Go
-    Given a file "main.go" with content
+    Given a file "main.go" with unix newlines
       """
       package main
       import "fmt"
@@ -34,7 +34,7 @@ Feature: lint Go
       """
 
   Scenario: invalid Go
-    Given a file "main.go" with content
+    Given a file "main.go" with unix newlines
       """
       package main
       import "fmt"

@@ -6,11 +6,11 @@ Feature: pitstop YML
       delete-empty-folders 0.0.2
       yamlfmt 0.21.0
       """
-    And a file "main.yml" with content
+    And a file "main.yml" with unix newlines
       """
       key:     value
       """
-    And a file "other.yml" with content
+    And a file "other.yml" with unix newlines
       """
       key:     other
       """
@@ -39,7 +39,7 @@ Feature: pitstop YML
       delete-empty-folders 0.0.2
       yamlfmt 0.21.0
       """
-    And a file "main.yml" with content
+    And a file "main.yml" with unix newlines
       """
       key:     value
       key:     other

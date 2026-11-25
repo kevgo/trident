@@ -9,7 +9,7 @@ Feature: lint GitHub Actions workflow files
       """
 
   Scenario: valid workflow
-    Given a file ".github/workflows/main.yml" with content
+    Given a file ".github/workflows/main.yml" with unix newlines
       """
       name: CI
       on:
@@ -43,7 +43,7 @@ Feature: lint GitHub Actions workflow files
       """
 
   Scenario: invalid workflow
-    Given a file ".github/workflows/main.yml" with content
+    Given a file ".github/workflows/main.yml" with unix newlines
       """
       key: "
       """

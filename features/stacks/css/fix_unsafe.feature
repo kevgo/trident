@@ -6,13 +6,13 @@ Feature: unsafe-fix CSS
       biome 2.4.0
       delete-empty-folders 0.0.2
       """
-    And a file "main.css" with content
+    And a file "main.css" with unix newlines
       """
       .style {
       \tcolor: red !important;
       }
       """
-    And a file "biome.json" with content
+    And a file "biome.json" with unix newlines
       """
       {
         "linter": {

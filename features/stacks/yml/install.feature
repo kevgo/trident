@@ -2,7 +2,7 @@
 Feature: install all YML tools
 
   Scenario: not installed
-    Given a file "main.yml" with content
+    Given a file "main.yml" with unix newlines
       """
       key:     value
       """

@@ -17,7 +17,7 @@ Feature: unsafe-fix Python
       print(add_to_list("a"))  # ["a"]
       print(add_to_list("b"))  # ["a", "b"]
       """
-    And a file "ruff.toml" with content
+    And a file "ruff.toml" with unix newlines
       """
       [lint]
       extend-select = ["B006"]

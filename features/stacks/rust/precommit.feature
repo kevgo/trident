@@ -31,7 +31,7 @@ Feature: precommit Rust
       """
 
   Scenario: a custom fix is defined
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "stacks": {

@@ -8,7 +8,7 @@ Feature: fix TypeScript
       """
 
   Scenario: valid TypeScript
-    Given a file "main.ts" with content
+    Given a file "main.ts" with unix newlines
       """
       console.log("hello");
       """
@@ -25,11 +25,11 @@ Feature: fix TypeScript
       """
 
   Scenario: unformatted TypeScript
-    Given a file "main.ts" with content
+    Given a file "main.ts" with unix newlines
       """
       console.log(  "hello"  );
       """
-    And a file "other.ts" with content
+    And a file "other.ts" with unix newlines
       """
       console.log(  "other"  );
       """
@@ -53,7 +53,7 @@ Feature: fix TypeScript
       """
 
   Scenario: invalid TypeScript
-    Given a file "main.ts" with content
+    Given a file "main.ts" with unix newlines
       """
       console.log("
       """

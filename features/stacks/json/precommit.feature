@@ -9,7 +9,7 @@ Feature: precommit JSON
       """
 
   Scenario: valid JSON
-    Given a file "main.json" with content
+    Given a file "main.json" with unix newlines
       """
       { "key": "value" }
       """
@@ -25,7 +25,7 @@ Feature: precommit JSON
       """
 
   Scenario: unformatted JSON
-    Given a file "main.json" with content
+    Given a file "main.json" with unix newlines
       """
       {"key":"value"}
       """
@@ -45,7 +45,7 @@ Feature: precommit JSON
       """
 
   Scenario: invalid JSON
-    Given a file "main.json" with content
+    Given a file "main.json" with unix newlines
       """
       { "key":
       """

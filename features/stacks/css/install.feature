@@ -2,7 +2,7 @@
 Feature: install all CSS tools
 
   Scenario: not installed
-    Given a file "main.css" with content
+    Given a file "main.css" with unix newlines
       """
       .foo {
         color:    red;

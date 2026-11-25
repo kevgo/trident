@@ -8,11 +8,11 @@ Feature: fix TOML
       """
 
   Scenario: unformatted TOML
-    Given a file "main.toml" with content
+    Given a file "main.toml" with unix newlines
       """
       key =     "value"
       """
-    And a file "other.toml" with content
+    And a file "other.toml" with unix newlines
       """
       key =     "other"
       """
@@ -37,7 +37,7 @@ Feature: fix TOML
       """
 
   Scenario: unformatted TOML with lint errors
-    Given a file "main.toml" with content
+    Given a file "main.toml" with unix newlines
       """
       key = 1
       key = 2

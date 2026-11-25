@@ -7,7 +7,7 @@ Feature: exclude a file from being unsafe-fixed by a specific app only
       delete-empty-folders 0.0.2
       taplo 0.10.0
       """
-    And a file "trident.json" with content
+    And a file "trident.json" with unix newlines
       """
       {
         "applications": {
@@ -21,11 +21,11 @@ Feature: exclude a file from being unsafe-fixed by a specific app only
         }
       }
       """
-    And a file "other.toml" with content
+    And a file "other.toml" with unix newlines
       """
       key =     "value"
       """
-    And a file "Cargo.toml" with content
+    And a file "Cargo.toml" with unix newlines
       """
       [package]
       name =      "demo"

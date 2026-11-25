@@ -12,13 +12,13 @@ Feature: CI doesn't care about uncommitted files that are unformatted
       """
       print(  "hello"  )
       """
-    And a file "main.css" with content
+    And a file "main.css" with unix newlines
       """
       p {
         color : red ;
       }
       """
-    And a file "main.ts" with content
+    And a file "main.ts" with unix newlines
       """
       console.log(  "hello"  );
       """

@@ -9,7 +9,7 @@ Feature: fix Shell
       """
 
   Scenario: valid Shell
-    Given a file "one.sh" with content
+    Given a file "one.sh" with unix newlines
       """
       #!/usr/bin/env bash
       foo() {
@@ -30,7 +30,7 @@ Feature: fix Shell
       """
 
   Scenario: unformatted Shell
-    Given a file "one.sh" with content
+    Given a file "one.sh" with unix newlines
       """
       #!/usr/bin/env bash
       if [ "$1" = "a" ]
@@ -38,7 +38,7 @@ Feature: fix Shell
             echo   "a"
       fi
       """
-    And a file "two.sh" with content
+    And a file "two.sh" with unix newlines
       """
       #!/usr/bin/env bash
       foo()   {
@@ -73,7 +73,7 @@ Feature: fix Shell
       """
 
   Scenario: invalid Shell
-    Given a file "one.sh" with content
+    Given a file "one.sh" with unix newlines
       """
       #!/usr/bin/env bash
       if [ "$1" = "a" ]
@@ -92,7 +92,7 @@ Feature: fix Shell
       """
 
   Scenario: Shell with lint errors
-    Given a file "one.sh" with content
+    Given a file "one.sh" with unix newlines
       """
       #!/usr/bin/env bash
       echo $1

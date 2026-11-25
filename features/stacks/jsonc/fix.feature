@@ -6,7 +6,7 @@ Feature: fix JSONC
       biome 2.4.0
       delete-empty-folders 0.0.2
       """
-    And a file "trident.json" with content
+    And a file "trident.json" with unix newlines
       """
       {
         "applications": {
@@ -16,7 +16,7 @@ Feature: fix JSONC
       """
 
   Scenario: formatted JSONC
-    Given a file "main.jsonc" with content
+    Given a file "main.jsonc" with unix newlines
       """
       { "key": "value" } // comment
       """
@@ -33,11 +33,11 @@ Feature: fix JSONC
       """
 
   Scenario: unformatted JSONC
-    Given a file "main.jsonc" with content
+    Given a file "main.jsonc" with unix newlines
       """
       {  "key"  :  "value"  } // comment
       """
-    And a file "other.jsonc" with content
+    And a file "other.jsonc" with unix newlines
       """
       {  "key"  :  "other"  } // comment
       """
@@ -61,7 +61,7 @@ Feature: fix JSONC
       """
 
   Scenario: invalid JSONC
-    Given a file "main.jsonc" with content
+    Given a file "main.jsonc" with unix newlines
       """
       { "key":
       """

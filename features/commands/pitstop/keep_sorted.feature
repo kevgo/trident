@@ -29,7 +29,7 @@ Feature: "trident pitstop" keep-sorted only rewrites files changed on the curren
 
   Scenario: on a feature branch, does not sort files that were not changed on the branch
     Given I ran "git checkout -b feature"
-    And a file "changed.toml" with content
+    And a file "changed.toml" with unix newlines
       """
       # keep-sorted start
       b = 2

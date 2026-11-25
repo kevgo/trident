@@ -8,7 +8,7 @@ Feature: pitstop JSON
       """
 
   Scenario: unformatted JSON
-    Given a file "main.json" with content
+    Given a file "main.json" with unix newlines
       """
       {"key":"value"}
       """
@@ -28,7 +28,7 @@ Feature: pitstop JSON
       """
 
   Scenario: unformatted JSON with lint errors
-    Given a file "main.json" with content
+    Given a file "main.json" with unix newlines
       """
       {
       "key":"value",

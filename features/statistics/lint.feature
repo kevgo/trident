@@ -10,13 +10,13 @@ Feature: display statistics about the codebase
       """
       print("Hello, world!")
       """
-    And a file "main.css" with content
+    And a file "main.css" with unix newlines
       """
       p {
       \tcolor: red;
       }
       """
-    And a file "main.ts" with content
+    And a file "main.ts" with unix newlines
       """
       console.log("hello");
       """

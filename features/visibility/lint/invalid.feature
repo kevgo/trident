@@ -11,11 +11,11 @@ Feature: lint multiple stacks with invalid code
       """
       print("
       """
-    And a file "main.css" with content
+    And a file "main.css" with unix newlines
       """
       .foo {
       """
-    And a file "main.ts" with content
+    And a file "main.ts" with unix newlines
       """
       console.log("
       """

@@ -11,13 +11,13 @@ Feature: lint multiple stacks with unformatted files
       """
       print(  "hello"  )
       """
-    And a file "main.css" with content
+    And a file "main.css" with unix newlines
       """
       .foo {
         color : red ;
       }
       """
-    And a file "main.ts" with content
+    And a file "main.ts" with unix newlines
       """
       console.log(  "hello"  );
       """

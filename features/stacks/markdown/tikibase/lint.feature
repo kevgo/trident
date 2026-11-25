@@ -8,7 +8,7 @@ Feature: lint a Tikibase
       rumdl 0.2.14
       tikibase 0.6.2
       """
-    And a file "tikibase.json" with content
+    And a file "tikibase.json" with unix newlines
       """
       {
         "ignore": [

@@ -6,7 +6,7 @@ Feature: pitstop JSONC
       biome 2.4.0
       delete-empty-folders 0.0.2
       """
-    And a file "trident.json" with content
+    And a file "trident.json" with unix newlines
       """
       {
         "applications": {
@@ -16,11 +16,11 @@ Feature: pitstop JSONC
       """
 
   Scenario: unformatted JSONC
-    Given a file "main.jsonc" with content
+    Given a file "main.jsonc" with unix newlines
       """
       {  "key"  :  "value"  } // comment
       """
-    And a file "other.jsonc" with content
+    And a file "other.jsonc" with unix newlines
       """
       {  "key"  :  "other"  } // comment
       """
@@ -44,7 +44,7 @@ Feature: pitstop JSONC
       """
 
   Scenario: invalid JSONC
-    Given a file "main.jsonc" with content
+    Given a file "main.jsonc" with unix newlines
       """
       { "key":
       """
