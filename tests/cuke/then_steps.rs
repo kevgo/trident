@@ -183,7 +183,7 @@ fn it_runs_the_git_commands(world: &mut TridentWorld, step: &Step) {
         }
         return;
     }
-    pretty::assert_eq!(have, want, "unexpected Git commands");
+    pretty::assert_eq!(want, have, "unexpected Git commands");
 }
 
 #[then("it runs no Git commands")]
