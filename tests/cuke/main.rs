@@ -12,6 +12,7 @@ use cucumber::tag::Ext as _;
 use cucumber::{World, WriterExt as _, cli, event, gherkin, runner};
 use dot_writer::DotWriter;
 use std::borrow::Cow;
+use std::process::ExitCode;
 use std::sync::{
     Arc,
     atomic::{AtomicBool, Ordering},
@@ -20,7 +21,7 @@ use test_helpers::snapshots;
 use world::TridentWorld;
 
 #[tokio::main(flavor = "current_thread")]
-async fn main() {
+async fn main() -> ExitCode {
     let had_failures = Arc::new(AtomicBool::new(false));
     let mut cli = cli::Opts::<_, runner::basic::Cli, _>::parsed();
     // Cucumber ignores custom filters when the CLI provides a tag or name filter,
@@ -74,7 +75,9 @@ async fn main() {
         snapshots::flush();
     }
     if had_failures.load(Ordering::SeqCst) {
-        std::process::exit(1);
+        ExitCode::FAILURE
+    } else {
+        ExitCode::SUCCESS
     }
 }
 
