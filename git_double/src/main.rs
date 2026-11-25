@@ -11,30 +11,28 @@ fn main() -> ExitCode {
         eprintln!("git double: environment variable {REAL_GIT_VAR} is not set");
         return ExitCode::FAILURE;
     };
-    let Some(log_path) = env::var_os(LOG_FILE_VAR) else {
-        eprintln!("git double: environment variable {LOG_FILE_VAR} is not set");
-        return ExitCode::FAILURE;
-    };
-
-    // write the entire entry at once so that entries of concurrent Git calls don't interleave
-    let texts: Vec<_> = args.iter().map(|arg| arg.to_string_lossy()).collect();
-    let entry = format!("{}\n", log_entry(&texts));
-    let mut log_file = OpenOptions::new()
-        .create(true)
-        .append(true)
-        .open(&log_path)
-        .unwrap_or_else(|err| {
+    // This env var gets removed below, so nested calls to Git might not see it.
+    if let Some(log_path) = env::var_os(LOG_FILE_VAR) {
+        // write the entire entry at once so that entries of concurrent Git calls don't interleave
+        let texts: Vec<_> = args.iter().map(|arg| arg.to_string_lossy()).collect();
+        let entry = format!("{}\n", log_entry(&texts));
+        let mut log_file = OpenOptions::new()
+            .create(true)
+            .append(true)
+            .open(&log_path)
+            .unwrap_or_else(|err| {
+                panic!(
+                    "git double: cannot open log file {}: {err}",
+                    log_path.display()
+                )
+            });
+        log_file.write_all(entry.as_bytes()).unwrap_or_else(|err| {
             panic!(
-                "git double: cannot open log file {}: {err}",
+                "git double: cannot write log file {}: {err}",
                 log_path.display()
             )
         });
-    log_file.write_all(entry.as_bytes()).unwrap_or_else(|err| {
-        panic!(
-            "git double: cannot write log file {}: {err}",
-            log_path.display()
-        )
-    });
+    }
     let mut command = Command::new(real_git);
     command.args(&args);
     // Git calls that Git itself makes, for example in hooks or `git town`, are not Trident's calls

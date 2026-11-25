@@ -1,9 +1,9 @@
-use crate::filesystem::{Newlines, write_file};
+use crate::filesystem::write_file;
 use crate::jitter::jitter;
 use crate::world::TridentWorld;
 use cucumber::gherkin::Step;
 use cucumber::given;
-use tokio::fs;
+use test_helpers::Newlines;
 use tokio::process::Command;
 
 #[given(expr = "a committed file {string} with content")]
@@ -30,7 +30,7 @@ async fn a_committed_file_with_content(world: &mut TridentWorld, step: &Step, fi
 }
 
 #[given(expr = "a file {string} with content")]
-async fn a_file_with_platform_newlines(world: &mut TridentWorld, step: &Step, filename: String) {
+async fn a_file_with_content(world: &mut TridentWorld, step: &Step, filename: String) {
     write_file(world, step, filename, Newlines::Platform).await;
 }
 
@@ -47,7 +47,7 @@ async fn i_change_file_to(world: &mut TridentWorld, step: &Step, filename: Strin
         "file '{}' does not exist",
         filepath.display()
     );
-    write_file(world, step, filename, Newlines::Unix).await;
+    write_file(world, step, filename, Newlines::Platform).await;
 }
 
 #[given(expr = "a Git repository")]
@@ -82,6 +82,7 @@ async fn an_executable_file_with_content(world: &mut TridentWorld, step: &Step, 
     #[cfg(unix)]
     {
         use std::os::unix::fs::PermissionsExt;
+        use tokio::fs;
         let mut perms = fs::metadata(&filepath).await.unwrap().permissions();
         perms.set_mode(0o755);
         fs::set_permissions(&filepath, perms).await.unwrap();
