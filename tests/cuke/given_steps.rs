@@ -46,7 +46,7 @@ async fn i_change_file_to(world: &mut TridentWorld, step: &Step, filename: Strin
         "file '{}' does not exist",
         filepath.display()
     );
-    write_file(world, step, filename, Newlines::Unix).await;
+    write_file(world, step, filename, Newlines::Platform).await;
 }
 
 #[given(expr = "a Git repository")]
