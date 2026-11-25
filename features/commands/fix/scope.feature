@@ -16,7 +16,7 @@ Feature: "trident fix --scope" selects which files to format
       """
       #     Branch
       """
-    And a file "untracked.md" with unix newlines
+    And a file "untracked.md" with content
       """
       #     Untracked
       """

@@ -16,7 +16,7 @@ Feature: "trident lint --scope" selects which files to lint
       """
       #     Branch
       """
-    And a file "untracked.md" with unix newlines
+    And a file "untracked.md" with content
       """
       #     Untracked
       """

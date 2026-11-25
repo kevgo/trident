@@ -47,7 +47,7 @@ Feature: "trident postedit" lints only uncommitted files
       """
       missing header
       """
-    And a file "untracked.md" with unix newlines
+    And a file "untracked.md" with content
       """
       missing header
       """

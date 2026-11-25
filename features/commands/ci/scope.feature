@@ -16,7 +16,7 @@ Feature: "trident ci --scope" selects which files to process
       """
       #     Branch
       """
-    And a file "untracked.md" with unix newlines
+    And a file "untracked.md" with content
       """
       #     Untracked
       """
