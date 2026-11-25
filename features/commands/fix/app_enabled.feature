@@ -7,7 +7,7 @@ Feature: "trident fix" skips disabled applications
       delete-empty-folders 0.0.2
       taplo 0.10.0
       """
-    And a file "config.toml" with unix newlines
+    And a file "config.toml" with content
       """
       key =     "value"
       """

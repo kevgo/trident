@@ -12,7 +12,7 @@ Feature: ignore files for an application
       [package]
       name = "demo"
       """
-    And a file "config.toml" with unix newlines
+    And a file "config.toml" with content
       """
       key = "value"
       """
@@ -55,7 +55,7 @@ Feature: ignore files for an application
         }
       }
       """
-    And a file "config.toml" with unix newlines
+    And a file "config.toml" with content
       """
       key =     "value"
       """
