@@ -9,7 +9,7 @@ Feature: stack-specific lints
       """
 
   Scenario: "additional-lints" adds custom lints to the built-in ones for that stack
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "stacks": {
@@ -44,7 +44,7 @@ Feature: stack-specific lints
       """
 
   Scenario: "replace-lints" replaces the built-in lints for that stack
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "stacks": {
@@ -79,7 +79,7 @@ Feature: stack-specific lints
       """
 
   Scenario: disable a stack's lints
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "stacks": {
@@ -107,7 +107,7 @@ Feature: stack-specific lints
       """
 
   Scenario: runs only when files of that stack exist
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "stacks": {

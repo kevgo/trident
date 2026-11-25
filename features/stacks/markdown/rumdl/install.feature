@@ -8,11 +8,11 @@ Feature: install Rumdl
 
       delete-empty-folders 0.0.2
       """
-    And a file "main.md" with unix newlines
+    And a file "main.md" with content
       """
       #     Hello
       """
-    And a file "trident.json" with content
+    And a file "trident.json" with unix newlines
       """
       {
         "applications": {

@@ -6,7 +6,7 @@ Feature: "trident postedit" lints all files outside a Git repository
       delete-empty-folders 0.0.2
       rumdl 0.2.14
       """
-    And a file "main.md" with unix newlines
+    And a file "main.md" with content
       """
       text
       """

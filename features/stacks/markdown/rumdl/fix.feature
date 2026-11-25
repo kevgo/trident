@@ -8,7 +8,7 @@ Feature: fix Markdown
       """
 
   Scenario: valid Markdown
-    Given a file "main.md" with unix newlines
+    Given a file "main.md" with content
       """
       # Hello
       """
@@ -25,7 +25,7 @@ Feature: fix Markdown
       """
 
   Scenario: unformatted Markdown
-    Given a file "main.md" with unix newlines
+    Given a file "main.md" with content
       """
       #     Hello
       """
@@ -46,7 +46,7 @@ Feature: fix Markdown
       """
 
   Scenario: invalid Markdown
-    Given a file "main.md" with unix newlines
+    Given a file "main.md" with content
       """
       # hello
 
@@ -66,7 +66,7 @@ Feature: fix Markdown
       """
 
   Scenario: file with spaces in the name
-    Given a file "my file.md" with unix newlines
+    Given a file "my file.md" with content
       """
       #     Hello
       """

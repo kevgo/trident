@@ -38,7 +38,7 @@ Feature: keep-sorted support
       """
 
   Scenario: keep-sorted sorts marker-bearing files when enabled
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "applications": {
@@ -74,7 +74,7 @@ Feature: keep-sorted support
       """
 
   Scenario: does not sort globally ignored files
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "ignore-files": ["unsorted_1.toml"],
@@ -104,7 +104,7 @@ Feature: keep-sorted support
       """
 
   Scenario: does not sort files that should not be sorted
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "applications": {

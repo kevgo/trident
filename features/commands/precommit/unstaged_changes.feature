@@ -7,7 +7,7 @@ Feature: "trident precommit" does not format files with unstaged changes
       delete-empty-folders 0.0.2
       rumdl 0.2.14
       """
-    And a file "file.md" with unix newlines
+    And a file "file.md" with content
       """
       line 1
       """

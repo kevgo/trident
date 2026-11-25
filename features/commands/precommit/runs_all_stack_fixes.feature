@@ -17,7 +17,7 @@ Feature: "trident precommit" runs all fixes for the changed files
         "bidiLinks": false
       }
       """
-    And a file "one.md" with unix newlines
+    And a file "one.md" with content
       """
       # One
 

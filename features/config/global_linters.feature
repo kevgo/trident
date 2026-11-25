@@ -10,7 +10,7 @@ Feature: custom lints
       """
 
   Scenario: custom lint passes
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "applications": {
@@ -48,7 +48,7 @@ Feature: custom lints
       """
 
   Scenario: custom lint fails
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "applications": {

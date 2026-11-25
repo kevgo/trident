@@ -8,7 +8,7 @@ Feature: disable an application's fix operation
       rumdl 0.2.14
       taplo 0.10.0
       """
-    And a file "trident.json" with content
+    And a file "trident.json" with unix newlines
       """
       {
         "applications": {
@@ -22,7 +22,7 @@ Feature: disable an application's fix operation
         }
       }
       """
-    And a file "other.md" with unix newlines
+    And a file "other.md" with content
       """
       # a markdown file
       """

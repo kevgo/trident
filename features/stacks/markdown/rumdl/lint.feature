@@ -8,7 +8,7 @@ Feature: lint Markdown
       """
 
   Scenario: valid Markdown
-    Given a file "main.md" with unix newlines
+    Given a file "main.md" with content
       """
       # Hello
       """
@@ -25,7 +25,7 @@ Feature: lint Markdown
       """
 
   Scenario: unformatted Markdown
-    Given a file "main.md" with unix newlines
+    Given a file "main.md" with content
       """
       #     Hello
       """
@@ -43,7 +43,7 @@ Feature: lint Markdown
       """
 
   Scenario: invalid Markdown
-    Given a file "main.md" with unix newlines
+    Given a file "main.md" with content
       """
       text
       """
@@ -61,7 +61,7 @@ Feature: lint Markdown
       """
 
   Scenario: file with spaces in the name
-    Given a file "my file.md" with unix newlines
+    Given a file "my file.md" with content
       """
       text
       """

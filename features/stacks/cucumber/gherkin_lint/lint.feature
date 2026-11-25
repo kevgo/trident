@@ -7,7 +7,7 @@ Feature: lint Cucumber
       gherkin-lint 4.2.4
       node 26.4.0
       """
-    And a file ".gherkin-lintrc" with unix newlines
+    And a file ".gherkin-lintrc" with content
       """
       {
         "allowed-tags": [ "on", { "tags": ["@online"] } ],
@@ -53,7 +53,7 @@ Feature: lint Cucumber
       """
 
   Scenario: valid Cucumber
-    Given a file "features/one.feature" with unix newlines
+    Given a file "features/one.feature" with content
       """
       Feature: one
 
@@ -73,7 +73,7 @@ Feature: lint Cucumber
       """
 
   Scenario: unformatted Cucumber
-    Given a file "features/one.feature" with unix newlines
+    Given a file "features/one.feature" with content
       """
       Feature: one
 
@@ -94,7 +94,7 @@ Feature: lint Cucumber
       """
 
   Scenario: invalid Cucumber
-    Given a file "features/one.feature" with unix newlines
+    Given a file "features/one.feature" with content
       """
       Feat
       """

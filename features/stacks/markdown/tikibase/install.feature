@@ -6,7 +6,7 @@ Feature: install Tikibase
       """
       delete-empty-folders 0.0.2
       """
-    And a file "trident.json" with content
+    And a file "trident.json" with unix newlines
       """
       {
         "applications": {
@@ -25,12 +25,12 @@ Feature: install Tikibase
         "bidiLinks": false
       }
       """
-    And a file "one.md" with unix newlines
+    And a file "one.md" with content
       """
       # One
       [two](two.md)
       """
-    And a file "two.md" with unix newlines
+    And a file "two.md" with content
       """
       # Two
       [one](one.md)

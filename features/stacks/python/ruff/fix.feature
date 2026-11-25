@@ -12,7 +12,7 @@ Feature: fix Python
       """
       print("Hello, world!")
       """
-    And a file "other.py" with unix newlines
+    And a file "other.py" with content
       """
       print("Hello, other!")
       """
@@ -38,7 +38,7 @@ Feature: fix Python
       """
       print   ("Hello, world!")
       """
-    And a file "other.py" with unix newlines
+    And a file "other.py" with content
       """
       print   ("Hello, other!")
       """
@@ -70,7 +70,7 @@ Feature: fix Python
       """
       print("
       """
-    And a file "other.py" with unix newlines
+    And a file "other.py" with content
       """
       print("
       """

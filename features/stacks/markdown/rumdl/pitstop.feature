@@ -8,7 +8,7 @@ Feature: pitstop Markdown
       """
 
   Scenario: unformatted Markdown
-    Given a file "main.md" with unix newlines
+    Given a file "main.md" with content
       """
       #     Hello
       """
@@ -29,7 +29,7 @@ Feature: pitstop Markdown
       """
 
   Scenario: file with spaces in the name
-    Given a file "my file.md" with unix newlines
+    Given a file "my file.md" with content
       """
       #     Hello
       """
@@ -50,7 +50,7 @@ Feature: pitstop Markdown
       """
 
   Scenario: unformatted Markdown with lint errors
-    Given a file "main.md" with unix newlines
+    Given a file "main.md" with content
       """
       one
 

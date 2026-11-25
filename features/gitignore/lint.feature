@@ -2,11 +2,11 @@ Feature: ignore files in .gitignore
 
   Scenario: all Python files are ignored
     Given a Git repository
-    And a file ".gitignore" with unix newlines
+    And a file ".gitignore" with content
       """
       *.py
       """
-    And a file ".git/info/exclude" with unix newlines
+    And a file ".git/info/exclude" with content
       """
       this file must exist for the .gitignore detection to work
       """

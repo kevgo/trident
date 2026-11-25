@@ -37,7 +37,7 @@ Feature: "trident init:config" writes the default config file
     And it runs no Git commands
 
   Scenario Outline: existing config file
-    Given a file "<FILENAME>" with unix newlines
+    Given a file "<FILENAME>" with content
       """
       existing
       """
@@ -57,7 +57,7 @@ Feature: "trident init:config" writes the default config file
       | trident.jsonc |
 
   Scenario Outline: force overwrites an existing config file
-    Given a file "<FILENAME>" with unix newlines
+    Given a file "<FILENAME>" with content
       """
       existing
       """

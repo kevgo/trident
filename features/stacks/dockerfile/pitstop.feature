@@ -8,7 +8,7 @@ Feature: pitstop Dockerfile with hadolint
       """
 
   Scenario: valid Dockerfile
-    Given a file "Dockerfile" with unix newlines
+    Given a file "Dockerfile" with content
       """
       FROM alpine:3.20
       USER 65534
@@ -26,7 +26,7 @@ Feature: pitstop Dockerfile with hadolint
       """
 
   Scenario: invalid Dockerfile
-    Given a file "Dockerfile" with unix newlines
+    Given a file "Dockerfile" with content
       """
       FROM alpine:3.20
       WORKDIR tmp

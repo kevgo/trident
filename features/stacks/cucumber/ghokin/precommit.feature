@@ -11,7 +11,7 @@ Feature: precommit Cucumber
     And I ran "git commit -m original"
 
   Scenario: valid Cucumber
-    Given a file "main.feature" with unix newlines
+    Given a file "main.feature" with content
       """
       Feature: foo
 
@@ -29,14 +29,14 @@ Feature: precommit Cucumber
       """
 
   Scenario: unformatted Cucumber
-    Given a file "main.feature" with unix newlines
+    Given a file "main.feature" with content
       """
       Feature:   foo
 
         Scenario:   bar
           Given   a step
       """
-    And a file "other.feature" with unix newlines
+    And a file "other.feature" with content
       """
       Feature:   foo2
 
@@ -69,7 +69,7 @@ Feature: precommit Cucumber
       """
 
   Scenario: invalid Cucumber
-    Given a file "main.feature" with unix newlines
+    Given a file "main.feature" with content
       """
       Feat
       """

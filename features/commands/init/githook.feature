@@ -36,7 +36,7 @@ Feature: "trident init:githook" installs the Git pre-commit hook
     And it runs no Git commands
 
   Scenario: Git worktree
-    Given a file ".git" with unix newlines
+    Given a file ".git" with content
       """
       gitdir: /tmp/somewhere
       """
@@ -50,7 +50,7 @@ Feature: "trident init:githook" installs the Git pre-commit hook
 
   Scenario: existing hook is left unchanged
     Given a Git repository
-    And a file ".git/hooks/pre-commit" with unix newlines
+    And a file ".git/hooks/pre-commit" with content
       """
       existing hook
       """
@@ -69,7 +69,7 @@ Feature: "trident init:githook" installs the Git pre-commit hook
 
   Scenario: --force overwrites an existing hook
     Given a Git repository
-    And a file ".git/hooks/pre-commit" with unix newlines
+    And a file ".git/hooks/pre-commit" with content
       """
       existing hook
       """

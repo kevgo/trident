@@ -5,7 +5,7 @@ Feature: "trident lint" does not run "git diff --check" if not a Git repository
       """
       delete-empty-folders 0.0.2
       """
-    And a file "main.txt" with unix newlines
+    And a file "main.txt" with content
       """
       line one
       <<<<<<< HEAD:main.txt
