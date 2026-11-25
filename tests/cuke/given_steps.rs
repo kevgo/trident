@@ -30,7 +30,7 @@ async fn a_committed_file_with_content(world: &mut TridentWorld, step: &Step, fi
 }
 
 #[given(expr = "a file {string} with content")]
-async fn a_file_with_platform_newlines(world: &mut TridentWorld, step: &Step, filename: String) {
+async fn a_file_with_content(world: &mut TridentWorld, step: &Step, filename: String) {
     write_file(world, step, filename, Newlines::Platform).await;
 }
 
