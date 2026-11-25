@@ -30,7 +30,7 @@ Feature: "trident postedit" lints the stacks that have uncommitted files
     And it runs the Git commands
       """
       git rev-parse --is-inside-work-tree
-      git status --porcelain=v1 -z --untracked-files=all
+      git status --porcelain=v1 -z --no-renames --untracked-files=all
       git diff HEAD --check
       """
 
@@ -59,15 +59,30 @@ Feature: "trident postedit" lints the stacks that have uncommitted files
       """
     And it prints the lines
       """
+      lint all (git diff HEAD --check)
       lint Markdown (rumdl)
-      """
-    And it prints the lines
-      """
       modified.md:1:1: [MD041] First line in file should be a level 1 heading
+      untracked.md:1:1: [MD041] First line in file should be a level 1 heading
+
+      Issues: Found 2 issues in 2 files (2ms)
       """
     And it prints the lines
       """
+      lint all (git diff HEAD --check)
+      lint Markdown (rumdl)
+      modified.md:1:1: [MD041] First line in file should be a level 1 heading
       untracked.md:1:1: [MD041] First line in file should be a level 1 heading
+
+      Issues: Found 2 issues in 2 files (2ms)
+      """
+    And it prints the lines
+      """
+      lint all (git diff HEAD --check)
+      lint Markdown (rumdl)
+      modified.md:1:1: [MD041] First line in file should be a level 1 heading
+      untracked.md:1:1: [MD041] First line in file should be a level 1 heading
+
+      Issues: Found 2 issues in 2 files (2ms)
       """
     And it prints the lines
       """
@@ -77,7 +92,7 @@ Feature: "trident postedit" lints the stacks that have uncommitted files
     And it runs the Git commands
       """
       git rev-parse --is-inside-work-tree
-      git status --porcelain=v1 -z --untracked-files=all
+      git status --porcelain=v1 -z --no-renames --untracked-files=all
       git diff HEAD --check
       """
 
@@ -94,12 +109,16 @@ Feature: "trident postedit" lints the stacks that have uncommitted files
       """
     And it prints the lines
       """
+      lint all (git diff HEAD --check)
+      lint Markdown (rumdl)
       my file.md:1:1: [MD041] First line in file should be a level 1 heading
+
+      Issues: Found 1 issues in 1 file (2ms)
       """
     And the exit code is 1
     And it runs the Git commands
       """
       git rev-parse --is-inside-work-tree
-      git status --porcelain=v1 -z --untracked-files=all
+      git status --porcelain=v1 -z --no-renames --untracked-files=all
       git diff HEAD --check
       """

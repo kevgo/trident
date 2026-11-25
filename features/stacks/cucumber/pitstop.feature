@@ -71,7 +71,10 @@ Feature: pitstop Cucumber
     When executing "trident pitstop --show=output"
     Then it prints the lines
       """
+      fix all (delete empty folders)
       fix Cucumber (Ghokin)
+      "main.feature" formatted
+      "other.feature" formatted
       lint Cucumber (gherkin-lint)
       """
     And the exit code is 0
@@ -104,9 +107,14 @@ Feature: pitstop Cucumber
     When executing "trident pitstop --show=output"
     Then it prints the lines
       """
+      fix all (delete empty folders)
       fix Cucumber (Ghokin)
+      "main.feature" formatted
       lint Cucumber (gherkin-lint)
+      /tmp/.tmpjkwxhI/16877310155104313880/main.feature
         1    Feature file does not have any Scenarios    no-files-without-scenarios
+
+
       """
     And the exit code is 1
     And file "main.feature" now has content

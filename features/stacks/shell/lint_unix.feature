@@ -63,15 +63,48 @@ Feature: lint Shell on Unix
     Then it prints the lines
       """
       lint Shell (ShellCheck)
+
       In one.sh line 2:
       echo $1
            ^-- SC2086 (info): Double quote to prevent globbing and word splitting.
-      """
-    And it prints the lines
-      """
+
+      Did you mean:
+      echo "$1"
+
+
       In two.sh line 2:
       cd /tmp
       ^-----^ SC2164 (warning): Use 'cd ... || exit' or 'cd ... || return' in case cd fails.
+
+      Did you mean:
+      cd /tmp || exit
+
+      For more information:
+        https://www.shellcheck.net/wiki/SC2164 -- Use 'cd ... || exit' or 'cd ... |...
+        https://www.shellcheck.net/wiki/SC2086 -- Double quote to prevent globbing ...
+      """
+    And it prints the lines
+      """
+      lint Shell (ShellCheck)
+
+      In one.sh line 2:
+      echo $1
+           ^-- SC2086 (info): Double quote to prevent globbing and word splitting.
+
+      Did you mean:
+      echo "$1"
+
+
+      In two.sh line 2:
+      cd /tmp
+      ^-----^ SC2164 (warning): Use 'cd ... || exit' or 'cd ... || return' in case cd fails.
+
+      Did you mean:
+      cd /tmp || exit
+
+      For more information:
+        https://www.shellcheck.net/wiki/SC2164 -- Use 'cd ... || exit' or 'cd ... |...
+        https://www.shellcheck.net/wiki/SC2086 -- Double quote to prevent globbing ...
       """
     And the exit code is 1
     And file "one.sh" is unchanged

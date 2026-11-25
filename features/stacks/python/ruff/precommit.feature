@@ -26,7 +26,7 @@ Feature: precommit Python
     And it runs the Git commands
       """
       git rev-parse --is-inside-work-tree
-      git status --porcelain=v1 -z
+      git status --porcelain=v1 -z --no-renames
       """
 
   Scenario: unformatted Python
@@ -53,7 +53,7 @@ Feature: precommit Python
     And it runs the Git commands
       """
       git rev-parse --is-inside-work-tree
-      git status --porcelain=v1 -z
+      git status --porcelain=v1 -z --no-renames
       git add -- main.py other.py
       """
 
@@ -106,5 +106,5 @@ Feature: precommit Python
     And it runs the Git commands
       """
       git rev-parse --is-inside-work-tree
-      git status --porcelain=v1 -z
+      git status --porcelain=v1 -z --no-renames
       """

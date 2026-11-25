@@ -54,7 +54,7 @@ Feature: stack-scoped custom fixes
     And it runs the Git commands
       """
       git rev-parse --is-inside-work-tree
-      git status --porcelain=v1 -z
+      git status --porcelain=v1 -z --no-renames
       """
 
   Scenario: no file of the stack is staged
@@ -76,5 +76,5 @@ Feature: stack-scoped custom fixes
     And it runs the Git commands
       """
       git rev-parse --is-inside-work-tree
-      git status --porcelain=v1 -z
+      git status --porcelain=v1 -z --no-renames
       """

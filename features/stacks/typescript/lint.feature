@@ -55,7 +55,45 @@ Feature: lint TypeScript
     Then it prints the lines
       """
       lint TypeScript (Biome)
+      Checked 1 file in 1021µs. No fixes applied.
       Found 2 errors.
+      main.ts:1:13 parse ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+        × unterminated string literal
+
+        > 1 │ console.log("
+            │             ^
+          2 │
+
+        i
+
+        > 1 │ console.log("
+            │             ^
+          2 │
+
+        i The closing quote must be on the same line.
+
+
+      main.ts:2:1 parse ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+        × expected `)` but instead the file ends
+
+          1 │ console.log("
+        > 2 │
+            │
+
+        i the file ends here
+
+          1 │ console.log("
+        > 2 │
+            │
+
+
+      lint ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+        × Some errors were emitted while running checks.
+
+
       """
     And the exit code is 1
     And file "main.ts" is unchanged

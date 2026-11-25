@@ -41,6 +41,7 @@ Feature: lint Dockerfile
       """
       lint Dockerfile (hadolint)
       Dockerfile:2 DL3000 error: Use absolute WORKDIR
+      subdir/Dockerfile:2 DL3000 error: Use absolute WORKDIR
       """
     And it prints the lines matching
       """

@@ -4,6 +4,7 @@ use crate::world::TridentWorld;
 use cucumber::gherkin::Step;
 use cucumber::given;
 use test_helpers::Newlines;
+use tokio::fs;
 use tokio::process::Command;
 
 #[given(expr = "a committed file {string} with content")]
@@ -102,7 +103,6 @@ async fn an_executable_file_with_content(world: &mut TridentWorld, step: &Step, 
     #[cfg(unix)]
     {
         use std::os::unix::fs::PermissionsExt;
-        use tokio::fs;
         let mut perms = fs::metadata(&filepath).await.unwrap().permissions();
         perms.set_mode(0o755);
         fs::set_permissions(&filepath, perms).await.unwrap();

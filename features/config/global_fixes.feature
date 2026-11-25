@@ -32,15 +32,30 @@ Feature: custom fixes
       fix all (delete empty folders)
       fix all (my global fix 1)
       global fix 1 running
-      """
-    And it prints the lines
-      """
       fix all (my global fix 2)
       global fix 2 running
+      fix JSON (Biome)
+      Formatted 1 file in 1114µs. Fixed 1 file.
       """
     And it prints the lines
       """
+      fix all (delete empty folders)
+      fix all (my global fix 1)
+      global fix 1 running
+      fix all (my global fix 2)
+      global fix 2 running
       fix JSON (Biome)
+      Formatted 1 file in 1114µs. Fixed 1 file.
+      """
+    And it prints the lines
+      """
+      fix all (delete empty folders)
+      fix all (my global fix 1)
+      global fix 1 running
+      fix all (my global fix 2)
+      global fix 2 running
+      fix JSON (Biome)
+      Formatted 1 file in 1114µs. Fixed 1 file.
       """
     And the exit code is 0
     And it runs the Git commands

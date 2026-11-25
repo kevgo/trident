@@ -68,6 +68,8 @@ Feature: test command with a failing test
     And it prints the lines
       """
       test all (unit)
+      test all (E2E)
+      failed
       """
     And the exit code is 4
     And it runs no Git commands

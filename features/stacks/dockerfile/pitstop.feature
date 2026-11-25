@@ -16,6 +16,7 @@ Feature: pitstop Dockerfile with hadolint
     When executing "trident pitstop --show=output"
     Then it prints the lines
       """
+      fix all (delete empty folders)
       lint Dockerfile (hadolint)
       """
     And the exit code is 0
@@ -34,6 +35,7 @@ Feature: pitstop Dockerfile with hadolint
     When executing "trident pitstop --show=output"
     Then it prints the lines
       """
+      fix all (delete empty folders)
       lint Dockerfile (hadolint)
       Dockerfile:2 DL3000 error: Use absolute WORKDIR
       """

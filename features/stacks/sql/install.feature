@@ -35,8 +35,10 @@ Feature: install sqlfmt
       """
     And it prints the lines
       """
+      fix all (delete empty folders)
       fix SQL (sqlfmt)
       1 file formatted.
+      0 files left unchanged.
       one.sql formatted.
       """
     And the exit code is 0

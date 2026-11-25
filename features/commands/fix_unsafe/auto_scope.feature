@@ -28,7 +28,10 @@ Feature: "trident fix-unsafe" chooses the smallest "--scope" based on the worksp
       """
     And it prints the lines
       """
+      unsafe-fix Python (Ruff)
       Found 1 error (1 fixed, 0 remaining).
+      format Python (Ruff)
+      1 file left unchanged
       """
     And the exit code is 0
     And file "on-main.py" now has content
@@ -42,13 +45,12 @@ Feature: "trident fix-unsafe" chooses the smallest "--scope" based on the worksp
     And it runs the Git commands
       """
       git rev-parse --is-inside-work-tree
-      git status --porcelain=v1 -z --untracked-files=all
-      git status --porcelain=v1 -z --untracked-files=all
-      git town diff-parent --name-only --non-interactive
+      git status --porcelain=v1 -z --no-renames --untracked-files=all
+      git town config get-parent
       git symbolic-ref --short refs/remotes/origin/HEAD
       git rev-parse --verify --quiet refs/heads/main
       git merge-base HEAD main
-      git diff -z --name-only --diff-filter=ACMRT {SHA}...HEAD
+      git diff -z --name-only --no-renames {SHA}...HEAD
       """
 
   Scenario: on main branch, has uncommitted files
@@ -68,6 +70,8 @@ Feature: "trident fix-unsafe" chooses the smallest "--scope" based on the worksp
       """
       unsafe-fix Python (Ruff)
       Found 1 error (1 fixed, 0 remaining).
+      format Python (Ruff)
+      1 file left unchanged
       """
     And the exit code is 0
     And file "untracked.py" now has content
@@ -82,8 +86,7 @@ Feature: "trident fix-unsafe" chooses the smallest "--scope" based on the worksp
     And it runs the Git commands
       """
       git rev-parse --is-inside-work-tree
-      git status --porcelain=v1 -z --untracked-files=all
-      git status --porcelain=v1 -z --untracked-files=all
+      git status --porcelain=v1 -z --no-renames --untracked-files=all
       """
 
   Scenario: on feature branch, branch has no commits, no uncommitted files,
@@ -96,7 +99,10 @@ Feature: "trident fix-unsafe" chooses the smallest "--scope" based on the worksp
       """
     And it prints the lines
       """
+      unsafe-fix Python (Ruff)
       Found 1 error (1 fixed, 0 remaining).
+      format Python (Ruff)
+      1 file left unchanged
       """
     And the exit code is 0
     And file "on-main.py" now has content
@@ -110,13 +116,12 @@ Feature: "trident fix-unsafe" chooses the smallest "--scope" based on the worksp
     And it runs the Git commands
       """
       git rev-parse --is-inside-work-tree
-      git status --porcelain=v1 -z --untracked-files=all
-      git status --porcelain=v1 -z --untracked-files=all
-      git town diff-parent --name-only --non-interactive
+      git status --porcelain=v1 -z --no-renames --untracked-files=all
+      git town config get-parent
       git symbolic-ref --short refs/remotes/origin/HEAD
       git rev-parse --verify --quiet refs/heads/main
       git merge-base HEAD main
-      git diff -z --name-only --diff-filter=ACMRT {SHA}...HEAD
+      git diff -z --name-only --no-renames {SHA}...HEAD
       """
 
   Scenario: on feature branch, branch has commits, no uncommitted files,
@@ -135,7 +140,10 @@ Feature: "trident fix-unsafe" chooses the smallest "--scope" based on the worksp
       """
     And it prints the lines
       """
+      unsafe-fix Python (Ruff)
       Found 1 error (1 fixed, 0 remaining).
+      format Python (Ruff)
+      1 file left unchanged
       """
     And it does not print
       """
@@ -154,19 +162,12 @@ Feature: "trident fix-unsafe" chooses the smallest "--scope" based on the worksp
     And it runs the Git commands
       """
       git rev-parse --is-inside-work-tree
-      git status --porcelain=v1 -z --untracked-files=all
-      git status --porcelain=v1 -z --untracked-files=all
-      git town diff-parent --name-only --non-interactive
+      git status --porcelain=v1 -z --no-renames --untracked-files=all
+      git town config get-parent
       git symbolic-ref --short refs/remotes/origin/HEAD
       git rev-parse --verify --quiet refs/heads/main
       git merge-base HEAD main
-      git diff -z --name-only --diff-filter=ACMRT {SHA}...HEAD
-      git status --porcelain=v1 -z --untracked-files=all
-      git town diff-parent --name-only --non-interactive
-      git symbolic-ref --short refs/remotes/origin/HEAD
-      git rev-parse --verify --quiet refs/heads/main
-      git merge-base HEAD main
-      git diff -z --name-only --diff-filter=ACMRT {SHA}...HEAD
+      git diff -z --name-only --no-renames {SHA}...HEAD
       """
 
   Scenario: on feature branch, branch has commits, has uncommitted files
@@ -193,6 +194,8 @@ Feature: "trident fix-unsafe" chooses the smallest "--scope" based on the worksp
       """
       unsafe-fix Python (Ruff)
       Found 1 error (1 fixed, 0 remaining).
+      format Python (Ruff)
+      1 file left unchanged
       """
     And it does not print
       """
@@ -216,8 +219,7 @@ Feature: "trident fix-unsafe" chooses the smallest "--scope" based on the worksp
     And it runs the Git commands
       """
       git rev-parse --is-inside-work-tree
-      git status --porcelain=v1 -z --untracked-files=all
-      git status --porcelain=v1 -z --untracked-files=all
+      git status --porcelain=v1 -z --no-renames --untracked-files=all
       """
 
   Scenario: on main branch, only uncommitted deletions
