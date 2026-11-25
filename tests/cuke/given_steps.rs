@@ -82,6 +82,7 @@ async fn a_git_repository(world: &mut TridentWorld) {
     jitter().await;
     Command::new("git")
         .arg("init")
+        .arg("--initial-branch=main")
         .current_dir(&world.dir)
         .output()
         .await
