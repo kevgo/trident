@@ -20,10 +20,27 @@ pub struct SnapshotEdit {
 static SNAPSHOT_EDITS: LazyLock<Mutex<Vec<SnapshotEdit>>> =
     LazyLock::new(|| Mutex::new(Vec::new()));
 
-/// indicates whether the test run should update the golden snapshots
+/// indicates whether the test run should update the `it runs the Git commands` snapshots
+#[must_use]
+pub fn update_git() -> bool {
+    env_flag("TRIDENT_UPDATE_GIT")
+}
+
+/// indicates whether the test run should update the `it prints the lines` snapshots
+#[must_use]
+pub fn update_output() -> bool {
+    env_flag("TRIDENT_UPDATE_OUTPUT")
+}
+
+/// indicates whether the test run should update any golden snapshots
 #[must_use]
 pub fn enabled() -> bool {
-    env::var("TRIDENT_UPDATE_SNAPSHOTS").is_ok_and(|value| !value.is_empty())
+    update_git() || update_output()
+}
+
+/// indicates whether the given environment variable is set to a non-empty value
+fn env_flag(name: &str) -> bool {
+    env::var(name).is_ok_and(|value| !value.is_empty())
 }
 
 /// queues a snapshot update to be applied after the test run finishes
