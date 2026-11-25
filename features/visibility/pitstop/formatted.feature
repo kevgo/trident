@@ -11,13 +11,13 @@ Feature: pitstop multiple good stacks
       """
       print("hello")
       """
-    And a file "main.css" with content
+    And a file "main.css" with unix newlines
       """
       .foo {
       \tcolor: red;
       }
       """
-    And a file "main.ts" with content
+    And a file "main.ts" with unix newlines
       """
       console.log("hello");
       """
@@ -61,6 +61,10 @@ Feature: pitstop multiple good stacks
       lint TypeScript (Biome)
       """
     And all files are unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: --show=verbose
     When executing "trident pitstop --show=verbose"
@@ -104,6 +108,10 @@ Feature: pitstop multiple good stacks
       All checks passed!
       """
     And all files are unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: --show=names
     When executing "trident pitstop --show=names"
@@ -119,8 +127,16 @@ Feature: pitstop multiple good stacks
       lint TypeScript (Biome)
       """
     And all files are unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: --show=failed
     When executing "trident pitstop --show=failed"
     Then it prints nothing to STDOUT
     And all files are unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """

@@ -39,6 +39,17 @@ Feature: "trident fix-unsafe" chooses the smallest "--scope" based on the worksp
           items.append(item)
           return items
       """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z --untracked-files=all
+      git status --porcelain=v1 -z --untracked-files=all
+      git town diff-parent --name-only --non-interactive
+      git symbolic-ref --short refs/remotes/origin/HEAD
+      git rev-parse --verify --quiet refs/heads/main
+      git merge-base HEAD main
+      git diff -z --name-only --diff-filter=ACMRT {SHA}...HEAD
+      """
 
   Scenario: on main branch, has uncommitted files
     And a file "untracked.py" with content
@@ -68,6 +79,12 @@ Feature: "trident fix-unsafe" chooses the smallest "--scope" based on the worksp
           return items
       """
     And file "on-main.py" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z --untracked-files=all
+      git status --porcelain=v1 -z --untracked-files=all
+      """
 
   Scenario: on feature branch, branch has no commits, no uncommitted files,
     Given I ran "git checkout -b feature"
@@ -89,6 +106,17 @@ Feature: "trident fix-unsafe" chooses the smallest "--scope" based on the worksp
               items = []
           items.append(item)
           return items
+      """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z --untracked-files=all
+      git status --porcelain=v1 -z --untracked-files=all
+      git town diff-parent --name-only --non-interactive
+      git symbolic-ref --short refs/remotes/origin/HEAD
+      git rev-parse --verify --quiet refs/heads/main
+      git merge-base HEAD main
+      git diff -z --name-only --diff-filter=ACMRT {SHA}...HEAD
       """
 
   Scenario: on feature branch, branch has commits, no uncommitted files,
@@ -123,6 +151,23 @@ Feature: "trident fix-unsafe" chooses the smallest "--scope" based on the worksp
           return items
       """
     And file "on-main.py" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z --untracked-files=all
+      git status --porcelain=v1 -z --untracked-files=all
+      git town diff-parent --name-only --non-interactive
+      git symbolic-ref --short refs/remotes/origin/HEAD
+      git rev-parse --verify --quiet refs/heads/main
+      git merge-base HEAD main
+      git diff -z --name-only --diff-filter=ACMRT {SHA}...HEAD
+      git status --porcelain=v1 -z --untracked-files=all
+      git town diff-parent --name-only --non-interactive
+      git symbolic-ref --short refs/remotes/origin/HEAD
+      git rev-parse --verify --quiet refs/heads/main
+      git merge-base HEAD main
+      git diff -z --name-only --diff-filter=ACMRT {SHA}...HEAD
+      """
 
   Scenario: on feature branch, branch has commits, has uncommitted files
     Given I ran "git checkout -b feature"
@@ -168,6 +213,12 @@ Feature: "trident fix-unsafe" chooses the smallest "--scope" based on the worksp
       """
     And file "committed-on-branch.py" is unchanged
     And file "on-main.py" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z --untracked-files=all
+      git status --porcelain=v1 -z --untracked-files=all
+      """
 
   Scenario: on main branch, only uncommitted deletions
     Given a committed file "deleted.py" with content
@@ -187,6 +238,12 @@ Feature: "trident fix-unsafe" chooses the smallest "--scope" based on the worksp
       """
     And the exit code is 0
     And file "on-main.py" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z --untracked-files=all
+      git status --porcelain=v1 -z --untracked-files=all
+      """
 
   Scenario: on feature branch, branch only deletes files
     Given a committed file "deleted.py" with content
@@ -208,6 +265,12 @@ Feature: "trident fix-unsafe" chooses the smallest "--scope" based on the worksp
       """
     And the exit code is 0
     And file "on-main.py" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z --untracked-files=all
+      git status --porcelain=v1 -z --untracked-files=all
+      """
 
   Scenario: on feature branch, branch has commits, only uncommitted deletions
     Given a committed file "deleted.py" with content
@@ -233,3 +296,9 @@ Feature: "trident fix-unsafe" chooses the smallest "--scope" based on the worksp
     And the exit code is 0
     And file "committed-on-branch.py" is unchanged
     And file "on-main.py" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z --untracked-files=all
+      git status --porcelain=v1 -z --untracked-files=all
+      """

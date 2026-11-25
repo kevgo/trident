@@ -21,3 +21,10 @@ Feature: ignore files in .gitignore
     When executing "trident lint --show=failed"
     Then it prints nothing to STDOUT
     And the exit code is 0
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z --untracked-files=all
+      git status --porcelain=v1 -z --untracked-files=all
+      git diff HEAD --check
+      """

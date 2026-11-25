@@ -14,7 +14,7 @@ Feature: pitstop Go
       """
 
   Scenario: unformatted Go
-    Given a file "main.go" with content
+    Given a file "main.go" with unix newlines
       """
       package main
       import "fmt"
@@ -41,9 +41,13 @@ Feature: pitstop Go
       \tfmt.Println("Hello")
       }
       """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: unformatted Go with lint errors
-    Given a file "main.go" with content
+    Given a file "main.go" with unix newlines
       """
       package main
       import "fmt"
@@ -51,7 +55,7 @@ Feature: pitstop Go
       	fmt.Printf(    "Hello")
       }
       """
-    And a file "other.go" with content
+    And a file "other.go" with unix newlines
       """
       package other
       import "fmt"
@@ -91,4 +95,8 @@ Feature: pitstop Go
       func main() {
       \tfmt.Printf("Other")
       }
+      """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
       """

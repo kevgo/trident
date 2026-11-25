@@ -7,7 +7,7 @@ Feature: config file format
       """
 
   Scenario: comments and trailing commas are accepted
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         // a comment
@@ -29,9 +29,13 @@ Feature: config file format
       hello
       """
     And the exit code is 0
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: trident.jsonc is used when trident.json is absent
-    Given a file "trident.jsonc" with content
+    Given a file "trident.jsonc" with unix newlines
       """
       {
         "applications": {
@@ -49,9 +53,13 @@ Feature: config file format
       from jsonc
       """
     And the exit code is 0
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: trident.json takes precedence over trident.jsonc
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "applications": {
@@ -62,7 +70,7 @@ Feature: config file format
         ]
       }
       """
-    And a file "trident.jsonc" with content
+    And a file "trident.jsonc" with unix newlines
       """
       {
         "applications": {
@@ -84,9 +92,13 @@ Feature: config file format
       from jsonc
       """
     And the exit code is 0
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: unknown keys are rejected
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "unknown-key": true
@@ -98,3 +110,4 @@ Feature: config file format
       config file (trident.json): unknown field `unknown-key`
       """
     And the exit code is 1
+    And it runs no Git commands

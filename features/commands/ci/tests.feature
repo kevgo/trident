@@ -11,7 +11,7 @@ Feature: CI runs all fixes, formatters, lints, and tests
       """
 
   Scenario:
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "tests": [
@@ -46,9 +46,13 @@ Feature: CI runs all fixes, formatters, lints, and tests
       All checks passed!
       """
     And the exit code is 0
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: test fails
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "tests": [
@@ -69,9 +73,13 @@ Feature: CI runs all fixes, formatters, lints, and tests
       custom test failed
       """
     And the exit code is 4
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: --test selects named tests
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "tests": [
@@ -102,9 +110,13 @@ Feature: CI runs all fixes, formatters, lints, and tests
       running slow tests
       """
     And the exit code is 0
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: commands.ci.test runs those tests by default
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "tests": [
@@ -134,9 +146,13 @@ Feature: CI runs all fixes, formatters, lints, and tests
       running cuke tests
       """
     And the exit code is 0
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: unknown test name
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "tests": [
@@ -152,3 +168,7 @@ Feature: CI runs all fixes, formatters, lints, and tests
       available tests: unit, cuke
       """
     And the exit code is 1
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """

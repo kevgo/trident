@@ -67,6 +67,10 @@ Feature: lint Cucumber
       """
     And the exit code is 0
     And file "features/one.feature" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: unformatted Cucumber
     Given a file "features/one.feature" with content
@@ -84,6 +88,10 @@ Feature: lint Cucumber
       """
     And the exit code is 1
     And file "features/one.feature" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: invalid Cucumber
     Given a file "features/one.feature" with content
@@ -98,3 +106,7 @@ Feature: lint Cucumber
       """
     And the exit code is 1
     And file "features/one.feature" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """

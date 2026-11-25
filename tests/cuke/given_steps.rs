@@ -1,14 +1,14 @@
+use crate::filesystem::write_file;
 use crate::jitter::jitter;
-use crate::world::{ExistingFile, TridentWorld};
+use crate::world::TridentWorld;
 use cucumber::gherkin::Step;
 use cucumber::given;
-use test_helpers::docstring_body;
-use tokio::fs;
+use test_helpers::Newlines;
 use tokio::process::Command;
 
 #[given(expr = "a committed file {string} with content")]
 async fn a_committed_file_with_content(world: &mut TridentWorld, step: &Step, filename: String) {
-    a_file_with_content(world, step, filename.clone()).await;
+    write_file(world, step, filename.clone(), Newlines::Platform).await;
     Command::new("git")
         .arg("add")
         .arg(&filename)
@@ -31,21 +31,12 @@ async fn a_committed_file_with_content(world: &mut TridentWorld, step: &Step, fi
 
 #[given(expr = "a file {string} with content")]
 async fn a_file_with_content(world: &mut TridentWorld, step: &Step, filename: String) {
-    let content = docstring_body(step.docstring.as_ref().unwrap());
-    let filepath = world.dir.join(&filename);
-    let parent = filepath.parent().unwrap();
-    if parent != world.dir {
-        fs::create_dir_all(parent)
-            .await
-            .unwrap_or_else(|_| panic!("cannot create parent '{}'", parent.display()));
-    }
-    fs::write(&filepath, content.as_bytes())
-        .await
-        .unwrap_or_else(|_| panic!("cannot write to file '{}'", filepath.display()));
-    world.original_files.push(ExistingFile {
-        name: filename,
-        content,
-    });
+    write_file(world, step, filename, Newlines::Platform).await;
+}
+
+#[given(expr = "a file {string} with unix newlines")]
+async fn a_file_with_unix_newlines(world: &mut TridentWorld, step: &Step, filename: String) {
+    write_file(world, step, filename, Newlines::Unix).await;
 }
 
 #[given(expr = "I change file {string} to")]
@@ -56,7 +47,7 @@ async fn i_change_file_to(world: &mut TridentWorld, step: &Step, filename: Strin
         "file '{}' does not exist",
         filepath.display()
     );
-    a_file_with_content(world, step, filename).await;
+    write_file(world, step, filename, Newlines::Platform).await;
 }
 
 #[given(expr = "I delete file {string}")]
@@ -84,6 +75,7 @@ async fn a_git_repository(world: &mut TridentWorld) {
     jitter().await;
     Command::new("git")
         .arg("init")
+        .arg("--initial-branch=main")
         .current_dir(&world.dir)
         .output()
         .await
@@ -106,10 +98,11 @@ async fn a_git_repository(world: &mut TridentWorld) {
 async fn an_executable_file_with_content(world: &mut TridentWorld, step: &Step, filename: String) {
     #[cfg(unix)]
     let filepath = world.dir.join(&filename);
-    a_file_with_content(world, step, filename).await;
+    write_file(world, step, filename, Newlines::Unix).await;
     #[cfg(unix)]
     {
         use std::os::unix::fs::PermissionsExt;
+        use tokio::fs;
         let mut perms = fs::metadata(&filepath).await.unwrap().permissions();
         perms.set_mode(0o755);
         fs::set_permissions(&filepath, perms).await.unwrap();

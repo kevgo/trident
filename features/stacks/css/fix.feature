@@ -8,7 +8,7 @@ Feature: fix CSS
       """
 
   Scenario: valid CSS
-    Given a file "main.css" with content
+    Given a file "main.css" with unix newlines
       """
       .foo {
       \tcolor: red;
@@ -21,15 +21,19 @@ Feature: fix CSS
       """
     And the exit code is 0
     And file "main.css" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: unformatted CSS
-    Given a file "main.css" with content
+    Given a file "main.css" with unix newlines
       """
       .foo {
         color : red ;
       }
       """
-    And a file "other.css" with content
+    And a file "other.css" with unix newlines
       """
       .bar {
         color : blue ;
@@ -53,9 +57,13 @@ Feature: fix CSS
       \tcolor: blue;
       }
       """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: invalid CSS
-    Given a file "main.css" with content
+    Given a file "main.css" with unix newlines
       """
       .foo {
         col
@@ -69,3 +77,7 @@ Feature: fix CSS
       """
     And the exit code is 1
     And file "main.css" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """

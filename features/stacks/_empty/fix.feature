@@ -18,6 +18,10 @@ Feature: formatting a codebase without any code
       fix all (delete empty folders)
       """
     And the exit code is 0
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: --show=names
     When executing "trident fix --show=names"
@@ -26,8 +30,16 @@ Feature: formatting a codebase without any code
       fix all (delete empty folders)
       """
     And the exit code is 0
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: --show=failed
     When executing "trident fix --show=failed"
     Then it prints nothing to STDOUT
     And the exit code is 0
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """

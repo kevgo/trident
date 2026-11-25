@@ -28,6 +28,17 @@ Feature: "trident fix" chooses the smallest "--scope" based on the workspace sta
       """
       # Main
       """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z --untracked-files=all
+      git status --porcelain=v1 -z --untracked-files=all
+      git town diff-parent --name-only --non-interactive
+      git symbolic-ref --short refs/remotes/origin/HEAD
+      git rev-parse --verify --quiet refs/heads/main
+      git merge-base HEAD main
+      git diff -z --name-only --diff-filter=ACMRT {SHA}...HEAD
+      """
 
   Scenario: on main branch, has uncommitted files
     And a file "untracked.md" with content
@@ -50,6 +61,12 @@ Feature: "trident fix" chooses the smallest "--scope" based on the workspace sta
       # Untracked
       """
     And file "on-main.md" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z --untracked-files=all
+      git status --porcelain=v1 -z --untracked-files=all
+      """
 
   Scenario: on feature branch, branch has no commits, no uncommitted files,
     Given I ran "git checkout -b feature"
@@ -67,6 +84,17 @@ Feature: "trident fix" chooses the smallest "--scope" based on the workspace sta
     And file "on-main.md" now has content
       """
       # Main
+      """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z --untracked-files=all
+      git status --porcelain=v1 -z --untracked-files=all
+      git town diff-parent --name-only --non-interactive
+      git symbolic-ref --short refs/remotes/origin/HEAD
+      git rev-parse --verify --quiet refs/heads/main
+      git merge-base HEAD main
+      git diff -z --name-only --diff-filter=ACMRT {SHA}...HEAD
       """
 
   Scenario: on feature branch, branch has commits, no uncommitted files,
@@ -95,6 +123,23 @@ Feature: "trident fix" chooses the smallest "--scope" based on the workspace sta
       # Branch
       """
     And file "on-main.md" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z --untracked-files=all
+      git status --porcelain=v1 -z --untracked-files=all
+      git town diff-parent --name-only --non-interactive
+      git symbolic-ref --short refs/remotes/origin/HEAD
+      git rev-parse --verify --quiet refs/heads/main
+      git merge-base HEAD main
+      git diff -z --name-only --diff-filter=ACMRT {SHA}...HEAD
+      git status --porcelain=v1 -z --untracked-files=all
+      git town diff-parent --name-only --non-interactive
+      git symbolic-ref --short refs/remotes/origin/HEAD
+      git rev-parse --verify --quiet refs/heads/main
+      git merge-base HEAD main
+      git diff -z --name-only --diff-filter=ACMRT {SHA}...HEAD
+      """
 
   Scenario: on feature branch, branch has commits, has uncommitted files
     Given I ran "git checkout -b feature"
@@ -131,6 +176,12 @@ Feature: "trident fix" chooses the smallest "--scope" based on the workspace sta
       """
     And file "committed-on-branch.md" is unchanged
     And file "on-main.md" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z --untracked-files=all
+      git status --porcelain=v1 -z --untracked-files=all
+      """
 
   Scenario: on main branch, only uncommitted deletions
     Given a committed file "deleted.md" with content
@@ -150,6 +201,12 @@ Feature: "trident fix" chooses the smallest "--scope" based on the workspace sta
       """
     And the exit code is 0
     And file "on-main.md" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z --untracked-files=all
+      git status --porcelain=v1 -z --untracked-files=all
+      """
 
   Scenario: on feature branch, branch only deletes files
     Given a committed file "deleted.md" with content
@@ -171,6 +228,12 @@ Feature: "trident fix" chooses the smallest "--scope" based on the workspace sta
       """
     And the exit code is 0
     And file "on-main.md" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z --untracked-files=all
+      git status --porcelain=v1 -z --untracked-files=all
+      """
 
   Scenario: on feature branch, branch has commits, only uncommitted deletions
     Given a committed file "deleted.md" with content
@@ -196,3 +259,9 @@ Feature: "trident fix" chooses the smallest "--scope" based on the workspace sta
     And the exit code is 0
     And file "committed-on-branch.md" is unchanged
     And file "on-main.md" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z --untracked-files=all
+      git status --porcelain=v1 -z --untracked-files=all
+      """

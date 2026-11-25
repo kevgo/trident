@@ -3,7 +3,7 @@ use std::env;
 use std::path::PathBuf;
 use std::sync::{LazyLock, Mutex};
 
-/// represents a golden snapshot for the `Then it prints:` step
+/// represents a golden snapshot for a step like `Then it prints:` or `And it runs the Git commands:`
 #[derive(Debug)]
 pub struct SnapshotEdit {
     /// the .feature file to update

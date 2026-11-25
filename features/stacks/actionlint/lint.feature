@@ -9,7 +9,7 @@ Feature: lint GitHub Actions workflow files
       """
 
   Scenario: valid workflow
-    Given a file ".github/workflows/main.yml" with content
+    Given a file ".github/workflows/main.yml" with unix newlines
       """
       name: CI
       on:
@@ -34,9 +34,16 @@ Feature: lint GitHub Actions workflow files
       """
     And the exit code is 0
     And all files are unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z --untracked-files=all
+      git status --porcelain=v1 -z --untracked-files=all
+      git diff HEAD --check
+      """
 
   Scenario: invalid workflow
-    Given a file ".github/workflows/main.yml" with content
+    Given a file ".github/workflows/main.yml" with unix newlines
       """
       key: "
       """
@@ -49,3 +56,10 @@ Feature: lint GitHub Actions workflow files
       """
     And the exit code is 1
     And all files are unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z --untracked-files=all
+      git status --porcelain=v1 -z --untracked-files=all
+      git diff HEAD --check
+      """

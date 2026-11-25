@@ -25,6 +25,18 @@ Feature: "trident lint" chooses the smallest "--scope" based on the workspace st
       """
     And the exit code is 1
     And all files are unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z --untracked-files=all
+      git status --porcelain=v1 -z --untracked-files=all
+      git town diff-parent --name-only --non-interactive
+      git symbolic-ref --short refs/remotes/origin/HEAD
+      git rev-parse --verify --quiet refs/heads/main
+      git merge-base HEAD main
+      git diff -z --name-only --diff-filter=ACMRT {SHA}...HEAD
+      git diff HEAD --check
+      """
 
   Scenario: on main branch, has uncommitted files
     And a file "untracked.md" with content
@@ -47,6 +59,13 @@ Feature: "trident lint" chooses the smallest "--scope" based on the workspace st
       """
     And the exit code is 1
     And all files are unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z --untracked-files=all
+      git status --porcelain=v1 -z --untracked-files=all
+      git diff HEAD --check
+      """
 
   Scenario: on feature branch, branch has no commits, no uncommitted files,
     Given I ran "git checkout -b feature"
@@ -62,6 +81,18 @@ Feature: "trident lint" chooses the smallest "--scope" based on the workspace st
       """
     And the exit code is 1
     And all files are unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z --untracked-files=all
+      git status --porcelain=v1 -z --untracked-files=all
+      git town diff-parent --name-only --non-interactive
+      git symbolic-ref --short refs/remotes/origin/HEAD
+      git rev-parse --verify --quiet refs/heads/main
+      git merge-base HEAD main
+      git diff -z --name-only --diff-filter=ACMRT {SHA}...HEAD
+      git diff HEAD --check
+      """
 
   Scenario: on feature branch, branch has commits, no uncommitted files,
     Given I ran "git checkout -b feature"
@@ -85,6 +116,24 @@ Feature: "trident lint" chooses the smallest "--scope" based on the workspace st
       """
     And the exit code is 1
     And all files are unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z --untracked-files=all
+      git status --porcelain=v1 -z --untracked-files=all
+      git town diff-parent --name-only --non-interactive
+      git symbolic-ref --short refs/remotes/origin/HEAD
+      git rev-parse --verify --quiet refs/heads/main
+      git merge-base HEAD main
+      git diff -z --name-only --diff-filter=ACMRT {SHA}...HEAD
+      git status --porcelain=v1 -z --untracked-files=all
+      git town diff-parent --name-only --non-interactive
+      git symbolic-ref --short refs/remotes/origin/HEAD
+      git rev-parse --verify --quiet refs/heads/main
+      git merge-base HEAD main
+      git diff -z --name-only --diff-filter=ACMRT {SHA}...HEAD
+      git diff HEAD --check
+      """
 
   Scenario: on feature branch, branch has commits, has uncommitted files
     Given I ran "git checkout -b feature"
@@ -233,3 +282,10 @@ Feature: "trident lint" chooses the smallest "--scope" based on the workspace st
       """
     And the exit code is 0
     And all files are unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z --untracked-files=all
+      git status --porcelain=v1 -z --untracked-files=all
+      git diff HEAD --check
+      """

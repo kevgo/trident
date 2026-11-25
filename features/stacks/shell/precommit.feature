@@ -11,7 +11,7 @@ Feature: precommit Shell
       """
 
   Scenario: valid Shell
-    Given a file "one.sh" with content
+    Given a file "one.sh" with unix newlines
       """
       #!/usr/bin/env bash
       foo() {
@@ -24,9 +24,14 @@ Feature: precommit Shell
     Then it prints nothing to STDOUT
     And the exit code is 0
     And file "one.sh" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z
+      """
 
   Scenario: unformatted Shell
-    Given a file "one.sh" with content
+    Given a file "one.sh" with unix newlines
       """
       #!/usr/bin/env bash
       foo()   {
@@ -34,7 +39,7 @@ Feature: precommit Shell
       }
       foo
       """
-    And a file "two.sh" with content
+    And a file "two.sh" with unix newlines
       """
       #!/usr/bin/env bash
       foo()   {
@@ -62,9 +67,15 @@ Feature: precommit Shell
       }
       foo
       """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z
+      git add -- one.sh two.sh
+      """
 
   Scenario: invalid Shell
-    Given a file "one.sh" with content
+    Given a file "one.sh" with unix newlines
       """
       #!/usr/bin/env bash
       if [ "$1" = "a" ]
@@ -77,3 +88,8 @@ Feature: precommit Shell
       """
     And the exit code is 0
     And file "one.sh" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z
+      """

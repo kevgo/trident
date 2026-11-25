@@ -23,6 +23,10 @@ Feature: fix Cucumber
       """
     And the exit code is 0
     And file "main.feature" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: unformatted Cucumber
     Given a file "main.feature" with content
@@ -61,6 +65,10 @@ Feature: fix Cucumber
         Scenario: bar2
           Given another step
       """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: invalid Cucumber
     Given a file "main.feature" with content
@@ -76,3 +84,7 @@ Feature: fix Cucumber
       """
     And the exit code is 1
     And file "main.feature" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """

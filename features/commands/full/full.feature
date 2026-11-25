@@ -7,7 +7,7 @@ Feature: full runs all fixes, lints, and tests
       delete-empty-folders 0.0.2
       ruff 0.15.16
       """
-    And a file "trident.json" with content
+    And a file "trident.json" with unix newlines
       """
       {
         "tests": [
@@ -15,7 +15,7 @@ Feature: full runs all fixes, lints, and tests
         ]
       }
       """
-    And a file "main.json" with content
+    And a file "main.json" with unix newlines
       """
       {  "key"  :  "value"  }
       """
@@ -57,6 +57,10 @@ Feature: full runs all fixes, lints, and tests
       """
       print("hello")
       """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: commands.full.test runs those tests by default
     Given a file "run-that-app" with content
@@ -65,7 +69,7 @@ Feature: full runs all fixes, lints, and tests
       delete-empty-folders 0.0.2
       ruff 0.15.16
       """
-    And a file "trident.json" with content
+    And a file "trident.json" with unix newlines
       """
       {
         "applications": {
@@ -98,3 +102,7 @@ Feature: full runs all fixes, lints, and tests
       running cuke tests
       """
     And the exit code is 0
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """

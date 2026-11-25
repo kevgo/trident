@@ -2,7 +2,7 @@
 Feature: install sqlfmt
 
   Scenario: not installed
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "applications": {
@@ -48,4 +48,8 @@ Feature: install sqlfmt
       """
       delete-empty-folders \d+\.\d+\.\d+
       sqlfmt \d+\.\d+\.\d+
+      """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
       """

@@ -17,7 +17,7 @@ Feature: unsafe-fix Python
       print(add_to_list("a"))  # ["a"]
       print(add_to_list("b"))  # ["a", "b"]
       """
-    And a file "ruff.toml" with content
+    And a file "ruff.toml" with unix newlines
       """
       [lint]
       extend-select = ["B006"]
@@ -45,6 +45,10 @@ Feature: unsafe-fix Python
       print(add_to_list("a"))  # ["a"]
       print(add_to_list("b"))  # ["a", "b"]
       """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: fix
     When executing "trident fix --show=output"
@@ -57,3 +61,7 @@ Feature: unsafe-fix Python
       """
     And the exit code is 1
     And file "main.py" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """

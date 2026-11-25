@@ -20,3 +20,7 @@ Feature: don't fix files in .gitignore
     When executing "trident fix --show=failed"
     Then it prints nothing to STDOUT
     And the exit code is 0
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """

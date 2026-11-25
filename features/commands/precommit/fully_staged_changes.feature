@@ -31,6 +31,12 @@ Feature: "trident precommit" formats and stages files with fully staged changes
       +# New
       """
     And there are no unstaged changes
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z
+      git add -- file.md
+      """
 
   Scenario: precommit a fully staged file with spaces in the name
     Given a Git repository
@@ -63,3 +69,9 @@ Feature: "trident precommit" formats and stages files with fully staged changes
       +# New
       """
     And there are no unstaged changes
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z
+      git add -- 'my file.md'
+      """

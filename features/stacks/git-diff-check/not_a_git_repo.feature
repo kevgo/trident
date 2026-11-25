@@ -18,3 +18,7 @@ Feature: "trident lint" does not run "git diff --check" if not a Git repository
     Then it prints nothing to STDERR
     And it prints nothing to STDOUT
     And the exit code is 0
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """

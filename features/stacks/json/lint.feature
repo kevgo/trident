@@ -8,7 +8,7 @@ Feature: lint JSON
       """
 
   Scenario: valid JSON
-    Given a file "main.json" with content
+    Given a file "main.json" with unix newlines
       """
       { "key": "value" }
       """
@@ -19,9 +19,13 @@ Feature: lint JSON
       """
     And the exit code is 0
     And file "main.json" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: unformatted JSON
-    Given a file "main.json" with content
+    Given a file "main.json" with unix newlines
       """
       {"key":"value"}
       """
@@ -32,9 +36,13 @@ Feature: lint JSON
       """
     And the exit code is 0
     And file "main.json" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: invalid JSON
-    Given a file "main.json" with content
+    Given a file "main.json" with unix newlines
       """
       { "key":
       """
@@ -45,3 +53,7 @@ Feature: lint JSON
       """
     And the exit code is 1
     And file "main.json" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """

@@ -21,9 +21,13 @@ Feature: lint Rust
     And it prints nothing to STDOUT
     And the exit code is 0
     And file "main.rs" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: rust-specific linters
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "stacks": {
@@ -53,3 +57,7 @@ Feature: lint Rust
       """
     And the exit code is 0
     And file "main.rs" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """

@@ -1,7 +1,7 @@
 Feature: sequential runs continue after a failure
 
   Scenario: the first test fails
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "tests": [
@@ -22,3 +22,4 @@ Feature: sequential runs continue after a failure
       three failed
       """
     And the exit code is 4
+    And it runs no Git commands

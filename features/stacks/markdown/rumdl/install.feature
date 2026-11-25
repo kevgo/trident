@@ -12,7 +12,7 @@ Feature: install Rumdl
       """
       #     Hello
       """
-    And a file "trident.json" with content
+    And a file "trident.json" with unix newlines
       """
       {
         "applications": {
@@ -37,4 +37,8 @@ Feature: install Rumdl
     And file "run-that-app" now has an additional line matching
       """
       rumdl \d+\.\d+\.\d+
+      """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
       """

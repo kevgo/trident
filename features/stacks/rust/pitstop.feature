@@ -24,9 +24,13 @@ Feature: pitstop Rust
       """
     And the exit code is 0
     And file "main.rs" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: custom linters and fixes defined
-    Given a file "trident.json" with content
+    Given a file "trident.json" with unix newlines
       """
       {
         "stacks": {
@@ -69,3 +73,7 @@ Feature: pitstop Rust
       """
     And the exit code is 0
     And file "main.rs" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """

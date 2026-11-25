@@ -1,3 +1,4 @@
+use crate::git_commands;
 use crate::jitter::jitter;
 use crate::world::TridentWorld;
 use cucumber::when;
@@ -28,9 +29,16 @@ async fn executing(world: &mut TridentWorld, command: String) {
     let mut cmd = Command::new(absolute_path);
     cmd.args(args);
     cmd.current_dir(&world.dir);
+    match tokio::fs::remove_file(&world.git_log).await {
+        Ok(()) => {}
+        Err(err) if err.kind() == std::io::ErrorKind::NotFound => {}
+        Err(err) => panic!("cannot delete the Git log: {err}"),
+    }
+    git_commands::configure(&mut cmd, &world.git_log);
     let output = cmd
         .output()
         .await
         .unwrap_or_else(|_| panic!("cannot find the '{executable}' executable"));
     world.output = Some(output);
+    world.git_commands = Some(git_commands::logged(&world.git_log));
 }

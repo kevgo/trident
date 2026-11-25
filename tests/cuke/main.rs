@@ -1,6 +1,8 @@
 #![allow(clippy::needless_pass_by_value)]
 
 mod dot_writer;
+mod filesystem;
+mod git_commands;
 mod given_steps;
 mod jitter;
 mod run_that_app_file;
@@ -23,6 +25,7 @@ use world::TridentWorld;
 #[tokio::main(flavor = "current_thread")]
 async fn main() -> ExitCode {
     let had_failures = Arc::new(AtomicBool::new(false));
+    let _git_double_dir = git_commands::install_double(&std::env::current_dir().unwrap());
     let mut cli = cli::Opts::<_, runner::basic::Cli, _>::parsed();
     // Cucumber ignores custom filters when the CLI provides a tag or name filter,
     // so we take them over and apply them together with the platform filter.

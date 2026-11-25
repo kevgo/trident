@@ -6,7 +6,7 @@ Feature: install all Shell tools
       """
       delete-empty-folders 0.0.2
       """
-    And a file "one.sh" with content
+    And a file "one.sh" with unix newlines
       """
       #!/usr/bin/env bash
       foo()   {
@@ -41,4 +41,8 @@ Feature: install all Shell tools
       """
       shellcheck \d+\.\d+\.\d+
       shfmt \d+\.\d+\.\d+
+      """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
       """

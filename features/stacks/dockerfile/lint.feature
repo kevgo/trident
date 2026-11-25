@@ -20,6 +20,10 @@ Feature: lint Dockerfile
       """
     And the exit code is 0
     And file "Dockerfile" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: invalid Dockerfile
     Given a file "Dockerfile" with content
@@ -45,3 +49,7 @@ Feature: lint Dockerfile
     And the exit code is 1
     And file "Dockerfile" is unchanged
     And file "subdir/Dockerfile" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """

@@ -10,7 +10,7 @@ Feature: lint Shell on Unix
       """
 
   Scenario: valid Shell
-    Given a file "one.sh" with content
+    Given a file "one.sh" with unix newlines
       """
       #!/usr/bin/env bash
       echo "one"
@@ -22,9 +22,13 @@ Feature: lint Shell on Unix
       """
     And the exit code is 0
     And file "one.sh" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: unformatted Shell
-    Given a file "one.sh" with content
+    Given a file "one.sh" with unix newlines
       """
       #!/usr/bin/env bash
       foo()   {
@@ -39,14 +43,18 @@ Feature: lint Shell on Unix
       """
     And the exit code is 0
     And file "one.sh" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: invalid Shell
-    Given a file "one.sh" with content
+    Given a file "one.sh" with unix newlines
       """
       #!/usr/bin/env bash
       echo $1
       """
-    And a file "two.sh" with content
+    And a file "two.sh" with unix newlines
       """
       #!/usr/bin/env bash
       cd /tmp
@@ -68,3 +76,7 @@ Feature: lint Shell on Unix
     And the exit code is 1
     And file "one.sh" is unchanged
     And file "two.sh" is unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """

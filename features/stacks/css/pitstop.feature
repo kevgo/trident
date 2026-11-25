@@ -8,7 +8,7 @@ Feature: pitstop CSS
       """
 
   Scenario: unformatted CSS
-    Given a file "main.css" with content
+    Given a file "main.css" with unix newlines
       """
       .foo {
         color : red ;
@@ -27,9 +27,13 @@ Feature: pitstop CSS
       \tcolor: red;
       }
       """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: unformatted CSS with lint error
-    Given a file "main.css" with content
+    Given a file "main.css" with unix newlines
       """
       .foo {
         colr: blue;
@@ -49,4 +53,8 @@ Feature: pitstop CSS
       .foo {
       \tcolr: blue;
       }
+      """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
       """

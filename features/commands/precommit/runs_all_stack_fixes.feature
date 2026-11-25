@@ -8,7 +8,7 @@ Feature: "trident precommit" runs all fixes for the changed files
       rumdl 0.2.14
       tikibase 0.6.2
       """
-    And a file "tikibase.json" with content
+    And a file "tikibase.json" with unix newlines
       """
       {
         "ignore": [
@@ -57,3 +57,9 @@ Feature: "trident precommit" runs all fixes for the changed files
        text
       """
     And there are no unstaged changes
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      git status --porcelain=v1 -z
+      git add -- one.md
+      """

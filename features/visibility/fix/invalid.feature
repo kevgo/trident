@@ -11,11 +11,11 @@ Feature: fix multiple stacks with invalid code
       """
       print("
       """
-    And a file "main.css" with content
+    And a file "main.css" with unix newlines
       """
       .foo {
       """
-    And a file "main.ts" with content
+    And a file "main.ts" with unix newlines
       """
       console.log("
       """
@@ -39,6 +39,10 @@ Feature: fix multiple stacks with invalid code
       Found 2 errors.
       main.ts:1:13 parse ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
     # no python error message here
     And all files are unchanged
 
@@ -60,6 +64,10 @@ Feature: fix multiple stacks with invalid code
       fix TypeScript (Biome)
       Found 2 errors.
       main.ts:1:13 parse ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      """
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
       """
     # no python error message here
     And all files are unchanged
@@ -98,6 +106,10 @@ Feature: fix multiple stacks with invalid code
       main.ts:1:13 parse ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       """
     And all files are unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: --show=failed
     When executing "trident fix --show=failed"
@@ -138,3 +150,7 @@ Feature: fix multiple stacks with invalid code
       format Python (Ruff)
       """
     And all files are unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
