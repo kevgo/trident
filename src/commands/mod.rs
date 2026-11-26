@@ -54,10 +54,8 @@ pub(crate) fn discover_stacks(
     group_into_stacks(&files, &ignores)
 }
 
-/// provides the files in the scope given via `--scope`,
-/// otherwise in the default scope, otherwise in the inferred scope
-///
-/// Uses all files in the workspace if there is no Git repo or Git fails.
+/// Determines the files that are changed according to the given scope.
+/// Falls back to all files in the workspace if Git doesn't work.
 fn determine_files(
     scope_flag: &ScopeFlag,
     default_scope: Option<CLIScope>,
@@ -78,7 +76,7 @@ fn determine_files(
     })
 }
 
-/// provides the files in the given scope
+/// provides all changed files according the given scope
 fn files_in_scope(scope: CLIScope, repo: &Repo, ignores: &Ignores) -> Result<FileChanges> {
     match scope {
         CLIScope::All => Ok(all_files(ignores)),
