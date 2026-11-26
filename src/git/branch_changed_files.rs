@@ -11,9 +11,13 @@ use crate::gittown;
 impl Repo {
     /// provides the files that the current branch touches, including uncommitted changes
     pub(crate) fn branch_changes(&self) -> Result<FileChanges> {
-        let mut files = self.uncommitted_files()?;
-        files.extend(self.committed_on_branch()?);
-        Ok(FileChanges::from_paths(self, files))
+        let uncommitted = self.uncommitted_changes()?;
+        let committed: Vec<File> = self
+            .committed_on_branch()?
+            .into_iter()
+            .filter(|file| !uncommitted.contains(file))
+            .collect();
+        Ok(uncommitted.merge(FileChanges::from_paths(self, committed)))
     }
 
     /// provides the files that the commits on the current branch touch

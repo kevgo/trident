@@ -122,6 +122,15 @@ impl Record<'_> {
         )
     }
 
+    /// provides whether the file that this record describes doesn't exist in the workspace,
+    /// i.e. it was deleted in the workspace, or its deletion is staged and the workspace has no changes
+    ///
+    /// A file whose deletion is staged but that exists in the workspace shows up
+    /// as an additional untracked record for the same path.
+    pub fn is_removed(&self) -> bool {
+        self.worktree == 'D' || (self.index == 'D' && self.worktree == ' ')
+    }
+
     /// provides whether this record describes a change to the file,
     /// as opposed to an ignored file or an unresolved merge conflict
     pub fn is_change(&self) -> bool {
@@ -202,6 +211,30 @@ mod tests {
             for (give, want) in tests {
                 let record = Record::parse(give).expect(give);
                 assert_eq!(record.is_change(), want, "{give}");
+            }
+        }
+    }
+
+    mod is_removed {
+        use super::super::Record;
+        use maplit::hashmap;
+
+        #[test]
+        fn is_removed() {
+            let tests = hashmap! {
+                "D  file.rs" => true,
+                " D file.rs" => true,
+                "MD file.rs" => true,
+                "AD file.rs" => true,
+                "M  file.rs" => false,
+                " M file.rs" => false,
+                "A  file.rs" => false,
+                "?? file.rs" => false,
+                " T file.rs" => false,
+            };
+            for (give, want) in tests {
+                let record = Record::parse(give).expect(give);
+                assert_eq!(record.is_removed(), want, "{give}");
             }
         }
     }

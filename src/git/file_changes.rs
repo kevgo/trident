@@ -4,7 +4,10 @@ use crate::domain::File;
 use crate::git::Repo;
 
 /// what a set of changes did to a file, as seen from the workspace
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+///
+/// The order matters: when several sources report conflicting statuses for the same file,
+/// the first variant wins.
+#[derive(Clone, Copy, Debug, Eq, Ord, PartialEq, PartialOrd)]
 pub(crate) enum FileStatus {
     /// the file was added or modified and exists in the workspace
     Changed,
@@ -14,7 +17,7 @@ pub(crate) enum FileStatus {
 }
 
 /// a file and how it was changed
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Eq, Ord, PartialEq, PartialOrd)]
 struct FileChange {
     file: File,
     status: FileStatus,
@@ -24,44 +27,61 @@ struct FileChange {
 #[derive(Clone, Debug, Default, Eq, PartialEq)]
 pub(crate) struct FileChanges(Vec<FileChange>);
 
+impl FromIterator<(File, FileStatus)> for FileChanges {
+    /// If the same file occurs several times, it counts as changed if any occurrence is.
+    /// An example is a file that the index deletes and that exists as an untracked file.
+    fn from_iter<I: IntoIterator<Item = (File, FileStatus)>>(iter: I) -> Self {
+        let mut changes: Vec<FileChange> = iter
+            .into_iter()
+            .map(|(file, status)| FileChange { file, status })
+            .collect();
+        changes.sort_unstable();
+        changes.dedup_by(|later, earlier| later.file == earlier.file);
+        FileChanges(changes)
+    }
+}
+
 impl FileChanges {
-    /// determines the status of the given files that Git reports as changed
-    ///
-    /// The status comes from the workspace rather than from Git's change type
-    /// because several Git commands can report conflicting changes for the same file,
-    /// for example a commit that deletes it and an untracked file that recreates it.
-    /// The workspace is the source of truth for what the fixes and lints can process.
-    pub(crate) fn from_paths(repo: &Repo, mut files: Vec<File>) -> FileChanges {
-        files.sort_unstable();
-        files.dedup();
-        FileChanges(
-            files
-                .into_iter()
-                .map(|file| {
-                    let status = if repo.file_exists(&file) {
-                        FileStatus::Changed
-                    } else {
-                        FileStatus::Removed
-                    };
-                    FileChange { file, status }
-                })
-                .collect(),
-        )
+    /// determines the status of the given files by looking them up in the workspace
+    pub(crate) fn from_paths(repo: &Repo, files: Vec<File>) -> FileChanges {
+        files
+            .into_iter()
+            .map(|file| {
+                let status = if repo.file_exists(&file) {
+                    FileStatus::Changed
+                } else {
+                    FileStatus::Removed
+                };
+                (file, status)
+            })
+            .collect()
     }
 
     /// provides the given files, which all exist in the workspace, as changed files
-    pub(crate) fn from_existing(mut files: Vec<File>) -> FileChanges {
-        files.sort_unstable();
-        files.dedup();
-        FileChanges(
-            files
-                .into_iter()
-                .map(|file| FileChange {
-                    file,
-                    status: FileStatus::Changed,
-                })
-                .collect(),
-        )
+    pub(crate) fn from_existing(files: Vec<File>) -> FileChanges {
+        files
+            .into_iter()
+            .map(|file| (file, FileStatus::Changed))
+            .collect()
+    }
+
+    /// provides whether this set contains the given file
+    pub(crate) fn contains(&self, file: &File) -> bool {
+        self.0
+            .binary_search_by(|change| change.file.cmp(file))
+            .is_ok()
+    }
+
+    /// adds the given changes, keeping the existing status of files that both contain
+    pub(crate) fn merge(mut self, other: FileChanges) -> FileChanges {
+        let added: Vec<FileChange> = other
+            .0
+            .into_iter()
+            .filter(|change| !self.contains(&change.file))
+            .collect();
+        self.0.extend(added);
+        self.0.sort_unstable();
+        self
     }
 
     /// provides all touched files, including the removed ones
@@ -147,6 +167,40 @@ mod tests {
         );
         pretty::assert_eq!(have.all().count(), 4);
         Ok(())
+    }
+
+    #[test]
+    fn from_iter_prefers_changed_for_duplicates() {
+        let have: FileChanges = vec![
+            (File::from("b.md"), Removed),
+            (File::from("a.md"), Removed),
+            (File::from("b.md"), Changed),
+            (File::from("a.md"), Removed),
+        ]
+        .into_iter()
+        .collect();
+        pretty::assert_eq!(have.summary(), vec![("a.md", Removed), ("b.md", Changed)]);
+    }
+
+    #[test]
+    fn contains() {
+        let changes = FileChanges::from_existing(vec![File::from("b.md"), File::from("a.md")]);
+        assert!(changes.contains(&File::from("a.md")));
+        assert!(changes.contains(&File::from("b.md")));
+        assert!(!changes.contains(&File::from("c.md")));
+    }
+
+    #[test]
+    fn merge_keeps_own_status() {
+        let own: FileChanges = vec![(File::from("b.md"), Removed), (File::from("c.md"), Changed)]
+            .into_iter()
+            .collect();
+        let other = FileChanges::from_existing(vec![File::from("a.md"), File::from("b.md")]);
+        let have = own.merge(other);
+        pretty::assert_eq!(
+            have.summary(),
+            vec![("a.md", Changed), ("b.md", Removed), ("c.md", Changed)]
+        );
     }
 
     #[test]

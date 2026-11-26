@@ -1,22 +1,24 @@
-use crate::domain::File;
 use crate::domain::Result;
 use crate::git::Repo;
-use crate::git::file_changes::FileChanges;
+use crate::git::file_changes::{FileChanges, FileStatus};
 use crate::git::status::Record;
 
 impl Repo {
     /// provides the files that uncommitted changes touch (staged, unstaged, and untracked)
+    /// and whether they still exist in the workspace
     pub(crate) fn uncommitted_changes(&self) -> Result<FileChanges> {
-        Ok(FileChanges::from_paths(self, self.uncommitted_files()?))
-    }
-
-    /// provides the names of the files that uncommitted changes touch
-    pub(crate) fn uncommitted_files(&self) -> Result<Vec<File>> {
         Ok(self
             .status(&["--untracked-files=all"])?
             .records()
             .filter(Record::is_change)
-            .map(|record| record.path.into())
+            .map(|record| {
+                let status = if record.is_removed() {
+                    FileStatus::Removed
+                } else {
+                    FileStatus::Changed
+                };
+                (record.path.into(), status)
+            })
             .collect())
     }
 }
@@ -126,6 +128,20 @@ mod tests {
             .run()?;
         let have = repo.uncommitted_changes()?;
         pretty::assert_eq!(have.summary(), vec![("file.txt", Changed)]);
+        Ok(())
+    }
+
+    #[test]
+    fn file_replaced_by_folder() -> Result<()> {
+        let dir = TempDir::new().unwrap();
+        let repo = Repo::init(dir.path())?;
+        repo.create_and_commit_file("name")?;
+        fs::remove_file(repo.file_path("name")).unwrap();
+        fs::create_dir(repo.file_path("name")).unwrap();
+        fs::write(repo.file_path("name/file.txt"), "content").unwrap();
+        let have = repo.uncommitted_changes()?;
+        let want = vec![("name", Removed), ("name/file.txt", Changed)];
+        pretty::assert_eq!(have.summary(), want);
         Ok(())
     }
 

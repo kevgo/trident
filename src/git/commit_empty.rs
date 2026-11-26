@@ -17,8 +17,8 @@ impl Repo {
 #[cfg(test)]
 mod tests {
     mod commit_empty {
-        use crate::domain::File;
         use crate::domain::Result;
+        use crate::git::FileStatus::Changed;
         use crate::git::Repo;
         use big_s::S;
         use std::fs;
@@ -62,7 +62,10 @@ mod tests {
             fs::write(repo.file_path("untracked.txt"), "content").unwrap();
             repo.commit_empty("empty")?;
             pretty::assert_eq!(repo.committed_files()?, Vec::<String>::new());
-            pretty::assert_eq!(repo.uncommitted_files()?, vec![File::from("untracked.txt")]);
+            pretty::assert_eq!(
+                repo.uncommitted_changes()?.summary(),
+                vec![("untracked.txt", Changed)]
+            );
             assert_eq!(repo.last_commit_message()?, "empty");
             Ok(())
         }
