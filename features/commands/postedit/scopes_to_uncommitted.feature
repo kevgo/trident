@@ -59,30 +59,9 @@ Feature: "trident postedit" lints only uncommitted files
       """
     And it prints the lines
       """
-      lint all (git diff HEAD --check)
       lint Markdown (rumdl)
       modified.md:1:1: [MD041] First line in file should be a level 1 heading
       untracked.md:1:1: [MD041] First line in file should be a level 1 heading
-
-      Issues: Found 2 issues in 2 files (2ms)
-      """
-    And it prints the lines
-      """
-      lint all (git diff HEAD --check)
-      lint Markdown (rumdl)
-      modified.md:1:1: [MD041] First line in file should be a level 1 heading
-      untracked.md:1:1: [MD041] First line in file should be a level 1 heading
-
-      Issues: Found 2 issues in 2 files (2ms)
-      """
-    And it prints the lines
-      """
-      lint all (git diff HEAD --check)
-      lint Markdown (rumdl)
-      modified.md:1:1: [MD041] First line in file should be a level 1 heading
-      untracked.md:1:1: [MD041] First line in file should be a level 1 heading
-
-      Issues: Found 2 issues in 2 files (2ms)
       """
     And it does not print
       """
