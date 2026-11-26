@@ -25,11 +25,9 @@ Feature: pitstop Go
     When executing "trident pitstop --show=output"
     Then it prints the lines
       """
-      fix all (delete empty folders)
       fix Go (gofumpt)
       main.go
       lint Go (golangci-lint)
-      0 issues.
       """
     And the exit code is 0
     And file "main.go" now has content
@@ -71,15 +69,9 @@ Feature: pitstop Go
       """
     And it prints the lines
       """
-      fix all (delete empty folders)
       fix Go (gofumpt)
-      main.go
-      other.go
       lint Go (golangci-lint)
       main.go:1: : found packages main (main.go) and other (other.go) in (typecheck)
-      package main
-      1 issues:
-      * typecheck: 1
       """
     And the exit code is failure
     And file "main.go" now has content
