@@ -17,7 +17,6 @@ Feature: unsafe-fix TypeScript
     Then it prints the lines
       """
       unsafe-fix TypeScript (Biome)
-      Checked 1 file in 3ms. Fixed 1 file.
       """
     And the exit code is 0
     And file "main.ts" now has content

@@ -36,7 +36,6 @@ Feature: fix YML
     When executing "trident fix --show=output"
     Then it prints the lines
       """
-      fix all (delete empty folders)
       fix YML (yamlfmt)
       """
     And the exit code is 0
