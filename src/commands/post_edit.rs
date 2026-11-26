@@ -1,4 +1,4 @@
-use super::{StacksToProcessArgs, lint, stacks_to_process};
+use super::{DiscoverStacksArgs, discover_stacks, lint};
 use crate::cli::input::{CLIScope, RunArgs, ScopeFlag, ShowExt};
 use crate::cli::output::print_metadata;
 use crate::config::Config;
@@ -16,7 +16,7 @@ pub fn post_edit(RunArgs { sequential, show }: RunArgs) -> Result<ExitCode> {
     let stderr_to_stdout = true;
 
     // step 2: discover the files and their stacks
-    let stacks = stacks_to_process(StacksToProcessArgs {
+    let stacks = discover_stacks(DiscoverStacksArgs {
         scope_flag: ScopeFlag { scope: None },
         default_scope: Some(CLIScope::Uncommitted),
         repo: git_repo.as_ref(),

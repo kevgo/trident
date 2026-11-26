@@ -1,5 +1,5 @@
 use super::pitstop::run_tasks;
-use super::{StacksToProcessArgs, stacks_to_process};
+use super::{DiscoverStacksArgs, discover_stacks};
 use crate::cli::input::{CLIScope, RunArgsWithTestAndScope};
 use crate::config::{Config, DefaultTests, to_sequences};
 use crate::domain::{Operation, Result, UserError};
@@ -14,7 +14,7 @@ pub fn ci(
 
     let config = Config::load()?;
     let ignores = config.ignores()?;
-    let stacks = stacks_to_process(StacksToProcessArgs {
+    let stacks = discover_stacks(DiscoverStacksArgs {
         scope_flag: scope,
         default_scope: Some(CLIScope::All),
         repo: repo.as_ref(),

@@ -1,4 +1,4 @@
-use super::{StacksToProcessArgs, stacks_to_process};
+use super::{DiscoverStacksArgs, discover_stacks};
 use crate::cli::input::{RunArgsWithScope, ShowExt};
 use crate::cli::output::print_metadata;
 use crate::config::Config;
@@ -20,7 +20,7 @@ pub fn fix_unsafe(RunArgsWithScope { run, scope }: RunArgsWithScope) -> Result<E
 
     // step 2: discover the stacks
     let repo = Repo::load();
-    let stacks = stacks_to_process(StacksToProcessArgs {
+    let stacks = discover_stacks(DiscoverStacksArgs {
         scope_flag: scope,
         default_scope: None,
         repo: repo.as_ref(),

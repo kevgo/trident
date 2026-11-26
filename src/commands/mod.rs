@@ -27,7 +27,7 @@ pub use test::test;
 pub use update_tools::update_tools;
 
 /// arguments for [`scoped_stacks`]
-pub(crate) struct StacksToProcessArgs<'a> {
+pub(crate) struct DiscoverStacksArgs<'a> {
     /// value of the CLI `--scope` flag
     pub(crate) scope_flag: ScopeFlag,
 
@@ -42,13 +42,13 @@ pub(crate) struct StacksToProcessArgs<'a> {
 }
 
 /// provides the stacks and files that a command should process
-pub(crate) fn stacks_to_process(
-    StacksToProcessArgs {
+pub(crate) fn discover_stacks(
+    DiscoverStacksArgs {
         scope_flag,
         default_scope,
         repo,
         ignores,
-    }: StacksToProcessArgs,
+    }: DiscoverStacksArgs,
 ) -> ScopedStacks {
     let files = determine_files(&scope_flag, default_scope, repo, &ignores);
     group_into_stacks(&files, &ignores)
