@@ -29,92 +29,24 @@ Feature: pitstop multiple good stacks
       1 CSS, 1 Python, 1 TypeScript, 1 other
       running 8 tasks
       """
-    And it prints the block
+    And it prints the lines
       """
       fix Python (Ruff)
       All checks passed!
-      """
-    And it prints the block
-      """
       format Python (Ruff)
       1 file left unchanged
-      """
-    And it prints the block
-      """
       lint Python (Ruff)
       All checks passed!
       """
     And it prints the lines
       """
-      fix all (delete empty folders)
-      fix Python (Ruff)
-      All checks passed!
-      format Python (Ruff)
-      1 file left unchanged
-      fix TypeScript (Biome)
-      Formatted 1 file in 356µs. No fixes applied.
       fix CSS (Biome)
-      Formatted 1 file in 325µs. No fixes applied.
-      lint Python (Ruff)
-      All checks passed!
       lint CSS (Biome)
-      Checked 1 file in 673µs. No fixes applied.
-      lint TypeScript (Biome)
-      Checked 1 file in 1111µs. No fixes applied.
       """
     And it prints the lines
       """
-      fix all (delete empty folders)
-      fix Python (Ruff)
-      All checks passed!
-      format Python (Ruff)
-      1 file left unchanged
       fix TypeScript (Biome)
-      Formatted 1 file in 356µs. No fixes applied.
-      fix CSS (Biome)
-      Formatted 1 file in 325µs. No fixes applied.
-      lint Python (Ruff)
-      All checks passed!
-      lint CSS (Biome)
-      Checked 1 file in 673µs. No fixes applied.
       lint TypeScript (Biome)
-      Checked 1 file in 1111µs. No fixes applied.
-      """
-    And it prints the lines
-      """
-      fix all (delete empty folders)
-      fix Python (Ruff)
-      All checks passed!
-      format Python (Ruff)
-      1 file left unchanged
-      fix TypeScript (Biome)
-      Formatted 1 file in 356µs. No fixes applied.
-      fix CSS (Biome)
-      Formatted 1 file in 325µs. No fixes applied.
-      lint Python (Ruff)
-      All checks passed!
-      lint CSS (Biome)
-      Checked 1 file in 673µs. No fixes applied.
-      lint TypeScript (Biome)
-      Checked 1 file in 1111µs. No fixes applied.
-      """
-    And it prints the lines
-      """
-      fix all (delete empty folders)
-      fix Python (Ruff)
-      All checks passed!
-      format Python (Ruff)
-      1 file left unchanged
-      fix TypeScript (Biome)
-      Formatted 1 file in 356µs. No fixes applied.
-      fix CSS (Biome)
-      Formatted 1 file in 325µs. No fixes applied.
-      lint Python (Ruff)
-      All checks passed!
-      lint CSS (Biome)
-      Checked 1 file in 673µs. No fixes applied.
-      lint TypeScript (Biome)
-      Checked 1 file in 1111µs. No fixes applied.
       """
     And all files are unchanged
     And it runs the Git commands
@@ -129,127 +61,31 @@ Feature: pitstop multiple good stacks
       1 CSS, 1 Python, 1 TypeScript, 1 other
       running 8 tasks
       """
-    And it prints the lines
-      """
-      fix all (delete empty folders)
-      /home/kevlar/.run-that-app/apps/delete-empty-folders@0.0.2/delete-empty-folders
-      fix Python (Ruff)
-      /home/kevlar/.run-that-app/apps/ruff@0.15.16/ruff-aarch64-unknown-linux-gnu/ruff check --fix main.py
-      All checks passed!
-      fix TypeScript (Biome)
-      /home/kevlar/.run-that-app/apps/biome@2.4.0/biome format --write main.ts
-      Formatted 1 file in 353µs. No fixes applied.
-      fix CSS (Biome)
-      /home/kevlar/.run-that-app/apps/biome@2.4.0/biome format --write main.css
-      Formatted 1 file in 523µs. No fixes applied.
-      format Python (Ruff)
-      /home/kevlar/.run-that-app/apps/ruff@0.15.16/ruff-aarch64-unknown-linux-gnu/ruff format main.py
-      1 file left unchanged
-      lint Python (Ruff)
-      /home/kevlar/.run-that-app/apps/ruff@0.15.16/ruff-aarch64-unknown-linux-gnu/ruff check main.py
-      All checks passed!
-      lint CSS (Biome)
-      /home/kevlar/.run-that-app/apps/biome@2.4.0/biome lint main.css
-      Checked 1 file in 617µs. No fixes applied.
-      lint TypeScript (Biome)
-      /home/kevlar/.run-that-app/apps/biome@2.4.0/biome lint main.ts
-      Checked 1 file in 980µs. No fixes applied.
-      """
-    And it prints the lines
-      """
-      fix all (delete empty folders)
-      /home/kevlar/.run-that-app/apps/delete-empty-folders@0.0.2/delete-empty-folders
-      fix Python (Ruff)
-      /home/kevlar/.run-that-app/apps/ruff@0.15.16/ruff-aarch64-unknown-linux-gnu/ruff check --fix main.py
-      All checks passed!
-      fix TypeScript (Biome)
-      /home/kevlar/.run-that-app/apps/biome@2.4.0/biome format --write main.ts
-      Formatted 1 file in 353µs. No fixes applied.
-      fix CSS (Biome)
-      /home/kevlar/.run-that-app/apps/biome@2.4.0/biome format --write main.css
-      Formatted 1 file in 523µs. No fixes applied.
-      format Python (Ruff)
-      /home/kevlar/.run-that-app/apps/ruff@0.15.16/ruff-aarch64-unknown-linux-gnu/ruff format main.py
-      1 file left unchanged
-      lint Python (Ruff)
-      /home/kevlar/.run-that-app/apps/ruff@0.15.16/ruff-aarch64-unknown-linux-gnu/ruff check main.py
-      All checks passed!
-      lint CSS (Biome)
-      /home/kevlar/.run-that-app/apps/biome@2.4.0/biome lint main.css
-      Checked 1 file in 617µs. No fixes applied.
-      lint TypeScript (Biome)
-      /home/kevlar/.run-that-app/apps/biome@2.4.0/biome lint main.ts
-      Checked 1 file in 980µs. No fixes applied.
-      """
-    And it prints the lines
-      """
-      fix all (delete empty folders)
-      /home/kevlar/.run-that-app/apps/delete-empty-folders@0.0.2/delete-empty-folders
-      fix Python (Ruff)
-      /home/kevlar/.run-that-app/apps/ruff@0.15.16/ruff-aarch64-unknown-linux-gnu/ruff check --fix main.py
-      All checks passed!
-      fix TypeScript (Biome)
-      /home/kevlar/.run-that-app/apps/biome@2.4.0/biome format --write main.ts
-      Formatted 1 file in 353µs. No fixes applied.
-      fix CSS (Biome)
-      /home/kevlar/.run-that-app/apps/biome@2.4.0/biome format --write main.css
-      Formatted 1 file in 523µs. No fixes applied.
-      format Python (Ruff)
-      /home/kevlar/.run-that-app/apps/ruff@0.15.16/ruff-aarch64-unknown-linux-gnu/ruff format main.py
-      1 file left unchanged
-      lint Python (Ruff)
-      /home/kevlar/.run-that-app/apps/ruff@0.15.16/ruff-aarch64-unknown-linux-gnu/ruff check main.py
-      All checks passed!
-      lint CSS (Biome)
-      /home/kevlar/.run-that-app/apps/biome@2.4.0/biome lint main.css
-      Checked 1 file in 617µs. No fixes applied.
-      lint TypeScript (Biome)
-      /home/kevlar/.run-that-app/apps/biome@2.4.0/biome lint main.ts
-      Checked 1 file in 980µs. No fixes applied.
-      """
-    And it prints the lines
-      """
-      fix all (delete empty folders)
-      /home/kevlar/.run-that-app/apps/delete-empty-folders@0.0.2/delete-empty-folders
-      fix Python (Ruff)
-      /home/kevlar/.run-that-app/apps/ruff@0.15.16/ruff-aarch64-unknown-linux-gnu/ruff check --fix main.py
-      All checks passed!
-      fix TypeScript (Biome)
-      /home/kevlar/.run-that-app/apps/biome@2.4.0/biome format --write main.ts
-      Formatted 1 file in 353µs. No fixes applied.
-      fix CSS (Biome)
-      /home/kevlar/.run-that-app/apps/biome@2.4.0/biome format --write main.css
-      Formatted 1 file in 523µs. No fixes applied.
-      format Python (Ruff)
-      /home/kevlar/.run-that-app/apps/ruff@0.15.16/ruff-aarch64-unknown-linux-gnu/ruff format main.py
-      1 file left unchanged
-      lint Python (Ruff)
-      /home/kevlar/.run-that-app/apps/ruff@0.15.16/ruff-aarch64-unknown-linux-gnu/ruff check main.py
-      All checks passed!
-      lint CSS (Biome)
-      /home/kevlar/.run-that-app/apps/biome@2.4.0/biome lint main.css
-      Checked 1 file in 617µs. No fixes applied.
-      lint TypeScript (Biome)
-      /home/kevlar/.run-that-app/apps/biome@2.4.0/biome lint main.ts
-      Checked 1 file in 980µs. No fixes applied.
-      """
     And it prints the lines matching
       """
       fix Python \(Ruff\)
       ruff(.exe)? check --fix main.py
       All checks passed!
-      """
-    And it prints the lines matching
-      """
       format Python \(Ruff\)
       ruff(.exe)? format main.py
       1 file left unchanged
-      """
-    And it prints the lines matching
-      """
       lint Python \(Ruff\)
       ruff(.exe)? check main.py
       All checks passed!
+      """
+    And it prints the lines matching
+      """
+      fix CSS \(Biome\)
+      biome format --write main.css$
+      lint CSS \(Biome\)
+      biome lint main.css$
+      """
+    And it prints the lines matching
+      """
+      fix TypeScript \(Biome\)
+      biome format --write main.ts$
+      lint TypeScript \(Biome\)
+      biome lint main.ts$
       """
     And all files are unchanged
     And it runs the Git commands
