@@ -72,8 +72,6 @@ Feature: pitstop Cucumber
     Then it prints the lines
       """
       fix Cucumber (Ghokin)
-      "main.feature" formatted
-      "other.feature" formatted
       lint Cucumber (gherkin-lint)
       """
     And the exit code is 0
@@ -107,7 +105,6 @@ Feature: pitstop Cucumber
     Then it prints the lines
       """
       fix Cucumber (Ghokin)
-      "main.feature" formatted
       lint Cucumber (gherkin-lint)
         1    Feature file does not have any Scenarios    no-files-without-scenarios
       """
