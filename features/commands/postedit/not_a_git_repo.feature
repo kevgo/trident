@@ -20,8 +20,6 @@ Feature: "trident postedit" lints all files outside a Git repository
       """
       lint Markdown (rumdl)
       main.md:1:1: [MD041] First line in file should be a level 1 heading
-
-      Issues: Found 1 issues in 1 file (1ms)
       """
     And the exit code is 1
     And file "main.md" is unchanged
