@@ -4,9 +4,10 @@
 [![windows](https://github.com/kevgo/Trident/actions/workflows/windows.yml/badge.svg)](https://github.com/kevgo/trident/actions/workflows/windows.yml)
 
 Trident determines and runs all applicable automated software quality
-guardrails: type checkers, linters, formatters, fixes, unit tests, etc.
-For all file types in your codebase, concurrently for fast results.
-This is useful for AI engineering and manual coding.
+guardrails: type checkers, linters, formatters, auto-fixes, unit tests, etc.
+For all file types in your codebase,
+concurrently for fast results on modern multi-core hardware.
+This is useful for vibe coding, AI engineering, and manual coding.
 
 ## Demo
 
