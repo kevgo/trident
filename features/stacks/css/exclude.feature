@@ -29,10 +29,7 @@ Feature: ignore a CSS file
     When executing "trident lint --show=output"
     Then it prints the lines
       """
-      lint JSON (Biome)
-      Checked 1 file in 631µs. No fixes applied.
       lint CSS (Biome)
-      Checked 1 file in 703µs. No fixes applied.
       """
     And the exit code is 0
     And file "bad.css" is unchanged
@@ -58,11 +55,7 @@ Feature: ignore a CSS file
     When executing "trident fix --show=output"
     Then it prints the lines
       """
-      fix all (delete empty folders)
-      fix JSON (Biome)
-      Formatted 1 file in 308µs. Fixed 1 file.
       fix CSS (Biome)
-      Formatted 1 file in 489µs. Fixed 1 file.
       """
     And the exit code is 0
     And file "good.css" now has content
