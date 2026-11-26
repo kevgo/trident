@@ -64,13 +64,13 @@ Feature: pitstop multiple good stacks
     And it prints the lines matching
       """
       fix Python \(Ruff\)
-      ruff(.exe)? check --fix main.py
+      ruff(.exe)? check --fix main.py$
       All checks passed!
       format Python \(Ruff\)
-      ruff(.exe)? format main.py
+      ruff(.exe)? format main.py$
       1 file left unchanged
       lint Python \(Ruff\)
-      ruff(.exe)? check main.py
+      ruff(.exe)? check main.py$
       All checks passed!
       """
     And it prints the lines matching
