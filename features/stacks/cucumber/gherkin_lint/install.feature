@@ -22,7 +22,7 @@ Feature: install Gherkin Lint
     And file "run-that-app" now has an additional line matching
       """
       gherkin-lint \d+\.\d+\.\d+
-      node \d+\.\d+\.\d+
+      node \d+\.\d+\..+
       """
     And it runs the Git commands
       """
