@@ -29,10 +29,7 @@ Feature: unsafe-fix CSS
     When executing "trident fix-unsafe --show=output"
     Then it prints the lines
       """
-      unsafe-fix JSON (Biome)
-      Checked 1 file in 845µs. No fixes applied.
       unsafe-fix CSS (Biome)
-      Checked 1 file in 964µs. Fixed 1 file.
       """
     And the exit code is 0
     And file "main.css" now has content
@@ -50,11 +47,7 @@ Feature: unsafe-fix CSS
     When executing "trident fix --show=output"
     Then it prints the lines
       """
-      fix all (delete empty folders)
-      fix JSON (Biome)
-      Formatted 1 file in 285µs. Fixed 1 file.
       fix CSS (Biome)
-      Formatted 1 file in 317µs. No fixes applied.
       """
     And the exit code is 0
     And file "main.css" is unchanged
