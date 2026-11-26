@@ -49,7 +49,7 @@ pub(crate) fn discover_stacks(
         repo,
         ignores,
     }: DiscoverStacksArgs,
-) -> ScopedStacks {
+) -> ChangedStacks {
     let files = determine_files(&scope_flag, default_scope, repo, &ignores);
     group_into_stacks(&files, &ignores)
 }
@@ -107,7 +107,7 @@ fn all_files(ignores: &Ignores) -> FileChanges {
 }
 
 /// the stacks and files that a command operates on
-pub(crate) struct ScopedStacks {
+pub(crate) struct ChangedStacks {
     /// the stacks of all files that the scope changes, including the ones it deletes or renames away
     affected: DetectedStacks,
 
@@ -115,10 +115,10 @@ pub(crate) struct ScopedStacks {
     lint: Option<DetectedStacks>,
 }
 
-impl ScopedStacks {
+impl ChangedStacks {
     /// all files in the workspace
-    pub(crate) fn all(ignores: &Ignores) -> ScopedStacks {
-        ScopedStacks {
+    pub(crate) fn all(ignores: &Ignores) -> ChangedStacks {
+        ChangedStacks {
             affected: stacks::discover_all(ignores),
             lint: None,
         }
@@ -141,12 +141,12 @@ impl ScopedStacks {
 }
 
 /// groups the given files into stacks
-fn group_into_stacks(files: &FileChanges, ignores: &Ignores) -> ScopedStacks {
+fn group_into_stacks(files: &FileChanges, ignores: &Ignores) -> ChangedStacks {
     let affected = stacks::from_changes(files, ignores);
     let lint = affected
         .has_removed_files()
         .then(|| stacks::include_stacks_of_removed_files(&affected, ignores));
-    ScopedStacks { affected, lint }
+    ChangedStacks { affected, lint }
 }
 
 #[cfg(test)]
