@@ -57,11 +57,17 @@ Feature: "trident postedit" lints only uncommitted files
       2 Markdown
       running 2 tasks
       """
+    And it prints
+      """
+      modified.md:1:1: [MD041] First line in file should be a level 1 heading
+      """
+    And it prints
+      """
+      untracked.md:1:1: [MD041] First line in file should be a level 1 heading
+      """
     And it prints the lines
       """
       lint Markdown (rumdl)
-      modified.md:1:1: [MD041] First line in file should be a level 1 heading
-      untracked.md:1:1: [MD041] First line in file should be a level 1 heading
       """
     And it does not print
       """
