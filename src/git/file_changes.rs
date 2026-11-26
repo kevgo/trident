@@ -49,6 +49,21 @@ impl FileChanges {
         )
     }
 
+    /// provides the given files, which all exist in the workspace, as changed files
+    pub(crate) fn from_existing(mut files: Vec<File>) -> FileChanges {
+        files.sort_unstable();
+        files.dedup();
+        FileChanges(
+            files
+                .into_iter()
+                .map(|file| FileChange {
+                    file,
+                    status: FileStatus::Changed,
+                })
+                .collect(),
+        )
+    }
+
     /// provides all touched files, including the removed ones
     pub(crate) fn all(&self) -> impl Iterator<Item = &File> {
         self.0.iter().map(|change| &change.file)

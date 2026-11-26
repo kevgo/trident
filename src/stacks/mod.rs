@@ -70,6 +70,15 @@ pub fn from_files<'a>(
     files: impl IntoIterator<Item = &'a File>,
     ignores: &Ignores,
 ) -> DetectedStacks {
+    group(
+        files
+            .into_iter()
+            .filter(|file| !ignores.matches_self_or_parent(file.as_ref())),
+    )
+}
+
+/// groups the given files into the stacks they belong to
+fn group<'a>(files: impl IntoIterator<Item = &'a File>) -> DetectedStacks {
     let all_stacks = all();
     let mut detected_stacks: Vec<DetectedStack> = all_stacks
         .into_iter()
@@ -79,9 +88,6 @@ pub fn from_files<'a>(
         })
         .collect();
     for file in files {
-        if ignores.matches_self_or_parent(file.as_ref()) {
-            continue;
-        }
         for detected_stack in &mut detected_stacks {
             if detected_stack.stack.matches(file.as_ref()) {
                 detected_stack.files.push(file.clone());
@@ -157,14 +163,19 @@ pub fn discover_all(ignores: &Ignores) -> DetectedStacks {
 /// provides all stacks and their files found under `dir`
 #[must_use]
 pub fn discover_all_in(dir: &Path, ignores: &Ignores) -> DetectedStacks {
-    let all_stacks = all();
-    let mut detected_stacks: Vec<DetectedStack> = all_stacks
-        .into_iter()
-        .map(|stack| DetectedStack {
-            stack,
-            files: Files::empty(),
-        })
-        .collect();
+    group(&workspace_files_in(dir, ignores))
+}
+
+/// provides all files in the workspace that aren't hidden or ignored
+#[must_use]
+pub fn workspace_files(ignores: &Ignores) -> Vec<File> {
+    workspace_files_in(Path::new("./"), ignores)
+}
+
+/// provides all files under `dir` that aren't hidden or ignored
+#[must_use]
+pub fn workspace_files_in(dir: &Path, ignores: &Ignores) -> Vec<File> {
+    let mut files = Vec::new();
     let ignores2 = ignores.clone();
     let walk = WalkBuilder::new(dir)
         // This code still ignores most hidden files (all except the ".github" folder)
@@ -200,22 +211,9 @@ pub fn discover_all_in(dir: &Path, ignores: &Ignores) -> DetectedStacks {
         if !path.is_file() {
             continue;
         }
-        for detected_stack in &mut detected_stacks {
-            if detected_stack.stack.matches(path) {
-                detected_stack.files.push(path.into());
-                break;
-            }
-        }
+        files.push(File::from(path));
     }
-    let result = detected_stacks
-        .into_iter()
-        .filter(|stack| !stack.files.is_empty())
-        .map(|mut stack| {
-            stack.files.sort_unstable();
-            stack
-        })
-        .collect();
-    DetectedStacks::new(result)
+    files
 }
 
 #[cfg(test)]
