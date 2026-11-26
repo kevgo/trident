@@ -1,7 +1,7 @@
 use crate::cli::input::{RunArgs, RunArgsWithTestAndScope, ShowExt};
 use crate::cli::output::print_metadata;
 use crate::commands::lint::Lints;
-use crate::commands::{ScopedStacks, ScopedStacksArgs, fix, lint, scoped_stacks};
+use crate::commands::{ScopedStacks, StacksToProcessArgs, fix, lint, stacks_to_process};
 use crate::config::{Config, DefaultTests, to_sequences};
 use crate::domain::{Operation, Result, Runnables, StackType};
 use crate::git::Repo;
@@ -16,7 +16,7 @@ pub fn pitstop(
     let config = Config::load()?;
     let ignores = config.ignores()?;
     let repo = Repo::load();
-    let stacks = scoped_stacks(ScopedStacksArgs {
+    let stacks = stacks_to_process(StacksToProcessArgs {
         scope_flag: scope,
         default_scope: None,
         repo: repo.as_ref(),

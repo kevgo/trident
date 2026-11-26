@@ -1,4 +1,4 @@
-use super::{ScopedStacksArgs, scoped_stacks};
+use super::{StacksToProcessArgs, stacks_to_process};
 use crate::apps::delete_empty_folders;
 use crate::apps::delete_empty_folders::DeleteEmptyFolders;
 use crate::apps::keep_sorted;
@@ -23,7 +23,7 @@ pub fn fix(RunArgsWithScope { run, scope }: RunArgsWithScope) -> Result<ExitCode
 
     // step 2: discover the stacks
     let repo = Repo::load();
-    let stacks = scoped_stacks(ScopedStacksArgs {
+    let stacks = stacks_to_process(StacksToProcessArgs {
         scope_flag: scope,
         default_scope: None,
         repo: repo.as_ref(),
