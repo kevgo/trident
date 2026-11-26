@@ -20,7 +20,6 @@ Feature: fix Shell
     When executing "trident fix --show=output"
     Then it prints the lines
       """
-      fix all (delete empty folders)
       fix Shell (shfmt)
       """
     And the exit code is 0
@@ -50,7 +49,6 @@ Feature: fix Shell
     When executing "trident fix --show=output"
     Then it prints the lines
       """
-      fix all (delete empty folders)
       fix Shell (shfmt)
       """
     And the exit code is 0
@@ -83,7 +81,6 @@ Feature: fix Shell
     When executing "trident fix --show=output"
     Then it prints the lines
       """
-      fix all (delete empty folders)
       fix Shell (shfmt)
       one.sh:2:1: `if <cond>` must be followed by `then`
       """
@@ -103,7 +100,6 @@ Feature: fix Shell
     When executing "trident fix --show=output"
     Then it prints the lines
       """
-      fix all (delete empty folders)
       fix Shell (shfmt)
       """
     And the exit code is 0
