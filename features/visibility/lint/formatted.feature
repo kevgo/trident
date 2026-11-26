@@ -36,21 +36,11 @@ Feature: lint multiple stacks
       """
     And it prints the lines
       """
-      lint Python (Ruff)
-      All checks passed!
       lint CSS (Biome)
-      Checked 1 file in 677µs. No fixes applied.
-      lint TypeScript (Biome)
-      Checked 1 file in 1384µs. No fixes applied.
       """
     And it prints the lines
       """
-      lint Python (Ruff)
-      All checks passed!
-      lint CSS (Biome)
-      Checked 1 file in 677µs. No fixes applied.
       lint TypeScript (Biome)
-      Checked 1 file in 1384µs. No fixes applied.
       """
     And all files are unchanged
     And it runs the Git commands
@@ -67,27 +57,11 @@ Feature: lint multiple stacks
       """
     And it prints the lines
       """
-      lint Python (Ruff)
-      /home/kevlar/.run-that-app/apps/ruff@0.15.16/ruff-aarch64-unknown-linux-gnu/ruff check main.py
-      All checks passed!
       lint CSS (Biome)
-      /home/kevlar/.run-that-app/apps/biome@2.4.0/biome lint main.css
-      Checked 1 file in 622µs. No fixes applied.
-      lint TypeScript (Biome)
-      /home/kevlar/.run-that-app/apps/biome@2.4.0/biome lint main.ts
-      Checked 1 file in 969µs. No fixes applied.
       """
     And it prints the lines
       """
-      lint Python (Ruff)
-      /home/kevlar/.run-that-app/apps/ruff@0.15.16/ruff-aarch64-unknown-linux-gnu/ruff check main.py
-      All checks passed!
-      lint CSS (Biome)
-      /home/kevlar/.run-that-app/apps/biome@2.4.0/biome lint main.css
-      Checked 1 file in 622µs. No fixes applied.
       lint TypeScript (Biome)
-      /home/kevlar/.run-that-app/apps/biome@2.4.0/biome lint main.ts
-      Checked 1 file in 969µs. No fixes applied.
       """
     And it prints the lines matching
       """

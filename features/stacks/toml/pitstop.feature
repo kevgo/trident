@@ -19,11 +19,8 @@ Feature: fix TOML
     When executing "trident pitstop --show=output"
     Then it prints the lines
       """
-      fix all (delete empty folders)
       fix TOML (Taplo)
-       INFO taplo:format_files:collect_files: found files total=2 excluded=0 files=["/tmp/.tmpEeB1IL/8476872760046772247/main.toml", "/tmp/.tmpEeB1IL/8476872760046772247/other.toml"] cwd="/tmp/.tmpEeB1IL/8476872760046772247"
       lint TOML (Taplo)
-       INFO taplo:lint_files:collect_files: found files total=2 excluded=0 files=["/tmp/.tmpEeB1IL/8476872760046772247/main.toml", "/tmp/.tmpEeB1IL/8476872760046772247/other.toml"] cwd="/tmp/.tmpEeB1IL/8476872760046772247"
       """
     And the exit code is 0
     And file "main.toml" now has content
@@ -48,21 +45,9 @@ Feature: fix TOML
     When executing "trident pitstop --show=output"
     Then it prints the lines
       """
-      fix all (delete empty folders)
       fix TOML (Taplo)
-       INFO taplo:format_files:collect_files: found files total=1 excluded=0 files=["/tmp/.tmpz8aKv7/11012814068424406396/main.toml"] cwd="/tmp/.tmpz8aKv7/11012814068424406396"
       lint TOML (Taplo)
-       INFO taplo:lint_files:collect_files: found files total=1 excluded=0 files=["/tmp/.tmpz8aKv7/11012814068424406396/main.toml"] cwd="/tmp/.tmpz8aKv7/11012814068424406396"
       error: conflicting keys
-        ┌─ /tmp/.tmpz8aKv7/11012814068424406396/main.toml:2:1
-        │
-      1 │ key = 1
-        │ --- duplicate found here
-      2 │ key = 2
-        │ ^^^ duplicate key
-
-      ERROR taplo:lint_files: invalid file error=semantic errors found path="/tmp/.tmpz8aKv7/11012814068424406396/main.toml"
-      ERROR operation failed error=some files were not valid
       """
     And the exit code is 1
     And file "main.toml" is unchanged

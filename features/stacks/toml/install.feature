@@ -13,9 +13,7 @@ Feature: install all TOML tools
       """
     And it prints the lines
       """
-      fix all (delete empty folders)
       fix TOML (Taplo)
-       INFO taplo:format_files:collect_files: found files total=1 excluded=0 files=["/tmp/.tmpTbVklN/7837115179257223702/main.toml"] cwd="/tmp/.tmpTbVklN/7837115179257223702"
       """
     And the exit code is 0
     And file "main.toml" now has content

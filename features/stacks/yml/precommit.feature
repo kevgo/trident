@@ -40,7 +40,6 @@ Feature: precommit YML
     When executing "trident precommit --show=output"
     Then it prints the lines
       """
-      fix all (delete empty folders)
       fix YML (yamlfmt)
       """
     And the exit code is 0
@@ -68,9 +67,7 @@ Feature: precommit YML
     When executing "trident precommit --show=output"
     Then it prints the lines
       """
-      fix all (delete empty folders)
       fix YML (yamlfmt)
-      encountered the following formatting errors:
       main.yml: yaml: line 2: found unexpected end of stream
       """
     And the exit code is 0

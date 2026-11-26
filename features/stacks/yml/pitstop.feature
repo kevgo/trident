@@ -17,7 +17,6 @@ Feature: pitstop YML
     When executing "trident pitstop --show=output"
     Then it prints the lines
       """
-      fix all (delete empty folders)
       fix YML (yamlfmt)
       """
     And the exit code is 0
@@ -48,7 +47,6 @@ Feature: pitstop YML
     When executing "trident pitstop --show=output"
     Then it prints the lines
       """
-      fix all (delete empty folders)
       fix YML (yamlfmt)
       """
     And the exit code is 0

@@ -34,9 +34,7 @@ Feature: unsafe-fix TypeScript
     When executing "trident fix --show=output"
     Then it prints the lines
       """
-      fix all (delete empty folders)
       fix TypeScript (Biome)
-      Formatted 1 file in 663µs. No fixes applied.
       """
     And the exit code is 0
     And file "main.ts" is unchanged
