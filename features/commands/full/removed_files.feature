@@ -31,6 +31,10 @@ Feature: "trident full" correctly handles deleted files
       """
     And the exit code is 0
     And all files are unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: uncommitted rename
     Given I change file "removed.md" to
@@ -64,6 +68,10 @@ Feature: "trident full" correctly handles deleted files
       # Removed
       """
     And file "removed.md" does not exist
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: committed deletion
     Given I ran "git checkout -b feature"
@@ -78,6 +86,10 @@ Feature: "trident full" correctly handles deleted files
       """
     And the exit code is 0
     And all files are unchanged
+    And it runs the Git commands
+      """
+      git rev-parse --is-inside-work-tree
+      """
 
   Scenario: uncommitted deletion next to a changed file
     Given a file "untracked.md" with content
