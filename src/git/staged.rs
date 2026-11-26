@@ -1,6 +1,6 @@
 //! provides the staged files in the current directory
 
-use crate::domain::{File, Result};
+use crate::domain::{File, FileChanges, FileStatus, Result};
 use crate::git::Repo;
 use crate::git::status::{GitStatusOutput, Record};
 
@@ -61,6 +61,20 @@ impl StagedFiles {
         result.extend(self.full.iter());
         result.sort();
         result
+    }
+
+    /// provides the staged files and the removed files, with their status
+    #[must_use]
+    pub fn changes(&self) -> FileChanges {
+        let changed = self
+            .all()
+            .into_iter()
+            .map(|file| (file.clone(), FileStatus::Changed));
+        let removed = self
+            .removed
+            .iter()
+            .map(|file| (file.clone(), FileStatus::Removed));
+        changed.chain(removed).collect()
     }
 
     /// provides whether there are any staged files to fix

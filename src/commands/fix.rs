@@ -30,11 +30,11 @@ pub fn fix(RunArgsWithScope { run, scope }: RunArgsWithScope) -> Result<ExitCode
         ignores,
     });
     if show.display_metadata() {
-        print_metadata(stacks.changed());
+        print_metadata(stacks.affected());
     }
 
     // step 3: discover the fixes to run
-    let fixes = determine_fixes(&config, stacks.fix())?;
+    let fixes = determine_fixes(&config, stacks.affected())?;
     if show.display_metadata() {
         eprintln!("running {} tasks", fixes.len());
     }
@@ -79,7 +79,7 @@ pub fn determine_fixes(config: &Config, detected_stacks: &DetectedStacks) -> Res
 
     // stack-specific fixes
     let mut stacks_executables: AHashMap<StackType, Vec<ToolCall>> = AHashMap::new();
-    for detected_stack in detected_stacks {
+    for detected_stack in detected_stacks.with_changed_files() {
         let stack_type = detected_stack.stack.stack_type();
         let stack_config = config.stack_config(stack_type);
         let stack_executables = stacks_executables.entry(stack_type).or_default();

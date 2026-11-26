@@ -11,8 +11,8 @@ mod test;
 mod update_tools;
 
 use crate::cli::input::{CLIScope, ScopeFlag};
-use crate::domain::{DetectedStacks, Ignores, Result};
-use crate::git::{FileChanges, Repo};
+use crate::domain::{DetectedStacks, FileChanges, Ignores, Result};
+use crate::git::Repo;
 use crate::stacks;
 pub use ci::ci;
 pub use fix::fix;
@@ -108,87 +108,71 @@ fn all_files(ignores: &Ignores) -> FileChanges {
 
 /// the stacks and files that a command operates on
 pub(crate) struct ScopedStacks {
-    /// the files in scope that exist in the workspace
-    existing: DetectedStacks,
+    /// the stacks of all files that the scope changes, including the ones it deletes or renames away
+    affected: DetectedStacks,
 
-    /// the stacks that differ from `existing` because the scope removes files
-    removed: Option<RemovedStacks>,
-}
-
-/// files that have been removed from the workspace
-struct RemovedStacks {
-    /// see [`ScopedStacks::changed`]
-    changed: DetectedStacks,
-
-    /// see [`ScopedStacks::lint`]
-    lint: DetectedStacks,
+    /// the stacks to lint, if they differ from `affected` because the scope removes files
+    lint: Option<DetectedStacks>,
 }
 
 impl ScopedStacks {
     /// all files in the workspace
     pub(crate) fn all(ignores: &Ignores) -> ScopedStacks {
         ScopedStacks {
-            existing: stacks::discover_all(ignores),
-            removed: None,
+            affected: stacks::discover_all(ignores),
+            lint: None,
         }
     }
 
-    /// all files that the scope changes, including the ones it deletes or renames away
+    /// the stacks of all files that the scope changes, including the ones it deletes or renames away
     ///
     /// This is what the user sees as the files in scope.
-    pub(crate) fn changed(&self) -> &DetectedStacks {
-        match &self.removed {
-            Some(removed) => &removed.changed,
-            None => &self.existing,
-        }
+    /// Fixes process the files in it that still exist in the workspace.
+    pub(crate) fn affected(&self) -> &DetectedStacks {
+        &self.affected
     }
 
-    /// the files to fix: the changed files that still exist in the workspace
-    pub(crate) fn fix(&self) -> &DetectedStacks {
-        &self.existing
-    }
-
-    /// the files to lint: the files to fix,
+    /// the stacks to lint: the affected stacks,
     /// plus all files in the stacks of the files that the scope deletes or renames away
     /// because those files might still refer to the removed file
     pub(crate) fn lint(&self) -> &DetectedStacks {
-        match &self.removed {
-            Some(removed) => &removed.lint,
-            None => &self.existing,
-        }
+        self.lint.as_ref().unwrap_or(&self.affected)
     }
 }
 
 /// groups the given files into stacks
 fn group_into_stacks(files: &FileChanges, ignores: &Ignores) -> ScopedStacks {
-    let existing = stacks::from_files(files.changed(), ignores);
-    if files.removed().next().is_none() {
-        return ScopedStacks {
-            existing,
-            removed: None,
-        };
-    }
-    let changed = stacks::from_files(files.all(), ignores);
-    let lint = stacks::include_stacks_of_removed_files(&existing, files.removed(), ignores);
-    ScopedStacks {
-        existing,
-        removed: Some(RemovedStacks { changed, lint }),
-    }
+    let affected = stacks::from_changes(files, ignores);
+    let lint = affected
+        .has_removed_files()
+        .then(|| stacks::include_stacks_of_removed_files(&affected, ignores));
+    ScopedStacks { affected, lint }
 }
 
 #[cfg(test)]
 mod tests {
     use super::{all_files, determine_files, files_in_scope, group_into_stacks, infer_files};
     use crate::cli::input::{CLIScope, ScopeFlag};
-    use crate::domain::{DetectedStacks, File, Ignores, Result};
-    use crate::git::FileStatus::{Changed, Removed};
-    use crate::git::{FileChanges, GitCommandExt, Repo};
+    use crate::domain::FileStatus::{Changed, Removed};
+    use crate::domain::{DetectedStacks, File, FileChanges, Ignores, Result};
+    use crate::git::{GitCommandExt, Repo};
     use tempfile::TempDir;
 
+    /// all files in the given stacks, including the removed ones
     fn filenames(stacks: &DetectedStacks) -> Vec<File> {
         let mut files: Vec<File> = stacks
             .into_iter()
-            .flat_map(|stack| stack.files.into_iter().cloned())
+            .flat_map(|stack| stack.files.all().cloned())
+            .collect();
+        files.sort();
+        files
+    }
+
+    /// the files in the given stacks that exist in the workspace
+    fn changed_filenames(stacks: &DetectedStacks) -> Vec<File> {
+        let mut files: Vec<File> = stacks
+            .into_iter()
+            .flat_map(|stack| stack.files.changed().cloned())
             .collect();
         files.sort();
         files
@@ -248,9 +232,12 @@ mod tests {
         std::fs::remove_file(repo.file_path("deleted.md")).unwrap();
         let files = files_in_scope(CLIScope::Uncommitted, &repo, &Ignores::empty())?;
         let stacks = group_into_stacks(&files, &Ignores::empty());
-        pretty::assert_eq!(filenames(stacks.fix()), vec![File::from("untracked.md")]);
         pretty::assert_eq!(
-            filenames(stacks.changed()),
+            changed_filenames(stacks.affected()),
+            vec![File::from("untracked.md")]
+        );
+        pretty::assert_eq!(
+            filenames(stacks.affected()),
             vec![File::from("deleted.md"), File::from("untracked.md")]
         );
         Ok(())
@@ -265,8 +252,7 @@ mod tests {
         let files = files_in_scope(CLIScope::Uncommitted, &repo, &Ignores::empty())?;
         let stacks = group_into_stacks(&files, &Ignores::empty());
         let want = vec![File::from("untracked.md")];
-        pretty::assert_eq!(filenames(stacks.fix()), want);
-        pretty::assert_eq!(filenames(stacks.changed()), want);
+        pretty::assert_eq!(filenames(stacks.affected()), want);
         pretty::assert_eq!(filenames(stacks.lint()), want);
         Ok(())
     }

@@ -2,9 +2,9 @@
 //!
 //! The parent branch is the one that Git Town has stored, otherwise the default branch.
 
+use crate::domain::FileChanges;
 use crate::domain::Result;
 use crate::git::Repo;
-use crate::git::file_changes::FileChanges;
 use crate::gittown;
 
 impl Repo {
@@ -41,8 +41,8 @@ impl Repo {
 
 #[cfg(test)]
 mod tests {
+    use crate::domain::FileStatus::{Changed, Removed};
     use crate::domain::Result;
-    use crate::git::FileStatus::{Changed, Removed};
     use crate::git::GitCommandExt;
     use crate::git::Repo;
     use std::fs;
@@ -136,8 +136,8 @@ mod tests {
     }
 
     mod with_git_town {
+        use crate::domain::FileStatus::{Changed, Removed};
         use crate::domain::Result;
-        use crate::git::FileStatus::{Changed, Removed};
         use crate::git::GitCommandExt;
         use crate::gittown::parent_branch;
         use crate::gittown::tests::{append_branch, git_town_installed, gittown_repo};

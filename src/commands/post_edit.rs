@@ -23,7 +23,7 @@ pub fn post_edit(RunArgs { sequential, show }: RunArgs) -> Result<ExitCode> {
         ignores,
     });
     if show.display_metadata() {
-        print_metadata(stacks.changed());
+        print_metadata(stacks.affected());
     }
 
     // step 3: discover the lints to run

@@ -26,7 +26,7 @@ impl Tool for Taplo {
 impl Lint for Taplo {
     fn lint_commands(&self, stack: &DetectedStack, config: &Config) -> Result<Option<ToolCall>> {
         let ignores = config.ignores_for(self, Operation::Lint)?;
-        let files = stack.files.remove(&ignores);
+        let files = stack.files.changed_except(&ignores);
         if files.is_empty() {
             return Ok(None);
         }
@@ -49,7 +49,7 @@ impl Lint for Taplo {
 impl Fix for Taplo {
     fn fix_commands(&self, stack: &DetectedStack, config: &Config) -> Result<Vec<ToolCall>> {
         let ignores = config.ignores_for(self, Operation::Fix)?;
-        let files = stack.files.remove(&ignores);
+        let files = stack.files.changed_except(&ignores);
         if files.is_empty() {
             return Ok(Vec::new());
         }
@@ -73,7 +73,7 @@ impl Fix for Taplo {
 
     fn unsafe_fix_commands(&self, stack: &DetectedStack, config: &Config) -> Result<Vec<ToolCall>> {
         let ignores = config.ignores_for(self, Operation::FixUnsafe)?;
-        let files = stack.files.remove(&ignores);
+        let files = stack.files.changed_except(&ignores);
         if files.is_empty() {
             return Ok(Vec::new());
         }

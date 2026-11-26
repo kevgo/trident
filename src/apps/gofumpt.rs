@@ -26,7 +26,7 @@ impl Tool for Gofumpt {
 impl Fix for Gofumpt {
     fn fix_commands(&self, stack: &DetectedStack, config: &Config) -> Result<Vec<ToolCall>> {
         let ignores = config.ignores_for(self, Operation::Fix)?;
-        let files = stack.files.remove(&ignores);
+        let files = stack.files.changed_except(&ignores);
         if files.is_empty() {
             return Ok(vec![]);
         }

@@ -27,11 +27,11 @@ pub fn fix_unsafe(RunArgsWithScope { run, scope }: RunArgsWithScope) -> Result<E
         ignores,
     });
     if show.display_metadata() {
-        print_metadata(stacks.changed());
+        print_metadata(stacks.affected());
     }
 
     // step 3: discover the unsafe fixes to run
-    let unsafe_fixes = determine_unsafe_fixes(stacks.fix(), &config)?;
+    let unsafe_fixes = determine_unsafe_fixes(stacks.affected(), &config)?;
     if show.display_metadata() {
         eprintln!("running {} tasks", unsafe_fixes.len());
     }
@@ -52,7 +52,7 @@ pub fn determine_unsafe_fixes(
     config: &Config,
 ) -> Result<Vec<NonEmpty<ToolCall>>> {
     let mut stacks_executables: AHashMap<StackType, Vec<ToolCall>> = AHashMap::new();
-    for stack in stacks {
+    for stack in stacks.with_changed_files() {
         let stack_executables = stacks_executables
             .entry(stack.stack.stack_type())
             .or_default();

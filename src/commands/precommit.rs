@@ -32,10 +32,9 @@ fn run(RunArgs { sequential, show }: RunArgs) -> Result<()> {
 
     // step 2: discover the staged files and their stacks
     let staged = repo.staged()?;
-    let stacks = stacks::from_staged(&staged, &ignores);
+    let stacks = stacks::from_changes(&staged.changes(), &ignores);
     if show.display_metadata() {
-        let staged_and_removed = staged.all().into_iter().chain(&staged.removed);
-        print_metadata(&stacks::from_files(staged_and_removed, &ignores));
+        print_metadata(&stacks);
     }
     if staged.is_empty() {
         return Ok(());
@@ -98,7 +97,7 @@ pub fn determine_precommit_fixes(
 
     // stack-specific fixes
     let mut stacks_executables: AHashMap<StackType, Vec<ToolCall>> = AHashMap::new();
-    for staged_stack in staged_stacks {
+    for staged_stack in staged_stacks.with_changed_files() {
         let stack_type = staged_stack.stack.stack_type();
         let stack_config = config.stack_config(stack_type);
         let stack_executables = stacks_executables.entry(stack_type).or_default();

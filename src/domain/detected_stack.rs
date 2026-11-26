@@ -1,11 +1,23 @@
-use crate::domain::{EnabledWhen, File, Files, Stack, StackType};
+use crate::domain::{EnabledWhen, File, FileChanges, FileStatus, Stack, StackType};
 
-/// A stack that was detected in the workspace,
-/// and the workspace files belonging to it.
+/// A stack that the files in scope belong to,
+/// and how these files were changed.
+///
+/// A stack whose files were all removed from the workspace has no files to process,
+/// but removing them can break other files of the stack.
 #[must_use]
 pub struct DetectedStack {
     pub stack: Box<dyn Stack>,
-    pub files: Files,
+    pub files: FileChanges,
+}
+
+impl DetectedStack {
+    /// provides whether this stack contains files that exist in the workspace,
+    /// i.e. files that tools can process
+    #[must_use]
+    pub fn has_changed_files(&self) -> bool {
+        self.files.has_changed()
+    }
 }
 
 impl std::fmt::Debug for DetectedStack {
@@ -14,9 +26,12 @@ impl std::fmt::Debug for DetectedStack {
         f.write_str("  stack: ")?;
         f.write_str(&self.stack.to_string())?;
         f.write_str("\n  files:\n")?;
-        for file in &self.files {
+        for (file, status) in self.files.iter() {
             f.write_str("    - ")?;
             f.write_str(file.as_str())?;
+            if status == FileStatus::Removed {
+                f.write_str(" (removed)")?;
+            }
             f.write_str("\n")?;
         }
         f.write_str("}")?;
@@ -34,7 +49,7 @@ impl PartialEq for DetectedStack {
 
 impl Eq for DetectedStack {}
 
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, Default, PartialEq, Eq)]
 pub struct DetectedStacks(Vec<DetectedStack>);
 
 impl DetectedStacks {
@@ -48,7 +63,10 @@ impl DetectedStacks {
         let Some(stack) = self.get_stack(stack_type) else {
             return false;
         };
-        stack.files.contains(file)
+        stack
+            .files
+            .changed()
+            .any(|changed| changed.as_str() == file)
     }
 
     /// indicates whether a folder with the given name exists in the files,
@@ -58,12 +76,7 @@ impl DetectedStacks {
         let Some(stack) = self.get_stack(stack_type) else {
             return false;
         };
-        for file in &stack.files {
-            if file.starts_with(name) {
-                return true;
-            }
-        }
-        false
+        stack.files.changed().any(|file| file.starts_with(name))
     }
 
     #[must_use]
@@ -74,6 +87,18 @@ impl DetectedStacks {
     #[must_use]
     pub fn len(&self) -> usize {
         self.0.len()
+    }
+
+    /// provides whether any of these stacks contains files that don't exist in the workspace anymore
+    #[must_use]
+    pub fn has_removed_files(&self) -> bool {
+        self.0.iter().any(|stack| stack.files.has_removed())
+    }
+
+    /// provides the stacks that contain files that exist in the workspace,
+    /// i.e. the stacks that have files for tools to process
+    pub fn with_changed_files(&self) -> impl Iterator<Item = &DetectedStack> {
+        self.0.iter().filter(|stack| stack.has_changed_files())
     }
 
     #[must_use]
@@ -96,15 +121,13 @@ impl DetectedStacks {
         }
     }
 
-    /// the stack type whose detected files include this path
+    /// the stack type whose detected files that exist in the workspace include this path
     #[must_use]
     pub fn stack_type_for_file(&self, file: &File) -> Option<StackType> {
-        for detected_stack in &self.0 {
-            if detected_stack.files.contains_file(file) {
-                return Some(detected_stack.stack.stack_type());
-            }
-        }
-        None
+        self.0
+            .iter()
+            .find(|detected_stack| detected_stack.files.contains_changed(file))
+            .map(|detected_stack| detected_stack.stack.stack_type())
     }
 }
 
@@ -129,15 +152,16 @@ impl<'a> IntoIterator for &'a DetectedStacks {
 #[cfg(test)]
 mod tests {
     mod stack_type_for_file {
-        use crate::domain::{DetectedStack, DetectedStacks, File, Files, StackType};
+        use crate::domain::{
+            DetectedStack, DetectedStacks, File, FileChanges, FileStatus, StackType,
+        };
         use crate::stacks::Toml;
-        use std::path::PathBuf;
 
         #[test]
         fn returns_type_for_file_in_the_detected_list() {
             let stacks = DetectedStacks::new(vec![DetectedStack {
                 stack: Box::new(Toml {}),
-                files: Files::from(vec![PathBuf::from("changed.toml")]),
+                files: FileChanges::from_existing(vec![File::from("changed.toml")]),
             }]);
             pretty::assert_eq!(
                 stacks.stack_type_for_file(&File::from("changed.toml")),
@@ -149,10 +173,24 @@ mod tests {
         fn ignores_same_type_file_not_in_the_detected_list() {
             let stacks = DetectedStacks::new(vec![DetectedStack {
                 stack: Box::new(Toml {}),
-                files: Files::from(vec![PathBuf::from("changed.toml")]),
+                files: FileChanges::from_existing(vec![File::from("changed.toml")]),
             }]);
             pretty::assert_eq!(
                 stacks.stack_type_for_file(&File::from("untouched.toml")),
+                None
+            );
+        }
+
+        #[test]
+        fn ignores_removed_file_in_the_detected_list() {
+            let stacks = DetectedStacks::new(vec![DetectedStack {
+                stack: Box::new(Toml {}),
+                files: vec![(File::from("removed.toml"), FileStatus::Removed)]
+                    .into_iter()
+                    .collect(),
+            }]);
+            pretty::assert_eq!(
+                stacks.stack_type_for_file(&File::from("removed.toml")),
                 None
             );
         }

@@ -1,6 +1,6 @@
 use crate::domain::Result;
+use crate::domain::{FileChanges, FileStatus};
 use crate::git::Repo;
-use crate::git::file_changes::{FileChanges, FileStatus};
 use crate::git::status::Record;
 
 impl Repo {
@@ -25,8 +25,8 @@ impl Repo {
 
 #[cfg(test)]
 mod tests {
+    use crate::domain::FileStatus::{Changed, Removed};
     use crate::domain::Result;
-    use crate::git::FileStatus::{Changed, Removed};
     use crate::git::GitCommandExt;
     use crate::git::Repo;
     use std::fs;

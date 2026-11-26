@@ -29,7 +29,7 @@ pub fn lint(RunArgsWithScope { run, scope }: RunArgsWithScope) -> Result<ExitCod
         ignores,
     });
     if show.display_metadata() {
-        print_metadata(stacks.changed());
+        print_metadata(stacks.affected());
     }
 
     // step 3: discover the lints to run
@@ -59,7 +59,7 @@ pub fn determine_lints(
 ) -> Result<Lints> {
     // determine the lints for the stacks
     let mut stack_specific: AHashMap<StackType, Vec<ToolCall>> = AHashMap::new();
-    for detected_stack in detected_stacks {
+    for detected_stack in detected_stacks.with_changed_files() {
         let stack_type = detected_stack.stack.stack_type();
         let stack_config = config.stack_config(stack_type);
         let stack_executables = stack_specific.entry(stack_type).or_default();

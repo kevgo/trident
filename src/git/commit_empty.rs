@@ -17,8 +17,8 @@ impl Repo {
 #[cfg(test)]
 mod tests {
     mod commit_empty {
+        use crate::domain::FileStatus::Changed;
         use crate::domain::Result;
-        use crate::git::FileStatus::Changed;
         use crate::git::Repo;
         use big_s::S;
         use std::fs;

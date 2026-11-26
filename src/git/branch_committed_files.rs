@@ -1,8 +1,8 @@
 use crate::domain::Result;
+use crate::domain::{FileChanges, FileStatus};
 use crate::git::GitCommandExt;
 use crate::git::Repo;
 use crate::git::ZeroString;
-use crate::git::file_changes::{FileChanges, FileStatus};
 
 impl Repo {
     /// provides the files that the commits since the given merge base touch
@@ -51,7 +51,7 @@ fn log_unexpected_output(text: &str) {
 #[cfg(test)]
 mod tests {
     use super::parse_name_status;
-    use crate::git::FileStatus::{Changed, Removed};
+    use crate::domain::FileStatus::{Changed, Removed};
     use crate::git::ZeroString;
 
     #[test]
