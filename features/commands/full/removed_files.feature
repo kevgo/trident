@@ -54,13 +54,13 @@ Feature: "trident full" correctly handles deleted files
     And it prints the block matching
       """
       fix Markdown \(rumdl\)
-      .*rumdl fmt renamed.md$
+      .*rumdl(.exe)? fmt renamed.md$
       renamed.md:1:2: \[MD019\] Multiple spaces \(5\) after # in heading \[fixed\]
       """
     And it prints the block matching
       """
       lint Markdown \(rumdl\)
-      .*rumdl check renamed.md$
+      .*rumdl(.exe)? check renamed.md$
       """
     And the exit code is 0
     And file "renamed.md" now has content
@@ -106,13 +106,13 @@ Feature: "trident full" correctly handles deleted files
     And it prints the block matching
       """
       fix Markdown \(rumdl\)
-      .*rumdl fmt untracked.md$
+      .*rumdl(.exe)? fmt untracked.md$
       untracked.md:1:2: \[MD019\] Multiple spaces \(5\) after # in heading \[fixed\]
       """
     And it prints the block matching
       """
       lint Markdown \(rumdl\)
-      .*rumdl check untracked.md$
+      .*rumdl(.exe)? check untracked.md$
       """
     And the exit code is 0
     And file "untracked.md" now has content

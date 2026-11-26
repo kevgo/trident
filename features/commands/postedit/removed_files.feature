@@ -59,7 +59,7 @@ Feature: "trident postedit" correctly handles deleted files
     And it prints the block matching
       """
       lint Markdown \(rumdl\)
-      .*rumdl check unrelated.md$
+      .*rumdl(.exe)? check unrelated.md$
       unrelated.md:1:2: \[MD019\] Multiple spaces \(5\) after # in heading \[\*\]
       """
     And it does not print
@@ -80,7 +80,7 @@ Feature: "trident postedit" correctly handles deleted files
     And it prints the block matching
       """
       lint Markdown \(rumdl\)
-      .*rumdl check renamed.md$
+      .*rumdl(.exe)? check renamed.md$
       renamed.md:1:2: \[MD019\] Multiple spaces \(5\) after # in heading \[\*\]
       """
     And it does not print
@@ -102,7 +102,7 @@ Feature: "trident postedit" correctly handles deleted files
     And it prints the block matching
       """
       lint Markdown \(rumdl\)
-      .*rumdl check renamed.md$
+      .*rumdl(.exe)? check renamed.md$
       renamed.md:1:2: \[MD019\] Multiple spaces \(5\) after # in heading \[\*\]
       """
     And it does not print

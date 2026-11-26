@@ -34,18 +34,15 @@ Feature: lint Dockerfile
     And a file "subdir/Dockerfile" with content
       """
       FROM alpine:3.20
+
       WORKDIR other
       """
     When executing "trident lint --show=output"
-    Then it prints the lines
+    Then it prints the lines matching
       """
-      lint Dockerfile (hadolint)
+      lint Dockerfile \(hadolint\)
       Dockerfile:2 DL3000 error: Use absolute WORKDIR
-      subdir/Dockerfile:2 DL3000 error: Use absolute WORKDIR
-      """
-    And it prints the lines matching
-      """
-      subdir[/\\]Dockerfile:2 DL3000 error: Use absolute WORKDIR
+      subdir[/\\]Dockerfile:3 DL3000 error: Use absolute WORKDIR
       """
     And the exit code is 1
     And file "Dockerfile" is unchanged

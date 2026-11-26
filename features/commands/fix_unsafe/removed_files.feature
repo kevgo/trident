@@ -66,10 +66,10 @@ Feature: "trident fix-unsafe" correctly handles deleted files
     And it prints the block matching
       """
       unsafe-fix Python \(Ruff\)
-      .*ruff check --fix --unsafe-fixes untracked.py$
+      .*ruff(.exe)? check --fix --unsafe-fixes untracked.py$
       Found 1 error \(1 fixed, 0 remaining\)\.
       format Python \(Ruff\)
-      .*ruff format untracked.py$
+      .*ruff(.exe)? format untracked.py$
       1 file left unchanged
       """
     And the exit code is 0

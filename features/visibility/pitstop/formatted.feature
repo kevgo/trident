@@ -76,16 +76,16 @@ Feature: pitstop multiple good stacks
     And it prints the lines matching
       """
       fix CSS \(Biome\)
-      biome format --write main.css$
+      biome(.exe)? format --write main.css$
       lint CSS \(Biome\)
-      biome lint main.css$
+      biome(.exe)? lint main.css$
       """
     And it prints the lines matching
       """
       fix TypeScript \(Biome\)
-      biome format --write main.ts$
+      biome(.exe)? format --write main.ts$
       lint TypeScript \(Biome\)
-      biome lint main.ts$
+      biome(.exe)? lint main.ts$
       """
     And all files are unchanged
     And it runs the Git commands

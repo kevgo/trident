@@ -55,7 +55,7 @@ Feature: "trident fix" correctly handles deleted files
     And it prints the block matching
       """
       fix Markdown \(rumdl\)
-      .*rumdl fmt untracked.md$
+      .*rumdl(.exe)? fmt untracked.md$
       untracked.md:1:2: \[MD019\] Multiple spaces \(5\) after # in heading \[fixed\]
       """
     And it does not print
@@ -91,7 +91,7 @@ Feature: "trident fix" correctly handles deleted files
     And it prints the lines matching
       """
       fix Markdown \(rumdl\)
-      rumdl fmt renamed.md$
+      rumdl(.exe)? fmt renamed.md$
       """
     And it does not print
       """
@@ -161,7 +161,7 @@ Feature: "trident fix" correctly handles deleted files
     And it prints the lines matching
       """
       fix Markdown \(rumdl\)
-      rumdl fmt on-branch.md$
+      rumdl(.exe)? fmt on-branch.md$
       """
     And it does not print
       """
@@ -192,7 +192,7 @@ Feature: "trident fix" correctly handles deleted files
     And it prints the lines matching
       """
       fix Markdown \(rumdl\)
-      rumdl fmt removed.md$
+      rumdl(.exe)? fmt removed.md$
       """
     And the exit code is 0
     And file "removed.md" now has content

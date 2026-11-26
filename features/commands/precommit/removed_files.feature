@@ -57,7 +57,7 @@ Feature: "trident precommit" correctly handles deleted files
     And it prints the block matching
       """
       fix Markdown \(rumdl\)
-      .*rumdl fmt added.md$
+      .*rumdl(.exe)? fmt added.md$
       added.md:1:2: \[MD019\] Multiple spaces \(5\) after # in heading \[fixed\]
       """
     And the exit code is 0
@@ -86,7 +86,7 @@ Feature: "trident precommit" correctly handles deleted files
     And it prints the block matching
       """
       fix Markdown \(rumdl\)
-      .*rumdl fmt renamed.md$
+      .*rumdl(.exe)? fmt renamed.md$
       renamed.md:1:2: \[MD019\] Multiple spaces \(5\) after # in heading \[fixed\]
       """
     And it does not print
@@ -119,7 +119,7 @@ Feature: "trident precommit" correctly handles deleted files
     And it prints the block matching
       """
       fix Markdown \(rumdl\)
-      .*rumdl fmt added.md$
+      .*rumdl(.exe)? fmt added.md$
       added.md:1:2: \[MD019\] Multiple spaces \(5\) after # in heading \[fixed\]
       """
     And it does not print
