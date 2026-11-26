@@ -1,4 +1,3 @@
-use crate::domain::File;
 #[cfg(test)]
 use crate::domain::Result;
 #[cfg(test)]
@@ -37,12 +36,8 @@ impl Repo {
         }
     }
 
-    /// indicates whether the given file exists in the repository
-    pub(crate) fn file_exists(&self, file: &File) -> bool {
-        self.file_path(file).is_file()
-    }
-
     /// provides the absolute path for the given file in the repository
+    #[cfg(test)]
     pub(crate) fn file_path(&self, file: &str) -> PathBuf {
         match &self.path {
             Some(dir) => dir.join(file),

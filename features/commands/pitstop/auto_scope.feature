@@ -36,7 +36,7 @@ Feature: "trident pitstop" chooses the smallest "--scope" based on the workspace
       git symbolic-ref --short refs/remotes/origin/HEAD
       git rev-parse --verify --quiet refs/heads/main
       git merge-base HEAD main
-      git diff -z --name-only --no-renames {SHA}...HEAD
+      git diff -z --name-status --no-renames {SHA}...HEAD
       git diff HEAD --check
       """
 
@@ -97,7 +97,7 @@ Feature: "trident pitstop" chooses the smallest "--scope" based on the workspace
       git symbolic-ref --short refs/remotes/origin/HEAD
       git rev-parse --verify --quiet refs/heads/main
       git merge-base HEAD main
-      git diff -z --name-only --no-renames {SHA}...HEAD
+      git diff -z --name-status --no-renames {SHA}...HEAD
       git diff HEAD --check
       """
 
@@ -135,7 +135,7 @@ Feature: "trident pitstop" chooses the smallest "--scope" based on the workspace
       git symbolic-ref --short refs/remotes/origin/HEAD
       git rev-parse --verify --quiet refs/heads/main
       git merge-base HEAD main
-      git diff -z --name-only --no-renames {SHA}...HEAD
+      git diff -z --name-status --no-renames {SHA}...HEAD
       git diff HEAD --check
       """
 

@@ -36,7 +36,7 @@ Feature: "trident fix" chooses the smallest "--scope" based on the workspace sta
       git symbolic-ref --short refs/remotes/origin/HEAD
       git rev-parse --verify --quiet refs/heads/main
       git merge-base HEAD main
-      git diff -z --name-only --no-renames {SHA}...HEAD
+      git diff -z --name-status --no-renames {SHA}...HEAD
       """
 
   Scenario: on main branch, has uncommitted files
@@ -91,7 +91,7 @@ Feature: "trident fix" chooses the smallest "--scope" based on the workspace sta
       git symbolic-ref --short refs/remotes/origin/HEAD
       git rev-parse --verify --quiet refs/heads/main
       git merge-base HEAD main
-      git diff -z --name-only --no-renames {SHA}...HEAD
+      git diff -z --name-status --no-renames {SHA}...HEAD
       """
 
   Scenario: on feature branch, branch has commits, no uncommitted files,
@@ -128,7 +128,7 @@ Feature: "trident fix" chooses the smallest "--scope" based on the workspace sta
       git symbolic-ref --short refs/remotes/origin/HEAD
       git rev-parse --verify --quiet refs/heads/main
       git merge-base HEAD main
-      git diff -z --name-only --no-renames {SHA}...HEAD
+      git diff -z --name-status --no-renames {SHA}...HEAD
       """
 
   Scenario: on feature branch, branch has commits, has uncommitted files

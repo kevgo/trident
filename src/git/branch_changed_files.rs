@@ -2,7 +2,6 @@
 //!
 //! The parent branch is the one that Git Town has stored, otherwise the default branch.
 
-use crate::domain::File;
 use crate::domain::Result;
 use crate::git::Repo;
 use crate::git::file_changes::FileChanges;
@@ -10,24 +9,21 @@ use crate::gittown;
 
 impl Repo {
     /// provides the files that the current branch touches, including uncommitted changes
+    ///
+    /// For files with uncommitted changes, Git status knows whether they exist in the workspace.
+    /// The workspace contains the other committed files the way HEAD has them.
     pub(crate) fn branch_changes(&self) -> Result<FileChanges> {
-        let uncommitted = self.uncommitted_changes()?;
-        let committed: Vec<File> = self
-            .committed_on_branch()?
-            .into_iter()
-            .filter(|file| !uncommitted.contains(file))
-            .collect();
-        Ok(uncommitted.merge(FileChanges::from_paths(self, committed)))
+        Ok(self
+            .uncommitted_changes()?
+            .merge(self.branch_committed_changes()?))
     }
 
-    /// provides the files that the commits on the current branch touch
-    pub(crate) fn branch_committed_changes(&self) -> Result<FileChanges> {
-        Ok(FileChanges::from_paths(self, self.committed_on_branch()?))
-    }
-
-    /// provides the names of the files that the commits on the current branch touch,
+    /// provides the files that the commits on the current branch touch,
     /// including both names of renamed files
-    fn committed_on_branch(&self) -> Result<Vec<File>> {
+    ///
+    /// The status of each file describes whether it exists in HEAD.
+    /// This matches the workspace only if there are no uncommitted changes.
+    pub(crate) fn branch_committed_changes(&self) -> Result<FileChanges> {
         let merge_base = gittown::parent_branch(self)
             // the parent branch that Git Town knows might not exist anymore --> use the default branch
             .and_then(|parent| self.merge_base(&parent))
@@ -37,7 +33,7 @@ impl Repo {
             });
         let Some(merge_base) = merge_base else {
             // cannot determine the merge base --> no committed files
-            return Ok(vec![]);
+            return Ok(FileChanges::default());
         };
         self.branch_committed_files(&merge_base)
     }
@@ -133,8 +129,9 @@ mod tests {
         fs::remove_file(repo.file_path("file.md")).unwrap();
         let have = repo.branch_changes()?;
         pretty::assert_eq!(have.summary(), vec![("file.md", Removed)]);
+        // the committed changes describe HEAD, which still contains the file
         let have = repo.branch_committed_changes()?;
-        pretty::assert_eq!(have.summary(), vec![("file.md", Removed)]);
+        pretty::assert_eq!(have.summary(), vec![("file.md", Changed)]);
         Ok(())
     }
 

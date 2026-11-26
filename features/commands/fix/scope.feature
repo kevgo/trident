@@ -87,7 +87,7 @@ Feature: "trident fix --scope" selects which files to format
       git symbolic-ref --short refs/remotes/origin/HEAD
       git rev-parse --verify --quiet refs/heads/main
       git merge-base HEAD main
-      git diff -z --name-only --no-renames {SHA}...HEAD
+      git diff -z --name-status --no-renames {SHA}...HEAD
       """
 
   Scenario: --scope=all formats all files
