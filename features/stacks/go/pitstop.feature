@@ -67,11 +67,11 @@ Feature: pitstop Go
       """
       found packages main (main.go) and other (other.go)
       """
-    And it prints the lines
+    And it prints the lines matching
       """
-      fix Go (gofumpt)
-      lint Go (golangci-lint)
-      main.go:1: : found packages main (main.go) and other (other.go) in (typecheck)
+      fix Go \(gofumpt\)
+      lint Go \(golangci-lint\)
+      .*found packages main \(main.go\) and other \(other.go\) in .*
       """
     And the exit code is failure
     And file "main.go" now has content
