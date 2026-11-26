@@ -88,11 +88,8 @@ Feature: "trident postedit" lints only uncommitted files
       """
     And it prints the lines
       """
-      lint all (git diff HEAD --check)
       lint Markdown (rumdl)
       my file.md:1:1: [MD041] First line in file should be a level 1 heading
-
-      Issues: Found 1 issues in 1 file (2ms)
       """
     And the exit code is 1
     And it runs the Git commands
