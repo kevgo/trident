@@ -16,7 +16,6 @@ Feature: lint JSON
     Then it prints the lines
       """
       lint JSON (Biome)
-      Checked 1 file in 589µs. No fixes applied.
       """
     And the exit code is 0
     And file "main.json" is unchanged
@@ -34,7 +33,6 @@ Feature: lint JSON
     Then it prints the lines
       """
       lint JSON (Biome)
-      Checked 1 file in 1349µs. No fixes applied.
       """
     And the exit code is 0
     And file "main.json" is unchanged

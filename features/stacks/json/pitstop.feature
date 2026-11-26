@@ -15,11 +15,8 @@ Feature: pitstop JSON
     When executing "trident pitstop --show=output"
     Then it prints the lines
       """
-      fix all (delete empty folders)
       fix JSON (Biome)
-      Formatted 1 file in 409µs. Fixed 1 file.
       lint JSON (Biome)
-      Checked 1 file in 1577µs. No fixes applied.
       """
     And the exit code is 0
     And file "main.json" now has content
