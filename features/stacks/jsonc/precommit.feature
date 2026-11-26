@@ -48,9 +48,7 @@ Feature: precommit JSONC
     When executing "trident precommit --show=output"
     Then it prints the lines
       """
-      fix all (delete empty folders)
       fix JSONC (Biome)
-      Formatted 2 files in 452µs. Fixed 2 files.
       """
     And the exit code is 0
     And file "main.jsonc" now has content

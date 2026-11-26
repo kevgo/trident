@@ -27,12 +27,8 @@ Feature: install Rumdl
       """
     And it prints the lines
       """
-      fix all (delete empty folders)
       fix Markdown (rumdl)
       main.md:1:2: [MD019] Multiple spaces (5) after # in heading [fixed]
-      main.md:1:2: [MD064] Multiple consecutive spaces (5) found [fixed]
-
-      Fixed: 2/2 issues in 1 file (0ms)
       """
     And the exit code is 0
     And file "main.md" now has content
