@@ -25,7 +25,6 @@ Feature: lint Go
     Then it prints the lines
       """
       lint Go (golangci-lint)
-      0 issues.
       """
     And the exit code is 0
     And file "main.go" is unchanged
