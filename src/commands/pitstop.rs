@@ -31,7 +31,7 @@ pub fn pitstop(
         Operation::Test,
         None,
     );
-    run_tasks(&run, &config, &stacks, &ignores, repo.as_ref(), tests)
+    run_tasks(&run, &config, stacks, &ignores, repo.as_ref(), tests)
 }
 
 /// runs global fixes, then stack-specific fixes, then lints on the given stacks
@@ -40,7 +40,7 @@ pub fn pitstop(
 pub(crate) fn run_tasks(
     args: &RunArgs,
     config: &Config,
-    stacks: &DetectedStacks,
+    stacks: DetectedStacks,
     ignores: &Ignores,
     repo: Option<&Repo>,
     tests: Vec<NonEmpty<ToolCall>>,
@@ -51,11 +51,11 @@ pub(crate) fn run_tasks(
     let stderr_to_stdout = true;
 
     if show.display_metadata() {
-        print_metadata(stacks);
+        print_metadata(&stacks);
     }
 
     // step 1: discover the runnables
-    let fixes = fix::determine_fixes(config, stacks)?;
+    let fixes = fix::determine_fixes(config, &stacks)?;
     let mut lints =
         lint::determine_lints(config, &stacks.with_stacks_of_removed_files(ignores), repo)?;
     lints.global.extend(tests);

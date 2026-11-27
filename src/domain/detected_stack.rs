@@ -102,39 +102,43 @@ impl DetectedStacks {
     /// Removing a file can break other files in its stack, for example the ones importing it.
     /// Lints therefore need to check all files of such stacks.
     #[must_use]
-    pub fn with_stacks_of_removed_files(&self, ignores: &Ignores) -> DetectedStacks {
+    pub fn with_stacks_of_removed_files(self, ignores: &Ignores) -> DetectedStacks {
         self.with_stacks_of_removed_files_in(Path::new("./"), ignores)
     }
 
     /// provides these stacks, with all files under `dir` added to the stacks that contain removed files
     #[must_use]
-    pub fn with_stacks_of_removed_files_in(&self, dir: &Path, ignores: &Ignores) -> DetectedStacks {
-        let workspace = if self.has_removed_files() {
-            stacks::discover_all_in(dir, ignores)
-        } else {
-            DetectedStacks::default()
-        };
-        let mut changes: Vec<(File, FileStatus)> = Vec::new();
-        for stack in &self.0 {
-            changes.extend(
-                stack
-                    .files
-                    .iter()
-                    .map(|(file, status)| (file.clone(), status)),
-            );
-            if stack.files.has_removed()
-                && let Some(workspace_stack) = workspace.get_stack(stack.stack.stack_type())
-            {
-                changes.extend(
-                    workspace_stack
-                        .files
-                        .iter()
-                        .map(|(file, status)| (file.clone(), status)),
-                );
-            }
+    pub fn with_stacks_of_removed_files_in(self, dir: &Path, ignores: &Ignores) -> DetectedStacks {
+        if !self.has_removed_files() {
+            return self;
         }
-        let changes: FileChanges = changes.into_iter().collect();
-        stacks::group(changes.iter())
+        let mut workspace = stacks::discover_all_in(dir, ignores);
+        let stacks = self
+            .0
+            .into_iter()
+            .map(|stack| {
+                if !stack.files.has_removed() {
+                    return stack;
+                }
+                let Some(workspace_stack) = workspace.remove_stack(stack.stack.stack_type()) else {
+                    return stack;
+                };
+                DetectedStack {
+                    stack: stack.stack,
+                    files: stack.files.merge(workspace_stack.files),
+                }
+            })
+            .collect();
+        DetectedStacks(stacks)
+    }
+
+    /// removes the stack with the given type from these stacks and provides it
+    fn remove_stack(&mut self, stack_type: StackType) -> Option<DetectedStack> {
+        let index = self
+            .0
+            .iter()
+            .position(|s| s.stack.stack_type() == stack_type)?;
+        Some(self.0.remove(index))
     }
 
     /// provides the stacks that contain files that exist in the workspace,
@@ -228,7 +232,7 @@ mod tests {
             fs::write(dir.path().join("other.md"), "").unwrap();
             let affected = stacks(&["changed.md"], &[]);
             let have = affected.with_stacks_of_removed_files_in(dir.path(), &Ignores::empty());
-            pretty::assert_eq!(have, affected);
+            pretty::assert_eq!(have, stacks(&["changed.md"], &[]));
         }
 
         #[test]
@@ -261,7 +265,7 @@ mod tests {
             fs::write(dir.path().join("other_stack.py"), "").unwrap();
             let affected = stacks(&[], &["removed.md"]);
             let have = affected.with_stacks_of_removed_files_in(dir.path(), &Ignores::empty());
-            pretty::assert_eq!(have, affected);
+            pretty::assert_eq!(have, stacks(&[], &["removed.md"]));
             pretty::assert_eq!(have.with_changed_files().count(), 0);
         }
     }

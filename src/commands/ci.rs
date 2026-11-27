@@ -26,7 +26,7 @@ pub fn ci(
     let exit_code = run_tasks(
         &args_show,
         &config,
-        &stacks,
+        stacks,
         &ignores,
         repo.as_ref(),
         test_sequences,

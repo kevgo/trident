@@ -68,7 +68,7 @@ pub fn from_changes(changes: &FileChanges, ignores: &Ignores) -> DetectedStacks 
 }
 
 /// groups the given files into the stacks they belong to
-pub(crate) fn group<'a>(files: impl IntoIterator<Item = (&'a File, FileStatus)>) -> DetectedStacks {
+fn group<'a>(files: impl IntoIterator<Item = (&'a File, FileStatus)>) -> DetectedStacks {
     let all_stacks = all();
     let mut stack_files: Vec<Vec<(File, FileStatus)>> = vec![Vec::new(); all_stacks.len()];
     for (file, status) in files {
