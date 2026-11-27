@@ -28,12 +28,15 @@ pub use update_tools::update_tools;
 
 // How does an architecture that reflects reality look like?
 //
-// There are types for each information:
+// There are dedicatde types for each distinct piece of information:
 //
-// - FilesInWorkspace: all files in the workspace
+// - FilesInWorkspace: contains all files in the workspace
 // - FileChanges: files that are changed in the Git repository (path + change type)
-// - FilesToLint: list of file paths that will be linted by a specific command
-// - FilesToFix: list of file paths that will be fixed by a specific command
+// - FilesToLint: list of file paths that will be linted by a specific command. Derived from FileChanges and/or FilesInWorkspace depending on scope. Stacks with removed files process as all files.
+// - FilesToFix: list of file paths that will be fixed by a specific command. Derived from FileChanges and/or FilesInWorkspace depending on scope. Only changed files, without the removed ones.
+//
+// Each command (lint, fix, pitstop) requests just the information types it needs.
+//
 //
 // - commands get a list of file paths to process (FilesToProcess type), not a list of FileChanges (file path + change type)
 // - if scope == all files: load FilesInWorkspace type, convert to FilesToProcess (remove ignores from config)
