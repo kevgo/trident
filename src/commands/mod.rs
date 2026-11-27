@@ -37,7 +37,6 @@ pub use update_tools::update_tools;
 //
 // Each command (lint, fix, pitstop) requests just the information types it needs.
 //
-//
 // - commands get a list of file paths to process (FilesToProcess type), not a list of FileChanges (file path + change type)
 // - if scope == all files: load FilesInWorkspace type, convert to FilesToProcess (remove ignores from config)
 // - if explicit scope given:
