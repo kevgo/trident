@@ -26,6 +26,28 @@ pub use precommit::precommit;
 pub use test::test;
 pub use update_tools::update_tools;
 
+// How does an architecture that reflects reality look like?
+//
+// There are types for each information:
+//
+// - FilesInWorkspace: all files in the workspace
+// - FileChanges: files that are changed in the Git repository (path + change type)
+// - FilesToLint: list of file paths that will be linted by a specific command
+// - FilesToFix: list of file paths that will be fixed by a specific command
+//
+// - commands get a list of file paths to process (FilesToProcess type), not a list of FileChanges (file path + change type)
+// - if scope == all files: load FilesInWorkspace type, convert to FilesToProcess (remove ignores from config)
+// - if explicit scope given:
+//   - load FileChanges from Git
+//   - convert to FilesToProcess. This is different per command:
+//     - lint: if a stack has removed files --> process all files in that stack
+//     - fix: process only the changed files in that stack (remove deleted files)
+// - if scope inferred:
+//   - load FileChanges from Git
+//   - derive the list of files to process from it
+//
+// When printing metadata to STDERR, don't print the counts of all files. Print the count of files that will get processed.
+
 /// arguments for [`scoped_stacks`]
 pub(crate) struct DiscoverStacksArgs<'a> {
     /// value of the CLI `--scope` flag
