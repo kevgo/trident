@@ -24,14 +24,14 @@ pub fn fix_unsafe(RunArgsWithScope { run, scope }: RunArgsWithScope) -> Result<E
         scope_flag: scope,
         default_scope: None,
         repo: repo.as_ref(),
-        ignores,
+        ignores: &ignores,
     });
     if show.display_metadata() {
-        print_metadata(stacks.affected());
+        print_metadata(&stacks);
     }
 
     // step 3: discover the unsafe fixes to run
-    let unsafe_fixes = determine_unsafe_fixes(stacks.affected(), &config)?;
+    let unsafe_fixes = determine_unsafe_fixes(&stacks, &config)?;
     if show.display_metadata() {
         eprintln!("running {} tasks", unsafe_fixes.len());
     }

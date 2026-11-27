@@ -27,14 +27,14 @@ pub fn fix(RunArgsWithScope { run, scope }: RunArgsWithScope) -> Result<ExitCode
         scope_flag: scope,
         default_scope: None,
         repo: repo.as_ref(),
-        ignores,
+        ignores: &ignores,
     });
     if show.display_metadata() {
-        print_metadata(stacks.affected());
+        print_metadata(&stacks);
     }
 
     // step 3: discover the fixes to run
-    let fixes = determine_fixes(&config, stacks.affected())?;
+    let fixes = determine_fixes(&config, &stacks)?;
     if show.display_metadata() {
         eprintln!("running {} tasks", fixes.len());
     }

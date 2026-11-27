@@ -38,10 +38,14 @@ pub(crate) struct DiscoverStacksArgs<'a> {
     pub(crate) repo: Option<&'a Repo>,
 
     /// the files to ignore
-    pub(crate) ignores: Ignores,
+    pub(crate) ignores: &'a Ignores,
 }
 
-/// provides the stacks and files that a command should process
+/// provides the stacks of all files that the scope changes, including the ones it deletes or renames away
+///
+/// This is what the user sees as the files in scope.
+/// Fixes process the files in it that still exist in the workspace.
+/// Lints process [`DetectedStacks::with_stacks_of_removed_files`] of it.
 pub(crate) fn discover_stacks(
     DiscoverStacksArgs {
         scope_flag,
@@ -49,9 +53,9 @@ pub(crate) fn discover_stacks(
         repo,
         ignores,
     }: DiscoverStacksArgs,
-) -> ChangedStacks {
-    let files = determine_files(&scope_flag, default_scope, repo, &ignores);
-    group_into_stacks(&files, &ignores)
+) -> DetectedStacks {
+    let files = determine_files(&scope_flag, default_scope, repo, ignores);
+    stacks::from_changes(&files, ignores)
 }
 
 /// Determines the files that are changed according to the given scope.
@@ -89,15 +93,17 @@ fn files_in_scope(scope: CLIScope, repo: &Repo, ignores: &Ignores) -> Result<Fil
 /// otherwise the files changed on the current branch if there are any,
 /// otherwise all files
 fn infer_files(repo: &Repo, ignores: &Ignores) -> Result<FileChanges> {
+    // try uncommitted changes
     let uncommitted = repo.uncommitted_changes()?;
     if !uncommitted.is_empty() {
         return Ok(uncommitted);
     }
-    // here there are no uncommitted changes --> the branch changes are the committed ones
+    // here there are no uncommitted changes --> try the branch changes
     let branch = repo.branch_committed_changes()?;
     if !branch.is_empty() {
         return Ok(branch);
     }
+    // here the branch is empty --> check all files
     Ok(all_files(ignores))
 }
 
@@ -106,56 +112,14 @@ fn all_files(ignores: &Ignores) -> FileChanges {
     FileChanges::from_existing(stacks::workspace_files(ignores))
 }
 
-/// the stacks and files that a command operates on
-pub(crate) struct ChangedStacks {
-    /// the stacks of all files that the scope changes, including the ones it deletes or renames away
-    affected: DetectedStacks,
-
-    /// the stacks to lint, if they differ from `affected` because the scope removes files
-    lint: Option<DetectedStacks>,
-}
-
-impl ChangedStacks {
-    /// all files in the workspace
-    pub(crate) fn all(ignores: &Ignores) -> ChangedStacks {
-        ChangedStacks {
-            affected: stacks::discover_all(ignores),
-            lint: None,
-        }
-    }
-
-    /// the stacks of all files that the scope changes, including the ones it deletes or renames away
-    ///
-    /// This is what the user sees as the files in scope.
-    /// Fixes process the files in it that still exist in the workspace.
-    pub(crate) fn affected(&self) -> &DetectedStacks {
-        &self.affected
-    }
-
-    /// the stacks to lint: the affected stacks,
-    /// plus all files in the stacks of the files that the scope deletes or renames away
-    /// because those files might still refer to the removed file
-    pub(crate) fn lint(&self) -> &DetectedStacks {
-        self.lint.as_ref().unwrap_or(&self.affected)
-    }
-}
-
-/// groups the given files into stacks
-fn group_into_stacks(files: &FileChanges, ignores: &Ignores) -> ChangedStacks {
-    let affected = stacks::from_changes(files, ignores);
-    let lint = affected
-        .has_removed_files()
-        .then(|| stacks::include_stacks_of_removed_files(&affected, ignores));
-    ChangedStacks { affected, lint }
-}
-
 #[cfg(test)]
 mod tests {
-    use super::{all_files, determine_files, files_in_scope, group_into_stacks, infer_files};
+    use super::{all_files, determine_files, files_in_scope, infer_files};
     use crate::cli::input::{CLIScope, ScopeFlag};
     use crate::domain::FileStatus::{Changed, Removed};
     use crate::domain::{DetectedStacks, File, FileChanges, Ignores, Result};
     use crate::git::{GitCommandExt, Repo};
+    use crate::stacks;
     use tempfile::TempDir;
 
     /// all files in the given stacks, including the removed ones
@@ -231,13 +195,10 @@ mod tests {
         repo.create_unstaged_file("untracked.md");
         std::fs::remove_file(repo.file_path("deleted.md")).unwrap();
         let files = files_in_scope(CLIScope::Uncommitted, &repo, &Ignores::empty())?;
-        let stacks = group_into_stacks(&files, &Ignores::empty());
+        let stacks = stacks::from_changes(&files, &Ignores::empty());
+        pretty::assert_eq!(changed_filenames(&stacks), vec![File::from("untracked.md")]);
         pretty::assert_eq!(
-            changed_filenames(stacks.affected()),
-            vec![File::from("untracked.md")]
-        );
-        pretty::assert_eq!(
-            filenames(stacks.affected()),
+            filenames(&stacks),
             vec![File::from("deleted.md"), File::from("untracked.md")]
         );
         Ok(())
@@ -250,10 +211,13 @@ mod tests {
         repo.create_and_commit_file("untouched.md")?;
         repo.create_unstaged_file("untracked.md");
         let files = files_in_scope(CLIScope::Uncommitted, &repo, &Ignores::empty())?;
-        let stacks = group_into_stacks(&files, &Ignores::empty());
+        let stacks = stacks::from_changes(&files, &Ignores::empty());
         let want = vec![File::from("untracked.md")];
-        pretty::assert_eq!(filenames(stacks.affected()), want);
-        pretty::assert_eq!(filenames(stacks.lint()), want);
+        pretty::assert_eq!(filenames(&stacks), want);
+        pretty::assert_eq!(
+            filenames(&stacks.with_stacks_of_removed_files(&Ignores::empty())),
+            want
+        );
         Ok(())
     }
 

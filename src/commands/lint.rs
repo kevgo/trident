@@ -26,14 +26,18 @@ pub fn lint(RunArgsWithScope { run, scope }: RunArgsWithScope) -> Result<ExitCod
         scope_flag: scope,
         default_scope: None,
         repo: repo.as_ref(),
-        ignores,
+        ignores: &ignores,
     });
     if show.display_metadata() {
-        print_metadata(stacks.affected());
+        print_metadata(&stacks);
     }
 
     // step 3: discover the lints to run
-    let lints = determine_lints(&config, stacks.lint(), repo.as_ref())?;
+    let lints = determine_lints(
+        &config,
+        &stacks.with_stacks_of_removed_files(&ignores),
+        repo.as_ref(),
+    )?;
     if show.display_metadata() {
         eprintln!("running {} tasks", lints.len());
     }

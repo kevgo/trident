@@ -20,14 +20,18 @@ pub fn post_edit(RunArgs { sequential, show }: RunArgs) -> Result<ExitCode> {
         scope_flag: ScopeFlag { scope: None },
         default_scope: Some(CLIScope::Uncommitted),
         repo: git_repo.as_ref(),
-        ignores,
+        ignores: &ignores,
     });
     if show.display_metadata() {
-        print_metadata(stacks.affected());
+        print_metadata(&stacks);
     }
 
     // step 3: discover the lints to run
-    let lints = lint::determine_lints(&config, stacks.lint(), git_repo.as_ref())?;
+    let lints = lint::determine_lints(
+        &config,
+        &stacks.with_stacks_of_removed_files(&ignores),
+        git_repo.as_ref(),
+    )?;
     if show.display_metadata() {
         eprintln!("running {} tasks", lints.len());
     }

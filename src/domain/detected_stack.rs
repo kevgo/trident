@@ -1,4 +1,6 @@
-use crate::domain::{EnabledWhen, File, FileChanges, FileStatus, Stack, StackType};
+use crate::domain::{EnabledWhen, File, FileChanges, FileStatus, Ignores, Stack, StackType};
+use crate::stacks;
+use std::path::Path;
 
 /// A stack that the files in scope belong to,
 /// and how these files were changed.
@@ -95,6 +97,46 @@ impl DetectedStacks {
         self.0.iter().any(|stack| stack.files.has_removed())
     }
 
+    /// provides these stacks, with all workspace files added to the stacks that contain removed files
+    ///
+    /// Removing a file can break other files in its stack, for example the ones importing it.
+    /// Lints therefore need to check all files of such stacks.
+    #[must_use]
+    pub fn with_stacks_of_removed_files(&self, ignores: &Ignores) -> DetectedStacks {
+        self.with_stacks_of_removed_files_in(Path::new("./"), ignores)
+    }
+
+    /// provides these stacks, with all files under `dir` added to the stacks that contain removed files
+    #[must_use]
+    pub fn with_stacks_of_removed_files_in(&self, dir: &Path, ignores: &Ignores) -> DetectedStacks {
+        let workspace = if self.has_removed_files() {
+            stacks::discover_all_in(dir, ignores)
+        } else {
+            DetectedStacks::default()
+        };
+        let mut changes: Vec<(File, FileStatus)> = Vec::new();
+        for stack in &self.0 {
+            changes.extend(
+                stack
+                    .files
+                    .iter()
+                    .map(|(file, status)| (file.clone(), status)),
+            );
+            if stack.files.has_removed()
+                && let Some(workspace_stack) = workspace.get_stack(stack.stack.stack_type())
+            {
+                changes.extend(
+                    workspace_stack
+                        .files
+                        .iter()
+                        .map(|(file, status)| (file.clone(), status)),
+                );
+            }
+        }
+        let changes: FileChanges = changes.into_iter().collect();
+        stacks::group(changes.iter())
+    }
+
     /// provides the stacks that contain files that exist in the workspace,
     /// i.e. the stacks that have files for tools to process
     pub fn with_changed_files(&self) -> impl Iterator<Item = &DetectedStack> {
@@ -151,6 +193,79 @@ impl<'a> IntoIterator for &'a DetectedStacks {
 
 #[cfg(test)]
 mod tests {
+    mod with_stacks_of_removed_files {
+        use crate::domain::{DetectedStacks, File, FileChanges, FileStatus, Ignores};
+        use crate::stacks::from_changes;
+        use std::fs;
+        use tempfile::TempDir;
+
+        /// the stacks of the given changed and removed files
+        fn stacks(changed: &[&str], removed: &[&str]) -> DetectedStacks {
+            let changes: FileChanges = changed
+                .iter()
+                .map(|file| (File::from(*file), FileStatus::Changed))
+                .chain(
+                    removed
+                        .iter()
+                        .map(|file| (File::from(*file), FileStatus::Removed)),
+                )
+                .collect();
+            from_changes(&changes, &Ignores::empty())
+        }
+
+        fn file_names(stacks: &DetectedStacks) -> Vec<String> {
+            let mut names: Vec<String> = stacks
+                .with_changed_files()
+                .flat_map(|stack| stack.files.changed().map(ToString::to_string))
+                .collect();
+            names.sort();
+            names
+        }
+
+        #[test]
+        fn no_removed_files() {
+            let dir = TempDir::new().unwrap();
+            fs::write(dir.path().join("other.md"), "").unwrap();
+            let affected = stacks(&["changed.md"], &[]);
+            let have = affected.with_stacks_of_removed_files_in(dir.path(), &Ignores::empty());
+            pretty::assert_eq!(have, affected);
+        }
+
+        #[test]
+        fn adds_all_files_of_the_removed_stack_only() {
+            let dir = TempDir::new().unwrap();
+            let in_stack = dir.path().join("in_stack.md");
+            fs::write(&in_stack, "").unwrap();
+            fs::write(dir.path().join("other_stack.py"), "").unwrap();
+            let affected = stacks(&["changed.toml"], &["removed.md"]);
+            let have = affected.with_stacks_of_removed_files_in(dir.path(), &Ignores::empty());
+            let mut want = vec![
+                in_stack.to_string_lossy().to_string(),
+                "changed.toml".to_string(),
+            ];
+            want.sort();
+            pretty::assert_eq!(file_names(&have), want);
+        }
+
+        #[test]
+        fn keeps_changed_files_not_discoverable_in_the_workspace() {
+            let dir = TempDir::new().unwrap();
+            let affected = stacks(&[".hidden/changed.md"], &["removed.md"]);
+            let have = affected.with_stacks_of_removed_files_in(dir.path(), &Ignores::empty());
+            pretty::assert_eq!(file_names(&have), vec![".hidden/changed.md"]);
+        }
+
+        #[test]
+        fn removed_stack_has_no_remaining_files() {
+            let dir = TempDir::new().unwrap();
+            fs::write(dir.path().join("other_stack.py"), "").unwrap();
+            let affected = stacks(&[], &["removed.md"]);
+            let have = affected.with_stacks_of_removed_files_in(dir.path(), &Ignores::empty());
+            pretty::assert_eq!(have, affected);
+            pretty::assert_eq!(have.with_changed_files().count(), 0);
+        }
+    }
+
     mod stack_type_for_file {
         use crate::domain::{
             DetectedStack, DetectedStacks, File, FileChanges, FileStatus, StackType,

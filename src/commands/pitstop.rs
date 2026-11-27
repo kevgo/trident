@@ -1,9 +1,9 @@
 use crate::cli::input::{RunArgs, RunArgsWithTestAndScope, ShowExt};
 use crate::cli::output::print_metadata;
 use crate::commands::lint::Lints;
-use crate::commands::{ChangedStacks, DiscoverStacksArgs, discover_stacks, fix, lint};
+use crate::commands::{DiscoverStacksArgs, discover_stacks, fix, lint};
 use crate::config::{Config, DefaultTests, to_sequences};
-use crate::domain::{Operation, Result, Runnables, StackType};
+use crate::domain::{DetectedStacks, Ignores, Operation, Result, Runnables, StackType};
 use crate::git::Repo;
 use crate::subshell::{self, ToolCall};
 use ahash::AHashMap;
@@ -20,7 +20,7 @@ pub fn pitstop(
         scope_flag: scope,
         default_scope: None,
         repo: repo.as_ref(),
-        ignores,
+        ignores: &ignores,
     });
     let tests = to_sequences(
         config.tests_for(
@@ -31,7 +31,7 @@ pub fn pitstop(
         Operation::Test,
         None,
     );
-    run_tasks(&run, &config, &stacks, repo.as_ref(), tests)
+    run_tasks(&run, &config, &stacks, &ignores, repo.as_ref(), tests)
 }
 
 /// runs global fixes, then stack-specific fixes, then lints on the given stacks
@@ -40,7 +40,8 @@ pub fn pitstop(
 pub(crate) fn run_tasks(
     args: &RunArgs,
     config: &Config,
-    stacks: &ChangedStacks,
+    stacks: &DetectedStacks,
+    ignores: &Ignores,
     repo: Option<&Repo>,
     tests: Vec<NonEmpty<ToolCall>>,
 ) -> Result<ExitCode> {
@@ -50,12 +51,13 @@ pub(crate) fn run_tasks(
     let stderr_to_stdout = true;
 
     if show.display_metadata() {
-        print_metadata(stacks.affected());
+        print_metadata(stacks);
     }
 
     // step 1: discover the runnables
-    let fixes = fix::determine_fixes(config, stacks.affected())?;
-    let mut lints = lint::determine_lints(config, stacks.lint(), repo)?;
+    let fixes = fix::determine_fixes(config, stacks)?;
+    let mut lints =
+        lint::determine_lints(config, &stacks.with_stacks_of_removed_files(ignores), repo)?;
     lints.global.extend(tests);
     if show.display_metadata() {
         eprintln!("running {} tasks", fixes.len() + lints.len());
