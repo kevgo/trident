@@ -19,8 +19,7 @@ Feature: "trident fix" does not run "git diff --check"
     And it runs the Git commands
       """
       git rev-parse --is-inside-work-tree
-      git status --porcelain=v1 -z --untracked-files=all
-      git status --porcelain=v1 -z --untracked-files=all
+      git status --porcelain=v1 -z --no-renames --untracked-files=all
       """
 
   Scenario: whitespace error in a changed file
@@ -36,8 +35,7 @@ Feature: "trident fix" does not run "git diff --check"
     And it runs the Git commands
       """
       git rev-parse --is-inside-work-tree
-      git status --porcelain=v1 -z --untracked-files=all
-      git status --porcelain=v1 -z --untracked-files=all
+      git status --porcelain=v1 -z --no-renames --untracked-files=all
       """
 
   Scenario: conflict markers in a changed file
@@ -57,6 +55,5 @@ Feature: "trident fix" does not run "git diff --check"
     And it runs the Git commands
       """
       git rev-parse --is-inside-work-tree
-      git status --porcelain=v1 -z --untracked-files=all
-      git status --porcelain=v1 -z --untracked-files=all
+      git status --porcelain=v1 -z --no-renames --untracked-files=all
       """

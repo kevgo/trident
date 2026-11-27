@@ -53,8 +53,7 @@ Feature: "trident pitstop" keep-sorted only rewrites files changed on the curren
     And it runs the Git commands
       """
       git rev-parse --is-inside-work-tree
-      git status --porcelain=v1 -z --untracked-files=all
-      git status --porcelain=v1 -z --untracked-files=all
+      git status --porcelain=v1 -z --no-renames --untracked-files=all
       git diff HEAD --check
       """
 
@@ -90,7 +89,6 @@ Feature: "trident pitstop" keep-sorted only rewrites files changed on the curren
     And it runs the Git commands
       """
       git rev-parse --is-inside-work-tree
-      git status --porcelain=v1 -z --untracked-files=all
-      git status --porcelain=v1 -z --untracked-files=all
+      git status --porcelain=v1 -z --no-renames --untracked-files=all
       git diff HEAD --check
       """

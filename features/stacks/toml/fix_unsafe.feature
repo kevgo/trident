@@ -18,6 +18,7 @@ Feature: unsafe-fix TOML
     Then it prints the lines
       """
       unsafe-fix TOML (Taplo)
+      error: invalid TOML
       """
     And the exit code is 0
     And file "main.toml" now has content

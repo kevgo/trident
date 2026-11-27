@@ -7,11 +7,4 @@ impl Repo {
     pub(crate) fn create_unstaged_file(&self, name: &str) {
         fs::write(self.file_path(name), "content").unwrap();
     }
-
-    #[cfg(test)]
-    pub(crate) fn create_unstaged_files(&self, names: &[&str]) {
-        for name in names {
-            self.create_unstaged_file(name);
-        }
-    }
 }

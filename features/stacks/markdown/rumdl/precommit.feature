@@ -21,7 +21,7 @@ Feature: precommit Markdown
     And it runs the Git commands
       """
       git rev-parse --is-inside-work-tree
-      git status --porcelain=v1 -z
+      git status --porcelain=v1 -z --no-renames
       """
 
   Scenario: unformatted JSON
@@ -40,7 +40,7 @@ Feature: precommit Markdown
     And it runs the Git commands
       """
       git rev-parse --is-inside-work-tree
-      git status --porcelain=v1 -z
+      git status --porcelain=v1 -z --no-renames
       git add -- main.md
       """
 
@@ -60,7 +60,7 @@ Feature: precommit Markdown
     And it runs the Git commands
       """
       git rev-parse --is-inside-work-tree
-      git status --porcelain=v1 -z
+      git status --porcelain=v1 -z --no-renames
       git add -- 'my file.md'
       """
 
@@ -79,5 +79,5 @@ Feature: precommit Markdown
     And it runs the Git commands
       """
       git rev-parse --is-inside-work-tree
-      git status --porcelain=v1 -z
+      git status --porcelain=v1 -z --no-renames
       """

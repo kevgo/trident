@@ -1,4 +1,4 @@
-use super::{determine_scope, discover_stacks};
+use super::{DiscoverStacksArgs, discover_stacks};
 use crate::cli::input::{RunArgsWithScope, ShowExt};
 use crate::cli::output::print_metadata;
 use crate::config::Config;
@@ -20,8 +20,12 @@ pub fn fix_unsafe(RunArgsWithScope { run, scope }: RunArgsWithScope) -> Result<E
 
     // step 2: discover the stacks
     let repo = Repo::load();
-    let scope = determine_scope(&scope, repo.as_ref());
-    let stacks = discover_stacks(scope, repo.as_ref(), &ignores)?;
+    let stacks = discover_stacks(DiscoverStacksArgs {
+        scope_flag: scope,
+        default_scope: None,
+        repo: repo.as_ref(),
+        ignores: &ignores,
+    });
     if show.display_metadata() {
         print_metadata(&stacks);
     }
@@ -48,7 +52,7 @@ pub fn determine_unsafe_fixes(
     config: &Config,
 ) -> Result<Vec<NonEmpty<ToolCall>>> {
     let mut stacks_executables: AHashMap<StackType, Vec<ToolCall>> = AHashMap::new();
-    for stack in stacks {
+    for stack in stacks.with_changed_files() {
         let stack_executables = stacks_executables
             .entry(stack.stack.stack_type())
             .or_default();

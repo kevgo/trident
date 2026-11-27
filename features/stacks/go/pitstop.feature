@@ -28,7 +28,6 @@ Feature: pitstop Go
       fix Go (gofumpt)
       main.go
       lint Go (golangci-lint)
-      0 issues.
       """
     And the exit code is 0
     And file "main.go" now has content
@@ -68,12 +67,11 @@ Feature: pitstop Go
       """
       found packages main (main.go) and other (other.go)
       """
-    And it prints the lines
+    And it prints the lines matching
       """
-      fix Go (gofumpt)
-      main.go
-      other.go
-      lint Go (golangci-lint)
+      fix Go \(gofumpt\)
+      lint Go \(golangci-lint\)
+      .*found packages main \(main.go\) and other \(other.go\) in .*
       """
     And the exit code is failure
     And file "main.go" now has content

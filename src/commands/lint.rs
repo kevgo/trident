@@ -1,4 +1,4 @@
-use super::{determine_scope, discover_stacks};
+use super::{DiscoverStacksArgs, discover_stacks};
 use crate::apps::git_diff_check;
 use crate::apps::git_diff_check::GitDiffCheck;
 use crate::cli::input::{RunArgsWithScope, ShowExt};
@@ -22,14 +22,22 @@ pub fn lint(RunArgsWithScope { run, scope }: RunArgsWithScope) -> Result<ExitCod
     let repo = git::Repo::load();
 
     // step 2: discover the stacks
-    let scope = determine_scope(&scope, repo.as_ref());
-    let stacks = discover_stacks(scope, repo.as_ref(), &ignores)?;
+    let stacks = discover_stacks(DiscoverStacksArgs {
+        scope_flag: scope,
+        default_scope: None,
+        repo: repo.as_ref(),
+        ignores: &ignores,
+    });
     if show.display_metadata() {
         print_metadata(&stacks);
     }
 
     // step 3: discover the lints to run
-    let lints = determine_lints(&config, &stacks, repo.as_ref())?;
+    let lints = determine_lints(
+        &config,
+        &stacks.with_stacks_of_removed_files(&ignores),
+        repo.as_ref(),
+    )?;
     if show.display_metadata() {
         eprintln!("running {} tasks", lints.len());
     }
@@ -55,7 +63,7 @@ pub fn determine_lints(
 ) -> Result<Lints> {
     // determine the lints for the stacks
     let mut stack_specific: AHashMap<StackType, Vec<ToolCall>> = AHashMap::new();
-    for detected_stack in detected_stacks {
+    for detected_stack in detected_stacks.with_changed_files() {
         let stack_type = detected_stack.stack.stack_type();
         let stack_config = config.stack_config(stack_type);
         let stack_executables = stack_specific.entry(stack_type).or_default();

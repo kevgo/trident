@@ -23,5 +23,6 @@ mod zerostring;
 
 pub(crate) use command::GitCommandExt;
 pub(crate) use repo::Repo;
+#[cfg(test)]
 pub(crate) use staged::StagedFiles;
 pub(crate) use zerostring::ZeroString;

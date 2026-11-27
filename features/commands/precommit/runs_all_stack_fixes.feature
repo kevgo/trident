@@ -37,6 +37,7 @@ Feature: "trident precommit" runs all fixes for the changed files
       """
       fix Markdown (tikibase)
       fix Markdown (rumdl)
+      one.md:1:6: [MD064] Multiple consecutive spaces (3) found [fixed]
       """
     And the exit code is 0
     And file "one.md" now has content
@@ -60,6 +61,6 @@ Feature: "trident precommit" runs all fixes for the changed files
     And it runs the Git commands
       """
       git rev-parse --is-inside-work-tree
-      git status --porcelain=v1 -z
+      git status --porcelain=v1 -z --no-renames
       git add -- one.md
       """

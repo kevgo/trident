@@ -51,7 +51,7 @@ Feature: "trident pitstop --scope" selects which files to process
     And it runs the Git commands
       """
       git rev-parse --is-inside-work-tree
-      git status --porcelain=v1 -z --untracked-files=all
+      git status --porcelain=v1 -z --no-renames --untracked-files=all
       git diff HEAD --check
       """
 
@@ -87,12 +87,12 @@ Feature: "trident pitstop --scope" selects which files to process
     And it runs the Git commands
       """
       git rev-parse --is-inside-work-tree
-      git status --porcelain=v1 -z --untracked-files=all
-      git town diff-parent --name-only --non-interactive
+      git status --porcelain=v1 -z --no-renames --untracked-files=all
+      git town config get-parent
       git symbolic-ref --short refs/remotes/origin/HEAD
       git rev-parse --verify --quiet refs/heads/main
       git merge-base HEAD main
-      git diff -z --name-only --diff-filter=ACMRT {SHA}...HEAD
+      git diff -z --name-status --no-renames {SHA}...HEAD
       git diff HEAD --check
       """
 

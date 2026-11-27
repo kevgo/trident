@@ -28,6 +28,7 @@ Feature: install Rumdl
     And it prints the lines
       """
       fix Markdown (rumdl)
+      main.md:1:2: [MD019] Multiple spaces (5) after # in heading [fixed]
       """
     And the exit code is 0
     And file "main.md" now has content

@@ -1,5 +1,5 @@
-use super::discover_stacks;
 use super::pitstop::run_tasks;
+use super::{DiscoverStacksArgs, discover_stacks};
 use crate::cli::input::{CLIScope, RunArgsWithTestAndScope};
 use crate::config::{Config, DefaultTests, to_sequences};
 use crate::domain::{Operation, Result, UserError};
@@ -14,12 +14,23 @@ pub fn ci(
 
     let config = Config::load()?;
     let ignores = config.ignores()?;
-    let scope = scope.unwrap_or(CLIScope::All);
-    let stacks = discover_stacks(scope, repo.as_ref(), &ignores)?;
+    let stacks = discover_stacks(DiscoverStacksArgs {
+        scope_flag: scope,
+        default_scope: Some(CLIScope::All),
+        repo: repo.as_ref(),
+        ignores: &ignores,
+    });
     let args_show = run.with_default_show(conc::Show::Output);
     let tests = config.tests_for(&test, |commands| commands.ci.as_ref(), DefaultTests::All)?;
     let test_sequences = to_sequences(tests, Operation::Test, None);
-    let exit_code = run_tasks(&args_show, &config, &stacks, repo.as_ref(), test_sequences)?;
+    let exit_code = run_tasks(
+        &args_show,
+        &config,
+        stacks,
+        &ignores,
+        repo.as_ref(),
+        test_sequences,
+    )?;
     if exit_code != ExitCode::SUCCESS {
         return Ok(exit_code);
     }

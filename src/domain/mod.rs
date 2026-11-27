@@ -1,6 +1,7 @@
 mod detected_stack;
 mod error;
 mod file;
+mod file_changes;
 mod files;
 pub mod fingerprint;
 mod fix;
@@ -15,6 +16,7 @@ mod tool;
 pub use detected_stack::{DetectedStack, DetectedStacks};
 pub use error::{Result, UserError};
 pub use file::File;
+pub use file_changes::{FileChanges, FileStatus};
 pub use files::Files;
 pub use fix::Fix;
 pub use ignores::Ignores;

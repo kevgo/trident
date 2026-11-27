@@ -29,35 +29,23 @@ Feature: pitstop multiple good stacks
       1 CSS, 1 Python, 1 TypeScript, 1 other
       running 8 tasks
       """
-    And it prints the block
+    And it prints the lines
       """
       fix Python (Ruff)
       All checks passed!
-      """
-    And it prints the block
-      """
       format Python (Ruff)
       1 file left unchanged
-      """
-    And it prints the block
-      """
       lint Python (Ruff)
       All checks passed!
       """
     And it prints the lines
       """
       fix CSS (Biome)
-      """
-    And it prints the lines
-      """
       lint CSS (Biome)
       """
     And it prints the lines
       """
       fix TypeScript (Biome)
-      """
-    And it prints the lines
-      """
       lint TypeScript (Biome)
       """
     And all files are unchanged
@@ -73,39 +61,31 @@ Feature: pitstop multiple good stacks
       1 CSS, 1 Python, 1 TypeScript, 1 other
       running 8 tasks
       """
-    And it prints the lines
-      """
-      fix CSS (Biome)
-      """
-    And it prints the lines
-      """
-      lint CSS (Biome)
-      """
-    And it prints the lines
-      """
-      fix TypeScript (Biome)
-      """
-    And it prints the lines
-      """
-      lint TypeScript (Biome)
-      """
     And it prints the lines matching
       """
       fix Python \(Ruff\)
-      ruff(.exe)? check --fix main.py
+      ruff(.exe)? check --fix main.py$
       All checks passed!
-      """
-    And it prints the lines matching
-      """
       format Python \(Ruff\)
-      ruff(.exe)? format main.py
+      ruff(.exe)? format main.py$
       1 file left unchanged
+      lint Python \(Ruff\)
+      ruff(.exe)? check main.py$
+      All checks passed!
       """
     And it prints the lines matching
       """
-      lint Python \(Ruff\)
-      ruff(.exe)? check main.py
-      All checks passed!
+      fix CSS \(Biome\)
+      biome(.exe)? format --write main.css$
+      lint CSS \(Biome\)
+      biome(.exe)? lint main.css$
+      """
+    And it prints the lines matching
+      """
+      fix TypeScript \(Biome\)
+      biome(.exe)? format --write main.ts$
+      lint TypeScript \(Biome\)
+      biome(.exe)? lint main.ts$
       """
     And all files are unchanged
     And it runs the Git commands

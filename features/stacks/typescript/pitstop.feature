@@ -20,6 +20,7 @@ Feature: pitstop TypeScript
     Then it prints the lines
       """
       fix TypeScript (Biome)
+      lint TypeScript (Biome)
       """
     And the exit code is 0
     And file "main.ts" now has content

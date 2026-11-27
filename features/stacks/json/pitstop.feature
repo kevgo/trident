@@ -16,6 +16,7 @@ Feature: pitstop JSON
     Then it prints the lines
       """
       fix JSON (Biome)
+      lint JSON (Biome)
       """
     And the exit code is 0
     And file "main.json" now has content

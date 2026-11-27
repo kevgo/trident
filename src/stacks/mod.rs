@@ -14,8 +14,7 @@ mod typescript;
 mod unknown;
 mod yml;
 
-use crate::domain::{DetectedStack, DetectedStacks, File, Files, Ignores, Stack};
-use crate::git::StagedFiles;
+use crate::domain::{DetectedStack, DetectedStacks, File, FileChanges, FileStatus, Ignores, Stack};
 pub use css::Css;
 pub use cucumber::Cucumber;
 pub use dockerfile::Dockerfile;
@@ -58,43 +57,35 @@ pub fn all() -> Vec<Box<dyn Stack>> {
     ]
 }
 
-/// provides the stacks for the given staged files
+/// provides the stacks that the given changes affect, without the ignored files
 #[must_use]
-pub fn from_staged(staged: &StagedFiles, ignores: &Ignores) -> DetectedStacks {
-    from_files(staged.all(), ignores)
+pub fn from_changes(changes: &FileChanges, ignores: &Ignores) -> DetectedStacks {
+    group(
+        changes
+            .iter()
+            .filter(|(file, _)| !ignores.matches_self_or_parent(file.as_ref())),
+    )
 }
 
-/// provides the stacks for the given files
-#[must_use]
-pub fn from_files<'a>(
-    files: impl IntoIterator<Item = &'a File>,
-    ignores: &Ignores,
-) -> DetectedStacks {
+/// groups the given files into the stacks they belong to
+fn group<'a>(files: impl IntoIterator<Item = (&'a File, FileStatus)>) -> DetectedStacks {
     let all_stacks = all();
-    let mut detected_stacks: Vec<DetectedStack> = all_stacks
-        .into_iter()
-        .map(|stack| DetectedStack {
-            stack,
-            files: Files::empty(),
-        })
-        .collect();
-    for file in files {
-        if ignores.matches_self_or_parent(file.as_ref()) {
-            continue;
-        }
-        for detected_stack in &mut detected_stacks {
-            if detected_stack.stack.matches(file.as_ref()) {
-                detected_stack.files.push(file.clone());
-                break;
-            }
+    let mut stack_files: Vec<Vec<(File, FileStatus)>> = vec![Vec::new(); all_stacks.len()];
+    for (file, status) in files {
+        if let Some(index) = all_stacks
+            .iter()
+            .position(|stack| stack.matches(file.as_ref()))
+        {
+            stack_files[index].push((file.clone(), status));
         }
     }
-    let result = detected_stacks
+    let result = all_stacks
         .into_iter()
-        .filter(|stack| !stack.files.is_empty())
-        .map(|mut stack| {
-            stack.files.sort_unstable();
-            stack
+        .zip(stack_files)
+        .filter(|(_, files)| !files.is_empty())
+        .map(|(stack, files)| DetectedStack {
+            stack,
+            files: files.into_iter().collect(),
         })
         .collect();
     DetectedStacks::new(result)
@@ -109,14 +100,20 @@ pub fn discover_all(ignores: &Ignores) -> DetectedStacks {
 /// provides all stacks and their files found under `dir`
 #[must_use]
 pub fn discover_all_in(dir: &Path, ignores: &Ignores) -> DetectedStacks {
-    let all_stacks = all();
-    let mut detected_stacks: Vec<DetectedStack> = all_stacks
-        .into_iter()
-        .map(|stack| DetectedStack {
-            stack,
-            files: Files::empty(),
-        })
-        .collect();
+    let files = workspace_files_in(dir, ignores);
+    group(files.iter().map(|file| (file, FileStatus::Changed)))
+}
+
+/// provides all files in the workspace that aren't hidden or ignored
+#[must_use]
+pub fn workspace_files(ignores: &Ignores) -> Vec<File> {
+    workspace_files_in(Path::new("./"), ignores)
+}
+
+/// provides all files under `dir` that aren't hidden or ignored
+#[must_use]
+pub fn workspace_files_in(dir: &Path, ignores: &Ignores) -> Vec<File> {
+    let mut files = Vec::new();
     let ignores2 = ignores.clone();
     let walk = WalkBuilder::new(dir)
         // This code still ignores most hidden files (all except the ".github" folder)
@@ -152,29 +149,16 @@ pub fn discover_all_in(dir: &Path, ignores: &Ignores) -> DetectedStacks {
         if !path.is_file() {
             continue;
         }
-        for detected_stack in &mut detected_stacks {
-            if detected_stack.stack.matches(path) {
-                detected_stack.files.push(path.into());
-                break;
-            }
-        }
+        files.push(File::from(path));
     }
-    let result = detected_stacks
-        .into_iter()
-        .filter(|stack| !stack.files.is_empty())
-        .map(|mut stack| {
-            stack.files.sort_unstable();
-            stack
-        })
-        .collect();
-    DetectedStacks::new(result)
+    files
 }
 
 #[cfg(test)]
 mod tests {
 
     mod discover {
-        use crate::domain::{DetectedStack, DetectedStacks, Files, Ignores};
+        use crate::domain::{DetectedStack, DetectedStacks, File, FileChanges, Ignores};
         use crate::stacks::discover_all_in;
         use crate::stacks::{Go, Json, JsonC, Markdown, Unknown};
         use std::fs;
@@ -216,23 +200,23 @@ mod tests {
             let want = DetectedStacks::new(vec![
                 DetectedStack {
                     stack: Box::new(Go {}),
-                    files: Files::from(vec![root.join("main.go")]),
+                    files: FileChanges::from_existing(vec![File::from(root.join("main.go"))]),
                 },
                 DetectedStack {
                     stack: Box::new(Json {}),
-                    files: Files::from(vec![root.join("config.json")]),
+                    files: FileChanges::from_existing(vec![File::from(root.join("config.json"))]),
                 },
                 DetectedStack {
                     stack: Box::new(JsonC {}),
-                    files: Files::from(vec![root.join("trident.jsonc")]),
+                    files: FileChanges::from_existing(vec![File::from(root.join("trident.jsonc"))]),
                 },
                 DetectedStack {
                     stack: Box::new(Markdown {}),
-                    files: Files::from(vec![root.join("README.md")]),
+                    files: FileChanges::from_existing(vec![File::from(root.join("README.md"))]),
                 },
                 DetectedStack {
                     stack: Box::new(Unknown {}),
-                    files: Files::from(vec![root.join("archive.tar")]),
+                    files: FileChanges::from_existing(vec![File::from(root.join("archive.tar"))]),
                 },
             ]);
             pretty::assert_eq!(have, want);
@@ -251,7 +235,7 @@ mod tests {
             let root = dir.path();
             let want = DetectedStacks::new(vec![DetectedStack {
                 stack: Box::new(Go {}),
-                files: Files::from(vec![root.join(nested)]),
+                files: FileChanges::from_existing(vec![File::from(root.join(nested))]),
             }]);
             pretty::assert_eq!(have, want);
         }
@@ -265,7 +249,7 @@ mod tests {
             let root = dir.path();
             let want = DetectedStacks::new(vec![DetectedStack {
                 stack: Box::new(Go {}),
-                files: Files::from(vec![root.join("main.go")]),
+                files: FileChanges::from_existing(vec![File::from(root.join("main.go"))]),
             }]);
             pretty::assert_eq!(have, want);
         }
@@ -279,7 +263,7 @@ mod tests {
             let root = dir.path();
             let want = DetectedStacks::new(vec![DetectedStack {
                 stack: Box::new(Go {}),
-                files: Files::from(vec![root.join("main.go")]),
+                files: FileChanges::from_existing(vec![File::from(root.join("main.go"))]),
             }]);
             pretty::assert_eq!(have, want);
         }

@@ -32,7 +32,7 @@ Feature: precommit JSONC
     And it runs the Git commands
       """
       git rev-parse --is-inside-work-tree
-      git status --porcelain=v1 -z
+      git status --porcelain=v1 -z --no-renames
       """
 
   Scenario: unformatted JSONC
@@ -62,7 +62,7 @@ Feature: precommit JSONC
     And it runs the Git commands
       """
       git rev-parse --is-inside-work-tree
-      git status --porcelain=v1 -z
+      git status --porcelain=v1 -z --no-renames
       git add -- main.jsonc other.jsonc
       """
 
@@ -83,5 +83,5 @@ Feature: precommit JSONC
     And it runs the Git commands
       """
       git rev-parse --is-inside-work-tree
-      git status --porcelain=v1 -z
+      git status --porcelain=v1 -z --no-renames
       """

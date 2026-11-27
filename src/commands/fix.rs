@@ -1,4 +1,4 @@
-use super::{determine_scope, discover_stacks};
+use super::{DiscoverStacksArgs, discover_stacks};
 use crate::apps::delete_empty_folders;
 use crate::apps::delete_empty_folders::DeleteEmptyFolders;
 use crate::apps::keep_sorted;
@@ -23,8 +23,12 @@ pub fn fix(RunArgsWithScope { run, scope }: RunArgsWithScope) -> Result<ExitCode
 
     // step 2: discover the stacks
     let repo = Repo::load();
-    let scope = determine_scope(&scope, repo.as_ref());
-    let stacks = discover_stacks(scope, repo.as_ref(), &ignores)?;
+    let stacks = discover_stacks(DiscoverStacksArgs {
+        scope_flag: scope,
+        default_scope: None,
+        repo: repo.as_ref(),
+        ignores: &ignores,
+    });
     if show.display_metadata() {
         print_metadata(&stacks);
     }
@@ -75,7 +79,7 @@ pub fn determine_fixes(config: &Config, detected_stacks: &DetectedStacks) -> Res
 
     // stack-specific fixes
     let mut stacks_executables: AHashMap<StackType, Vec<ToolCall>> = AHashMap::new();
-    for detected_stack in detected_stacks {
+    for detected_stack in detected_stacks.with_changed_files() {
         let stack_type = detected_stack.stack.stack_type();
         let stack_config = config.stack_config(stack_type);
         let stack_executables = stacks_executables.entry(stack_type).or_default();

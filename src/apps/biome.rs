@@ -28,7 +28,7 @@ impl Tool for Biome {
 impl Lint for Biome {
     fn lint_commands(&self, stack: &DetectedStack, config: &Config) -> Result<Option<ToolCall>> {
         let ignores = config.ignores_for(self, Operation::Lint)?;
-        let files = stack.files.remove(&ignores);
+        let files = stack.files.changed_except(&ignores);
         if files.is_empty() {
             return Ok(None);
         }
@@ -51,7 +51,7 @@ impl Lint for Biome {
 impl Fix for Biome {
     fn fix_commands(&self, stack: &DetectedStack, config: &Config) -> Result<Vec<ToolCall>> {
         let ignores = config.ignores_for(self, Operation::Fix)?;
-        let files = stack.files.remove(&ignores);
+        let files = stack.files.changed_except(&ignores);
         if files.is_empty() {
             return Ok(vec![]);
         }
@@ -76,7 +76,7 @@ impl Fix for Biome {
 
     fn unsafe_fix_commands(&self, stack: &DetectedStack, config: &Config) -> Result<Vec<ToolCall>> {
         let ignores = config.ignores_for(self, Operation::FixUnsafe)?;
-        let files = stack.files.remove(&ignores);
+        let files = stack.files.changed_except(&ignores);
         if files.is_empty() {
             return Ok(vec![]);
         }

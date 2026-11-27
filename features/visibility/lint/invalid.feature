@@ -29,6 +29,12 @@ Feature: lint multiple stacks with invalid code
       """
     And it prints the lines
       """
+      lint Python (Ruff)
+      invalid-syntax: missing closing quote in string literal
+       --> main.py:1:7
+      """
+    And it prints the lines
+      """
       lint CSS (Biome)
       Found 1 error.
       main.css:2:1 parse ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -54,6 +60,12 @@ Feature: lint multiple stacks with invalid code
       """
     And it prints the lines
       """
+      lint Python (Ruff)
+      invalid-syntax: missing closing quote in string literal
+       --> main.py:1:7
+      """
+    And it prints the lines
+      """
       lint CSS (Biome)
       Found 1 error.
       main.css:2:1 parse ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -73,6 +85,12 @@ Feature: lint multiple stacks with invalid code
   Scenario: --show=names
     When executing "trident lint --show=names"
     Then it prints nothing to STDERR
+    And it prints the lines
+      """
+      lint Python (Ruff)
+      invalid-syntax: missing closing quote in string literal
+       --> main.py:1:7
+      """
     And it prints the lines
       """
       lint CSS (Biome)

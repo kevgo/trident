@@ -25,7 +25,7 @@ impl Tool for Hadolint {
 impl Lint for Hadolint {
     fn lint_commands(&self, stack: &DetectedStack, config: &Config) -> Result<Option<ToolCall>> {
         let ignores = config.ignores_for(self, Operation::Lint)?;
-        let files = stack.files.remove(&ignores);
+        let files = stack.files.changed_except(&ignores);
         if files.is_empty() {
             return Ok(None);
         }

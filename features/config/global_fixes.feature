@@ -29,7 +29,6 @@ Feature: custom fixes
     When executing "trident fix --show=output"
     Then it prints the lines
       """
-      fix all (delete empty folders)
       fix all (my global fix 1)
       global fix 1 running
       """

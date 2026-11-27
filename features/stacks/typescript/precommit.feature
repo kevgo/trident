@@ -24,7 +24,7 @@ Feature: precommit TypeScript
     And it runs the Git commands
       """
       git rev-parse --is-inside-work-tree
-      git status --porcelain=v1 -z
+      git status --porcelain=v1 -z --no-renames
       """
 
   Scenario: unformatted TypeScript
@@ -54,7 +54,7 @@ Feature: precommit TypeScript
     And it runs the Git commands
       """
       git rev-parse --is-inside-work-tree
-      git status --porcelain=v1 -z
+      git status --porcelain=v1 -z --no-renames
       git add -- main.ts other.ts
       """
 
@@ -75,5 +75,5 @@ Feature: precommit TypeScript
     And it runs the Git commands
       """
       git rev-parse --is-inside-work-tree
-      git status --porcelain=v1 -z
+      git status --porcelain=v1 -z --no-renames
       """

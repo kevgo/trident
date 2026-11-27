@@ -30,7 +30,7 @@ Feature: "trident postedit" lints only uncommitted files
     And it runs the Git commands
       """
       git rev-parse --is-inside-work-tree
-      git status --porcelain=v1 -z --untracked-files=all
+      git status --porcelain=v1 -z --no-renames --untracked-files=all
       git diff HEAD --check
       """
 
@@ -57,17 +57,17 @@ Feature: "trident postedit" lints only uncommitted files
       2 Markdown
       running 2 tasks
       """
-    And it prints the lines
-      """
-      lint Markdown (rumdl)
-      """
-    And it prints the lines
+    And it prints the block
       """
       modified.md:1:1: [MD041] First line in file should be a level 1 heading
       """
-    And it prints the lines
+    And it prints the block
       """
       untracked.md:1:1: [MD041] First line in file should be a level 1 heading
+      """
+    And it prints the block
+      """
+      lint Markdown (rumdl)
       """
     And it does not print
       """
@@ -77,7 +77,7 @@ Feature: "trident postedit" lints only uncommitted files
     And it runs the Git commands
       """
       git rev-parse --is-inside-work-tree
-      git status --porcelain=v1 -z --untracked-files=all
+      git status --porcelain=v1 -z --no-renames --untracked-files=all
       git diff HEAD --check
       """
 
@@ -94,12 +94,13 @@ Feature: "trident postedit" lints only uncommitted files
       """
     And it prints the lines
       """
+      lint Markdown (rumdl)
       my file.md:1:1: [MD041] First line in file should be a level 1 heading
       """
     And the exit code is 1
     And it runs the Git commands
       """
       git rev-parse --is-inside-work-tree
-      git status --porcelain=v1 -z --untracked-files=all
+      git status --porcelain=v1 -z --no-renames --untracked-files=all
       git diff HEAD --check
       """

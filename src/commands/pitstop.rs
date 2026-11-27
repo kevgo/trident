@@ -1,9 +1,9 @@
 use crate::cli::input::{RunArgs, RunArgsWithTestAndScope, ShowExt};
 use crate::cli::output::print_metadata;
 use crate::commands::lint::Lints;
-use crate::commands::{determine_scope, discover_stacks, fix, lint};
+use crate::commands::{DiscoverStacksArgs, discover_stacks, fix, lint};
 use crate::config::{Config, DefaultTests, to_sequences};
-use crate::domain::{DetectedStacks, Operation, Result, Runnables, StackType};
+use crate::domain::{DetectedStacks, Ignores, Operation, Result, Runnables, StackType};
 use crate::git::Repo;
 use crate::subshell::{self, ToolCall};
 use ahash::AHashMap;
@@ -16,8 +16,12 @@ pub fn pitstop(
     let config = Config::load()?;
     let ignores = config.ignores()?;
     let repo = Repo::load();
-    let scope = determine_scope(&scope, repo.as_ref());
-    let stacks = discover_stacks(scope, repo.as_ref(), &ignores)?;
+    let stacks = discover_stacks(DiscoverStacksArgs {
+        scope_flag: scope,
+        default_scope: None,
+        repo: repo.as_ref(),
+        ignores: &ignores,
+    });
     let tests = to_sequences(
         config.tests_for(
             &test,
@@ -27,7 +31,7 @@ pub fn pitstop(
         Operation::Test,
         None,
     );
-    run_tasks(&run, &config, &stacks, repo.as_ref(), tests)
+    run_tasks(&run, &config, stacks, &ignores, repo.as_ref(), tests)
 }
 
 /// runs global fixes, then stack-specific fixes, then lints on the given stacks
@@ -36,7 +40,8 @@ pub fn pitstop(
 pub(crate) fn run_tasks(
     args: &RunArgs,
     config: &Config,
-    stacks: &DetectedStacks,
+    stacks: DetectedStacks,
+    ignores: &Ignores,
     repo: Option<&Repo>,
     tests: Vec<NonEmpty<ToolCall>>,
 ) -> Result<ExitCode> {
@@ -46,12 +51,13 @@ pub(crate) fn run_tasks(
     let stderr_to_stdout = true;
 
     if show.display_metadata() {
-        print_metadata(stacks);
+        print_metadata(&stacks);
     }
 
     // step 1: discover the runnables
-    let fixes = fix::determine_fixes(config, stacks)?;
-    let mut lints = lint::determine_lints(config, stacks, repo)?;
+    let fixes = fix::determine_fixes(config, &stacks)?;
+    let mut lints =
+        lint::determine_lints(config, &stacks.with_stacks_of_removed_files(ignores), repo)?;
     lints.global.extend(tests);
     if show.display_metadata() {
         eprintln!("running {} tasks", fixes.len() + lints.len());

@@ -27,7 +27,7 @@ impl Tool for Ruff {
 impl Lint for Ruff {
     fn lint_commands(&self, stack: &DetectedStack, config: &Config) -> Result<Option<ToolCall>> {
         let ignores = config.ignores_for(self, Operation::Lint)?;
-        let files = stack.files.remove(&ignores);
+        let files = stack.files.changed_except(&ignores);
         if files.is_empty() {
             return Ok(None);
         }
@@ -56,7 +56,7 @@ impl Fix for Ruff {
 
         // run "ruff format --check"
         let ignores = config.ignores_for(self, Operation::Fix)?;
-        let files = stack.files.remove(&ignores);
+        let files = stack.files.changed_except(&ignores);
         if files.is_empty() {
             return Ok(vec![]);
         }
@@ -97,7 +97,7 @@ impl Fix for Ruff {
 
         // run "ruff format --check"
         let ignores = config.ignores_for(self, Operation::FixUnsafe)?;
-        let files = stack.files.remove(&ignores);
+        let files = stack.files.changed_except(&ignores);
         if files.is_empty() {
             return Ok(vec![]);
         }
