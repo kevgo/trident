@@ -16,7 +16,6 @@ Feature: precommit Rust
     When executing "trident precommit --show=output"
     Then it prints to STDERR
       """
-      1 Rust
       running 1 tasks
       """
     And it prints

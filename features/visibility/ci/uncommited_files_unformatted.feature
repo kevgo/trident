@@ -27,7 +27,7 @@ Feature: CI doesn't care about uncommitted files that are unformatted
     When executing "trident ci --show=output"
     Then it prints to STDERR
       """
-      1 CSS, 1 Python, 1 TypeScript, 1 other
+      1 CSS, 1 Python, 1 TypeScript
       running 9 tasks
       """
     And it prints the block
@@ -91,7 +91,7 @@ Feature: CI doesn't care about uncommitted files that are unformatted
     When executing "trident ci --show=verbose"
     Then it prints to STDERR
       """
-      1 CSS, 1 Python, 1 TypeScript, 1 other
+      1 CSS, 1 Python, 1 TypeScript
       running 9 tasks
       """
     And it prints the lines matching

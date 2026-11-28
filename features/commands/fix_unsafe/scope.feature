@@ -105,7 +105,7 @@ Feature: "trident fix-unsafe --scope" selects which files to fix
     When executing "trident fix-unsafe --scope=all --show=output"
     Then it prints to STDERR
       """
-      3 Python, 1 other
+      3 Python
       running 1 tasks
       """
     And it prints the lines

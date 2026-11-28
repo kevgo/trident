@@ -23,7 +23,7 @@ Feature: "trident ci --scope" selects which files to process
 
   Scenario: --scope=uncommitted processes only uncommitted files
     When executing "trident ci --scope=uncommitted --show=output"
-    Then it prints the lines to STDERR
+    Then it prints to STDERR
       """
       1 Markdown
       running 4 tasks
@@ -58,7 +58,7 @@ Feature: "trident ci --scope" selects which files to process
 
   Scenario: --scope=branch processes files changed on the current branch
     When executing "trident ci --scope=branch --show=output"
-    Then it prints the lines to STDERR
+    Then it prints to STDERR
       """
       2 Markdown
       running 4 tasks
@@ -101,9 +101,9 @@ Feature: "trident ci --scope" selects which files to process
 
   Scenario: --scope=all processes all files
     When executing "trident ci --scope=all --show=output"
-    Then it prints the lines to STDERR
+    Then it prints to STDERR
       """
-      3 Markdown, 1 other
+      3 Markdown
       running 4 tasks
       """
     And it prints the block

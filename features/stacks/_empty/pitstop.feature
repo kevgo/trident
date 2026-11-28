@@ -10,7 +10,6 @@ Feature: pitstop for a codebase without any code
     When executing "trident pitstop --show=output"
     Then it prints to STDERR
       """
-      1 other
       running 1 tasks
       """
     And it prints

@@ -36,9 +36,6 @@ fn run(RunArgs { sequential, show }: RunArgs) -> Result<()> {
         return Ok(());
     }
     let stacks = stacks::from_staged(&staged, &ignores);
-    if show.display_metadata() {
-        print_metadata(&stacks);
-    }
 
     // step 3: fingerprint the staged files before running the fixes
     let staged_files = staged.all();
@@ -47,6 +44,7 @@ fn run(RunArgs { sequential, show }: RunArgs) -> Result<()> {
     // step 4: discover the fixes to run
     let fixes = determine_precommit_fixes(&config, &stacks)?;
     if show.display_metadata() {
+        print_metadata(&stacks, fixes.tool_calls());
         eprintln!("running {} tasks", fixes.len());
     }
     let Runnables {

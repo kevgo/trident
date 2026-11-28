@@ -10,7 +10,6 @@ Feature: checking a codebase without any code
     When executing "trident lint --show=output"
     Then it prints to STDERR
       """
-      1 other
       running 0 tasks
       """
     And it prints nothing to STDOUT

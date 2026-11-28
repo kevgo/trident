@@ -24,13 +24,11 @@ pub fn lint(RunArgsWithScope { run, scope }: RunArgsWithScope) -> Result<ExitCod
     // step 2: discover the stacks
     let scope = determine_scope(&scope, repo.as_ref());
     let stacks = discover_stacks(scope, repo.as_ref(), &ignores)?;
-    if show.display_metadata() {
-        print_metadata(&stacks);
-    }
 
     // step 3: discover the lints to run
     let lints = determine_lints(&config, &stacks, repo.as_ref())?;
     if show.display_metadata() {
+        print_metadata(&stacks, lints.tool_calls());
         eprintln!("running {} tasks", lints.len());
     }
 
@@ -129,6 +127,14 @@ impl Lints {
             .values()
             .fold(0, |acc, executables| acc + executables.len());
         global_len + stack_specific_len
+    }
+
+    /// provides all tool calls in these lints
+    pub fn tool_calls(&self) -> impl Iterator<Item = &ToolCall> {
+        self.global
+            .iter()
+            .flatten()
+            .chain(self.stack_specific.values().flatten())
     }
 
     pub fn is_empty(&self) -> bool {

@@ -100,7 +100,7 @@ Feature: "trident pitstop --scope" selects which files to process
     When executing "trident pitstop --scope=all --show=output"
     Then it prints to STDERR
       """
-      3 Markdown, 1 other
+      3 Markdown
       running 4 tasks
       """
     And it prints the block

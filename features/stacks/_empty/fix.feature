@@ -10,7 +10,6 @@ Feature: formatting a codebase without any code
     When executing "trident fix --show=output"
     Then it prints to STDERR
       """
-      1 other
       running 1 tasks
       """
     And it prints

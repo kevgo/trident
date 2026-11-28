@@ -26,7 +26,7 @@ Feature: lint multiple stacks
     When executing "trident lint --show=output"
     Then it prints to STDERR
       """
-      1 CSS, 1 Python, 1 TypeScript, 1 other
+      1 CSS, 1 Python, 1 TypeScript
       running 3 tasks
       """
     And it prints the block
@@ -52,7 +52,7 @@ Feature: lint multiple stacks
     When executing "trident lint --show=verbose"
     Then it prints to STDERR
       """
-      1 CSS, 1 Python, 1 TypeScript, 1 other
+      1 CSS, 1 Python, 1 TypeScript
       running 3 tasks
       """
     And it prints the lines

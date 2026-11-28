@@ -15,7 +15,6 @@ Feature: pitstop Rust
     When executing "trident pitstop --show=output"
     Then it prints to STDERR
       """
-      1 Rust, 1 other
       running 1 tasks
       """
     And it prints
@@ -58,7 +57,7 @@ Feature: pitstop Rust
     When executing "trident pitstop --show=output"
     Then it prints to STDERR
       """
-      1 JSON, 1 Rust, 1 other
+      1 JSON, 1 Rust
       running 5 tasks
       """
     And it prints the block
