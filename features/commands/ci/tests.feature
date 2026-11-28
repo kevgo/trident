@@ -25,7 +25,7 @@ Feature: CI runs all fixes, formatters, lints, and tests
       print("hello")
       """
     When executing "trident ci --show=output"
-    Then it prints to STDERR
+    Then it prints the lines to STDERR
       """
       1 JSON, 1 Python
       running 8 tasks
