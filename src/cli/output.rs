@@ -19,19 +19,19 @@ fn metadata_text<'a>(
     stacks: &DetectedStacks,
     tool_calls: impl IntoIterator<Item = &'a ToolCall>,
 ) -> Option<String> {
-    let processed: AHashSet<StackType> = tool_calls
+    let processed_stacks: AHashSet<StackType> = tool_calls
         .into_iter()
         .filter_map(|tool_call| tool_call.stack)
         .collect();
-    let texts: Vec<String> = stacks
+    let files_texts: Vec<String> = stacks
         .into_iter()
-        .filter(|stack| processed.contains(&stack.stack.stack_type()))
+        .filter(|stack| processed_stacks.contains(&stack.stack.stack_type()))
         .map(|stack| format!("{} {}", stack.files.len(), stack.stack))
         .collect();
-    if texts.is_empty() {
+    if files_texts.is_empty() {
         return None;
     }
-    Some(texts.iter().join(", "))
+    Some(files_texts.iter().join(", "))
 }
 
 #[cfg(test)]
