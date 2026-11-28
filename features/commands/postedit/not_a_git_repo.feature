@@ -11,7 +11,7 @@ Feature: "trident postedit" lints all files outside a Git repository
       text
       """
     When executing "trident postedit --show=output"
-    Then it prints the lines to STDERR
+    Then it prints to STDERR
       """
       1 Markdown
       running 1 tasks

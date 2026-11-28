@@ -25,7 +25,7 @@ Feature: CI runs all fixes, formatters, lints, and tests
       print("hello")
       """
     When executing "trident ci --show=output"
-    Then it prints the lines to STDERR
+    Then it prints to STDERR
       """
       1 JSON, 1 Python
       running 8 tasks
@@ -90,7 +90,7 @@ Feature: CI runs all fixes, formatters, lints, and tests
       }
       """
     When executing "trident ci --test=unit+cuke --show=output"
-    Then it prints the lines to STDERR
+    Then it prints to STDERR
       """
       1 JSON
       running 5 tasks
@@ -131,7 +131,7 @@ Feature: CI runs all fixes, formatters, lints, and tests
       }
       """
     When executing "trident ci --show=output"
-    Then it prints the lines to STDERR
+    Then it prints to STDERR
       """
       1 JSON
       running 4 tasks

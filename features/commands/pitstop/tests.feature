@@ -23,7 +23,7 @@ Feature: pitstop --test runs selected tests
       }
       """
     When executing "trident pitstop --show=output"
-    Then it prints the lines to STDERR
+    Then it prints to STDERR
       """
       running 1 tasks
       """
@@ -60,7 +60,7 @@ Feature: pitstop --test runs selected tests
       }
       """
     When executing "trident pitstop --show=output"
-    Then it prints the lines to STDERR
+    Then it prints to STDERR
       """
       running 2 tasks
       """
@@ -98,7 +98,7 @@ Feature: pitstop --test runs selected tests
       }
       """
     When executing "trident pitstop --test=cuke --show=output"
-    Then it prints the lines to STDERR
+    Then it prints to STDERR
       """
       running 2 tasks
       """
@@ -132,7 +132,7 @@ Feature: pitstop --test runs selected tests
       }
       """
     When executing "trident pitstop --test=unit+cuke --show=output"
-    Then it prints the lines to STDERR
+    Then it prints to STDERR
       """
       running 3 tasks
       """

@@ -19,7 +19,7 @@ Feature: GitHub Actions workflow files not in a Git repository
             - uses: actions/checkout@v6
       """
     When executing "trident lint --show=output"
-    Then it prints the lines to STDERR
+    Then it prints to STDERR
       """
       1 YML
       running 1 tasks

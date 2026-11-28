@@ -22,7 +22,7 @@ Feature: lint GitHub Actions workflow files
             - uses: actions/checkout@v6
       """
     When executing "trident lint --show=output"
-    Then it prints the lines to STDERR
+    Then it prints to STDERR
       """
       1 YML
       running 2 tasks
