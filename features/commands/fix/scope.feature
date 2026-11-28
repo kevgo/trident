@@ -94,7 +94,7 @@ Feature: "trident fix --scope" selects which files to format
     When executing "trident fix --scope=all --show=output"
     Then it prints to STDERR
       """
-      3 Markdown, 1 other
+      3 Markdown
       running 2 tasks
       """
     And it prints the block

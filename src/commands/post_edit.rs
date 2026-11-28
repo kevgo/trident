@@ -17,13 +17,11 @@ pub fn post_edit(RunArgs { sequential, show }: RunArgs) -> Result<ExitCode> {
 
     // step 2: discover the files and their stacks
     let stacks = discover_stacks(CLIScope::Uncommitted, git_repo.as_ref(), &ignores)?;
-    if show.display_metadata() {
-        print_metadata(&stacks);
-    }
 
     // step 3: discover the lints to run
     let lints = lint::determine_lints(&config, &stacks, git_repo.as_ref())?;
     if show.display_metadata() {
+        print_metadata(&stacks, lints.tool_calls());
         eprintln!("running {} tasks", lints.len());
     }
 

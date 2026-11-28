@@ -21,7 +21,7 @@ Feature: GitHub Actions workflow files not in a Git repository
     When executing "trident lint --show=output"
     Then it prints the lines to STDERR
       """
-      1 YML, 1 other
+      1 YML
       running 1 tasks
       """
     And it prints the block matching

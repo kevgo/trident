@@ -15,7 +15,6 @@ Feature: lint Rust
     When executing "trident lint --show=output"
     Then it prints to STDERR
       """
-      1 Rust, 1 other
       running 0 tasks
       """
     And it prints nothing to STDOUT
@@ -47,7 +46,7 @@ Feature: lint Rust
     When executing "trident lint --show=output"
     Then it prints to STDERR
       """
-      1 JSON, 1 Rust, 1 other
+      1 JSON, 1 Rust
       running 2 tasks
       """
     And it prints the block

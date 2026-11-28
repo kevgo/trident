@@ -22,13 +22,11 @@ pub fn fix_unsafe(RunArgsWithScope { run, scope }: RunArgsWithScope) -> Result<E
     let repo = Repo::load();
     let scope = determine_scope(&scope, repo.as_ref());
     let stacks = discover_stacks(scope, repo.as_ref(), &ignores)?;
-    if show.display_metadata() {
-        print_metadata(&stacks);
-    }
 
     // step 3: discover the unsafe fixes to run
     let unsafe_fixes = determine_unsafe_fixes(&stacks, &config)?;
     if show.display_metadata() {
+        print_metadata(&stacks, unsafe_fixes.iter().flatten());
         eprintln!("running {} tasks", unsafe_fixes.len());
     }
 

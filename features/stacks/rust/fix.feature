@@ -15,7 +15,6 @@ Feature: fix Rust
     When executing "trident fix --show=output"
     Then it prints to STDERR
       """
-      1 Rust, 1 other
       running 1 tasks
       """
     And it prints
@@ -50,7 +49,7 @@ Feature: fix Rust
     When executing "trident fix --show=output"
     Then it prints to STDERR
       """
-      1 JSON, 1 Rust, 1 other
+      1 JSON, 1 Rust
       running 3 tasks
       """
     And it prints the block

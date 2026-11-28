@@ -27,7 +27,7 @@ Feature: CI runs all fixes, formatters, lints, and tests
     When executing "trident ci --show=output"
     Then it prints the lines to STDERR
       """
-      1 JSON, 1 Python, 1 other
+      1 JSON, 1 Python
       running 8 tasks
       """
     And it prints the block
@@ -92,7 +92,7 @@ Feature: CI runs all fixes, formatters, lints, and tests
     When executing "trident ci --test=unit+cuke --show=output"
     Then it prints the lines to STDERR
       """
-      1 JSON, 1 other
+      1 JSON
       running 5 tasks
       """
     And it prints the block
@@ -133,7 +133,7 @@ Feature: CI runs all fixes, formatters, lints, and tests
     When executing "trident ci --show=output"
     Then it prints the lines to STDERR
       """
-      1 JSON, 1 other
+      1 JSON
       running 4 tasks
       """
     And it prints the block

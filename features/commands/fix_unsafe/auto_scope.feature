@@ -23,7 +23,7 @@ Feature: "trident fix-unsafe" chooses the smallest "--scope" based on the worksp
     When executing "trident fix-unsafe --show=output"
     Then it prints to STDERR
       """
-      1 Python, 1 other
+      1 Python
       running 1 tasks
       """
     And it prints the lines
@@ -91,7 +91,7 @@ Feature: "trident fix-unsafe" chooses the smallest "--scope" based on the worksp
     When executing "trident fix-unsafe --show=output"
     Then it prints to STDERR
       """
-      1 Python, 1 other
+      1 Python
       running 1 tasks
       """
     And it prints the lines

@@ -18,6 +18,14 @@ impl Runnables {
         self.global.is_none() && self.stack_specific.is_empty()
     }
 
+    /// provides all tool calls in these runnables
+    pub fn tool_calls(&self) -> impl Iterator<Item = &ToolCall> {
+        self.global
+            .iter()
+            .flatten()
+            .chain(self.stack_specific.values().flatten())
+    }
+
     #[must_use]
     pub fn len(&self) -> usize {
         let mut result = self.global.as_ref().map_or(0, NonEmpty::len);

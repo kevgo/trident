@@ -23,7 +23,7 @@ Feature: display statistics about the codebase
     When executing "trident lint --show=output"
     Then it prints to STDERR
       """
-      1 CSS, 1 Python, 1 TypeScript, 1 other
+      1 CSS, 1 Python, 1 TypeScript
       running 3 tasks
       """
     And it runs the Git commands
